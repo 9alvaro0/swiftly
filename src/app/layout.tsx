@@ -6,8 +6,8 @@ import MainLayout from '@/components/layout/MainLayout';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Mi Proyecto',
-  description: 'Descripción de mi proyecto con Next.js',
+  title: 'Swiftly - Tutoriales de Swift y SwiftUI',
+  description: 'Blog, guías y tutoriales para aprender Swift y SwiftUI de manera efectiva',
 };
 
 export default function RootLayout({
