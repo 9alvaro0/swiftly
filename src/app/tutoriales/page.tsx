@@ -16,6 +16,39 @@ export default function TutorialsPage() {
     const [categoryFilter, setCategoryFilter] = useState("");
     const [levelFilter, setLevelFilter] = useState("");
 
+    function getTutorials() {
+        return [
+            {
+                id: "introduccion-swiftui",
+                title: "Introducción a SwiftUI",
+                description: "Aprende los fundamentos de SwiftUI y cómo construir interfaces declarativas.",
+                category: "SwiftUI",
+                level: "Principiante",
+                date: "10 de abril, 2025",
+                image: "/images/tutorials/introduccion-swiftui.jpg",
+            },
+            {
+                id: "estructuras-vs-clases",
+                title: "Estructuras vs Clases en Swift",
+                description: "Entiende las diferencias entre estructuras y clases, y cuándo usar cada una.",
+                category: "Swift",
+                level: "Intermedio",
+                date: "8 de abril, 2025",
+                image: "/images/tutorials/estructuras-vs-clases.jpg",
+            },
+            {
+                id: "concurrencia-swift",
+                title: "Concurrencia en Swift",
+                description: "Explora el moderno sistema de concurrencia de Swift con async/await.",
+                category: "Swift",
+                level: "Avanzado",
+                date: "5 de abril, 2025",
+                image: "/images/tutorials/concurrencia-swift.jpg",
+            },
+            // Puedes añadir más tutoriales aquí cuando los tengas
+        ];
+    }
+
     useEffect(() => {
         // Cargar tutoriales desde localStorage
         const storedTutorials = localStorage.getItem("tutorials");
