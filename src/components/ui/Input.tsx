@@ -20,7 +20,7 @@ const Input = ({ label, error, id, className = "", ...props }: InputProps) => {
             </label>
             <input
                 id={id}
-                className={`w-full p-2 border bg-white rounded-md focus:ring-2 focus:ring-primary focus:outline-none 
+                className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-primary focus:outline-none 
         ${error ? "border-error" : "border-neutral-300"} ${className}`}
                 {...props}
             />

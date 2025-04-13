@@ -1,86 +1,88 @@
-"use client";
-
-import Image from "next/image";
 import Link from "next/link";
-import React from "react";
-import Card from "@/components/ui/Card";
+import Image from "next/image";
+import { Clock } from "lucide-react";
+import { Tutorial } from "@/types/Tutorial";
 
-export interface TutorialCardProps {
-    id: string;
-    title: string;
-    description: string;
-    category: string;
-    level: string;
-    date: string;
-    imageUrl?: string;
-}
-
-const TutorialCard = ({ id, title, description, category, level, date, imageUrl }: TutorialCardProps) => {
-    const getCategoryColor = (cat: string) => {
-        switch (cat.toLowerCase()) {
-            case "swiftui":
-                return "bg-primary";
-            case "swift":
-                return "bg-secondary";
-            default:
-                return "bg-info";
-        }
-    };
-
-    // Imágenes por defecto según la categoría desde URLs externas
-    const getDefaultImage = (cat: string) => {
-        switch (cat.toLowerCase()) {
-            case "swiftui":
-                return "https://developer.apple.com/assets/elements/icons/swiftui/swiftui-96x96.png";
-            case "swift":
-                return "https://developer.apple.com/assets/elements/icons/swift/swift-96x96.png";
-            default:
-                return "https://developer.apple.com/assets/elements/icons/xcode/xcode-96x96.png";
-        }
-    };
-
-    const imageSource = imageUrl || getDefaultImage(category);
-
-    return (
-        <Link
-            href={`/tutoriales/${id}`}
-            className="block transition-transform duration-300 hover:scale-[1.02]"
-        >
-            <Card
-                elevation="sm"
-                className="h-full"
-            >
-                <div className="h-48 relative overflow-hidden">
-                    <Image
-                        src={imageSource}
-                        alt={title}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className="object-cover transition-transform duration-500 hover:scale-105"
-                        priority={false}
-                        unoptimized={imageSource.startsWith("http")} // Para URLs externas
-                    />
-                    <div
-                        className={`
-            absolute top-0 right-0 text-white text-xs font-semibold px-2 py-1 m-2 rounded-sm
-            ${getCategoryColor(category)}
-          `}
-                    >
-                        {category}
-                    </div>
-                </div>
-                <div className="p-4">
-                    <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm text-secondary">{level}</span>
-                        <span className="text-sm text-secondary">{date}</span>
-                    </div>
-                    <h3 className="font-bold text-lg mb-2 text-primary">{title}</h3>
-                    <p className="text-secondary mb-3 line-clamp-2">{description}</p>
-                    <span className="text-primary font-medium">Leer tutorial →</span>
-                </div>
-            </Card>
-        </Link>
-    );
+type TutorialCardProps = {
+    tutorial: Tutorial;
 };
 
-export default TutorialCard;
+export default function TutorialCard({ tutorial }: TutorialCardProps) {
+    return (
+        <Link
+            href={`/tutoriales/${tutorial.slug}`}
+            className="group"
+        >
+            <article className="bg-surface rounded-lg shadow-sm overflow-hidden h-full transition-all duration-200 hover:shadow-md">
+                <div className="h-48 relative bg-neutral-200 dark:bg-neutral-800 overflow-hidden">
+                    {tutorial.imageUrl ? (
+                        <Image
+                            src={tutorial.imageUrl || "/placeholder.svg"}
+                            alt={tutorial.title}
+                            fill
+                            className="object-cover transition-transform duration-300 group-hover:scale-105"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
+                    ) : (
+                        <div className="absolute inset-0 flex items-center justify-center text-text-secondary">
+                            <span className="text-4xl">Swift</span>
+                        </div>
+                    )}
+                    <div className="absolute top-0 right-0 m-3">
+                        <span className="inline-block bg-neutral-900 dark:bg-neutral-700 text-white text-xs px-2 py-1 rounded">
+                            {tutorial.category}
+                        </span>
+                    </div>
+                    <div className="absolute bottom-0 left-0 m-3">
+                        <span className="inline-block bg-neutral-900/80 text-white text-xs px-2 py-1 rounded">
+                            {tutorial.level}
+                        </span>
+                    </div>
+                </div>
+
+                <div className="p-5">
+                    <div className="flex items-center text-text-secondary text-sm mb-3">
+                        <time dateTime={tutorial.date}>
+                            {new Date(tutorial.date).toLocaleDateString("es-ES", {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                            })}
+                        </time>
+                        <span className="mx-2">•</span>
+                        <span className="flex items-center">
+                            <Clock
+                                size={14}
+                                className="mr-1"
+                            />
+                            {tutorial.readTime || 5} min
+                        </span>
+                    </div>
+
+                    <h3 className="font-bold text-lg mb-2 text-text-primary group-hover:text-primary transition-colors">
+                        {tutorial.title}
+                    </h3>
+
+                    <p className="text-text-secondary mb-4 line-clamp-2">{tutorial.description}</p>
+
+                    <div className="flex justify-between items-center">
+                        <div className="text-primary font-medium group-hover:underline">Leer tutorial →</div>
+
+                        <div className="flex items-center">
+                            {tutorial.author?.avatar && (
+                                <Image
+                                    src={tutorial.author.avatar || "/placeholder.svg"}
+                                    alt={tutorial.author.name}
+                                    width={24}
+                                    height={24}
+                                    className="rounded-full mr-2"
+                                />
+                            )}
+                            <span className="text-sm text-text-secondary">{tutorial.author?.name}</span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </Link>
+    );
+}

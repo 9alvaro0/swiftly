@@ -1,97 +1,38 @@
 @import "tailwindcss";
 
 :root {
-    /* Apple-inspired color palette */
-    --color-primary: #0071e3; /* Apple blue */
-    --color-primary-dark: #0058b0;
-    --color-primary-light: #47a0ff;
-
-    /* Secondary colors */
-    --color-secondary: #34c759; /* Apple green */
-    --color-secondary-dark: #28a745;
-    --color-secondary-light: #5dde7d;
-
-    /* Neutral colors - softer than pure white */
-    --color-neutral-50: #f5f5f7; /* Apple light gray */
-    --color-neutral-100: #ebebed;
-    --color-neutral-200: #d2d2d7;
-    --color-neutral-300: #bcbcc0;
-    --color-neutral-400: #86868b; /* Apple secondary text */
-    --color-neutral-500: #6e6e73; /* Apple tertiary text */
-    --color-neutral-600: #515154;
-    --color-neutral-700: #3a3a3c;
-    --color-neutral-800: #1d1d1f; /* Apple dark background */
-    --color-neutral-900: #121214;
-
-    /* Semantic colors */
-    --color-success: #34c759; /* Apple green */
-    --color-warning: #ff9f0a; /* Apple orange */
-    --color-error: #ff3b30; /* Apple red */
-    --color-info: #0071e3; /* Apple blue */
-
-    /* Backgrounds - softer than pure white */
-    --color-background: #f5f5f7; /* Apple light background */
-    --color-surface: #ffffff;
-    --color-card: #ffffff;
+    /* Monochromatic color palette */
+    --color-primary: #333333; /* Dark gray */
+    --color-primary-dark: #1a1a1a;
+    --color-primary-light: #666666;
 
     /* Text */
-    --color-text-primary: #1d1d1f; /* Apple primary text */
-    --color-text-secondary: #6e6e73; /* Apple secondary text */
+    --color-text-primary: #1a1a1a;
+    --color-text-secondary: #666666;
 
-    /* Spacing */
-    --spacing-unit: 4px;
+    /* Backgrounds */
+    --color-background: #f7f7f7;
+    --color-surface: #ffffff;
 
-    /* Borders */
-    --border-radius-sm: 8px;
-    --border-radius-md: 12px;
-    --border-radius-lg: 16px;
-    --border-radius-full: 9999px;
-
-    /* Shadows - subtle Apple-like shadows */
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.04), 0 0 1px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.03), 0 0 1px rgba(0, 0, 0, 0.1);
-}
-
-/* Dark theme - Apple-like dark mode */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --color-background: #1d1d1f; /* Apple dark background */
-        --color-surface: #2d2d2f;
-        --color-card: #323236;
-
-        --color-text-primary: #f5f5f7; /* Apple light text */
-        --color-text-secondary: #a1a1a6;
-
-        --color-neutral-50: #323236;
-        --color-neutral-100: #3a3a3c;
-        --color-neutral-800: #f5f5f7;
-        --color-neutral-900: #ffffff;
-
-        /* Shadows for dark mode - more subtle */
-        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
-        --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.3);
-        --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.3);
-    }
-}
-
-@theme inline {
-    --color-primary: var(--color-primary);
-    --color-primary-dark: var(--color-primary-dark);
-    --color-primary-light: var(--color-primary-light);
-    --color-secondary: var(--color-secondary);
-    --color-secondary-dark: var(--color-secondary-dark);
-    --color-secondary-light: var(--color-secondary-light);
-
-    --color-background: var(--color-background);
-    --color-surface: var(--color-surface);
-    --color-text-primary: var(--color-text-primary);
-    --color-text-secondary: var(--color-text-secondary);
-
-    /* SF Pro font stack for Apple-like typography */
+    /* Font stacks */
     --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
     --font-mono: "SF Mono", SFMono-Regular, ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
         monospace;
+}
+
+/* Dark theme */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-primary: #e0e0e0; /* Light gray */
+        --color-primary-dark: #cccccc;
+        --color-primary-light: #f5f5f5;
+
+        --color-background: #121212;
+        --color-surface: #1e1e1e;
+
+        --color-text-primary: #f5f5f5;
+        --color-text-secondary: #a0a0a0;
+    }
 }
 
 body {
@@ -100,105 +41,18 @@ body {
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    line-height: 1.5;
 }
 
-/* Utility classes for Tailwind */
-.bg-primary {
-    background-color: var(--color-primary);
+/* Only keeping essential custom classes that aren't in Tailwind */
+.btn-primary {
+    @apply bg-zinc-900 text-white hover:bg-zinc-800 px-5 py-2.5 rounded-full font-medium transition-colors duration-200;
 }
 
-.bg-primary-dark {
-    background-color: var(--color-primary-dark);
+.btn-secondary {
+    @apply bg-transparent border-2 border-zinc-900 text-zinc-900 hover:bg-zinc-100 dark:border-zinc-200 dark:text-zinc-200 dark:hover:bg-zinc-800 px-5 py-2.5 rounded-full font-medium transition-colors duration-200;
 }
 
-.bg-primary-light {
-    background-color: var(--color-primary-light);
-}
-
-.bg-secondary {
-    background-color: var(--color-secondary);
-}
-
-.bg-surface {
-    background-color: var(--color-surface);
-}
-
-.bg-card {
-    background-color: var(--color-card);
-}
-
-.text-primary {
-    color: var(--color-text-primary);
-}
-
-.text-secondary {
-    color: var(--color-text-secondary);
-}
-
-.border-primary {
-    border-color: var(--color-primary);
-}
-
-/* Apple-like border radius classes */
-.rounded-apple-sm {
-    border-radius: var(--border-radius-sm);
-}
-
-.rounded-apple-md {
-    border-radius: var(--border-radius-md);
-}
-
-.rounded-apple-lg {
-    border-radius: var(--border-radius-lg);
-}
-
-/* Apple-like shadows */
-.shadow-apple-sm {
-    box-shadow: var(--shadow-sm);
-}
-
-.shadow-apple-md {
-    box-shadow: var(--shadow-md);
-}
-
-.shadow-apple-lg {
-    box-shadow: var(--shadow-lg);
-}
-
-/* Apple-like button styles */
-.btn-apple {
-    background-color: var(--color-primary);
-    color: white;
-    border-radius: var(--border-radius-full);
-    padding: 8px 16px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
-
-.btn-apple:hover {
-    background-color: var(--color-primary-dark);
-}
-
-/* Card styles for tutorials */
-.card-apple {
-    background-color: var(--color-card);
-    border-radius: var(--border-radius-md);
-    box-shadow: var(--shadow-md);
-    padding: 24px;
-    transition: all 0.2s ease;
-}
-
-.card-apple:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
-}
-
-/* Code block styling for Swift tutorials */
-.code-block {
-    background-color: var(--color-neutral-50);
-    border-radius: var(--border-radius-sm);
-    padding: 16px;
-    font-family: var(--font-mono);
-    overflow-x: auto;
+/* Dark mode overrides */
+.dark .btn-primary {
+    @apply bg-zinc-200 text-zinc-900 hover:bg-zinc-300;
 }

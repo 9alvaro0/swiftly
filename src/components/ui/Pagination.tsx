@@ -1,6 +1,4 @@
-"use client";
-
-import React from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface PaginationProps {
     totalItems: number;
@@ -9,77 +7,106 @@ interface PaginationProps {
     onPageChange: (page: number) => void;
 }
 
-const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }: PaginationProps) => {
+export default function Pagination({ totalItems, itemsPerPage, currentPage, onPageChange }: PaginationProps) {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
+    // No mostrar paginación si solo hay una página
     if (totalPages <= 1) return null;
 
+    // Determinar qué páginas mostrar
     const getPageNumbers = () => {
-        const pages = [];
+        const pageNumbers = [];
+        const maxPagesToShow = 5; // Ajusta según necesites
 
-        pages.push(1);
-
-        for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
-            pages.push(i);
+        if (totalPages <= maxPagesToShow) {
+            // Mostrar todas las páginas si hay menos que el máximo
+            for (let i = 1; i <= totalPages; i++) {
+                pageNumbers.push(i);
+            }
+        } else {
+            // Lógica para mostrar páginas con elipsis
+            if (currentPage <= 3) {
+                // Cerca del inicio
+                for (let i = 1; i <= 4; i++) {
+                    pageNumbers.push(i);
+                }
+                pageNumbers.push("ellipsis");
+                pageNumbers.push(totalPages);
+            } else if (currentPage >= totalPages - 2) {
+                // Cerca del final
+                pageNumbers.push(1);
+                pageNumbers.push("ellipsis");
+                for (let i = totalPages - 3; i <= totalPages; i++) {
+                    pageNumbers.push(i);
+                }
+            } else {
+                // En medio
+                pageNumbers.push(1);
+                pageNumbers.push("ellipsis");
+                for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+                    pageNumbers.push(i);
+                }
+                pageNumbers.push("ellipsis");
+                pageNumbers.push(totalPages);
+            }
         }
 
-        if (totalPages > 1) {
-            pages.push(totalPages);
-        }
-
-        return [...new Set(pages)].sort((a, b) => a - b);
+        return pageNumbers;
     };
 
-    const pageNumbers = getPageNumbers();
-
     return (
-        <nav className="inline-flex">
+        <nav
+            className="flex justify-center items-center space-x-1"
+            aria-label="Paginación"
+        >
             <button
-                onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
+                onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className={`px-3 py-2 rounded-l-md border border-gray-300 bg-white ${
-                    currentPage === 1 ? "text-gray-400 cursor-not-allowed" : "text-gray-500 hover:bg-gray-50"
-                }`}
+                className="p-2 rounded-md text-text-secondary hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 disabled:pointer-events-none"
+                aria-label="Página anterior"
             >
-                Anterior
+                <ChevronLeft size={16} />
             </button>
 
-            {pageNumbers.map((page, index) => {
-                if (index > 0 && page > pageNumbers[index - 1] + 1) {
-                    return (
-                        <span
-                            key={`ellipsis-${page}`}
-                            className="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500"
-                        >
-                            ...
-                        </span>
-                    );
-                }
+            <div className="flex space-x-1">
+                {getPageNumbers().map((page, index) => {
+                    if (page === "ellipsis") {
+                        return (
+                            <span
+                                key={`ellipsis-${index}`}
+                                className="px-3 py-2 text-text-secondary"
+                            >
+                                ...
+                            </span>
+                        );
+                    }
 
-                return (
-                    <button
-                        key={page}
-                        onClick={() => onPageChange(page)}
-                        className={`px-3 py-2 border-t border-b border-gray-300 bg-white ${
-                            currentPage === page ? "text-blue-600 hover:bg-blue-50" : "text-gray-500 hover:bg-gray-50"
-                        }`}
-                    >
-                        {page}
-                    </button>
-                );
-            })}
+                    return (
+                        <button
+                            key={`page-${page}`}
+                            onClick={() => onPageChange(page as number)}
+                            className={`px-3 py-1 rounded-md ${
+                                currentPage === page
+                                    ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 font-medium"
+                                    : "text-text-primary hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                            }`}
+                            aria-current={currentPage === page ? "page" : undefined}
+                            aria-label={`Página ${page}`}
+                        >
+                            {page}
+                        </button>
+                    );
+                })}
+            </div>
 
             <button
-                onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
+                onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className={`px-3 py-2 rounded-r-md border border-gray-300 bg-white ${
-                    currentPage === totalPages ? "text-gray-400 cursor-not-allowed" : "text-gray-500 hover:bg-gray-50"
-                }`}
+                className="p-2 rounded-md text-text-secondary hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 disabled:pointer-events-none"
+                aria-label="Página siguiente"
             >
-                Siguiente
+                <ChevronRight size={16} />
             </button>
         </nav>
     );
-};
-
-export default Pagination;
+}

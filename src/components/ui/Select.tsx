@@ -1,4 +1,3 @@
-// src/components/ui/Select.tsx
 "use client";
 
 import React, { SelectHTMLAttributes } from "react";
@@ -26,14 +25,17 @@ const Select = ({ label, options, error, id, className = "", ...props }: SelectP
             </label>
             <select
                 id={id}
-                className={`w-full p-2 border bg-white rounded-md focus:ring-2 focus:ring-primary focus:outline-none 
-        ${error ? "border-error" : "border-neutral-300"} ${className}`}
+                className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-primary focus:outline-none 
+                text-black dark:text-white
+                ${error ? "border-error" : "border-neutral-300"} 
+                ${className}`}
                 {...props}
             >
                 {options.map((option) => (
                     <option
                         key={option.value}
                         value={option.value}
+                        className="bg-white dark:bg-neutral-800 text-black dark:text-white"
                     >
                         {option.label}
                     </option>

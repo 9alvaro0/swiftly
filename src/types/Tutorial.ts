@@ -5,10 +5,11 @@ export interface Tutorial {
     title: string;
     description: string;
     content: string;
-    category: "Swift" | "SwiftUI" | "Xcode" | "iOS" | "macOS" | "Frameworks";
+    category: "Swift" | "SwiftUI" | "Xcode" | "iOS" | "macOS" | "Frameworks" | "visionOS" | "Arquitectura" | "Testing" | "watchOS";
     level: "Principiante" | "Intermedio" | "Avanzado";
     date: string;
     imageUrl: string;
+    images?: string[];
     author: {
         name: string;
         avatar?: string;
@@ -21,5 +22,7 @@ export interface Tutorial {
     }[];
     isPublished: boolean;
     slug: string;
-    readTime?: number; // Tiempo estimado de lectura en minutos
+    readTime?: number;
+    updatedAt: string;
+    createdAt: string;
 }

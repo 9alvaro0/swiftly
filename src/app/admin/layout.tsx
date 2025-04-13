@@ -79,17 +79,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                     <Link
                                         key={item.href}
                                         href={item.disabled ? "#" : item.href}
-                                        className={`
-                      flex items-center gap-3 px-3 py-2 rounded-md text-sm
-                      transition-colors duration-200
-                      ${
-                          active
-                              ? "bg-primary/10 text-primary font-medium"
-                              : item.disabled
-                              ? "text-neutral-400 cursor-default"
-                              : "text-primary hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                      }
-                    `}
+                                        className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm
+                                            transition-colors duration-200
+                                            ${
+                                                active
+                                                    ? "bg-primary/10 text-primary font-medium"
+                                                    : item.disabled
+                                                    ? "text-neutral-400 cursor-default"
+                                                    : "text-primary hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                                            }
+                                        `}
                                         onClick={item.disabled ? (e) => e.preventDefault() : undefined}
                                     >
                                         <item.icon

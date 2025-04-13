@@ -23,7 +23,7 @@ const Button = ({
     const variantStyles = {
         primary: "bg-primary text-white hover:bg-primary-dark focus:ring-primary",
         secondary: "bg-secondary text-white hover:bg-secondary-dark focus:ring-secondary",
-        outline: "bg-white border border-neutral-300 text-secondary hover:bg-neutral-50 focus:ring-primary",
+        outline: "border border-neutral-300 text-secondary hover:bg-neutral-50 focus:ring-primary",
     };
 
     const sizeStyles = {

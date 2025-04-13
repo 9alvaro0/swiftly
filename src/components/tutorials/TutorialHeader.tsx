@@ -1,50 +1,59 @@
-import React from "react";
-import Link from "next/link";
+import Image from "next/image";
+import { Clock, Calendar, BookOpen } from "lucide-react";
+import type { Tutorial } from "@/types/Tutorial";
 
-interface TutorialHeaderProps {
-    title: string;
-    description: string;
-    category: string;
-    level: string;
-    date: string;
-    author: {
-        name: string;
-        avatar?: string;
-        bio?: string;
-    };
-}
+type TutorialHeaderProps = {
+    tutorial: Tutorial;
+};
 
-const TutorialHeader = ({ title, description, category, level, date, author }: TutorialHeaderProps) => {
+export default function TutorialHeader({ tutorial }: TutorialHeaderProps) {
     return (
         <div className="mb-8">
-            <div className="flex items-center gap-2 mb-2">
-                <span
-                    className={`
-          px-2 py-1 text-xs rounded text-white
-          ${category === "SwiftUI" ? "bg-blue-600" : "bg-green-600"}
-        `}
-                >
-                    {category}
+            <div className="flex items-center gap-2 text-sm text-text-secondary mb-4">
+                <span className="inline-block bg-neutral-900 dark:bg-neutral-700 text-white px-2 py-1 rounded text-xs">
+                    {tutorial.category}
                 </span>
-                <span className="text-sm text-gray-500">{level}</span>
+                <span className="inline-block bg-neutral-900/80 text-white px-2 py-1 rounded text-xs">
+                    {tutorial.level}
+                </span>
             </div>
 
-            <h1 className="text-3xl font-bold mb-4">{title}</h1>
-            <p className="text-lg text-gray-600 mb-6">{description}</p>
+            <h1 className="text-3xl md:text-4xl font-bold mb-4 text-text-primary">{tutorial.title}</h1>
 
-            <div className="flex items-center">
-                <div className="w-10 h-10 bg-gray-200 rounded-full mr-3">
-                    {/* Aquí iría la imagen del autor si existe */}
+            <p className="text-xl text-text-secondary mb-6">{tutorial.description}</p>
+
+            <div className="flex flex-wrap items-center gap-6 text-sm text-text-secondary">
+                <div className="flex items-center gap-2">
+                    <Calendar size={16} />
+                    <time dateTime={tutorial.date}>
+                        {new Date(tutorial.date).toLocaleDateString("es-ES", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                        })}
+                    </time>
                 </div>
-                <div>
-                    <p className="font-medium">{author.name}</p>
-                    <p className="text-sm text-gray-500">
-                        {author.role} · {date}
-                    </p>
+
+                <div className="flex items-center gap-2">
+                    <Clock size={16} />
+                    <span>{tutorial.readTime || 10} min de lectura</span>
+                </div>
+
+                <div className="flex items-center gap-2 ml-auto">
+                    <div className="flex items-center">
+                        {tutorial.author.avatar && (
+                            <Image
+                                src={tutorial.author.avatar || "/placeholder.svg"}
+                                alt={tutorial.author.name}
+                                width={32}
+                                height={32}
+                                className="rounded-full mr-2"
+                            />
+                        )}
+                        <span>{tutorial.author.name}</span>
+                    </div>
                 </div>
             </div>
         </div>
     );
-};
-
-export default TutorialHeader;
+}

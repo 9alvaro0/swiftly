@@ -1,88 +1,93 @@
-// src/app/tutoriales/[slug]/page.tsx
-"use client";
-
-import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Tutorial } from "@/types/Tutorial";
+import { notFound } from "next/navigation";
+import { fetchTutorialBySlug, fetchTutorials } from "@/services/api";
 import TutorialHeader from "@/components/tutorials/TutorialHeader";
 import TutorialContent from "@/components/tutorials/TutorialContent";
 import RelatedTutorials from "@/components/tutorials/RelatedTutorials";
+import { ChevronLeft } from "lucide-react";
+import type { Metadata } from "next";
 
-export default function TutorialDetailPage({ params }: { params: { slug: string } }) {
-    const router = useRouter();
-    const [tutorial, setTutorial] = useState<Tutorial | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [relatedTutorials, setRelatedTutorials] = useState<{ id: string; title: string }[]>([]);
+// Generar metadatos para SEO
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+    const tutorial = await fetchTutorialBySlug(params.slug);
 
-    useEffect(() => {
-        // Cargar el tutorial desde localStorage
-        const storedTutorials = localStorage.getItem("tutorials");
-        if (storedTutorials) {
-            const tutorials = JSON.parse(storedTutorials);
-            // Buscar por id o por slug
-            const foundTutorial = tutorials.find((t: Tutorial) => t.id === params.slug || t.slug === params.slug);
+    if (!tutorial) {
+        return {
+            title: "Tutorial no encontrado",
+            description: "El tutorial que buscas no existe o no está disponible.",
+        };
+    }
 
-            if (foundTutorial && foundTutorial.isPublished) {
-                setTutorial(foundTutorial);
+    return {
+        title: `${tutorial.title} | Swiftly`,
+        description: tutorial.description,
+        openGraph: {
+            title: `${tutorial.title} | Swiftly`,
+            description: tutorial.description,
+            images: tutorial.imageUrl ? [tutorial.imageUrl] : [],
+            type: "article",
+            authors: [tutorial.author.name],
+            publishedTime: tutorial.date,
+            tags: tutorial.tags,
+        },
+    };
+}
 
-                // Encontrar tutoriales relacionados (de la misma categoría)
-                const related = tutorials
-                    .filter(
-                        (t: Tutorial) =>
-                            t.id !== foundTutorial.id &&
-                            t.isPublished &&
-                            (t.category === foundTutorial.category ||
-                                foundTutorial.tags.some((tag) => t.tags.includes(tag)))
-                    )
-                    .slice(0, 3)
-                    .map((t: Tutorial) => ({ id: t.id, title: t.title }));
+// Generar rutas estáticas para todos los tutoriales
+export async function generateStaticParams() {
+    const tutorials = await fetchTutorials(0); // Obtener todos los tutoriales
 
-                setRelatedTutorials(related);
-            } else {
-                // Tutorial no encontrado o no publicado
-                router.push("/tutoriales");
-            }
-        }
-        setLoading(false);
-    }, [params.slug, router]);
+    return tutorials.map((tutorial) => ({
+        slug: tutorial.slug,
+    }));
+}
 
-    if (loading) return <div className="p-8 text-center">Cargando...</div>;
-    if (!tutorial) return <div className="p-8 text-center">Tutorial no encontrado</div>;
+export default async function TutorialDetailPage({ params }: { params: { slug: string } }) {
+    const tutorial = await fetchTutorialBySlug(params.slug);
+
+    if (!tutorial || !tutorial.isPublished) {
+        notFound();
+    }
+
+    // Obtener tutoriales relacionados
+    const allTutorials = await fetchTutorials(0);
+    const relatedTutorials = allTutorials
+        .filter(
+            (t) =>
+                t.id !== tutorial.id &&
+                t.isPublished &&
+                (t.category === tutorial.category || tutorial.tags.some((tag) => t.tags.includes(tag)))
+        )
+        .slice(0, 3);
 
     return (
-        <div className="max-w-3xl mx-auto">
+        <div className="py-12 px-4 md:px-6 max-w-4xl mx-auto">
             {/* Breadcrumbs */}
-            <div className="text-sm mb-6">
+            <div className="flex items-center text-sm mb-8">
                 <Link
                     href="/tutoriales"
-                    className="text-primary hover:underline"
+                    className="text-text-secondary hover:text-primary flex items-center group"
                 >
-                    Tutoriales
+                    <ChevronLeft
+                        size={16}
+                        className="mr-1 group-hover:-translate-x-1 transition-transform"
+                    />
+                    Volver a tutoriales
                 </Link>
-                <span className="mx-2">/</span>
-                <span className="text-secondary">{tutorial.title}</span>
             </div>
 
             {/* Tutorial header */}
-            <TutorialHeader
-                title={tutorial.title}
-                description={tutorial.description}
-                category={tutorial.category}
-                level={tutorial.level}
-                date={tutorial.date}
-                author={tutorial.author}
-            />
+            <TutorialHeader tutorial={tutorial} />
 
             {/* Tutorial image */}
             {tutorial.imageUrl && (
                 <div className="relative h-64 sm:h-96 rounded-lg overflow-hidden mb-8">
                     <Image
-                        src={tutorial.imageUrl}
+                        src={tutorial.imageUrl || "/placeholder.svg"}
                         alt={tutorial.title}
                         fill
-                        sizes="(max-width: 768px) 100vw, 768px"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 768px, 1024px"
                         className="object-cover"
                         priority
                     />
@@ -94,18 +99,40 @@ export default function TutorialDetailPage({ params }: { params: { slug: string 
 
             {/* Tags */}
             {tutorial.tags && tutorial.tags.length > 0 && (
-                <div className="mb-8">
-                    <h3 className="text-lg font-semibold mb-2">Etiquetas:</h3>
+                <div className="mb-12">
+                    <h3 className="text-lg font-semibold mb-3 text-text-primary">Etiquetas:</h3>
                     <div className="flex flex-wrap gap-2">
                         {tutorial.tags.map((tag) => (
                             <span
                                 key={tag}
-                                className="bg-neutral-100 px-3 py-1 rounded-full text-sm text-secondary"
+                                className="bg-neutral-100 dark:bg-neutral-800 px-3 py-1 rounded-full text-sm text-text-secondary"
                             >
                                 {tag}
                             </span>
                         ))}
                     </div>
+                </div>
+            )}
+
+            {/* Author bio */}
+            {tutorial.author.bio && (
+                <div className="mb-12 p-6 bg-neutral-50 dark:bg-neutral-800 rounded-lg">
+                    <div className="flex items-center gap-4 mb-4">
+                        {tutorial.author.avatar && (
+                            <Image
+                                src={tutorial.author.avatar || "/placeholder.svg"}
+                                alt={tutorial.author.name}
+                                width={64}
+                                height={64}
+                                className="rounded-full"
+                            />
+                        )}
+                        <div>
+                            <h3 className="text-lg font-bold text-text-primary">Sobre el autor</h3>
+                            <p className="text-text-secondary">{tutorial.author.name}</p>
+                        </div>
+                    </div>
+                    <p className="text-text-secondary">{tutorial.author.bio}</p>
                 </div>
             )}
 

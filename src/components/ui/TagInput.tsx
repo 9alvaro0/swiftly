@@ -44,7 +44,7 @@ const TagInput = ({ label, tags, onAddTag, onRemoveTag, id }: TagInputProps) => 
                     value={currentTag}
                     onChange={(e) => setCurrentTag(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className="w-full p-2 border border-neutral-300 bg-white rounded-l-md focus:ring-2 focus:ring-primary focus:outline-none"
+                    className="w-full p-2 border border-neutral-300 rounded-l-md focus:ring-2 focus:ring-primary focus:outline-none"
                     placeholder="Añadir etiqueta"
                 />
                 <Button
