@@ -25,6 +25,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "introduccion-swiftui",
             readTime: 10,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "2",
@@ -44,6 +46,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "swift-concurrency",
             readTime: 12,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "3",
@@ -63,6 +67,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "core-data-swiftui",
             readTime: 15,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "4",
@@ -82,6 +88,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "swift-package-manager",
             readTime: 10,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "5",
@@ -101,6 +109,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "swiftui-animations",
             readTime: 9,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "6",
@@ -120,6 +130,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "combine-framework",
             readTime: 14,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         // Nuevos tutoriales
         {
@@ -140,6 +152,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "gestion-estado-swiftui",
             readTime: 11,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "8",
@@ -159,6 +173,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "protocolos-swift",
             readTime: 13,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "9",
@@ -178,6 +194,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "notificaciones-push-ios",
             readTime: 16,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "10",
@@ -197,6 +215,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "swift-ui-testing",
             readTime: 14,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "11",
@@ -216,6 +236,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "mvvm-swiftui",
             readTime: 12,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "12",
@@ -236,6 +258,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "localizacion-ios",
             readTime: 9,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "13",
@@ -255,6 +279,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "mapkit-swiftui",
             readTime: 11,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "14",
@@ -274,6 +300,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "widgets-ios",
             readTime: 15,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "15",
@@ -293,6 +321,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "userdefaults-ios",
             readTime: 7,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "16",
@@ -312,6 +342,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "swift-charts",
             readTime: 10,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "17",
@@ -331,6 +363,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "extensiones-ios",
             readTime: 13,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "18",
@@ -350,6 +384,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "animaciones-avanzadas-swiftui",
             readTime: 16,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "19",
@@ -369,6 +405,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "accesibilidad-ios",
             readTime: 11,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "20",
@@ -388,6 +426,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "macos-swiftui",
             readTime: 14,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "21",
@@ -407,6 +447,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "swift-macros",
             readTime: 17,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "22",
@@ -426,6 +468,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "visionos-development",
             readTime: 18,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "23",
@@ -445,6 +489,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "watchos-development",
             readTime: 12,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
         {
             id: "24",
@@ -464,6 +510,8 @@ export async function fetchTutorials(limit = 6): Promise<Tutorial[]> {
             isPublished: true,
             slug: "firebase-ios",
             readTime: 15,
+            createdAt: "2024-04-01T00:00:00Z",
+            updatedAt: "2024-04-10T00:00:00Z",
         },
     ];
 

@@ -96,7 +96,7 @@ export default function CourseDetailPage({ params }: { params: { slug: string } 
                     {/* Cabecera del curso */}
                     <div>
                         <div className="flex items-center gap-2 mb-2">
-                            <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                            <span className=" text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
                                 {course.level}
                             </span>
                             <span className="text-sm text-gray-500">Última actualización: {course.updated}</span>
@@ -155,7 +155,7 @@ export default function CourseDetailPage({ params }: { params: { slug: string } 
                     </div>
 
                     {/* Contenido del curso */}
-                    <div className="bg-white rounded-lg border shadow-sm p-6">
+                    <div className="rounded-lg border shadow-sm p-6">
                         <h2 className="text-2xl font-bold mb-6">Contenido del curso</h2>
 
                         <div className="mb-4">
@@ -255,7 +255,7 @@ export default function CourseDetailPage({ params }: { params: { slug: string } 
                         <h2 className="text-2xl font-bold mb-4">Sobre el instructor</h2>
                         <div className="flex flex-col md:flex-row gap-6 items-start">
                             <div className="md:w-1/4 flex-shrink-0">
-                                <div className="h-32 w-32 bg-gray-200 rounded-full"></div>
+                                <div className="h-32 w-32 rounded-full"></div>
                             </div>
                             <div className="md:w-3/4">
                                 <h3 className="text-xl font-bold mb-2">{course.instructor.name}</h3>
@@ -283,7 +283,7 @@ export default function CourseDetailPage({ params }: { params: { slug: string } 
 
                 {/* Sidebar */}
                 <div className="lg:col-span-1">
-                    <div className="bg-white rounded-lg border shadow-sm p-6 sticky top-24">
+                    <div className="rounded-lg border shadow-sm p-6 sticky top-24">
                         <div className="h-48 bg-gray-200 mb-4 rounded"></div>
 
                         <div className="mb-4">

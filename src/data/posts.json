@@ -1,0 +1,52 @@
+[
+    {
+        "id": "1",
+        "title": "Novedades de Swift 6: Concurrencia Mejorada",
+        "slug": "novedades-swift-6-concurrencia",
+        "date": "2025-04-12",
+        "excerpt": "Exploramos las nuevas características de manejo de concurrencia que simplifican el desarrollo de aplicaciones Swift multiplataforma.",
+        "image": "/images/tutorials/swiftui-intro.jpg",
+        "tag": "Desarrollo",
+        "readTime": "5 min",
+        "author": {
+            "name": "Carlos Ruiz",
+            "avatar": "/images/authors/alvaro.jpg"
+        },
+        "content": [
+            {
+                "type": "paragraph",
+                "text": "La concurrencia en Swift 6 introduce mejoras significativas en el manejo de tareas asíncronas y paralelas."
+            },
+            {
+                "type": "code",
+                "language": "swift",
+                "code": "async function fetchData() {\n    let result = await networkCall()\n    return result\n}"
+            }
+        ]
+    },
+    {
+        "id": "2",
+        "title": "Introducción a SwiftUI: Construyendo Interfaces Modernas",
+        "slug": "introduccion-swiftui-interfaces-modernas",
+        "date": "2025-03-28",
+        "excerpt": "Una guía paso a paso para comenzar con SwiftUI y crear interfaces de usuario elegantes y responsivas.",
+        "image": "/images/tutorials/swiftui-intro.jpg",
+        "tag": "Tutorial",
+        "readTime": "7 min",
+        "author": {
+            "name": "Laura Gómez",
+            "avatar": "/images/authors/alvaro.jpg"
+        },
+        "content": [
+            {
+                "type": "paragraph",
+                "text": "SwiftUI revoluciona la forma en que construimos interfaces de usuario en iOS, macOS, watchOS y tvOS."
+            },
+            {
+                "type": "code",
+                "language": "swift",
+                "code": "struct ContentView: View {\n    var body: some View {\n        Text(\"Hola, SwiftUI!\")\n    }\n}"
+            }
+        ]
+    }
+]
