@@ -1,56 +1,84 @@
 // src/types/Post.ts
 
-export type ContentBlock =
-    | { type: "paragraph"; text: string }
-    | { type: "code"; language: string; code: string }
-    | { type: "heading"; level: 1 | 2 | 3; text: string }
-    | { type: "list"; items: string[] }
-    | { type: "image"; src: string; alt: string; caption?: string };
-
 export interface Post {
+    // Identificadores
     id: string;
-    title: string;
     slug: string;
-    date: string;
-    excerpt: string;
-    image: string;
-    tag: string;
-    readTime?: string;
-    author: {
-        name: string;
-        avatar: string;
-    };
-    content: ContentBlock[];
-    relatedPosts?: string[];
-    keywords?: string[];
-    type: "post" | "tutorial" | "course";
-}
 
-export interface Course {
-    price: number;
-    duration: string;
-    level: string;
+    // Contenido principal
+    title: string;
     description: string;
-    prerequisites: string[];
-    curriculum: string[];
-    projects: string[];
-    testimonials: string[];
-    resources: string[];
-    reviews: string[];
-    
+    content: string;
 
-    lessons: Lessons[]
-    posts: Post[];
+    // Metadatos de publicación
+    createdAt: Date;
+    updatedAt: Date;
+    publishedAt?: Date;
+    isPublished: boolean;
+
+    // Categorización
+    category: PostCategory;
+    tags: string[];
+    level: PostLevel;
+    type: PostType;
+
+    // Multimedia
+    imageUrl: string;
+    images?: string[];
+    coverImage?: string;
+
+    // Información de lectura
+    readTime?: number; // en minutos
+    wordCount?: number;
+
+    // Autor
+    author: Author; 
+
+    // SEO y discoverability
+    keywords?: string[];
+    metaDescription?: string;
+
+    // Relaciones
+    relatedPosts?: Pick<Post, "id" | "title" | "slug">[];
+
+    // Interacción
+    views?: number;
+    likes?: number;
+    comments?: number;
+
+    // Opciones adicionales
+    draft?: boolean;
+    featured?: boolean;
+    language?: string;
 }
 
-export interface Lessons {
+// Interfaz para el autor
+export interface Author {
     id: string;
-    title: string;
-    slug: string;
-    date: string;
-    excerpt: string;
-    image: string;
-    tag: string;
-    readTime?: string;
-    posts: Post[];
+    name: string;
+    username?: string;
+    avatar?: string;
+    bio?: string;
+    socialLinks?: {
+        twitter?: string;
+        github?: string;
+        linkedin?: string;
+    };
 }
+
+// Enums para tipos
+export type PostCategory =
+    | "Swift"
+    | "SwiftUI"
+    | "Xcode"
+    | "iOS"
+    | "macOS"
+    | "Frameworks"
+    | "visionOS"
+    | "Arquitectura"
+    | "Testing"
+    | "watchOS";
+
+export type PostLevel = "Principiante" | "Intermedio" | "Avanzado";
+
+export type PostType = "article" | "tutorial" | "course" | "guide" | "snippets";

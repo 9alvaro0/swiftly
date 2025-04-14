@@ -1,6 +1,7 @@
 // src/app/posts/page.tsx
+
 import PostGrid from "@/components/posts/PostGrid";
-import { getAllPosts } from "@/services/postService";
+import { useArticles } from "@/hooks/usePosts";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,16 +10,16 @@ export const metadata: Metadata = {
 };
 
 export default function PostsPage() {
-    const posts = getAllPosts();
+   const { posts: articles, isLoading, error } = useArticles();
 
     return (
         <div className="container mx-auto px-4 py-12">
             <h1 className="text-4xl font-bold mb-8">Todas las Publicaciones</h1>
             <div className="space-y-8">
                 <div className="flex items-center justify-between mb-6">
-                    <p className="text-gray-600">{posts.length} publicaciones disponibles</p>
+                    <p className="text-gray-600">{articles.length} publicaciones disponibles</p>
                 </div>
-                <PostGrid posts={posts} />
+                <PostGrid posts={articles} />
             </div>
         </div>
     );

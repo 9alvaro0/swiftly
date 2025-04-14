@@ -17,7 +17,7 @@ export default function RelatedTutorials({ tutorials }: RelatedTutorialsProps) {
                 {tutorials.map((tutorial) => (
                     <Link
                         key={tutorial.id}
-                        href={`/tutoriales/${tutorial.slug}`}
+                        href={`/tutorials/${tutorial.slug}`}
                         className="group"
                     >
                         <div className="bg-surface rounded-lg shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md h-full">

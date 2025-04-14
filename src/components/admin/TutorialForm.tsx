@@ -11,7 +11,7 @@ import TagInput from "@/components/ui/TagInput";
 import TutorialContent from "@/components/tutorials/TutorialContent";
 import { ImageUploader, UploadedImagesList } from "@/components/admin/ImageUploader";
 import { CATEGORY_OPTIONS, LEVEL_OPTIONS, CODE_SNIPPETS } from "@/constants/tutorial";
-import { useTutorialForm } from "@/hooks/useTutorialForm";
+import { useTutorialForm } from "@/hooks/usePostForm";
 
 interface TutorialFormProps {
     isEdit?: boolean;

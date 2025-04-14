@@ -1,23 +1,32 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Clock } from "lucide-react";
-import { Tutorial } from "@/types/Tutorial";
+import type { Post } from "@/types/Post";
 
 type TutorialCardProps = {
-    tutorial: Tutorial;
+    tutorial: Post;
 };
 
 export default function TutorialCard({ tutorial }: TutorialCardProps) {
     return (
         <Link
-            href={`/tutoriales/${tutorial.slug}`}
-            className="group"
+            href={`/tutorials/${tutorial.slug}`}
+            className="group block h-full"
         >
-            <article className="bg-surface rounded-lg shadow-sm overflow-hidden h-full transition-all duration-200 hover:shadow-md">
-                <div className="h-48 relative bg-neutral-200 dark:bg-neutral-800 overflow-hidden">
+            <article className="bg-surface rounded-lg shadow-sm overflow-hidden h-full grid grid-rows-[192px_auto_60px] transition-all duration-200 hover:shadow-md">
+                {/* Image section - fixed height */}
+                <div className="relative bg-neutral-200 dark:bg-neutral-800 overflow-hidden">
                     {tutorial.imageUrl ? (
                         <Image
                             src={tutorial.imageUrl || "/placeholder.svg"}
+                            alt={tutorial.title}
+                            fill
+                            className="object-cover transition-transform duration-300 group-hover:scale-105"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
+                    ) : tutorial.coverImage ? (
+                        <Image
+                            src={tutorial.coverImage || "/placeholder.svg"}
                             alt={tutorial.title}
                             fill
                             className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -40,10 +49,12 @@ export default function TutorialCard({ tutorial }: TutorialCardProps) {
                     </div>
                 </div>
 
-                <div className="p-5">
-                    <div className="flex items-center text-text-secondary text-sm mb-3">
-                        <time dateTime={tutorial.date}>
-                            {new Date(tutorial.date).toLocaleDateString("es-ES", {
+                {/* Content area with fixed structure */}
+                <div className="p-5 flex flex-col">
+                    {/* Date and read time - fixed height */}
+                    <div className="flex items-center text-text-secondary text-sm h-5 mb-3">
+                        <time dateTime={tutorial.createdAt.toISOString()}>
+                            {tutorial.createdAt.toLocaleDateString("es-ES", {
                                 year: "numeric",
                                 month: "long",
                                 day: "numeric",
@@ -59,13 +70,18 @@ export default function TutorialCard({ tutorial }: TutorialCardProps) {
                         </span>
                     </div>
 
-                    <h3 className="font-bold text-lg mb-2 text-text-primary group-hover:text-primary transition-colors">
+                    {/* Title - fixed height with line clamp */}
+                    <h3 className="font-bold text-lg h-14 mb-2 line-clamp-2 text-text-primary group-hover:text-primary transition-colors flex items-center">
                         {tutorial.title}
                     </h3>
 
-                    <p className="text-text-secondary mb-4 line-clamp-2">{tutorial.description}</p>
+                    {/* Description - fixed height with line clamp */}
+                    <p className="text-text-secondary line-clamp-2 h-12">{tutorial.description}</p>
+                </div>
 
-                    <div className="flex justify-between items-center">
+                {/* Footer - fixed height */}
+                <div className="p-5 border-t border-gray-100 dark:border-gray-800 flex items-center">
+                    <div className="flex justify-between items-center w-full">
                         <div className="text-primary font-medium group-hover:underline">Leer tutorial →</div>
 
                         <div className="flex items-center">
@@ -78,7 +94,7 @@ export default function TutorialCard({ tutorial }: TutorialCardProps) {
                                     className="rounded-full mr-2"
                                 />
                             )}
-                            <span className="text-sm text-text-secondary">{tutorial.author?.name}</span>
+                            <span className="text-sm text-text-secondary">{tutorial.author.name}</span>
                         </div>
                     </div>
                 </div>

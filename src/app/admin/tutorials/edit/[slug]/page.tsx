@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchTutorialBySlug } from "@/services/api";
+import { fetchTutorialBySlug } from "@/services/tutorialService";
 import TutorialForm from "@/components/admin/TutorialForm";
 import { Tutorial } from "@/types/Tutorial";
 

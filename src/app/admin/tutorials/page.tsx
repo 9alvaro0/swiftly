@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Tag } from "lucide-react";
 import TutorialCard from "@/components/admin/TutorialCard";
 import { useSearchParams } from "next/navigation";
-import { useTutorials } from "@/hooks/useTutorials";
+import { useTutorials } from "@/hooks/usePosts";
 
 export default function AdminTutorialsPage() {
     const searchParams = useSearchParams();

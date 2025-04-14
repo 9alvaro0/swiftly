@@ -13,7 +13,7 @@ export default function PostGrid({ posts, featuredPostIndex = 0 }: PostGridProps
             {posts.map((post, index) => (
                 <PostCard
                     key={post.id}
-                    {...post}
+                    post= {post}
                     variant={index === featuredPostIndex ? "featured" : "default"}
                 />
             ))}

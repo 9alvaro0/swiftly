@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Card, { CardBody, CardTitle } from "@/components/ui/Card";
 import { BarChartIcon, FileTextIcon, FilePenLineIcon } from "@/components/icons";
-import { useTutorials } from "@/hooks/useTutorials";
+import { useTutorials } from "@/hooks/usePosts";
 
 export default function () {
     const { stats, isLoading } = useTutorials();

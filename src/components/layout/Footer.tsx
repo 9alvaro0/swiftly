@@ -1,150 +1,130 @@
+// src/components/layout/Footer.tsx
 import React from "react";
-import Link from "next/link";
+import Image from "next/image";
+import FooterColumn from "./footer/FooterColumn";
+import FooterLink from "./footer/FooterLink";
+import FooterLinkList from "./footer/FooterLinkList";
+import FooterSocialLinks from "./footer/FooterSocialLinks";
+
+// Enlaces del footer organizados por secciones
+const footerLinks = {
+    explorar: [
+        { title: "Inicio", href: "/" },
+        { title: "Tutoriales", href: "/tutorials" },
+        { title: "Recursos", href: "/recursos" },
+        { title: "Blog", href: "/blog" },
+    ],
+    categorias: [
+        { title: "Swift", href: "/categoria/swift" },
+        { title: "SwiftUI", href: "/categoria/swiftui" },
+        { title: "Xcode", href: "/categoria/xcode" },
+        { title: "Frameworks", href: "/categoria/frameworks" },
+    ],
+    recursos: [
+        { title: "Guía de Swift", href: "/guia-swift" },
+        { title: "Glosario", href: "/glosario" },
+        { title: "Preguntas frecuentes", href: "/faq" },
+    ],
+};
 
 const Footer = () => {
     return (
-        <footer className="bg-surface py-10">
-            <div className="container mx-auto px-4">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                    <div>
-                        <h3 className="font-bold text-lg mb-4 text-primary">Swiftly</h3>
-                        <p className="text-secondary">
-                            Tu recurso para aprender Swift y SwiftUI con tutoriales prácticos y actualizados.
-                        </p>
+        <footer className="bg-surface border-t border-neutral-200 dark:border-neutral-800">
+            {/* Parte superior del footer con el logo y el call-to-action */}
+            <div className="container mx-auto px-4 py-10">
+                <div className="flex flex-col md:flex-row justify-between items-center py-6 border-b border-neutral-200 dark:border-neutral-800 mb-8">
+                    <div className="flex items-center space-x-2 mb-4 md:mb-0">
+                        <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="text-primary"
+                        >
+                            <path
+                                d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
+                                strokeWidth="2"
+                                stroke="currentColor"
+                                fill="none"
+                            />
+                            <path
+                                d="M15.5 9L10.5 14L8.5 12"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                stroke="currentColor"
+                            />
+                        </svg>
+                        <span className="text-xl font-bold tracking-tight text-primary">Swiftly</span>
                     </div>
-
-                    <div>
-                        <h3 className="font-bold mb-4 text-primary">Explorar</h3>
-                        <ul className="space-y-2">
-                            <li>
-                                <Link
-                                    href="/"
-                                    className="text-secondary hover:text-primary transition-colors"
-                                >
-                                    Inicio
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/tutoriales"
-                                    className="text-secondary hover:text-primary transition-colors"
-                                >
-                                    Tutoriales
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/recursos"
-                                    className="text-secondary hover:text-primary transition-colors"
-                                >
-                                    Recursos
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/blog"
-                                    className="text-secondary hover:text-primary transition-colors"
-                                >
-                                    Blog
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/admin"
-                                    className="text-secondary hover:text-primary transition-colors"
-                                >
-                                    Admin
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h3 className="font-bold mb-4 text-primary">Categorías</h3>
-                        <ul className="space-y-2">
-                            <li>
-                                <Link
-                                    href="/categoria/swift"
-                                    className="text-secondary hover:text-primary transition-colors"
-                                >
-                                    Swift
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/categoria/swiftui"
-                                    className="text-secondary hover:text-primary transition-colors"
-                                >
-                                    SwiftUI
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/categoria/xcode"
-                                    className="text-secondary hover:text-primary transition-colors"
-                                >
-                                    Xcode
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/categoria/frameworks"
-                                    className="text-secondary hover:text-primary transition-colors"
-                                >
-                                    Frameworks
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h3 className="font-bold mb-4 text-primary">Conectar</h3>
-                        <ul className="space-y-2">
-                            <li>
-                                <a
-                                    href="https://twitter.com/swiftly"
-                                    className="text-secondary hover:text-primary transition-colors"
-                                >
-                                    Twitter
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="https://github.com/swiftly"
-                                    className="text-secondary hover:text-primary transition-colors"
-                                >
-                                    GitHub
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="mailto:info@swiftly.dev"
-                                    className="text-secondary hover:text-primary transition-colors"
-                                >
-                                    Contacto
-                                </a>
-                            </li>
-                        </ul>
+                    <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                        <span className="text-secondary">¿Tienes alguna pregunta?</span>
+                        <a
+                            href="mailto:info@swiftly.dev"
+                            className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition-colors flex items-center space-x-1"
+                        >
+                            <span>Contáctanos</span>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                <path d="M5 12h14"></path>
+                                <path d="m12 5 7 7-7 7"></path>
+                            </svg>
+                        </a>
                     </div>
                 </div>
 
-                <div className="border-t border-neutral-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-                    <p className="text-secondary">
+                {/* Columnas de enlaces del footer */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <FooterColumn title="Sobre Swiftly">
+                        <p className="text-secondary mb-4">
+                            Tu recurso principal para aprender Swift y SwiftUI. Tutoriales actualizados, ejemplos
+                            prácticos y recursos para todos los niveles.
+                        </p>
+                        <FooterSocialLinks />
+                    </FooterColumn>
+
+                    <FooterColumn title="Explorar">
+                        <FooterLinkList>
+                            {footerLinks.explorar.map((link) => (
+                                <li key={link.href}>
+                                    <FooterLink href={link.href}>{link.title}</FooterLink>
+                                </li>
+                            ))}
+                        </FooterLinkList>
+                    </FooterColumn>
+
+                    <FooterColumn title="Categorías">
+                        <FooterLinkList>
+                            {footerLinks.categorias.map((link) => (
+                                <li key={link.href}>
+                                    <FooterLink href={link.href}>{link.title}</FooterLink>
+                                </li>
+                            ))}
+                        </FooterLinkList>
+                    </FooterColumn>
+                </div>
+            </div>
+
+            {/* Parte inferior del footer con copyright y enlaces legales */}
+            <div className="border-t border-neutral-200 dark:border-neutral-800 py-6 bg-surface-secondary">
+                <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+                    <p className="text-secondary text-sm">
                         © {new Date().getFullYear()} Swiftly. Todos los derechos reservados.
                     </p>
-                    <div className="flex space-x-4 mt-4 md:mt-0">
-                        <a
-                            href="/privacidad"
-                            className="text-secondary hover:text-primary transition-colors"
-                        >
-                            Política de privacidad
-                        </a>
-                        <a
-                            href="/terminos"
-                            className="text-secondary hover:text-primary transition-colors"
-                        >
-                            Términos de uso
-                        </a>
+                    <div className="flex space-x-6 mt-4 md:mt-0">
+                        <FooterLink href="/privacidad">Política de privacidad</FooterLink>
+                        <FooterLink href="/terminos">Términos de uso</FooterLink>
+                        <FooterLink href="/cookies">Cookies</FooterLink>
                     </div>
                 </div>
             </div>

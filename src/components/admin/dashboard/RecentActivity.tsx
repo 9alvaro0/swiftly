@@ -3,7 +3,7 @@
 "use client";
 
 import Link from "next/link";
-import { useTutorials } from "@/hooks/useTutorials";
+import { useTutorials } from "@/hooks/usePosts";
 
 export default function RecentActivity() {
     const { tutorials, isLoading } = useTutorials();

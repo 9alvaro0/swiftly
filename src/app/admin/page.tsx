@@ -6,7 +6,7 @@ import PerformanceChart from "@/components/admin/dashboard/PerformanceChart";
 import UserStats from "@/components/admin/dashboard/UserStats";
 import TutorialStatsCards from "@/components/admin/dashboard/TutorialStatsCards";
 import Loading from "@/app/admin/loading";
-import { useTutorials } from "@/hooks/useTutorials";
+import { useTutorials } from "@/hooks/usePosts";
 
 export default function AdminDashboardPage() {
     const { isLoading } = useTutorials();

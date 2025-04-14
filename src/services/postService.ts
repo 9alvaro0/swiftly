@@ -1,66 +1,69 @@
 // src/services/postService.ts
-import { Post, ContentBlock } from "@/types/Post";
+import { Post } from "@/types/Post";
 import postsData from "@/data/posts.json";
 
-function mapToPostType(postData: any): Post {
-    return {
-        id: postData.id,
-        title: postData.title,
-        slug: postData.slug,
-        date: postData.date,
-        excerpt: postData.excerpt,
-        image: postData.image,
-        tag: postData.tag,
-        readTime: postData.readTime || "5 min",
-        author: {
-            name: postData.author.name,
-            avatar: postData.author.avatar,
-        },
-        content: postData.content.map(mapContentBlock),
-        relatedPosts: postData.relatedPosts || [],
-        keywords: postData.keywords || [],
-    };
-}
+export const PostService = {
+    // Obtener todos los posts
+    async fetchPosts(): Promise<Post[]> {
+        // Simular una llamada asíncrona
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
-function mapContentBlock(block: any): ContentBlock {
-    switch (block.type) {
-        case "paragraph":
-            return { type: "paragraph", text: block.text };
-        case "code":
-            return {
-                type: "code",
-                language: block.language,
-                code: block.code,
-            };
-        case "heading":
-            return {
-                type: "heading",
-                level: block.level,
-                text: block.text,
-            };
-        case "list":
-            return {
-                type: "list",
-                items: block.items,
-            };
-        case "image":
-            return {
-                type: "image",
-                src: block.src,
-                alt: block.alt,
-                caption: block.caption,
-            };
-        default:
-            throw new Error(`Unsupported content block type: ${block.type}`);
-    }
-}
+        return postsData.map((post) => ({
+            ...post,
+            createdAt: new Date(post.createdAt),
+            updatedAt: new Date(post.updatedAt),
+            publishedAt: post.publishedAt ? new Date(post.publishedAt) : null,
+        })) as Post[];
+    },
 
-export function getAllPosts(): Post[] {
-    return postsData.map(mapToPostType).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-}
+    // Obtener post por slug
+    async fetchPostBySlug(slug: string): Promise<Post | null> {
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
-export function getPostBySlug(slug: string): Post | undefined {
-    const foundPost = postsData.find((post) => post.id === slug || post.slug === slug);
+        const post = postsData.find((p) => p.slug === slug);
+        return post
+            ? ({
+                  ...post,
+                  createdAt: new Date(post.createdAt),
+                  updatedAt: new Date(post.updatedAt),
+                  publishedAt: post.publishedAt ? new Date(post.publishedAt) : null,
+              } as Post)
+            : null;
+    },
 
-    return foundPost ? mapToPostType(foundPost) : undefined;
-}
+    // Métodos mock para mantener la interfaz
+    async createPost(postData: Partial<Post>): Promise<Post> {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        const newPost: Post = {
+            ...postData,
+            id: Date.now().toString(),
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            isPublished: postData.isPublished ?? true,
+        } as Post;
+
+        // En un escenario real, esto se haría en el backend
+        return newPost;
+    },
+
+    async updatePost(id: string, postData: Partial<Post>): Promise<Post> {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        const post = postsData.find((p) => p.id === id);
+        if (!post) throw new Error("Post not found");
+
+        return {
+            ...post,
+            ...postData,
+            updatedAt: new Date(),
+        } as Post;
+    },
+
+    async deletePost(id: string): Promise<void> {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        // Mock de eliminación
+        console.log(`Post ${id} eliminado`);
+    },
+};

@@ -1,7 +1,7 @@
 import TutorialHeaderSkeleton from "@/components/tutorials/skeletons/TutorialHeaderSkeleton";
 import TutorialContentSkeleton from "@/components/tutorials/skeletons/TutorialContentSkeleton";
 
-export default function Loading() {
+export default function TutorialDetailSkeleton() {
     return (
         <div className="py-12 px-4 md:px-6 max-w-4xl mx-auto">
             {/* Breadcrumbs skeleton */}
