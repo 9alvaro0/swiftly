@@ -1,26 +1,108 @@
 // src/app/posts/page.tsx
 
-import PostGrid from "@/components/posts/PostGrid";
-import { useArticles } from "@/hooks/usePosts";
-import { Metadata } from "next";
+'use client';
 
-export const metadata: Metadata = {
-    title: "Todos los Posts | Swift Academy",
-    description: "Explora nuestra biblioteca de tutoriales y artículos sobre Swift y desarrollo iOS",
-};
+import { useState, useCallback, useEffect } from "react";
+import { PostCategory, PostLevel } from "@/types/Post";
+import { usePosts } from "@/hooks/usePosts";
+import PostsHeader from "@/components/posts/PostsHeader";
+import PostsFilters from "@/components/posts/PostsFilters";
+import PostsList from "@/components/posts/PostsList";
+import PostsSkeleton from "@/components/posts/skeletons/PostsSkeleton";
 
 export default function PostsPage() {
-   const { posts: articles, isLoading, error } = useArticles();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [showFilters, setShowFilters] = useState(false);
+    const itemsPerPage = 9;
+
+    const [categoryFilter, setCategoryFilter] = useState<PostCategory | "">("");
+    const [levelFilter, setLevelFilter] = useState<PostLevel | "">("");
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const {
+        posts,
+        stats,
+        isLoading,
+        error,
+        filters,
+        updateFilters,
+        resetFilters
+    } = usePosts({ type: "article" });
+
+    const applyFilters = useCallback(() => {
+        updateFilters({
+            category: categoryFilter || undefined,
+            level: levelFilter || undefined,
+            searchTerm: searchQuery || undefined,
+        });
+    }, [categoryFilter, levelFilter, searchQuery, updateFilters]);
+
+    useEffect(() => {
+        applyFilters();
+    }, [applyFilters]);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [filters]);
+
+    const handlePageChange = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+        window.scrollTo(0, 0);
+    };
+
+    const clearFilters = () => {
+        setCategoryFilter("");
+        setLevelFilter("");
+        setSearchQuery("");
+        resetFilters();
+    };
+
+    const hasActiveFilters = Boolean(categoryFilter || levelFilter || searchQuery);
+
+    const categories = Object.keys(stats.postsByCategory || {});
+
+    if (isLoading) {
+        return <PostsSkeleton />;
+    }
+
+    if (error) {
+        return (
+            <section className="container mx-auto px-4 py-12">
+                <div className="container mx-auto px-4">
+                    <p className="text-red-500 text-lg mb-4">Error al cargar los artículos: {error.message}</p>
+                </div>
+            </section>
+        );
+    }
 
     return (
-        <div className="container mx-auto px-4 py-12">
-            <h1 className="text-4xl font-bold mb-8">Todas las Publicaciones</h1>
-            <div className="space-y-8">
-                <div className="flex items-center justify-between mb-6">
-                    <p className="text-gray-600">{articles.length} publicaciones disponibles</p>
-                </div>
-                <PostGrid posts={articles} />
+        <div className="py-12 px-4 md:px-6 max-w-7xl mx-auto">
+            <div className="space-y-6 mb-10">
+                <PostsHeader />
+
+                <PostsFilters
+                    searchQuery={searchQuery}
+                    categoryFilter={categoryFilter}
+                    levelFilter={levelFilter}
+                    categories={categories}
+                    showFilters={showFilters}
+                    hasActiveFilters={hasActiveFilters}
+                    onSearchChange={setSearchQuery}
+                    onCategoryChange={setCategoryFilter}
+                    onLevelChange={setLevelFilter}
+                    onToggleFilters={() => setShowFilters(!showFilters)}
+                    onClearFilters={clearFilters}
+                />
             </div>
+
+            <PostsList
+                posts={posts}
+                currentPage={currentPage}
+                itemsPerPage={itemsPerPage}
+                onPageChange={handlePageChange}
+                hasActiveFilters={hasActiveFilters}
+                onClearFilters={clearFilters}
+            />
         </div>
     );
 }

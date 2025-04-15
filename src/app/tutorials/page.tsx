@@ -1,9 +1,10 @@
 // src/app/tutorials/page.tsx
+
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { PostCategory, PostLevel } from "@/types/Post";
-import { useTutorials } from "@/hooks/useTutorials";
+import { usePosts } from "@/hooks/usePosts";
 import TutorialsHeader from "@/components/tutorials/TutorialsHeader";
 import TutorialsFilters from "@/components/tutorials/TutorialsFilters";
 import TutorialsList from "@/components/tutorials/TutorialsList";
@@ -19,16 +20,15 @@ export default function TutorialsPage() {
     const [searchQuery, setSearchQuery] = useState("");
 
     const {
-        tutorials: filteredTutorials,
+        posts: tutorials,
         stats,
         isLoading,
         error,
         filters,
         updateFilters,
         resetFilters,
-    } = useTutorials();
+    } = usePosts({ type: "tutorial" });
 
-    // Definimos una función memoizada para aplicar los filtros
     const applyFilters = useCallback(() => {
         updateFilters({
             category: categoryFilter || undefined,
@@ -37,23 +37,19 @@ export default function TutorialsPage() {
         });
     }, [categoryFilter, levelFilter, searchQuery, updateFilters]);
 
-    // Usamos un efecto separado para aplicar los filtros
     useEffect(() => {
         applyFilters();
     }, [applyFilters]);
 
-    // Restablecer paginación cuando cambian los filtros
     useEffect(() => {
         setCurrentPage(1);
     }, [filters]);
 
-    // Cambiar de página
     const handlePageChange = (pageNumber: number) => {
         setCurrentPage(pageNumber);
         window.scrollTo(0, 0);
     };
 
-    // Limpiar todos los filtros
     const clearFilters = () => {
         setCategoryFilter("");
         setLevelFilter("");
@@ -61,11 +57,9 @@ export default function TutorialsPage() {
         resetFilters();
     };
 
-    // Verificar si hay filtros activos
     const hasActiveFilters = Boolean(categoryFilter || levelFilter || searchQuery);
 
-    // Obtener categorías únicas para el filtro
-    const categories = Object.keys(stats.tutorialsByCategory || {});
+    const categories = Object.keys(stats.postsByCategory || {});
 
     if (isLoading) {
         return <TutorialsSkeleton />;
@@ -102,7 +96,7 @@ export default function TutorialsPage() {
             </div>
 
             <TutorialsList
-                tutorials={filteredTutorials}
+                tutorials={tutorials}
                 currentPage={currentPage}
                 itemsPerPage={itemsPerPage}
                 onPageChange={handlePageChange}

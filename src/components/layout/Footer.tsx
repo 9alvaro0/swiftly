@@ -1,6 +1,5 @@
 // src/components/layout/Footer.tsx
-import React from "react";
-import Image from "next/image";
+
 import FooterColumn from "./footer/FooterColumn";
 import FooterLink from "./footer/FooterLink";
 import FooterLinkList from "./footer/FooterLinkList";
@@ -10,20 +9,16 @@ import FooterSocialLinks from "./footer/FooterSocialLinks";
 const footerLinks = {
     explorar: [
         { title: "Inicio", href: "/" },
+        { title: "Publicaciones", href: "/posts" },
         { title: "Tutoriales", href: "/tutorials" },
-        { title: "Recursos", href: "/recursos" },
-        { title: "Blog", href: "/blog" },
+        { title: "Cursos", href: "/courses" },
+        { title: "Contacto", href: "/contact" },
     ],
     categorias: [
         { title: "Swift", href: "/categoria/swift" },
         { title: "SwiftUI", href: "/categoria/swiftui" },
         { title: "Xcode", href: "/categoria/xcode" },
         { title: "Frameworks", href: "/categoria/frameworks" },
-    ],
-    recursos: [
-        { title: "Guía de Swift", href: "/guia-swift" },
-        { title: "Glosario", href: "/glosario" },
-        { title: "Preguntas frecuentes", href: "/faq" },
     ],
 };
 
@@ -57,29 +52,6 @@ const Footer = () => {
                             />
                         </svg>
                         <span className="text-xl font-bold tracking-tight text-primary">Swiftly</span>
-                    </div>
-                    <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
-                        <span className="text-secondary">¿Tienes alguna pregunta?</span>
-                        <a
-                            href="mailto:info@swiftly.dev"
-                            className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition-colors flex items-center space-x-1"
-                        >
-                            <span>Contáctanos</span>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="16"
-                                height="16"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
-                                <path d="M5 12h14"></path>
-                                <path d="m12 5 7 7-7 7"></path>
-                            </svg>
-                        </a>
                     </div>
                 </div>
 

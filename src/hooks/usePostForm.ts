@@ -12,7 +12,7 @@ export const usePostForm = ({ defaultValues = {}, onSubmit }: PostFormOptions = 
 
     const [post, setPost] = useState<Partial<Post>>({
         ...defaultValues,
-        type: defaultValues.type || "post", // Valor por defecto o el que venga
+        type: defaultValues.type,
     });
 
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -79,7 +79,7 @@ export const usePostForm = ({ defaultValues = {}, onSubmit }: PostFormOptions = 
         const updatedPost: Post = {
             ...(post as Post),
             id: postId,
-            type: post.type || "post",
+            type: post.type || "article",
             createdAt: post.createdAt || now,
             updatedAt: now,
             slug:

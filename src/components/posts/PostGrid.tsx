@@ -1,4 +1,5 @@
 // src/components/posts/PostGrid.tsx
+
 import { Post } from "@/types/Post";
 import PostCard from "./PostCard";
 

@@ -81,7 +81,7 @@ export default function CourseDetailPage({ params }: { params: { slug: string } 
             {/* Breadcrumbs */}
             <div className="text-sm mb-6">
                 <Link
-                    href="/cursos"
+                    href="/courses"
                     className="text-blue-600 hover:underline"
                 >
                     Cursos
@@ -271,7 +271,7 @@ export default function CourseDetailPage({ params }: { params: { slug: string } 
                             {course.relatedCourses.map((related) => (
                                 <Link
                                     key={related.id}
-                                    href={`/cursos/${related.id}`}
+                                    href={`/courses/${related.id}`}
                                     className="p-4 border rounded-lg hover:bg-blue-50 transition-colors"
                                 >
                                     <h3 className="font-medium">{related.title}</h3>

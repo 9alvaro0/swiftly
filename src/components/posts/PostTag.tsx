@@ -1,17 +1,19 @@
+import Link from "next/link";
+
 // src/components/posts/PostTag.tsx
 interface PostTagProps {
-    label: string;
-    className?: string;
+    tag: string;
 }
 
-export default function PostTag({ label, className = '' }: PostTagProps) {
+export default function PostTag({ tag }: PostTagProps) {
     return (
-        <span className={`
-            text-xs px-2 py-1 rounded-full 
-            bg-blue-100 text-blue-800
-            ${className}
-        `}>
-            {label}
-        </span>
+        <Link
+            key={tag}
+            href={`/tags/${tag.toLowerCase().replace(/\s+/g, "-")}`}
+        >
+            <span className="inline-block px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white/80 hover:text-white border border-white/10 rounded-full text-sm transition-all duration-200">
+                #{tag}
+            </span>
+        </Link>
     );
 }

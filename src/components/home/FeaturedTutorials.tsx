@@ -2,16 +2,13 @@
 
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-import { Clock } from "lucide-react";
-import { useTutorials } from "@/hooks/useTutorials";
+import { usePosts } from "@/hooks/usePosts";
 import FeaturedTutorialsSkeleton from "./skeletons/FeaturedTutorialsSkeleton";
 import SectionHeader from "../ui/SectionHeader";
 import TutorialCard from "../tutorials/TutorialCard";
 
 export default function FeaturedTutorials() {
-    const { tutorials, isLoading, error } = useTutorials();
+    const { posts: tutorials, isLoading, error } = usePosts({ type: "tutorial" });
 
     if (isLoading) {
         return (

@@ -1,38 +1,36 @@
-// src/components/tutorials/TutorialsList.tsx
+// src/components/posts/PostsList.tsx
 
-"use client";
-
+import React from "react";
 import { Post } from "@/types/Post";
-import TutorialCard from "@/components/tutorials/TutorialCard";
+import PostCard from "@/components/posts/PostCard";
 import Pagination from "@/components/ui/Pagination";
 
-interface TutorialsListProps {
-    tutorials: Post[];
+interface PostsListProps {
+    posts: Post[];
     currentPage: number;
     itemsPerPage: number;
-    onPageChange: (page: number) => void;
     hasActiveFilters: boolean;
+    onPageChange: (page: number) => void;
     onClearFilters: () => void;
 }
 
-export default function TutorialsList({
-    tutorials,
+const PostsList = ({
+    posts,
     currentPage,
     itemsPerPage,
-    onPageChange,
     hasActiveFilters,
+    onPageChange,
     onClearFilters,
-}: TutorialsListProps) {
+}: PostsListProps) => {
+    // Calcular índices para paginación
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentTutorials = tutorials.slice(indexOfFirstItem, indexOfLastItem);
+    const currentPosts = posts.slice(indexOfFirstItem, indexOfLastItem);
 
-    if (currentTutorials.length === 0) {
+    if (currentPosts.length === 0) {
         return (
             <div className="text-center py-16 bg-neutral-50 dark:bg-neutral-800 rounded-lg">
-                <p className="text-text-secondary text-lg mb-4">
-                    No se encontraron tutoriales con los filtros seleccionados.
-                </p>
+                <p className="text-text-secondary text-lg mb-4">No se encontraron artículos</p>
                 {hasActiveFilters && (
                     <div className="mt-4">
                         <p className="text-gray-600 mb-4">Prueba con otros criterios de búsqueda</p>
@@ -51,22 +49,21 @@ export default function TutorialsList({
     return (
         <>
             <div className="mb-4 text-text-secondary">
-                Mostrando {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, tutorials.length)} de {tutorials.length}{" "}
-                tutoriales
+                Mostrando {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, posts.length)} de {posts.length} tutoriales
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {currentTutorials.map((tutorial) => (
-                    <TutorialCard
-                        key={tutorial.slug}
-                        tutorial={tutorial}
+                {currentPosts.map((post) => (
+                    <PostCard
+                        key={post.id}
+                        post={post}
                     />
                 ))}
             </div>
 
-            {tutorials.length > 0 && (
+            {posts.length > 0 && (
                 <div className="flex justify-center pt-12">
                     <Pagination
-                        totalItems={tutorials.length}
+                        totalItems={posts.length}
                         itemsPerPage={itemsPerPage}
                         currentPage={currentPage}
                         onPageChange={onPageChange}
@@ -75,4 +72,6 @@ export default function TutorialsList({
             )}
         </>
     );
-}
+};
+
+export default PostsList;

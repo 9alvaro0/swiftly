@@ -5,24 +5,20 @@
 import { useState } from "react";
 import PostGrid from "@/components/posts/PostGrid";
 import Pagination from "../ui/Pagination";
-import { useArticles } from "@/hooks/usePosts";
+import { usePosts } from "@/hooks/usePosts";
 import LatestBlogPostsSkeleton from "./skeletons/LatestBlogPostsSkeleton";
 import SectionHeader from "../ui/SectionHeader";
 
 export default function LatestBlogPosts() {
-    // Obtener posts desde el servicio
-    const { posts: articles, isLoading, error } = useArticles();
+    const { posts: articles, isLoading, error } = usePosts({ type: "article" });
 
-    // Estados para la paginación
     const [currentPage, setCurrentPage] = useState(1);
     const POSTS_PER_PAGE = 6;
 
-    // Lógica de paginación
     const indexOfLastPost = currentPage * POSTS_PER_PAGE;
     const indexOfFirstPost = indexOfLastPost - POSTS_PER_PAGE;
     const currentPosts = articles.slice(indexOfFirstPost, indexOfLastPost);
 
-    // Función para cambiar de página
     const handlePageChange = (pageNumber: number) => {
         setCurrentPage(pageNumber);
     };

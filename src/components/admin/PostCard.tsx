@@ -1,17 +1,17 @@
-// src/components/admin/TutorialCard.tsx
+// src/components/admin/PostCard.tsx
 
 "use client";
 
 import { useState } from "react";
 import Link from "next/link";
-import { Tutorial } from "@/types/Tutorial";
+import { Post } from "@/types/Post";
 import { Trash2, Edit, Globe, EyeOff, Tag, Calendar } from "lucide-react";
 
 type Props = {
-    tutorial: Tutorial;
+    tutorial: Post;
 };
 
-export default function TutorialCard({ tutorial }: Props) {
+export default function PostCard({ tutorial }: Props) {
     const [isPublished, setIsPublished] = useState(tutorial.isPublished);
 
     const togglePublishStatus = () => {
@@ -46,7 +46,7 @@ export default function TutorialCard({ tutorial }: Props) {
                     </div>
                     <div className="flex items-center space-x-2">
                         <Calendar size={16} />
-                        <span>{tutorial.date}</span>
+                        {/* <span>{tutorial.date}</span> */}
                     </div>
                 </div>
                 <div className="mt-4 flex justify-between items-center">

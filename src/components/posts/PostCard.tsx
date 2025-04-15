@@ -1,7 +1,8 @@
 // src/components/posts/PostCard.tsx
+
 import Link from "next/link";
 import Image from "next/image";
-import PostTag from "./PostTag";
+import PostTag from "@/components/posts/PostTag";
 import { Post } from "@/types/Post";
 
 interface PostCardProps {
@@ -79,7 +80,7 @@ export default function PostCard({ post, variant = "default" }: PostCardProps) {
 
                 {post.category && (
                     <div className="absolute top-4 left-4">
-                        <PostTag label={post.category} />
+                        <PostTag tag={post.category} />
                     </div>
                 )}
 

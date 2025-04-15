@@ -1,4 +1,5 @@
 // src/constants/posts.ts
+
 import { PostCategory, PostType, PostLevel } from "@/types/Post";
 
 export const CATEGORY_OPTIONS: { value: PostCategory; label: string }[] = [

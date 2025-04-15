@@ -2,19 +2,19 @@
 
 import Link from "next/link";
 import { Tag } from "lucide-react";
-import TutorialCard from "@/components/admin/TutorialCard";
+import TutorialCard from "@/components/admin/PostCard";
 import { useSearchParams } from "next/navigation";
-import { useTutorials } from "@/hooks/usePosts";
+import { usePosts } from "@/hooks/usePosts";
 
 export default function AdminTutorialsPage() {
     const searchParams = useSearchParams();
     const status = searchParams.get("status");
 
-    const { tutorials, isLoading } = useTutorials();
+    const { posts, isLoading } = usePosts();
 
-    const filteredTutorials = status
-        ? tutorials.filter((t) => (status === "published" ? t.isPublished : !t.isPublished))
-        : tutorials;
+    const filteredPosts = status
+        ? posts.filter((t) => (status === "published" ? t.isPublished : !t.isPublished))
+        : posts;
 
     return (
         <div className="p-8 space-y-6">
@@ -30,22 +30,22 @@ export default function AdminTutorialsPage() {
             </div>
 
             <div className="text-neutral-600">
-                ({filteredTutorials.length}) tutoriales{" "}
+                ({filteredPosts.length}) tutoriales{" "}
                 {status === "published" ? "publicados" : status === "draft" ? "en borrador" : "cargados"}
             </div>
 
             {isLoading ? (
                 <p>Cargando...</p>
-            ) : filteredTutorials.length === 0 ? (
+            ) : filteredPosts.length === 0 ? (
                 <div className="text-center py-12 rounded-md">
                     <p className="text-neutral-600 mb-4">No hay tutoriales disponibles</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredTutorials.map((tutorial) => (
+                    {filteredPosts.map((post) => (
                         <TutorialCard
-                            key={tutorial.id}
-                            tutorial={tutorial}
+                            key={post.id}
+                            tutorial={post}
                         />
                     ))}
                 </div>

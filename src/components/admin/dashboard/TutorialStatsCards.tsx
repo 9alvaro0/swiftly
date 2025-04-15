@@ -3,13 +3,18 @@
 import Link from "next/link";
 import Card, { CardBody, CardTitle } from "@/components/ui/Card";
 import { BarChartIcon, FileTextIcon, FilePenLineIcon } from "@/components/icons";
-import { useTutorials } from "@/hooks/usePosts";
 
-export default function () {
-    const { stats, isLoading } = useTutorials();
+interface TutorialStatsCardsProps {
+    stats: {
+        totalTutorials: number;
+        filteredTutorials: number;
+        publishedTutorials: number;
+        tutorialsByCategory: Record<string, number>;
+        tutorialsByLevel: Record<string, number>;
+    };
+}
 
-    if (isLoading) return null;
-
+export default function TutorialStatsCards({ stats }: TutorialStatsCardsProps) {
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <Card

@@ -1,4 +1,5 @@
-// src/components/tutorials/TutorialForm.tsx
+// src/components/admin/PostForm.tsx
+
 "use client";
 
 import React, { useRef } from "react";
@@ -8,26 +9,25 @@ import Select from "@/components/ui/Select";
 import Button from "@/components/ui/Button";
 import Checkbox from "@/components/ui/Checkbox";
 import TagInput from "@/components/ui/TagInput";
-import TutorialContent from "@/components/tutorials/TutorialContent";
+import PostContent from "@/components/posts/PostContent";
 import { ImageUploader, UploadedImagesList } from "@/components/admin/ImageUploader";
-import { CATEGORY_OPTIONS, LEVEL_OPTIONS, CODE_SNIPPETS } from "@/constants/tutorial";
-import { useTutorialForm } from "@/hooks/usePostForm";
+import { CATEGORY_OPTIONS, LEVEL_OPTIONS, CODE_SNIPPETS } from "@/constants/post";
+import { usePostForm } from "@/hooks/usePostForm";
 
-interface TutorialFormProps {
+interface PostFormProps {
     isEdit?: boolean;
     initialData?: any;
     onSubmit?: (data: any) => void;
 }
 
-export default function TutorialForm({ isEdit = false, initialData, onSubmit }: TutorialFormProps) {
+export default function PostForm({ isEdit = false, initialData, onSubmit }: PostFormProps) {
     const contentRef = useRef<HTMLTextAreaElement>(null);
 
     const {
-        tutorial,
-        setTutorial,
+        post,
+        setPost,
         errors,
         uploadedImages,
-        addImageToTutorial,
         insertImageInContent,
         isPreviewMode,
         setIsPreviewMode,
@@ -35,18 +35,18 @@ export default function TutorialForm({ isEdit = false, initialData, onSubmit }: 
         handleSubmit,
         addTag,
         removeTag,
-    } = useTutorialForm(initialData ? { defaultValues: initialData } : undefined);
+    } = usePostForm(initialData ? { defaultValues: initialData } : undefined);
 
     const handleQuickInsert = (snippet: string) => {
         if (contentRef.current) {
             const textarea = contentRef.current;
             const startPos = textarea.selectionStart;
             const endPos = textarea.selectionEnd;
-            const currentContent = tutorial.content || "";
+            const currentContent = post.content || "";
 
             const newContent = currentContent.substring(0, startPos) + snippet + currentContent.substring(endPos);
 
-            setTutorial({ ...tutorial, content: newContent });
+            setPost({ ...post, content: newContent });
         }
     };
 
@@ -54,13 +54,13 @@ export default function TutorialForm({ isEdit = false, initialData, onSubmit }: 
         if (contentRef.current) {
             const textarea = contentRef.current;
             const cursorPosition = textarea.selectionStart;
-            const currentContent = tutorial.content || "";
+            const currentContent = post.content || "";
 
-            const markdownImage = `\n![Imagen de tutorial](${imageUrl})\n`;
+            const markdownImage = `\n![Imagen de post](${imageUrl})\n`;
             const newContent =
                 currentContent.substring(0, cursorPosition) + markdownImage + currentContent.substring(cursorPosition);
 
-            setTutorial({ ...tutorial, content: newContent });
+            setPost({ ...post, content: newContent });
         } else {
             insertImageInContent(imageUrl);
         }
@@ -71,7 +71,7 @@ export default function TutorialForm({ isEdit = false, initialData, onSubmit }: 
             onSubmit={(e) => {
                 e.preventDefault();
                 handleSubmit(e);
-                if (onSubmit) onSubmit(tutorial);
+                if (onSubmit) onSubmit(post);
             }}
             className="space-y-6"
         >
@@ -79,8 +79,8 @@ export default function TutorialForm({ isEdit = false, initialData, onSubmit }: 
                 <Input
                     id="title"
                     name="title"
-                    label="Título del Tutorial"
-                    value={tutorial.title}
+                    label="Título del Post"
+                    value={post.title}
                     onChange={handleChange}
                     error={errors.title}
                 />
@@ -88,9 +88,9 @@ export default function TutorialForm({ isEdit = false, initialData, onSubmit }: 
                     id="imageUrl"
                     name="imageUrl"
                     label="URL de la Imagen Principal"
-                    value={tutorial.imageUrl}
+                    value={post.imageUrl}
                     onChange={handleChange}
-                    placeholder="https://ejemplo.com/imagen-tutorial.jpg"
+                    placeholder="https://ejemplo.com/imagen-post.jpg"
                     error={errors.imageUrl}
                 />
             </div>
@@ -99,7 +99,7 @@ export default function TutorialForm({ isEdit = false, initialData, onSubmit }: 
                 id="description"
                 name="description"
                 label="Descripción Corta"
-                value={tutorial.description}
+                value={post.description}
                 onChange={handleChange}
                 rows={2}
                 error={errors.description}
@@ -110,7 +110,7 @@ export default function TutorialForm({ isEdit = false, initialData, onSubmit }: 
                     id="category"
                     name="category"
                     label="Categoría"
-                    value={tutorial.category}
+                    value={post.category}
                     onChange={handleChange}
                     options={CATEGORY_OPTIONS}
                 />
@@ -118,7 +118,7 @@ export default function TutorialForm({ isEdit = false, initialData, onSubmit }: 
                     id="level"
                     name="level"
                     label="Nivel"
-                    value={tutorial.level}
+                    value={post.level}
                     onChange={handleChange}
                     options={LEVEL_OPTIONS}
                 />
@@ -126,7 +126,7 @@ export default function TutorialForm({ isEdit = false, initialData, onSubmit }: 
                     id="authorName"
                     name="author.name"
                     label="Nombre del Autor"
-                    value={tutorial.author?.name}
+                    value={post.author?.name}
                     onChange={handleChange}
                 />
             </div>
@@ -134,7 +134,7 @@ export default function TutorialForm({ isEdit = false, initialData, onSubmit }: 
             <TagInput
                 id="tags"
                 label="Etiquetas"
-                tags={tutorial.tags || []}
+                tags={post.tags || []}
                 onAddTag={addTag}
                 onRemoveTag={removeTag}
             />
@@ -172,22 +172,22 @@ export default function TutorialForm({ isEdit = false, initialData, onSubmit }: 
                         id="content"
                         name="content"
                         label="Contenido (Markdown)"
-                        value={tutorial.content}
+                        value={post.content}
                         onChange={handleChange}
                         rows={15}
                         className="font-mono"
-                        placeholder="Escribe tu tutorial en Markdown..."
+                        placeholder="Escribe tu post en Markdown..."
                         error={errors.content}
                     />
                 ) : (
                     <div className="border rounded-md p-4 h-[30rem] overflow-auto">
-                        <TutorialContent content={tutorial.content || "Vista previa de tu contenido..."} />
+                        <PostContent content={post.content || "Vista previa de tu contenido..."} />
                     </div>
                 )}
             </div>
 
             <div className="mt-6">
-                <label className="block text-primary font-medium mb-2">Subir Imágenes para el Tutorial</label>
+                <label className="block text-primary font-medium mb-2">Subir Imágenes para el Post</label>
                 <ImageUploader onImageUpload={handleImageInsert} />
             </div>
 
@@ -221,8 +221,8 @@ export default function TutorialForm({ isEdit = false, initialData, onSubmit }: 
             <Checkbox
                 id="publish"
                 name="isPublished"
-                checked={tutorial.isPublished}
-                onChange={(e) => setTutorial({ ...tutorial, isPublished: e.target.checked })}
+                checked={post.isPublished}
+                onChange={(e) => setPost({ ...post, isPublished: e.target.checked })}
                 label="Publicar inmediatamente"
             />
 
@@ -231,7 +231,7 @@ export default function TutorialForm({ isEdit = false, initialData, onSubmit }: 
                     variant="primary"
                     type="submit"
                 >
-                    {isEdit ? "Actualizar Tutorial" : "Guardar Tutorial"}
+                    {isEdit ? "Actualizar Post" : "Guardar Post"}
                 </Button>
             </div>
         </form>

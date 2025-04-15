@@ -3,11 +3,11 @@
 "use client";
 
 import Link from "next/link";
-import { useTutorials } from "@/hooks/usePosts";
+import { usePosts } from "@/hooks/usePosts";
 
 export default function RecentActivity() {
-    const { tutorials, isLoading } = useTutorials();
-    const sorted = [...tutorials].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+    const { posts, isLoading } = usePosts();
+    const sorted = [...posts].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
 
     if (isLoading) return <p>Cargando actividad reciente...</p>;
 

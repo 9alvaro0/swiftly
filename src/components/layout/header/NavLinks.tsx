@@ -5,9 +5,10 @@ import NavItem from "./NavItem";
 
 export const navItems = [
     { name: "Inicio", path: "/" },
+    { name: "Publicaciones", path: "/posts" },
     { name: "Tutoriales", path: "/tutorials" },
-    { name: "Recursos", path: "/recursos" },
-    { name: "Blog", path: "/blog" },
+    { name: "Cursos", path: "/courses" },
+    { name: "Contacto", path: "/contact" },
 ];
 
 interface NavLinksProps {

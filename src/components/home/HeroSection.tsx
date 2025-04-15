@@ -16,22 +16,6 @@ export default function HeroSection() {
                     Tutoriales, guías y recursos para convertirte en un
                     <span className="font-semibold"> desarrollador de iOS experimentado</span>
                 </p>
-                
-                {/* Stats section */}
-                {/* <div className="mt-16 flex flex-wrap justify-center gap-8 text-text-secondary">
-                    <div className="flex flex-col items-center">
-                        <span className="text-3xl font-bold text-text-primary">100+</span>
-                        <span className="text-sm">Tutoriales</span>
-                    </div>
-                    <div className="flex flex-col items-center">
-                        <span className="text-3xl font-bold text-text-primary">5,000+</span>
-                        <span className="text-sm">Estudiantes</span>
-                    </div>
-                    <div className="flex flex-col items-center">
-                        <span className="text-3xl font-bold text-text-primary">4.9/5</span>
-                        <span className="text-sm">Valoración</span>
-                    </div>
-                </div> */}
             </div>
         </section>
     );

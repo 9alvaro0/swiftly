@@ -39,12 +39,11 @@ export interface Post {
     metaDescription?: string;
 
     // Relaciones
-    relatedPosts?: Pick<Post, "id" | "title" | "slug">[];
+    relatedPosts?: Pick<Post, "id" | "title" | "slug" | "imageUrl" | "category" | "description">[];
 
     // Interacción
     views?: number;
     likes?: number;
-    comments?: number;
 
     // Opciones adicionales
     draft?: boolean;
@@ -81,4 +80,4 @@ export type PostCategory =
 
 export type PostLevel = "Principiante" | "Intermedio" | "Avanzado";
 
-export type PostType = "article" | "tutorial" | "course" | "guide" | "snippets";
+export type PostType = "article" | "tutorial";

@@ -1,13 +1,13 @@
-// src/components/tutorials/TutorialAuthorBio.tsx
+// src/components/tutorials/PostAuthorBio.tsx
 
 import Image from "next/image";
 import { Author } from "@/types/Post";
 
-interface TutorialAuthorBioProps {
+interface PostAuthorBioProps {
     author: Author;
 }
 
-export default function TutorialAuthorBio({ author }: TutorialAuthorBioProps) {
+export default function PostAuthorBio({ author }: PostAuthorBioProps) {
     if (!author.bio) return null;
 
     return (

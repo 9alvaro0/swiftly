@@ -1,57 +1,36 @@
 // src/app/tutorials/[slug]/page.tsx
-import { notFound } from "next/navigation";
-import { PostService } from "@/services/postService";
-import type { Metadata } from "next";
-import TutorialDetail from "@/components/tutorials/TutorialDetail";
+
+"use client";
+
+import { useEffect } from "react";
+import { notFound, useParams } from "next/navigation";
+import PostDetail from "@/components/post/PostDetail";
 import TutorialError from "@/components/tutorials/TutorialError";
+import { usePost } from "@/hooks/usePost";
+import TutorialDetailSkeleton from "@/components/tutorials/skeletons/TutorialDetailSkeleton";
 
-// Generar metadatos para SEO
-export async function generateMetadata(props: { params: { slug: string } }): Promise<Metadata> {
-    const params = await Promise.resolve(props.params);
-    const slug = params.slug;
+export default function TutorialDetailPage({ params }: { params: { slug: string } }) {
+   const routeParams = useParams();
+    const slug = routeParams.slug as string;
 
-    try {
-        const tutorial = await PostService.fetchPostBySlug(slug);
+    const { post: tutorial, isLoading, error } = usePost(slug);
 
-        if (!tutorial || !tutorial.isPublished) {
-            return {
-                title: "Tutorial no encontrado",
-                description: "El tutorial que buscas no existe o no está disponible.",
-            };
+    useEffect(() => {
+        if (error) {
+            console.error("Error fetching post:", error);
         }
+    }, [error]);
 
-        return {
-            title: tutorial.title,
-            description: tutorial.description,
-            openGraph: {
-                title: tutorial.title,
-                description: tutorial.description,
-                images: tutorial.imageUrl ? [{ url: tutorial.imageUrl }] : [],
-            },
-        };
-    } catch (error) {
-        console.error("Error fetching post metadata:", error);
-        return {
-            title: "Error al cargar el tutorial",
-            description: "Ocurrió un error al intentar cargar este tutorial.",
-        };
+    if (isLoading) {
+        return <TutorialDetailSkeleton />;
     }
-}
 
-export default async function TutorialDetailPage(props: { params: { slug: string } }) {
-    const params = await Promise.resolve(props.params);
-    const slug = params.slug;
+    if (!tutorial && !isLoading) {
+        notFound();
+    }
 
-    try {
-        const tutorial = await PostService.fetchPostBySlug(slug);
-
-        if (!tutorial || !tutorial.isPublished) {
-            notFound();
-        }
-
-        return <TutorialDetail tutorial={tutorial} />;
-    } catch (error) {
-        console.error("Error fetching post:", error);
+    if (!tutorial) {
         return <TutorialError />;
     }
+    return <PostDetail post={tutorial} branch="tutoriales" />;
 }

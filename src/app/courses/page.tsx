@@ -98,7 +98,7 @@ export default function CoursesPage() {
                     {featuredCourses.map((course) => (
                         <Link
                             key={course.id}
-                            href={`/cursos/${course.id}`}
+                            href={`/courses/${course.id}`}
                             className="flex flex-col md:flex-row bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
                         >
                             <div className="md:w-2/5 bg-gray-200 h-48 md:h-auto relative">
@@ -245,7 +245,7 @@ export default function CoursesPage() {
                     {regularCourses.map((course) => (
                         <Link
                             key={course.id}
-                            href={`/cursos/${course.id}`}
+                            href={`/courses/${course.id}`}
                             className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col"
                         >
                             <div className="h-48 bg-gray-200 relative">{/* Aquí iría la imagen del curso */}</div>

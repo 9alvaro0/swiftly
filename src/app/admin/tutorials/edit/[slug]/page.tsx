@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { fetchTutorialBySlug } from "@/services/tutorialService";
-import TutorialForm from "@/components/admin/TutorialForm";
+import TutorialForm from "@/components/admin/PostForm";
 import { Tutorial } from "@/types/Tutorial";
 
 export default function EditTutorialPage({ params }: { params: { slug: string } }) {
