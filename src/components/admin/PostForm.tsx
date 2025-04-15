@@ -10,14 +10,16 @@ import Button from "@/components/ui/Button";
 import Checkbox from "@/components/ui/Checkbox";
 import TagInput from "@/components/ui/TagInput";
 import PostContent from "@/components/posts/PostContent";
-import { ImageUploader, UploadedImagesList } from "@/components/admin/ImageUploader";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 import { CATEGORY_OPTIONS, LEVEL_OPTIONS, CODE_SNIPPETS } from "@/constants/post";
 import { usePostForm } from "@/hooks/usePostForm";
+import { Post } from "@/types/Post";
+import Image from "next/image";
 
 interface PostFormProps {
     isEdit?: boolean;
-    initialData?: any;
-    onSubmit?: (data: any) => void;
+    initialData?: Post;
+    onSubmit?: (data: Post) => void;
 }
 
 export default function PostForm({ isEdit = false, initialData, onSubmit }: PostFormProps) {
@@ -200,7 +202,7 @@ export default function PostForm({ isEdit = false, initialData, onSubmit }: Post
                                 key={index}
                                 className="relative border rounded-md overflow-hidden group"
                             >
-                                <img
+                                <Image
                                     src={imageUrl}
                                     alt={`Imagen subida ${index + 1}`}
                                     className="object-cover w-full h-32"

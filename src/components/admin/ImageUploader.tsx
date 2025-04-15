@@ -4,7 +4,8 @@
 import React, { useRef } from "react";
 import { uploadImage } from "@/services/imageUploadService";
 import Button from "@/components/ui/Button";
-import { Upload, Image as ImageIcon, Copy } from "lucide-react";
+import { Upload, Copy } from "lucide-react";
+import Image from "next/image";
 
 interface ImageUploaderProps {
     onImageUpload: (imageUrl: string) => void;
@@ -75,7 +76,7 @@ export const UploadedImagesList = ({
                     key={index}
                     className="relative group"
                 >
-                    <img
+                    <Image
                         src={imageUrl}
                         alt={`Tutorial imagen ${index + 1}`}
                         className="w-full h-32 object-cover rounded-md"

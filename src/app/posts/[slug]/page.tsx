@@ -8,7 +8,7 @@ import { usePost } from "@/hooks/usePost";
 import TutorialDetailSkeleton from "@/components/tutorials/skeletons/TutorialDetailSkeleton";
 import PostDetail from "@/components/post/PostDetail";
 
-export default function PostDetailPage({ params }: { params: { slug: string } }) {
+export default function PostDetailPage() {
     const routeParams = useParams();
     const slug = routeParams.slug as string;
     

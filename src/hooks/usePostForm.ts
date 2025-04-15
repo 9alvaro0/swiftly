@@ -58,7 +58,7 @@ export const usePostForm = ({ defaultValues = {}, onSubmit }: PostFormOptions = 
             setPost((prev) => ({
                 ...prev,
                 [parent]: {
-                    ...(prev[parent as keyof Partial<Post>] as Record<string, any>),
+                    ...(prev[parent as keyof Post] as unknown as Record<string, unknown>),
                     [child]: value,
                 },
             }));
@@ -104,7 +104,6 @@ export const usePostForm = ({ defaultValues = {}, onSubmit }: PostFormOptions = 
             },
             views: post.views || 0,
             likes: post.likes || 0,
-            comments: post.comments || 0,
             draft: post.draft || false,
             featured: post.featured || false,
             language: post.language || "es",

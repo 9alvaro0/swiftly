@@ -4,7 +4,7 @@
 
 import React from "react";
 import { PostCategory, PostLevel } from "@/types/Post";
-import { ChevronDown, X, Filter, Search } from "lucide-react";
+import { X, Filter, Search } from "lucide-react";
 
 interface PostsFiltersProps {
     searchQuery: string;

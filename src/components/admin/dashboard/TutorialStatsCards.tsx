@@ -6,11 +6,12 @@ import { BarChartIcon, FileTextIcon, FilePenLineIcon } from "@/components/icons"
 
 interface TutorialStatsCardsProps {
     stats: {
-        totalTutorials: number;
-        filteredTutorials: number;
-        publishedTutorials: number;
-        tutorialsByCategory: Record<string, number>;
-        tutorialsByLevel: Record<string, number>;
+        totalPosts: number;
+        filteredPosts: number;
+        publishedPosts: number;
+        postsByCategory: Record<string, number>;
+        postsByLevel: Record<string, number>;
+        postsByType: Record<string, number>;
     };
 }
 
@@ -27,7 +28,7 @@ export default function TutorialStatsCards({ stats }: TutorialStatsCardsProps) {
                     </div>
                     <div className="flex-1">
                         <CardTitle className="text-lg font-semibold text-primary mb-1">Total de Tutoriales</CardTitle>
-                        <p className="text-3xl font-bold text-primary">{stats.totalTutorials}</p>
+                        <p className="text-3xl font-bold text-primary">{stats.totalPosts}</p>
                         <Link
                             href="/admin/tutorials"
                             className="text-primary text-sm hover:underline block mt-2"
@@ -50,7 +51,7 @@ export default function TutorialStatsCards({ stats }: TutorialStatsCardsProps) {
                         <CardTitle className="text-lg font-semibold text-secondary mb-1">
                             Tutoriales Publicados
                         </CardTitle>
-                        <p className="text-3xl font-bold text-primary">{stats.publishedTutorials}</p>
+                        <p className="text-3xl font-bold text-primary">{stats.publishedPosts}</p>
                         <Link
                             href={{ pathname: "/admin/tutorials", query: { status: "published" } }}
                             className="text-secondary text-sm hover:underline block mt-2"
@@ -71,7 +72,7 @@ export default function TutorialStatsCards({ stats }: TutorialStatsCardsProps) {
                     </div>
                     <div className="flex-1">
                         <CardTitle className="text-lg font-semibold text-warning mb-1">Borradores</CardTitle>
-                        <p className="text-3xl font-bold text-primary">{stats.draftTutorials}</p>
+                        <p className="text-3xl font-bold text-primary">{stats.filteredPosts}</p>
                         <Link
                             href={{ pathname: "/admin/tutorials", query: { status: "draft" } }}
                             className="text-warning text-sm hover:underline block mt-2"

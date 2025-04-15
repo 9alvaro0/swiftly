@@ -50,6 +50,7 @@ export function useNewsletterSignup(): UseNewsletterSignupReturn {
             alert("¡Gracias por suscribirte!");
         } catch (err) {
             // Manejar error de suscripción
+            console.error("Error al suscribirse:", err);
             setError("Hubo un problema al suscribirte. Inténtalo de nuevo.");
         } finally {
             setIsLoading(false);

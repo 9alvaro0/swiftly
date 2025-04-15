@@ -18,8 +18,7 @@ const Textarea = ({
     error?: string;
     id: string;
     className?: string;
-    [key: string]: any;
-}) => {
+} & React.TextareaHTMLAttributes<HTMLTextAreaElement>) => {
     return (
         <div className="mb-4">
             <label

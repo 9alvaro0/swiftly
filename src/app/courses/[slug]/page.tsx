@@ -1,10 +1,13 @@
+'use client'
+
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import React from "react";
 
-export default function CourseDetailPage({ params }: { params: { slug: string } }) {
-    // Datos de ejemplo para un curso específico
+export default function CourseDetailPage() {
+    const routeParams = useParams();
     const course = {
-        id: params.slug,
+        id: routeParams.slug,
         title: "Fundamentos de Swift para principiantes",
         description:
             "Un curso completo para principiantes que cubre todos los aspectos fundamentales del lenguaje Swift, desde variables y tipos de datos hasta protocolos y extensiones. Este curso te dará una base sólida para empezar a desarrollar aplicaciones iOS.",

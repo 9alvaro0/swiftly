@@ -1,39 +1,36 @@
 // src/app/admin/tutorials/edit/[slug]/page.tsx
+
 "use client";
 
-import { useEffect, useState } from "react";
-import { fetchTutorialBySlug } from "@/services/tutorialService";
+import { useEffect } from "react";
 import TutorialForm from "@/components/admin/PostForm";
-import { Tutorial } from "@/types/Tutorial";
+import { notFound, useParams } from "next/navigation";
+import { usePost } from "@/hooks/usePost";
 
-export default function EditTutorialPage({ params }: { params: { slug: string } }) {
-    const [tutorial, setTutorial] = useState<Tutorial | null>(null);
-    const [loading, setLoading] = useState(true);
+export default function EditTutorialPage() {
+    const routeParams = useParams();
+    const slug = routeParams.slug as string;
+    const { post, isLoading, error } = usePost(slug);
 
     useEffect(() => {
-        const loadTutorial = async () => {
-            try {
-                const data = await fetchTutorialBySlug(params.slug);
-                setTutorial(data);
-            } catch (err) {
-                console.error("No se pudo cargar el tutorial:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
+        if (error) {
+            console.error("Error fetching post:", error);
+        }
+    }, [error]);
 
-        loadTutorial();
-    }, [params.slug]);
+    if (isLoading) {
+        return <div className="p-8">Cargando...</div>;
+    }
 
-    if (loading) return <div className="p-8">Cargando...</div>;
-    if (!tutorial) return <div className="p-8">Tutorial no encontrado.</div>;
-
+    if (!post && !isLoading) {
+        notFound();
+    }
     return (
         <div className="p-8">
-            <h1 className="text-2xl font-bold mb-6">Editar Tutorial</h1>
+            <h1 className="text-2xl font-bold mb-6">Editar Post</h1>
             <TutorialForm
                 isEdit
-                initialData={tutorial}
+                initialData={post}
             />
         </div>
     );

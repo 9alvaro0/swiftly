@@ -9,8 +9,8 @@ import TutorialError from "@/components/tutorials/TutorialError";
 import { usePost } from "@/hooks/usePost";
 import TutorialDetailSkeleton from "@/components/tutorials/skeletons/TutorialDetailSkeleton";
 
-export default function TutorialDetailPage({ params }: { params: { slug: string } }) {
-   const routeParams = useParams();
+export default function TutorialDetailPage() {
+    const routeParams = useParams();
     const slug = routeParams.slug as string;
 
     const { post: tutorial, isLoading, error } = usePost(slug);
@@ -32,5 +32,10 @@ export default function TutorialDetailPage({ params }: { params: { slug: string 
     if (!tutorial) {
         return <TutorialError />;
     }
-    return <PostDetail post={tutorial} branch="tutoriales" />;
+    return (
+        <PostDetail
+            post={tutorial}
+            branch="tutoriales"
+        />
+    );
 }

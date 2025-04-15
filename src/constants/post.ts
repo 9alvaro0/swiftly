@@ -22,11 +22,8 @@ export const LEVEL_OPTIONS: { value: PostLevel; label: string }[] = [
 ];
 
 export const POST_TYPE_OPTIONS: { value: PostType; label: string }[] = [
-    { value: "post", label: "Post General" },
-    { value: "tutorial", label: "Tutorial" },
-    { value: "course", label: "Curso" },
-    { value: "guide", label: "Guía" },
-    { value: "snippets", label: "Snippets de Código" },
+    { value: "article", label: "Articulo" },
+    { value: "tutorial", label: "Tutorial" }
 ];
 
 export const CODE_SNIPPETS = [
