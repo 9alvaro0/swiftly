@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import PostTag from "@/components/posts/PostTag";
+import { Eye, Heart, ArrowRight } from "lucide-react";
 import { Post } from "@/types/Post";
 
 interface PostCardProps {
@@ -11,10 +11,7 @@ interface PostCardProps {
 }
 
 export default function PostCard({ post, variant = "default" }: PostCardProps) {
-    // Verificar si post existe
-    if (!post) {
-        return null; // O un componente de fallback/error
-    }
+    if (!post) return null;
 
     const isFeatured = variant === "featured";
 
@@ -23,18 +20,15 @@ export default function PostCard({ post, variant = "default" }: PostCardProps) {
         if (post.imageUrl) {
             return post.imageUrl.startsWith("/") ? post.imageUrl : `/${post.imageUrl}`;
         }
-
         if (post.coverImage) {
             return post.coverImage.startsWith("/") ? post.coverImage : `/${post.coverImage}`;
         }
-
         return "/placeholder.svg";
     };
 
     // Función segura para formatear fechas
     const formatDate = (date: Date | string | undefined) => {
         if (!date) return "Fecha no disponible";
-
         try {
             const dateObj = date instanceof Date ? date : new Date(date);
             return dateObj.toLocaleDateString("es-ES", {
@@ -49,212 +43,179 @@ export default function PostCard({ post, variant = "default" }: PostCardProps) {
     };
 
     return (
-        <article
-            className={`
-            rounded-lg shadow-md overflow-hidden 
-            transition-all duration-300 
-            hover:shadow-xl hover:-translate-y-2
-            ${isFeatured ? "md:col-span-2 lg:col-span-3" : ""}
-        `}
+        <Link
+            href={`/posts/${post.slug}`}
+            className={`group block h-full ${isFeatured ? "md:col-span-2 lg:col-span-3" : ""}`}
         >
-            <div className="relative">
-                <div className={`relative w-full ${isFeatured ? "h-96" : "h-48"}`}>
-                    {post.imageUrl || post.coverImage ? (
-                        <Image
-                            src={getImageUrl()}
-                            alt={post.title || "Imagen del post"}
-                            fill
-                            className="object-cover"
-                            sizes={
-                                isFeatured
-                                    ? "(max-width: 768px) 100vw, 100vw"
-                                    : "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            }
-                        />
-                    ) : (
-                        <div className="absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-gray-500">
-                            <span className="text-4xl">Swift</span>
+            <article
+                className={`
+                    bg-white/5 backdrop-blur-sm border border-white/10 
+                    rounded-xl overflow-hidden 
+                    transition-all duration-300 
+                    group-hover:translate-y-[-4px] group-hover:shadow-lg group-hover:shadow-blue-500/10 group-hover:border-blue-400/30
+                    h-full
+                `}
+            >
+                <div className="relative">
+                    <div className={`relative w-full ${isFeatured ? "h-96" : "h-56"}`}>
+                        {post.imageUrl || post.coverImage ? (
+                            <Image
+                                src={getImageUrl()}
+                                alt={post.title || "Imagen del post"}
+                                fill
+                                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                sizes={
+                                    isFeatured
+                                        ? "(max-width: 768px) 100vw, 100vw"
+                                        : "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                }
+                            />
+                        ) : (
+                            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-900/40 to-purple-900/40">
+                                <span className="text-4xl text-white/70 font-bold">Swift</span>
+                            </div>
+                        )}
+
+                        {/* Overlay gradient for better readability of badges */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30"></div>
+                    </div>
+
+                    {post.category && (
+                        <div className="absolute top-4 left-4">
+                            <span className="inline-block bg-blue-600/80 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full font-medium">
+                                {post.category}
+                            </span>
+                        </div>
+                    )}
+
+                    {post.featured && (
+                        <div className="absolute top-4 right-4">
+                            <span className="inline-block bg-yellow-500/90 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full font-medium">
+                                Destacado
+                            </span>
+                        </div>
+                    )}
+
+                    {/* Level badge if exists */}
+                    {post.level && (
+                        <div className="absolute bottom-4 left-4">
+                            <span className="inline-block bg-purple-600/80 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full font-medium">
+                                {post.level}
+                            </span>
                         </div>
                     )}
                 </div>
 
-                {post.category && (
-                    <div className="absolute top-4 left-4">
-                        <PostTag tag={post.category} />
-                    </div>
-                )}
-
-                {post.featured && (
-                    <div className="absolute top-4 right-4">
-                        <span className="bg-yellow-500 text-white text-xs px-2 py-1 rounded font-medium">
-                            Destacado
-                        </span>
-                    </div>
-                )}
-            </div>
-
-            <div className="p-6">
-                {post.title && (
-                    <h3 className={`font-bold mb-2 text-gray-800 ${isFeatured ? "text-2xl" : "text-lg"} line-clamp-2`}>
-                        {post.title}
-                    </h3>
-                )}
-
-                <div className="flex items-center text-gray-500 text-sm flex-wrap">
-                    {post.createdAt && (
-                        <time
-                            dateTime={
-                                post.createdAt instanceof Date
-                                    ? post.createdAt.toISOString()
-                                    : post.createdAt
-                            }
+                <div className="p-6">
+                    {post.title && (
+                        <h3
+                            className={`font-bold mb-3 text-white ${
+                                isFeatured ? "text-2xl" : "text-lg"
+                            } line-clamp-2 group-hover:text-blue-400 transition-colors`}
                         >
-                            {formatDate(post.createdAt)}
-                        </time>
+                            {post.title}
+                        </h3>
                     )}
 
-                    {post.createdAt && post.readTime && <span className="mx-2">•</span>}
-
-                    {post.readTime !== undefined && <span>{post.readTime} min lectura</span>}
-
-                    {post.author && (
-                        <>
-                            <span className="mx-2">•</span>
-                            <div className="flex items-center">
-                                {post.author.avatar && (
-                                    <Image
-                                        src={
-                                            post.author.avatar.startsWith("/")
-                                                ? post.author.avatar
-                                                : `/${post.author.avatar}`
-                                        }
-                                        alt={post.author.name || "Avatar del autor"}
-                                        width={20}
-                                        height={20}
-                                        className="rounded-full mr-1"
-                                    />
-                                )}
-                                <span>{post.author.name || "Autor"}</span>
-                            </div>
-                        </>
-                    )}
-                </div>
-
-                {post.description && (
-                    <p className={`text-gray-600 mt-3 ${isFeatured ? "text-base" : "text-sm"} line-clamp-3`}>
-                        {post.description}
-                    </p>
-                )}
-
-                {post.tags && post.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-3">
-                        {post.tags.slice(0, 3).map((tag) => (
-                            <span
-                                key={tag}
-                                className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
+                    <div className="flex items-center text-white/60 text-sm flex-wrap">
+                        {post.createdAt && (
+                            <time
+                                dateTime={
+                                    post.createdAt instanceof Date
+                                        ? post.createdAt.toISOString()
+                                        : String(post.createdAt)
+                                }
                             >
-                                {tag}
-                            </span>
-                        ))}
-                        {post.tags.length > 3 && (
-                            <span className="text-xs text-gray-500">+{post.tags.length - 3} más</span>
+                                {formatDate(post.createdAt)}
+                            </time>
+                        )}
+
+                        {post.createdAt && post.readTime && <span className="mx-2">•</span>}
+
+                        {post.readTime !== undefined && <span>{post.readTime} min lectura</span>}
+
+                        {post.author && (
+                            <>
+                                <span className="mx-2">•</span>
+                                <div className="flex items-center">
+                                    {post.author.avatar ? (
+                                        <Image
+                                            src={
+                                                post.author.avatar.startsWith("/")
+                                                    ? post.author.avatar
+                                                    : `/${post.author.avatar}`
+                                            }
+                                            alt={post.author.name || "Avatar del autor"}
+                                            width={20}
+                                            height={20}
+                                            className="rounded-full border border-white/20 mr-1"
+                                        />
+                                    ) : (
+                                        <div className="w-5 h-5 rounded-full bg-blue-500/30 flex items-center justify-center text-xs text-white mr-1">
+                                            {post.author.name?.charAt(0) || "A"}
+                                        </div>
+                                    )}
+                                    <span>{post.author.name || "Autor"}</span>
+                                </div>
+                            </>
                         )}
                     </div>
-                )}
 
-                {(post.views !== undefined || post.likes !== undefined || post.comments !== undefined) && (
-                    <div className="flex gap-4 mt-3 text-sm text-gray-500">
-                        {post.views !== undefined && (
-                            <span className="flex items-center">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-4 w-4 mr-1"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
+                    {post.description && (
+                        <p className={`text-white/70 mt-4 ${isFeatured ? "text-base" : "text-sm"} line-clamp-3`}>
+                            {post.description}
+                        </p>
+                    )}
+
+                    {post.tags && post.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-4">
+                            {post.tags.slice(0, 3).map((tag) => (
+                                <span
+                                    key={tag}
+                                    className="text-xs bg-white/10 text-white/80 px-3 py-1 rounded-full hover:bg-white/15 transition-colors"
                                 >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                    />
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                    />
-                                </svg>
-                                {post.views}
-                            </span>
-                        )}
+                                    #{tag}
+                                </span>
+                            ))}
+                            {post.tags.length > 3 && (
+                                <span className="text-xs text-white/50">+{post.tags.length - 3} más</span>
+                            )}
+                        </div>
+                    )}
 
-                        {post.likes !== undefined && (
-                            <span className="flex items-center">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-4 w-4 mr-1"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    {(post.views !== undefined || post.likes !== undefined) && (
+                        <div className="flex gap-4 mt-4 text-sm text-white/60">
+                            {post.views !== undefined && (
+                                <span className="flex items-center">
+                                    <Eye
+                                        size={16}
+                                        className="mr-1 text-blue-400/80"
                                     />
-                                </svg>
-                                {post.likes}
-                            </span>
-                        )}
+                                    {post.views}
+                                </span>
+                            )}
 
-                        {post.comments !== undefined && (
-                            <span className="flex items-center">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-4 w-4 mr-1"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                            {post.likes !== undefined && (
+                                <span className="flex items-center">
+                                    <Heart
+                                        size={16}
+                                        className="mr-1 text-blue-400/80"
                                     />
-                                </svg>
-                                {post.comments}
-                            </span>
-                        )}
-                    </div>
-                )}
+                                    {post.likes}
+                                </span>
+                            )}
+                        </div>
+                    )}
 
-                {post.slug && (
-                    <Link
-                        href={`/posts/${post.slug}`}
-                        className="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold text-sm mt-4"
-                    >
+                    <div className="inline-flex items-center text-blue-400 group-hover:text-blue-300 font-semibold text-sm mt-4">
                         Leer artículo
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4 ml-2"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M14 5l7 7m0 0l-7 7m7-7H3"
-                            />
-                        </svg>
-                    </Link>
-                )}
-            </div>
-        </article>
+                        <ArrowRight
+                            size={16}
+                            className="ml-2 transform group-hover:translate-x-1 transition-transform duration-200"
+                        />
+                    </div>
+                </div>
+            </article>
+        </Link>
     );
 }

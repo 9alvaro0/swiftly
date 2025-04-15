@@ -12,7 +12,7 @@ export default function FeaturedTutorials() {
 
     if (isLoading) {
         return (
-            <section className="py-16 bg-neutral-50 dark:bg-neutral-900">
+            <section className="py-16">
                 <div className="container mx-auto px-4">
                     <FeaturedTutorialsSkeleton />
                 </div>
@@ -22,7 +22,7 @@ export default function FeaturedTutorials() {
 
     if (error) {
         return (
-            <section className="py-16 bg-neutral-50 dark:bg-neutral-900">
+            <section className="py-16">
                 <div className="container mx-auto px-4">
                     <div className="text-center py-12 text-red-500">
                         Error al cargar los tutoriales: {error.message}
@@ -33,7 +33,7 @@ export default function FeaturedTutorials() {
     }
 
     return (
-        <section className="py-16 bg-neutral-50 dark:bg-neutral-900">
+        <section className="py-16">
             <div className="container mx-auto px-4">
                 <SectionHeader
                     title="Tutoriales destacados"

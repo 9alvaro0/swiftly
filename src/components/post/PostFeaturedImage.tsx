@@ -36,7 +36,7 @@ export default function PostFeaturedImage({ imageUrl, title, caption }: PostFeat
                         isLoading ? "opacity-0" : "opacity-100"
                     }`}
                     priority
-                    onLoadingComplete={() => setIsLoading(false)}
+                    onLoad={() => setIsLoading(false)}
                 />
             </div>
 

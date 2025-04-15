@@ -8,16 +8,30 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import remarkGfm from "remark-gfm";
 import Image from "next/image";
+import React from "react";
 
 type PostContentProps = {
     content: string;
 };
 
-// Memoizamos el componente para evitar renderizados innecesarios
+const ImageRenderer = ({ src, alt, ...props }: { src?: string; alt?: string; [key: string]: any }) => {
+    if (!src) return null;
+
+    return (
+        <figure className="my-8 rounded-lg overflow-hidden shadow-md">
+            <img
+                src={src}
+                alt={alt || "Imagen del artículo"}
+                className="w-full h-auto rounded-lg"
+                loading="lazy"
+                {...props}
+            />
+        </figure>
+    );
+};
+
 const PostContent = memo(function PostContent({ content }: PostContentProps) {
-    // Efecto para aplicar estilos adicionales o comportamientos después de renderizar
     useEffect(() => {
-        // Añadir comportamiento para enlaces externos
         const links = document.querySelectorAll('.prose a[href^="http"]');
         links.forEach((link) => {
             if (!(link as HTMLElement).hasAttribute("target")) {
@@ -27,6 +41,12 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
         });
     }, [content]);
 
+    const preprocessMarkdown = (markdown: string) => {
+        return markdown.replace(
+            /!\[(.*?)\]\((.*?)\)/g,
+            (_, alt, src) => `<custom-image src="${src}" alt="${alt || ""}"></custom-image>`
+        );
+    };
     return (
         <div className="prose prose-lg dark:prose-invert max-w-none mb-12 prose-headings:text-white prose-p:text-white/80 prose-a:text-blue-400 prose-blockquote:border-blue-500 prose-blockquote:text-white/70 prose-strong:text-white">
             <ReactMarkdown
@@ -50,12 +70,26 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                             {...props}
                         />
                     ),
-                    p: ({ node, ...props }) => (
-                        <p
-                            className="my-4 leading-relaxed"
-                            {...props}
-                        />
-                    ),
+                    p: ({ node, children, ...props }) => {
+                        const childArray = React.Children.toArray(children);
+
+                        if (
+                            childArray.length === 1 &&
+                            React.isValidElement(childArray[0]) &&
+                            (childArray[0] as React.ReactElement).type === "custom-image"
+                        ) {
+                            const imgProps = (childArray[0] as React.ReactElement).props as {
+                                src?: string;
+                                alt?: string;
+                            };
+                            return (
+                                <ImageRenderer
+                                    src={imgProps.src}
+                                    alt={imgProps.alt}
+                                />
+                            );
+                        }
+                    },
                     ul: ({ node, ...props }) => (
                         <ul
                             className="list-disc pl-6 my-4 space-y-2 text-white/80"
@@ -119,23 +153,18 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                         );
                     },
                     img: ({ node, src, alt, ...props }) => {
-                        // Si no hay src, retornar un componente vacío
                         if (!src) return null;
 
                         return (
-                            <div className="relative my-8 rounded-lg overflow-hidden shadow-md">
-                                {/* Asumimos que las imágenes son externas aquí */}
-                                <img
-                                    src={src}
-                                    alt={alt || "Imagen del artículo"}
-                                    className="w-full h-auto rounded-lg"
-                                    loading="lazy"
-                                    {...props}
-                                />
-                            </div>
+                            <img
+                                src={src}
+                                alt={alt || "Imagen del artículo"}
+                                className="w-full h-auto my-8 rounded-lg shadow-md"
+                                loading="lazy"
+                                {...props}
+                            />
                         );
                     },
-                    // Añadimos estilos para tablas
                     table: ({ node, ...props }) => (
                         <div className="overflow-x-auto my-8">
                             <table

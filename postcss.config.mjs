@@ -29,6 +29,16 @@ const config = {
                     800: "#1d1d1f",
                     900: "#121214",
                 },
+                // Colores para el fondo gradiente
+                "bg-gradient": {
+                    blue: "#2563eb", // blue-600
+                    purple: "#8b5cf6", // purple-500
+                    dark: "#000000",
+                },
+            },
+            backgroundImage: {
+                "app-gradient":
+                    "radial-gradient(circle at top left, var(--gradient-blue-opacity) 0%, transparent 50%), radial-gradient(circle at bottom right, var(--gradient-purple-opacity) 0%, transparent 50%), linear-gradient(to bottom, var(--gradient-dark) 0%, var(--gradient-dark) 100%)",
             },
             textColor: {
                 primary: "var(--color-text-primary)",

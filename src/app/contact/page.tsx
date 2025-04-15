@@ -126,7 +126,7 @@ export default function ContactPage() {
     };
 
     return (
-        <div className="container mx-auto py-16 px-4 sm:px-6 lg:px-8 bg-background">
+        <div className="container mx-auto py-16 px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto space-y-12">
                 <div className="text-center space-y-4">
                     <h1 className="text-4xl font-semibold text-primary tracking-tight">Contacto</h1>

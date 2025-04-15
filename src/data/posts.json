@@ -124,7 +124,109 @@
         "content": "# Arquitectura MVVM en SwiftUI\n\nEn este tutorial, exploraremos cómo implementar el patrón de arquitectura MVVM (Model-View-ViewModel) en aplicaciones SwiftUI. MVVM es particularmente adecuado para SwiftUI debido a su sistema de binding reactivo y su enfoque declarativo.\n\n## ¿Qué es MVVM?\n\nMVVM separa tus aplicaciones en tres componentes principales: Model (los datos), View (la interfaz de usuario) y ViewModel (la lógica que conecta Model y View).",
         "category": "Arquitectura",
         "level": "Intermedio",
-        "type": "tutorial",
+        "type": "article",
+        "slug": "arquitectura-mvvm-swiftui",
+        "metaDescription": "Aprende a implementar MVVM en SwiftUI para crear aplicaciones más mantenibles, testables y escalables.",
+        "imageUrl": "/images/posts/swiftui-intro.jpg",
+        "images": ["/images/posts/mvvm-swiftui-detail1.jpg", "/images/posts/mvvm-swiftui-detail2.jpg"],
+        "coverImage": "/images/posts/swiftui-intro.jpg",
+        "tags": ["SwiftUI", "MVVM", "Arquitectura", "Patrones de Diseño", "iOS"],
+        "isPublished": true,
+        "readTime": 15,
+        "wordCount": 3800,
+        "createdAt": "2024-02-20T00:00:00Z",
+        "updatedAt": "2024-03-15T00:00:00Z",
+        "publishedAt": "2024-02-25T00:00:00Z",
+        "views": 1580,
+        "likes": 92,
+        "draft": false,
+        "featured": false,
+        "language": "es",
+        "keywords": ["MVVM", "SwiftUI", "arquitectura", "patrones de diseño", "desarrollo iOS"],
+        "author": {
+            "id": "author-2",
+            "name": "María López",
+            "username": "maria-lopez",
+            "avatar": "/images/authors/maria.jpg",
+            "bio": "Ingeniera de software especializada en arquitecturas limpias y patrones de diseño para desarrollo iOS.",
+            "socialLinks": {
+                "twitter": "https://twitter.com/marialopez",
+                "github": "https://github.com/marialopez",
+                "linkedin": "https://linkedin.com/in/marialopez"
+            }
+        },
+        "relatedPosts": [
+            {
+                "id": "1",
+                "title": "Introducción a SwiftUI: Construyendo Interfaces Declarativas con Swift",
+                "slug": "introduccion-swiftui"
+            },
+            {
+                "id": "5",
+                "title": "Inyección de dependencias en SwiftUI",
+                "slug": "inyeccion-dependencias-swiftui"
+            }
+        ]
+    },
+    {
+        "id": "4",
+        "title": "Arquitectura MVVM en SwiftUI",
+        "description": "Aprende a implementar el patrón Model-View-ViewModel en tus aplicaciones SwiftUI para un código más mantenible y testeable.",
+        "content": "# Arquitectura MVVM en SwiftUI\n\nEn este tutorial, exploraremos cómo implementar el patrón de arquitectura MVVM (Model-View-ViewModel) en aplicaciones SwiftUI. MVVM es particularmente adecuado para SwiftUI debido a su sistema de binding reactivo y su enfoque declarativo.\n\n## ¿Qué es MVVM?\n\nMVVM separa tus aplicaciones en tres componentes principales: Model (los datos), View (la interfaz de usuario) y ViewModel (la lógica que conecta Model y View).",
+        "category": "Arquitectura",
+        "level": "Intermedio",
+        "type": "article",
+        "slug": "arquitectura-mvvm-swiftui",
+        "metaDescription": "Aprende a implementar MVVM en SwiftUI para crear aplicaciones más mantenibles, testables y escalables.",
+        "imageUrl": "/images/posts/swiftui-intro.jpg",
+        "images": ["/images/posts/mvvm-swiftui-detail1.jpg", "/images/posts/mvvm-swiftui-detail2.jpg"],
+        "coverImage": "/images/posts/swiftui-intro.jpg",
+        "tags": ["SwiftUI", "MVVM", "Arquitectura", "Patrones de Diseño", "iOS"],
+        "isPublished": true,
+        "readTime": 15,
+        "wordCount": 3800,
+        "createdAt": "2024-02-20T00:00:00Z",
+        "updatedAt": "2024-03-15T00:00:00Z",
+        "publishedAt": "2024-02-25T00:00:00Z",
+        "views": 1580,
+        "likes": 92,
+        "draft": false,
+        "featured": false,
+        "language": "es",
+        "keywords": ["MVVM", "SwiftUI", "arquitectura", "patrones de diseño", "desarrollo iOS"],
+        "author": {
+            "id": "author-2",
+            "name": "María López",
+            "username": "maria-lopez",
+            "avatar": "/images/authors/maria.jpg",
+            "bio": "Ingeniera de software especializada en arquitecturas limpias y patrones de diseño para desarrollo iOS.",
+            "socialLinks": {
+                "twitter": "https://twitter.com/marialopez",
+                "github": "https://github.com/marialopez",
+                "linkedin": "https://linkedin.com/in/marialopez"
+            }
+        },
+        "relatedPosts": [
+            {
+                "id": "1",
+                "title": "Introducción a SwiftUI: Construyendo Interfaces Declarativas con Swift",
+                "slug": "introduccion-swiftui"
+            },
+            {
+                "id": "5",
+                "title": "Inyección de dependencias en SwiftUI",
+                "slug": "inyeccion-dependencias-swiftui"
+            }
+        ]
+    },
+    {
+        "id": "5",
+        "title": "Arquitectura MVVM en SwiftUI",
+        "description": "Aprende a implementar el patrón Model-View-ViewModel en tus aplicaciones SwiftUI para un código más mantenible y testeable.",
+        "content": "# Arquitectura MVVM en SwiftUI\n\nEn este tutorial, exploraremos cómo implementar el patrón de arquitectura MVVM (Model-View-ViewModel) en aplicaciones SwiftUI. MVVM es particularmente adecuado para SwiftUI debido a su sistema de binding reactivo y su enfoque declarativo.\n\n## ¿Qué es MVVM?\n\nMVVM separa tus aplicaciones en tres componentes principales: Model (los datos), View (la interfaz de usuario) y ViewModel (la lógica que conecta Model y View).",
+        "category": "Arquitectura",
+        "level": "Intermedio",
+        "type": "article",
         "slug": "arquitectura-mvvm-swiftui",
         "metaDescription": "Aprende a implementar MVVM en SwiftUI para crear aplicaciones más mantenibles, testables y escalables.",
         "imageUrl": "/images/posts/swiftui-intro.jpg",
