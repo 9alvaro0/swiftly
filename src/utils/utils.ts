@@ -8,6 +8,11 @@ export function formatDate(dateString: string): string {
     });
 }
 
+export const isValidUrl = (url: string) => {
+    const regex = /^(https?:\/\/)?(www\.)?(linkedin\.com|github\.com)\/[a-zA-Z0-9_-]+$/;
+    return regex.test(url);
+};
+
 export const getDefaultPost = (): Post => ({
     // Identificadores
     id: "",

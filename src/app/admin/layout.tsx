@@ -3,7 +3,8 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import type React from "react";
-import { LayoutDashboard, BookOpen, FolderKanban, Newspaper, Settings, ExternalLink, LogOut } from "lucide-react";
+import { LayoutDashboard, BookOpen, FolderKanban, Newspaper, Settings, ExternalLink } from "lucide-react";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -45,37 +46,38 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     ];
 
     return (
-        <div className="min-h-screen flex flex-col">
-            {/* Header */}
-            <header className="bg-white/5 backdrop-blur-md border-b border-white/10 shadow-md">
-                <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-                    <h1 className="text-xl font-semibold text-white flex items-center">
-                        <span className="bg-blue-600 text-white p-1 rounded mr-2 text-sm">Admin</span>
-                        Swiftly
-                    </h1>
-                    <Link
-                        href="/"
-                        className="flex items-center gap-1 text-sm text-white/80 hover:text-white transition-colors bg-white/10 px-3 py-1.5 rounded-full"
-                    >
-                        <span>Ver sitio</span>
-                        <ExternalLink className="h-4 w-4 ml-1" />
-                    </Link>
-                </div>
-            </header>
+        <ProtectedRoute adminOnly>
+            <div className="min-h-screen flex flex-col">
+                {/* Header */}
+                <header className="bg-white/5 backdrop-blur-md border-b border-white/10 shadow-md">
+                    <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+                        <h1 className="text-xl font-semibold text-white flex items-center">
+                            <span className="bg-blue-600 text-white p-1 rounded mr-2 text-sm">Admin</span>
+                            Swiftly
+                        </h1>
+                        <Link
+                            href="/"
+                            className="flex items-center gap-1 text-sm text-white/80 hover:text-white transition-colors bg-white/10 px-3 py-1.5 rounded-full"
+                        >
+                            <span>Ver sitio</span>
+                            <ExternalLink className="h-4 w-4 ml-1" />
+                        </Link>
+                    </div>
+                </header>
 
-            <div className="flex flex-1">
-                {/* Sidebar con efecto glassmorphism */}
-                <aside className="w-64 bg-white/5 backdrop-blur-sm border-r border-white/10">
-                    <nav className="p-4">
-                        <div className="space-y-2">
-                            {navItems.map((item) => {
-                                const active = item.exact ? pathname === item.href : isActive(item.href);
+                <div className="flex flex-1">
+                    {/* Sidebar con efecto glassmorphism */}
+                    <aside className="w-64 bg-white/5 backdrop-blur-sm border-r border-white/10">
+                        <nav className="p-4">
+                            <div className="space-y-2">
+                                {navItems.map((item) => {
+                                    const active = item.exact ? pathname === item.href : isActive(item.href);
 
-                                return (
-                                    <Link
-                                        key={item.href}
-                                        href={item.disabled ? "#" : item.href}
-                                        className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm
+                                    return (
+                                        <Link
+                                            key={item.href}
+                                            href={item.disabled ? "#" : item.href}
+                                            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm
                                             transition-all duration-200
                                             ${
                                                 active
@@ -85,62 +87,43 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                                     : "text-white/70 hover:bg-white/10 hover:text-white"
                                             }
                                         `}
-                                        onClick={item.disabled ? (e) => e.preventDefault() : undefined}
-                                    >
-                                        <item.icon
-                                            className={`h-5 w-5 ${
-                                                active
-                                                    ? "text-blue-400"
-                                                    : item.disabled
-                                                    ? "text-white/40"
-                                                    : "text-white/60"
-                                            }`}
-                                        />
-                                        <span>{item.name}</span>
+                                            onClick={item.disabled ? (e) => e.preventDefault() : undefined}
+                                        >
+                                            <item.icon
+                                                className={`h-5 w-5 ${
+                                                    active
+                                                        ? "text-blue-400"
+                                                        : item.disabled
+                                                        ? "text-white/40"
+                                                        : "text-white/60"
+                                                }`}
+                                            />
+                                            <span>{item.name}</span>
 
-                                        {item.disabled && (
-                                            <span className="ml-auto text-xs bg-white/10 px-2 py-0.5 rounded-full">
-                                                Pronto
-                                            </span>
-                                        )}
-                                    </Link>
-                                );
-                            })}
+                                            {item.disabled && (
+                                                <span className="ml-auto text-xs bg-white/10 px-2 py-0.5 rounded-full">
+                                                    Pronto
+                                                </span>
+                                            )}
+                                        </Link>
+                                    );
+                                })}
+                            </div>                          
+                        </nav>
+                    </aside>
+
+                    {/* Main content */}
+                    <main className="flex-1 overflow-auto">
+                        {/* Elementos decorativos de fondo */}
+                        <div className="fixed inset-0 -z-10 pointer-events-none">
+                            <div className="absolute -top-40 -right-20 w-96 h-96 bg-blue-600/10 rounded-full filter blur-3xl"></div>
+                            <div className="absolute bottom-40 -left-20 w-96 h-96 bg-purple-600/10 rounded-full filter blur-3xl"></div>
                         </div>
 
-                        {/* Sección de usuario */}
-                        <div className="mt-8 pt-6 border-t border-white/10">
-                            <div className="flex items-center p-3 rounded-lg bg-white/5">
-                                <div className="w-8 h-8 bg-blue-600/30 rounded-full flex items-center justify-center text-white">
-                                    A
-                                </div>
-                                <div className="ml-3">
-                                    <p className="text-sm font-medium text-white">Admin</p>
-                                    <p className="text-xs text-white/60">admin@swiftly.dev</p>
-                                </div>
-                                <Link
-                                    href="/admin/logout"
-                                    className="ml-auto"
-                                >
-                                    <span className="sr-only">Salir</span>
-                                    <LogOut className="h-5 w-5 text-white/60 hover:text-white" />
-                                </Link>
-                            </div>
-                        </div>
-                    </nav>
-                </aside>
-
-                {/* Main content */}
-                <main className="flex-1 overflow-auto">
-                    {/* Elementos decorativos de fondo */}
-                    <div className="fixed inset-0 -z-10 pointer-events-none">
-                        <div className="absolute -top-40 -right-20 w-96 h-96 bg-blue-600/10 rounded-full filter blur-3xl"></div>
-                        <div className="absolute bottom-40 -left-20 w-96 h-96 bg-purple-600/10 rounded-full filter blur-3xl"></div>
-                    </div>
-
-                    <div className="container mx-auto p-6">{children}</div>
-                </main>
+                        <div className="container mx-auto p-6">{children}</div>
+                    </main>
+                </div>
             </div>
-        </div>
+        </ProtectedRoute>
     );
 }

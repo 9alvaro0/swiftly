@@ -1,13 +1,20 @@
 // src/components/layout/header/MobileNav.tsx
+
+"use client";
+
 import { Menu, X } from "lucide-react";
 import NavLinks from "./NavLinks";
+import type { User } from "@/types/User";
 
 interface MobileNavProps {
     isOpen: boolean;
     onToggle: () => void;
+    isAuthenticated: boolean;
+    user: User | null;
+    isLoading: boolean;
 }
 
-export default function MobileNav({ isOpen, onToggle }: MobileNavProps) {
+export default function MobileNav({ isOpen, onToggle, isAuthenticated, user, isLoading }: MobileNavProps) {
     return (
         <div className="md:hidden">
             <button
@@ -40,6 +47,9 @@ export default function MobileNav({ isOpen, onToggle }: MobileNavProps) {
                     <NavLinks
                         isMobile={true}
                         onItemClick={onToggle}
+                        isAuthenticated={isAuthenticated}
+                        user={user}
+                        isLoading={isLoading}
                     />
                 </nav>
             </div>

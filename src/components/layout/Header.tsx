@@ -5,12 +5,14 @@ import React, { useState, useEffect } from "react";
 import Logo from "./header/Logo";
 import DesktopNav from "./header/DesktopNav";
 import MobileNav from "./header/MobileNav";
+import { useAuthStore } from "@/store/authStore";
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
-    // Detectar scroll para cambiar la apariencia del header
+    const { isAuthenticated, user, isLoading } = useAuthStore();
+
     useEffect(() => {
         const handleScroll = () => {
             setScrolled(window.scrollY > 10);
@@ -35,10 +37,17 @@ const Header = () => {
         >
             <div className="container mx-auto px-4 flex justify-between items-center">
                 <Logo />
-                <DesktopNav />
+                <DesktopNav
+                    isAuthenticated={isAuthenticated}
+                    user={user}
+                    isLoading={isLoading}
+                />
                 <MobileNav
                     isOpen={isMenuOpen}
                     onToggle={toggleMenu}
+                    isAuthenticated={isAuthenticated}
+                    user={user}
+                    isLoading={isLoading}
                 />
             </div>
         </header>

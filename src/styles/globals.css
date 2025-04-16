@@ -32,6 +32,10 @@
     }
 }
 
+.toaster-container {
+    @apply z-[100];
+}
+
 /* Estilo base para el body */
 body {
     color: var(--foreground);

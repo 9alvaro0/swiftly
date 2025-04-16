@@ -4,6 +4,8 @@ import "@/styles/globals.css";
 import MainLayout from "@/components/layout/MainLayout";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 const inter = Inter({ subsets: ["latin"] });
+import AuthInitializer from "@/components/auth/AuthInitializer";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
     title: "Swiftly - Tutoriales de Swift y SwiftUI",
@@ -14,8 +16,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html lang="es">
             <body className={inter.className}>
-                <MainLayout>{children}</MainLayout>
-                <SpeedInsights />
+                <AuthInitializer>
+                    <MainLayout>{children}</MainLayout>
+                    <Toaster
+                        position="top-right"
+                        richColors
+                        expand={false}
+                        className="toaster-container"
+                    />
+                    <SpeedInsights />
+                </AuthInitializer>
             </body>
         </html>
     );

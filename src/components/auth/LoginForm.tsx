@@ -1,20 +1,30 @@
 // src/components/auth/LoginForm.tsx
+
+"use client";
+
+import { loginWithEmailAndPassword } from "@/firebase/auth/auth";
+import { handleFirebaseError } from "@/firebase/errors";
 import Link from "next/link";
 import { useState } from "react";
 
-interface LoginFormProps {
-    onSubmit: (email: string, password: string) => void;
-    isLoading: boolean;
-}
-
-export default function LoginForm({ onSubmit, isLoading }: LoginFormProps) {
+export default function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        onSubmit(email, password);
+        setIsLoading(true);
+
+        try {
+            loginWithEmailAndPassword(email, password);
+            window.location.href = "/";
+        } catch (error) {
+            handleFirebaseError(error, "Email Login");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (

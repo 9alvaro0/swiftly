@@ -1,5 +1,7 @@
 // src/components/layout/header/NavItem.tsx
 
+"use client";
+
 import Link from "next/link";
 
 interface NavItemProps {
@@ -8,9 +10,10 @@ interface NavItemProps {
     isActive: boolean;
     onClick?: () => void;
     isMobile?: boolean;
+    className?: string;
 }
 
-export default function NavItem({ name, path, isActive, onClick, isMobile = false }: NavItemProps) {
+export default function NavItem({ name, path, isActive, onClick, isMobile = false, className = "" }: NavItemProps) {
     return (
         <li>
             <Link
@@ -20,6 +23,7 @@ export default function NavItem({ name, path, isActive, onClick, isMobile = fals
                     font-medium transition-all duration-300
                     ${isActive ? "text-white bg-white/10 backdrop-blur-sm" : "text-white/70 hover:text-white"}
                     ${isMobile ? (isActive ? "border-l-4 border-blue-500" : "") : "rounded-lg hover:bg-white/5"}
+                    ${className}
                 `}
                 onClick={onClick}
             >
