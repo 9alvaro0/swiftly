@@ -1,19 +1,15 @@
 // src/app/admin/page.tsx
 
-"use client";
-
-import TutorialStatsCards from "@/components/admin/dashboard/TutorialStatsCards";
-import Loading from "@/app/admin/loading";
-import { usePosts } from "@/hooks/usePosts";
+import PostStatsCardsSkeleton from "@/components/admin/dashboard/skeletons/PostStatsCardsSkeleton";
+import PostStatsCards from "@/components/admin/dashboard/PostStatsCards";
+import { Suspense } from "react";
 
 export default function AdminDashboardPage() {
-    const { isLoading, stats } = usePosts();
-
-    if (isLoading) return <Loading />;
-
     return (
         <div className="space-y-8 p-6">
-            <TutorialStatsCards stats={stats} />
+            <Suspense fallback={<PostStatsCardsSkeleton />}>
+                <PostStatsCards />
+            </Suspense>
         </div>
     );
 }

@@ -1,5 +1,3 @@
-// src/components/admin/PostForm.tsx
-
 "use client";
 
 import React, { useRef } from "react";
@@ -11,7 +9,7 @@ import Checkbox from "@/components/ui/Checkbox";
 import TagInput from "@/components/ui/TagInput";
 import PostContent from "@/components/posts/PostContent";
 import { ImageUploader } from "@/components/admin/ImageUploader";
-import { CATEGORY_OPTIONS, LEVEL_OPTIONS, CODE_SNIPPETS } from "@/constants/post";
+import { CATEGORY_OPTIONS, LEVEL_OPTIONS, CODE_SNIPPETS, POST_TYPE_OPTIONS } from "@/constants/post";
 import { usePostForm } from "@/hooks/usePostForm";
 import { Post } from "@/types/Post";
 import Image from "next/image";
@@ -37,6 +35,8 @@ export default function PostForm({ isEdit = false, initialData, onSubmit }: Post
         handleSubmit,
         addTag,
         removeTag,
+        addKeyword,
+        removeKeyword,
     } = usePostForm(initialData ? { defaultValues: initialData } : undefined);
 
     const handleQuickInsert = (snippet: string) => {
@@ -73,10 +73,11 @@ export default function PostForm({ isEdit = false, initialData, onSubmit }: Post
             onSubmit={(e) => {
                 e.preventDefault();
                 handleSubmit(e);
-                if (onSubmit) onSubmit(post);
+                onSubmit?.(post);
             }}
-            className="space-y-6"
+            className="space-y-8"
         >
+            {/* Básico */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Input
                     id="title"
@@ -87,13 +88,26 @@ export default function PostForm({ isEdit = false, initialData, onSubmit }: Post
                     error={errors.title}
                 />
                 <Input
+                    id="slug"
+                    name="slug"
+                    label="Slug personalizado"
+                    value={post.slug}
+                    onChange={handleChange}
+                />
+                <Input
                     id="imageUrl"
                     name="imageUrl"
-                    label="URL de la Imagen Principal"
+                    label="URL de Imagen Principal"
                     value={post.imageUrl}
                     onChange={handleChange}
-                    placeholder="https://ejemplo.com/imagen-post.jpg"
                     error={errors.imageUrl}
+                />
+                <Input
+                    id="coverImage"
+                    name="coverImage"
+                    label="Imagen de Portada (opcional)"
+                    value={post.coverImage || ""}
+                    onChange={handleChange}
                 />
             </div>
 
@@ -124,15 +138,76 @@ export default function PostForm({ isEdit = false, initialData, onSubmit }: Post
                     onChange={handleChange}
                     options={LEVEL_OPTIONS}
                 />
+                <Select
+                    id="type"
+                    name="type"
+                    label="Tipo de Post"
+                    value={post.type}
+                    onChange={handleChange}
+                    options={POST_TYPE_OPTIONS}
+                />
+            </div>
+
+            {/* Autor */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Input
-                    id="authorName"
+                    id="author.name"
                     name="author.name"
                     label="Nombre del Autor"
                     value={post.author?.name}
                     onChange={handleChange}
                 />
+                <Input
+                    id="author.username"
+                    name="author.username"
+                    label="Username del Autor"
+                    value={post.author?.username || ""}
+                    onChange={handleChange}
+                />
+                <Input
+                    id="author.avatar"
+                    name="author.avatar"
+                    label="Avatar del Autor"
+                    value={post.author?.avatar || ""}
+                    onChange={handleChange}
+                />
             </div>
 
+            <Textarea
+                id="author.bio"
+                name="author.bio"
+                label="Bio del Autor"
+                value={post.author?.bio || ""}
+                onChange={handleChange}
+                rows={3}
+            />
+
+            {/* Redes Sociales */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Input
+                    id="author.socialLinks.twitter"
+                    name="author.socialLinks.twitter"
+                    label="Twitter"
+                    value={post.author?.socialLinks?.twitter || ""}
+                    onChange={handleChange}
+                />
+                <Input
+                    id="author.socialLinks.github"
+                    name="author.socialLinks.github"
+                    label="GitHub"
+                    value={post.author?.socialLinks?.github || ""}
+                    onChange={handleChange}
+                />
+                <Input
+                    id="author.socialLinks.linkedin"
+                    name="author.socialLinks.linkedin"
+                    label="LinkedIn"
+                    value={post.author?.socialLinks?.linkedin || ""}
+                    onChange={handleChange}
+                />
+            </div>
+
+            {/* Etiquetas y Keywords */}
             <TagInput
                 id="tags"
                 label="Etiquetas"
@@ -140,7 +215,24 @@ export default function PostForm({ isEdit = false, initialData, onSubmit }: Post
                 onAddTag={addTag}
                 onRemoveTag={removeTag}
             />
+            <TagInput
+                id="keywords"
+                label="Palabras clave (SEO)"
+                tags={post.keywords || []}
+                onAddTag={addKeyword}
+                onRemoveTag={removeKeyword}
+            />
 
+            <Textarea
+                id="metaDescription"
+                name="metaDescription"
+                label="Meta Descripción (SEO)"
+                value={post.metaDescription || ""}
+                onChange={handleChange}
+                rows={2}
+            />
+
+            {/* Markdown */}
             <div>
                 <label className="block text-primary font-medium mb-2">Snippets Rápidos</label>
                 <div className="flex flex-wrap gap-2 mb-4">
@@ -158,44 +250,39 @@ export default function PostForm({ isEdit = false, initialData, onSubmit }: Post
                 </div>
             </div>
 
-            <div>
-                <div className="flex items-center mb-4">
-                    <Checkbox
-                        id="preview"
-                        label="Vista Previa"
-                        checked={isPreviewMode}
-                        onChange={() => setIsPreviewMode(!isPreviewMode)}
-                    />
-                </div>
+            <Checkbox
+                id="preview"
+                label="Vista Previa"
+                checked={isPreviewMode}
+                onChange={() => setIsPreviewMode(!isPreviewMode)}
+            />
 
-                {!isPreviewMode ? (
-                    <Textarea
-                        ref={contentRef}
-                        id="content"
-                        name="content"
-                        label="Contenido (Markdown)"
-                        value={post.content}
-                        onChange={handleChange}
-                        rows={15}
-                        className="font-mono"
-                        placeholder="Escribe tu post en Markdown..."
-                        error={errors.content}
-                    />
-                ) : (
-                    <div className="border rounded-md p-4 h-[30rem] overflow-auto">
-                        <PostContent content={post.content || "Vista previa de tu contenido..."} />
-                    </div>
-                )}
-            </div>
+            {!isPreviewMode ? (
+                <Textarea
+                    ref={contentRef}
+                    id="content"
+                    name="content"
+                    label="Contenido (Markdown)"
+                    value={post.content}
+                    onChange={handleChange}
+                    rows={15}
+                    className="font-mono"
+                    error={errors.content}
+                />
+            ) : (
+                <div className="border rounded-md p-4 h-[30rem] overflow-auto">
+                    <PostContent content={post.content || "Vista previa de tu contenido..."} />
+                </div>
+            )}
 
             <div className="mt-6">
-                <label className="block text-primary font-medium mb-2">Subir Imágenes para el Post</label>
+                <label className="block text-primary font-medium mb-2">Subir Imágenes</label>
                 <ImageUploader onImageUpload={handleImageInsert} />
             </div>
 
             {uploadedImages.length > 0 && (
                 <div className="mt-4">
-                    <label className="block text-primary font-medium mb-2">Vista Previa de Imágenes</label>
+                    <label className="block text-primary font-medium mb-2">Imágenes Subidas</label>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {uploadedImages.map((imageUrl, index) => (
                             <div
@@ -220,15 +307,32 @@ export default function PostForm({ isEdit = false, initialData, onSubmit }: Post
                 </div>
             )}
 
-            <Checkbox
-                id="publish"
-                name="isPublished"
-                checked={post.isPublished}
-                onChange={(e) => setPost({ ...post, isPublished: e.target.checked })}
-                label="Publicar inmediatamente"
-            />
+            {/* Flags adicionales */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <Checkbox
+                    id="isPublished"
+                    name="isPublished"
+                    checked={post.isPublished}
+                    onChange={(e) => setPost({ ...post, isPublished: e.target.checked })}
+                    label="¿Publicar?"
+                />
+                <Checkbox
+                    id="featured"
+                    name="featured"
+                    checked={post.featured || false}
+                    onChange={(e) => setPost({ ...post, featured: e.target.checked })}
+                    label="Destacado"
+                />
+                <Checkbox
+                    id="draft"
+                    name="draft"
+                    checked={post.draft || false}
+                    onChange={(e) => setPost({ ...post, draft: e.target.checked })}
+                    label="Borrador"
+                />
+            </div>
 
-            <div className="flex justify-end space-x-4">
+            <div className="flex justify-end mt-8">
                 <Button
                     variant="primary"
                     type="submit"

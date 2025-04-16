@@ -1,19 +1,17 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Post } from "@/types/Post";
+import { getDefaultPost } from "@/utils/utils";
 
 interface PostFormOptions {
-    defaultValues?: Partial<Post>;
+    defaultValues?: Post;
     onSubmit?: (post: Post) => void;
 }
 
-export const usePostForm = ({ defaultValues = {}, onSubmit }: PostFormOptions = {}) => {
+export const usePostForm = ({ defaultValues, onSubmit }: PostFormOptions = {}) => {
     const router = useRouter();
 
-    const [post, setPost] = useState<Partial<Post>>({
-        ...defaultValues,
-        type: defaultValues.type,
-    });
+    const [post, setPost] = useState<Post>(defaultValues || getDefaultPost());
 
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [uploadedImages, setUploadedImages] = useState<string[]>([]);
@@ -33,6 +31,22 @@ export const usePostForm = ({ defaultValues = {}, onSubmit }: PostFormOptions = 
         setPost((prev) => ({
             ...prev,
             content: (prev.content || "") + markdownImage,
+        }));
+    };
+
+    const addKeyword = (keyword: string) => {
+        if (keyword && !post.keywords?.includes(keyword)) {
+            setPost((prev) => ({
+                ...prev,
+                keywords: [...(prev.keywords || []), keyword],
+            }));
+        }
+    };
+
+    const removeKeyword = (keyword: string) => {
+        setPost((prev) => ({
+            ...prev,
+            keywords: prev.keywords?.filter((k) => k !== keyword) || [],
         }));
     };
 
@@ -160,5 +174,7 @@ export const usePostForm = ({ defaultValues = {}, onSubmit }: PostFormOptions = 
         addTag,
         removeTag,
         validateForm,
+        addKeyword,
+        removeKeyword,
     };
 };

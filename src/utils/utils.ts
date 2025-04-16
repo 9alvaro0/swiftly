@@ -1,8 +1,70 @@
+import { Post } from "@/types/Post";
+
 export function formatDate(dateString: string): string {
     return new Date(dateString).toLocaleDateString("es-ES", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    })
-  }
-  
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
+}
+
+export const getDefaultPost = (): Post => ({
+    // Identificadores
+    id: "",
+    slug: "",
+
+    // Contenido principal
+    title: "",
+    description: "",
+    content: "",
+
+    // Metadatos de publicación
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    isPublished: false,
+
+    // Categorización
+    category: "Swift",
+    tags: [],
+    level: "Principiante",
+    type: "article",
+
+    // Multimedia
+    imageUrl: "",
+    images: [],
+    coverImage: "",
+
+    // Información de lectura
+    readTime: 0,
+    wordCount: 0,
+
+    // Autor
+    author: {
+        id: "",
+        name: "",
+        username: "",
+        avatar: "",
+        bio: "",
+        socialLinks: {
+            twitter: "",
+            github: "",
+            linkedin: "",
+        },
+    },
+
+    // SEO y discoverability
+    keywords: [],
+    metaDescription: "",
+
+    // Relaciones
+    relatedPosts: [],
+
+    // Interacción
+    views: 0,
+    likes: 0,
+
+    // Opciones adicionales
+    draft: false,
+    featured: false,
+    language: "es",
+});

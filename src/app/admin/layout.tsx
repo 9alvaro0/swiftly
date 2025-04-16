@@ -3,14 +3,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import type React from "react";
-import {
-    DashboardIcon,
-    TutorialIcon,
-    ResourceIcon,
-    BlogIcon,
-    SettingsIcon,
-    ExternalLinkIcon,
-} from "@/components/icons/admin-icons";
+import { LayoutDashboard, BookOpen, FolderKanban, Newspaper, Settings, ExternalLink, LogOut } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -23,55 +16,58 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {
             name: "Dashboard",
             href: "/admin",
-            icon: DashboardIcon,
+            icon: LayoutDashboard,
             exact: true,
         },
         {
-            name: "Tutoriales",
-            href: "/admin/tutorials",
-            icon: TutorialIcon,
+            name: "Publicaciones",
+            href: "/admin/posts",
+            icon: BookOpen,
         },
         {
             name: "Recursos",
             href: "/admin/resources",
-            icon: ResourceIcon,
+            icon: FolderKanban,
             disabled: true,
         },
         {
             name: "Blog",
             href: "/admin/blog",
-            icon: BlogIcon,
+            icon: Newspaper,
             disabled: true,
         },
         {
             name: "Configuración",
             href: "/admin/settings",
-            icon: SettingsIcon,
+            icon: Settings,
             disabled: true,
         },
     ];
 
     return (
-        <div className="min-h-screen flex flex-col bg-background">
+        <div className="min-h-screen flex flex-col">
             {/* Header */}
-            <header className="bg-card border-b border-neutral-200 dark:border-neutral-800">
-                <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-                    <h1 className="text-xl font-semibold text-primary">Swiftly Admin</h1>
+            <header className="bg-white/5 backdrop-blur-md border-b border-white/10 shadow-md">
+                <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+                    <h1 className="text-xl font-semibold text-white flex items-center">
+                        <span className="bg-blue-600 text-white p-1 rounded mr-2 text-sm">Admin</span>
+                        Swiftly
+                    </h1>
                     <Link
                         href="/"
-                        className="flex items-center gap-1 text-sm text-primary hover:text-primary-dark transition-colors"
+                        className="flex items-center gap-1 text-sm text-white/80 hover:text-white transition-colors bg-white/10 px-3 py-1.5 rounded-full"
                     >
                         <span>Ver sitio</span>
-                        <ExternalLinkIcon className="h-4 w-4" />
+                        <ExternalLink className="h-4 w-4 ml-1" />
                     </Link>
                 </div>
             </header>
 
             <div className="flex flex-1">
-                {/* Sidebar */}
-                <aside className="w-64 bg-card border-r border-neutral-200 dark:border-neutral-800">
-                    <nav className="p-3">
-                        <div className="space-y-1">
+                {/* Sidebar con efecto glassmorphism */}
+                <aside className="w-64 bg-white/5 backdrop-blur-sm border-r border-white/10">
+                    <nav className="p-4">
+                        <div className="space-y-2">
                             {navItems.map((item) => {
                                 const active = item.exact ? pathname === item.href : isActive(item.href);
 
@@ -79,31 +75,71 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                     <Link
                                         key={item.href}
                                         href={item.disabled ? "#" : item.href}
-                                        className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm
-                                            transition-colors duration-200
+                                        className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm
+                                            transition-all duration-200
                                             ${
                                                 active
-                                                    ? "bg-primary/10 text-primary font-medium"
+                                                    ? "bg-blue-600/20 text-white font-medium border border-blue-500/30"
                                                     : item.disabled
-                                                    ? "text-neutral-400 cursor-default"
-                                                    : "text-primary hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                                                    ? "text-white/40 cursor-default"
+                                                    : "text-white/70 hover:bg-white/10 hover:text-white"
                                             }
                                         `}
                                         onClick={item.disabled ? (e) => e.preventDefault() : undefined}
                                     >
                                         <item.icon
-                                            className={`h-5 w-5 ${active ? "text-primary" : "text-neutral-500"}`}
+                                            className={`h-5 w-5 ${
+                                                active
+                                                    ? "text-blue-400"
+                                                    : item.disabled
+                                                    ? "text-white/40"
+                                                    : "text-white/60"
+                                            }`}
                                         />
                                         <span>{item.name}</span>
+
+                                        {item.disabled && (
+                                            <span className="ml-auto text-xs bg-white/10 px-2 py-0.5 rounded-full">
+                                                Pronto
+                                            </span>
+                                        )}
                                     </Link>
                                 );
                             })}
+                        </div>
+
+                        {/* Sección de usuario */}
+                        <div className="mt-8 pt-6 border-t border-white/10">
+                            <div className="flex items-center p-3 rounded-lg bg-white/5">
+                                <div className="w-8 h-8 bg-blue-600/30 rounded-full flex items-center justify-center text-white">
+                                    A
+                                </div>
+                                <div className="ml-3">
+                                    <p className="text-sm font-medium text-white">Admin</p>
+                                    <p className="text-xs text-white/60">admin@swiftly.dev</p>
+                                </div>
+                                <Link
+                                    href="/admin/logout"
+                                    className="ml-auto"
+                                >
+                                    <span className="sr-only">Salir</span>
+                                    <LogOut className="h-5 w-5 text-white/60 hover:text-white" />
+                                </Link>
+                            </div>
                         </div>
                     </nav>
                 </aside>
 
                 {/* Main content */}
-                <main className="flex-1 overflow-auto bg-background">{children}</main>
+                <main className="flex-1 overflow-auto">
+                    {/* Elementos decorativos de fondo */}
+                    <div className="fixed inset-0 -z-10 pointer-events-none">
+                        <div className="absolute -top-40 -right-20 w-96 h-96 bg-blue-600/10 rounded-full filter blur-3xl"></div>
+                        <div className="absolute bottom-40 -left-20 w-96 h-96 bg-purple-600/10 rounded-full filter blur-3xl"></div>
+                    </div>
+
+                    <div className="container mx-auto p-6">{children}</div>
+                </main>
             </div>
         </div>
     );

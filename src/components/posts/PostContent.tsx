@@ -5,9 +5,9 @@
 import { useEffect, memo } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import remarkGfm from "remark-gfm";
 import Image from "next/image";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 type PostContentProps = {
     content: string;
@@ -32,64 +32,68 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
             <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
-                    h1: ({ node, ...props }) => (
+                    h1: (props) => (
                         <h1
                             className="text-3xl font-bold mt-12 mb-6 pb-2 border-b border-white/10"
                             {...props}
                         />
                     ),
-                    h2: ({ node, ...props }) => (
+                    h2: (props) => (
                         <h2
                             className="text-2xl font-bold mt-10 mb-4 pb-1 border-b border-white/10"
                             {...props}
                         />
                     ),
-                    h3: ({ node, ...props }) => (
+                    h3: (props) => (
                         <h3
                             className="text-xl font-bold mt-8 mb-3"
                             {...props}
                         />
                     ),
-                    p: ({ node, ...props }) => (
+                    p: (props) => (
                         <p
                             className="my-4 leading-relaxed"
                             {...props}
                         />
                     ),
-                    ul: ({ node, ...props }) => (
+                    ul: (props) => (
                         <ul
                             className="list-disc pl-6 my-4 space-y-2 text-white/80"
                             {...props}
                         />
                     ),
-                    ol: ({ node, ...props }) => (
+                    ol: (props) => (
                         <ol
                             className="list-decimal pl-6 my-4 space-y-2 text-white/80"
                             {...props}
                         />
                     ),
-                    li: ({ node, ...props }) => (
+                    li: (props) => (
                         <li
                             className="mb-2"
                             {...props}
                         />
                     ),
-                    a: ({ node, href, ...props }) => (
+                    a: ({ href, ...props }) => (
                         <a
                             href={href}
                             className="text-blue-400 hover:text-blue-300 transition-colors hover:underline"
                             {...props}
                         />
                     ),
-                    blockquote: ({ node, ...props }) => (
+                    blockquote: (props) => (
                         <blockquote
                             className="border-l-4 border-blue-500/70 bg-blue-500/5 pl-4 py-1 italic my-6 rounded-r"
                             {...props}
                         />
                     ),
-                    code: ({ node, className, children, ...props }: any) => {
+                    code: ({
+                        className,
+                        children,
+                        inline,
+                        ...props
+                    }: React.HTMLAttributes<HTMLElement> & { inline?: boolean }) => {
                         const match = /language-(\w+)/.exec(className || "");
-                        const inline = props.inline;
 
                         return !inline && match ? (
                             <div className="rounded-md overflow-hidden my-6">
@@ -97,8 +101,9 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                                     {match[1].toUpperCase()}
                                 </div>
                                 <SyntaxHighlighter
-                                    style={vscDarkPlus}
                                     language={match[1]}
+                                    // @ts-expect-error: TypeScript does not recognize the style property for SyntaxHighlighter
+                                    style={vscDarkPlus}
                                     PreTag="div"
                                     customStyle={{
                                         margin: 0,
@@ -118,13 +123,11 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                             </code>
                         );
                     },
-                    img: ({ node, src, alt, ...props }) => {
-                        // Si no hay src, retornar un componente vacío
+                    img: ({ src, alt }) => {
                         if (!src) return null;
 
                         return (
                             <div className="relative my-8 rounded-lg overflow-hidden shadow-md">
-                                {/* Asumimos que las imágenes son externas aquí */}
                                 <Image
                                     src={src}
                                     alt={alt || "Imagen del artículo"}
@@ -135,8 +138,7 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                             </div>
                         );
                     },
-                    // Añadimos estilos para tablas
-                    table: ({ node, ...props }) => (
+                    table: (props) => (
                         <div className="overflow-x-auto my-8">
                             <table
                                 className="min-w-full border border-white/10 rounded-lg"
@@ -144,19 +146,19 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                             />
                         </div>
                     ),
-                    thead: ({ node, ...props }) => (
+                    thead: (props) => (
                         <thead
                             className="bg-white/5"
                             {...props}
                         />
                     ),
-                    th: ({ node, ...props }) => (
+                    th: (props) => (
                         <th
                             className="px-4 py-3 border-b border-white/10 text-left text-sm font-semibold text-white"
                             {...props}
                         />
                     ),
-                    td: ({ node, ...props }) => (
+                    td: (props) => (
                         <td
                             className="px-4 py-3 border-b border-white/10 text-sm text-white/80"
                             {...props}

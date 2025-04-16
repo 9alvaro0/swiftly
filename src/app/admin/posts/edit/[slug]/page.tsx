@@ -30,7 +30,7 @@ export default function EditTutorialPage() {
             <h1 className="text-2xl font-bold mb-6">Editar Post</h1>
             <TutorialForm
                 isEdit
-                initialData={post}
+                initialData={post!}
             />
         </div>
     );
