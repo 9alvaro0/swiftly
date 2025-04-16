@@ -4,6 +4,7 @@ import FooterColumn from "./footer/FooterColumn";
 import FooterLink from "./footer/FooterLink";
 import FooterLinkList from "./footer/FooterLinkList";
 import FooterSocialLinks from "./footer/FooterSocialLinks";
+import Image from "next/image";
 
 // Enlaces del footer organizados por secciones
 const footerLinks = {
@@ -29,28 +30,13 @@ const Footer = () => {
             <div className="container mx-auto px-4 py-10">
                 <div className="flex flex-col md:flex-row justify-between items-center py-6 border-b border-neutral-200 dark:border-neutral-800 mb-8">
                     <div className="flex items-center space-x-2 mb-4 md:mb-0">
-                        <svg
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="text-primary"
-                        >
-                            <path
-                                d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
-                                strokeWidth="2"
-                                stroke="currentColor"
-                                fill="none"
-                            />
-                            <path
-                                d="M15.5 9L10.5 14L8.5 12"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                stroke="currentColor"
-                            />
-                        </svg>
+                        <Image
+                            src="/icons/logo.png"
+                            className="rounded-full"
+                            alt="Logo"
+                            width={40}
+                            height={40}
+                        />
                         <span className="text-xl font-bold tracking-tight text-primary">Swiftly</span>
                     </div>
                 </div>
