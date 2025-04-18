@@ -183,7 +183,7 @@ export default function PostCard({ post, variant = "default" }: PostCardProps) {
                         </div>
                     )}
 
-                    {(post.views !== undefined || post.likes !== undefined) && (
+                    {(post.views !== undefined || post.likedBy?.length !== undefined) && (
                         <div className="flex gap-4 mt-4 text-sm text-white/60">
                             {post.views !== undefined && (
                                 <span className="flex items-center">
@@ -195,13 +195,13 @@ export default function PostCard({ post, variant = "default" }: PostCardProps) {
                                 </span>
                             )}
 
-                            {post.likes !== undefined && (
+                            {post.likedBy?.length !== undefined && (
                                 <span className="flex items-center">
                                     <Heart
                                         size={16}
                                         className="mr-1 text-blue-400/80"
                                     />
-                                    {post.likes}
+                                    {post.likedBy?.length}
                                 </span>
                             )}
                         </div>
