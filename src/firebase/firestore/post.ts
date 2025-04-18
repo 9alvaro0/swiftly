@@ -9,7 +9,8 @@ import {
   updateDoc, 
   deleteDoc, 
   arrayUnion, 
-  arrayRemove, 
+  arrayRemove,
+  increment,
   runTransaction 
 } from "firebase/firestore";
 import { Post } from "@/types/Post";
@@ -103,4 +104,47 @@ export const hasUserLikedPost = async (postId: string, userId: string): Promise<
     
     const postData = postDoc.data();
     return Array.isArray(postData.likedBy) && postData.likedBy.includes(userId);
+};
+
+// Incrementa el contador de vistas de un post
+export const incrementPostViews = async (postId: string): Promise<{views: number}> => {
+    const postRef = doc(postsCollection, postId);
+    
+    try {
+        let newViewCount = 0;
+        
+        await runTransaction(db, async (transaction) => {
+            const postDoc = await transaction.get(postRef);
+            
+            if (!postDoc.exists()) {
+                throw new Error("El post no existe");
+            }
+            
+            // Obtenemos el número actual de vistas o 0 si no existe
+            const currentViews = postDoc.data().views || 0;
+            newViewCount = currentViews + 1;
+            
+            // Incrementamos el contador de vistas
+            transaction.update(postRef, {
+                views: increment(1)
+            });
+        });
+        
+        return { views: newViewCount };
+    } catch (error) {
+        console.error("Error al incrementar vistas:", error);
+        throw error;
+    }
+};
+
+// Obtiene el número actual de vistas de un post
+export const getPostViews = async (postId: string): Promise<number> => {
+    const postRef = doc(postsCollection, postId);
+    const postDoc = await getDoc(postRef);
+    
+    if (!postDoc.exists()) {
+        return 0;
+    }
+    
+    return postDoc.data().views || 0;
 };
