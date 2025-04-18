@@ -34,4 +34,7 @@ export interface User {
         linkedin?: string;
         github?: string;
     };
+
+    // Posts
+    likedPosts?: string[];
 }

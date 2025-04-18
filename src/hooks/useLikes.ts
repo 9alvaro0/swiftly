@@ -4,6 +4,7 @@ import { hasUserLikedPost, togglePostLike } from "@/firebase/firestore/post";
 import { Post } from "@/types/Post";
 import { User } from "@/types/User";
 import { toast } from "sonner";
+import { saveUser } from "@/firebase/firestore/user";
 
 interface UseLikesResult {
     isLiked: boolean;
@@ -80,7 +81,15 @@ export function useLikes(post: Post, currentUser: User | null): UseLikesResult {
             setIsLiked(newLikedState);
             setLikesCount((prevCount) => (newLikedState ? prevCount + 1 : prevCount - 1));
 
+            // Actualizar en Firestore el estado del post
             await togglePostLike(post.id, currentUser.uid, newLikedState);
+
+            // Actualizar en Firestore el usuario con la referencia del post
+            const updatedLikedPosts = newLikedState
+                ? [...(currentUser.likedPosts || []), post.id]
+                : (currentUser.likedPosts || []).filter((likedPostId) => likedPostId !== post.id);
+
+            await saveUser({ ...currentUser, likedPosts: updatedLikedPosts });
 
             toast.success(newLikedState ? "Te gusta este post" : "Has quitado tu like");
         } catch {

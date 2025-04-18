@@ -55,13 +55,11 @@ export const updatePost = async (id: string, updatedFields: Partial<Post>): Prom
     });
 
     await updateDoc(doc(postsCollection, id), updatedData);
-    console.log("Post actualizado:", id);
 };
 
 // Eliminar un post
 export const deletePost = async (id: string): Promise<void> => {
     await deleteDoc(doc(postsCollection, id));
-    console.log("Post eliminado:", id);
 };
 
 // Dar/quitar like a un post
@@ -93,9 +91,7 @@ export const togglePostLike = async (postId: string, userId: string, likeStatus:
             }
         });
         
-        console.log(`Like ${likeStatus ? "agregado" : "removido"} al post ${postId} por usuario ${userId}`);
     } catch (error) {
-        console.error("Error al actualizar like:", error);
         throw error;
     }
 };
