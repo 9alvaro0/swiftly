@@ -1,5 +1,5 @@
 // src/hooks/usePostViews.ts
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { incrementPostViews, getPostViews } from '@/firebase/firestore/post';
 
 /**
@@ -15,7 +15,7 @@ export function usePostViews(postId: string, initialViews: number = 0) {
   const viewRegistered = useRef<boolean>(false);
 
   // Registra una vista y actualiza el estado local
-  const registerView = async () => {
+  const registerView = useCallback(async () => {
     // Evitar incrementar múltiples veces en la misma sesión
     if (viewRegistered.current) return;
     
@@ -35,7 +35,7 @@ export function usePostViews(postId: string, initialViews: number = 0) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [postId]);
 
   // Obtiene el número actual de vistas
   const refreshViews = async () => {
@@ -53,15 +53,11 @@ export function usePostViews(postId: string, initialViews: number = 0) {
     }
   };
 
-  // Efecto para registrar automáticamente la vista al montar el componente
   useEffect(() => {
     if (postId) {
       registerView();
     }
-    
-    // No es necesario limpiar viewRegistered.current ya que queremos que persista durante
-    // toda la sesión para evitar múltiples vistas del mismo usuario
-  }, [postId]);
+  }, [postId, registerView]);
 
   return { views, loading, error, refreshViews };
 }

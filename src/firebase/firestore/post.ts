@@ -106,11 +106,7 @@ export const hasUserLikedPost = async (postId: string, userId: string): Promise<
     return Array.isArray(postData.likedBy) && postData.likedBy.includes(userId);
 };
 
-/**
- * Incrementa el contador de vistas de un post
- * @param postId ID del post
- * @returns Un objeto con el nuevo número de vistas
- */
+// Incrementa el contador de vistas de un post
 export const incrementPostViews = async (postId: string): Promise<{views: number}> => {
     const postRef = doc(postsCollection, postId);
     
@@ -141,11 +137,7 @@ export const incrementPostViews = async (postId: string): Promise<{views: number
     }
 };
 
-/**
- * Obtiene el número actual de vistas de un post
- * @param postId ID del post
- * @returns Número de vistas o 0 si no existe
- */
+// Obtiene el número actual de vistas de un post
 export const getPostViews = async (postId: string): Promise<number> => {
     const postRef = doc(postsCollection, postId);
     const postDoc = await getDoc(postRef);
