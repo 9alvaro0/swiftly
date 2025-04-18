@@ -35,7 +35,7 @@ export default function TutorialDetailPage() {
     return (
         <PostDetail
             post={tutorial}
-            branch="tutoriales"
+            branch="tutorials"
         />
     );
 }

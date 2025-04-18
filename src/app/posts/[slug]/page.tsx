@@ -37,5 +37,5 @@ export default function PostDetailPage() {
         );
     }
 
-    return <PostDetail post={post} branch="tutoriales" />;
+    return <PostDetail post={post} branch="articles" />;
 }

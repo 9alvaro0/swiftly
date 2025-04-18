@@ -11,10 +11,10 @@ interface PostBreadcrumbsProps {
 export default function PostBreadcrumbs({ branch, postTitle }: PostBreadcrumbsProps) {
     const getBranchInfo = () => {
         switch (branch.toLowerCase()) {
-            case "tutoriales":
+            case "tutorials":
                 return { url: "/tutorials", label: "Tutoriales" };
             case "articles":
-                return { url: "/articles", label: "Articulos" };
+                return { url: "/posts", label: "Articulos" };
             default:
                 return { url: `/${branch.toLowerCase()}`, label: branch };
         }
