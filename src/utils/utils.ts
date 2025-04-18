@@ -66,7 +66,7 @@ export const getDefaultPost = (): Post => ({
 
     // Interacción
     views: 0,
-    likes: 0,
+    likedBy: [],
 
     // Opciones adicionales
     draft: false,

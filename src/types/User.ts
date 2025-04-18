@@ -25,7 +25,7 @@ export interface User {
 
     // Estadísticas
     stats?: {
-        likesCount: number;
+        likes: string[];
         viewsCount: number;
     };
 
@@ -34,7 +34,4 @@ export interface User {
         linkedin?: string;
         github?: string;
     };
-
-    // Posts
-    likedPosts?: string[];
 }

@@ -28,7 +28,7 @@ export default function UserStatsSection() {
                 <>
                     <StatItem
                         icon={Heart}
-                        value={stats.likesCount}
+                        value={stats.likes.length}
                         label="Likes"
                     />
                     <StatItem

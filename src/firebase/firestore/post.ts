@@ -10,7 +10,6 @@ import {
   deleteDoc, 
   arrayUnion, 
   arrayRemove, 
-  increment, 
   runTransaction 
 } from "firebase/firestore";
 import { Post } from "@/types/Post";
@@ -78,14 +77,11 @@ export const togglePostLike = async (postId: string, userId: string, likeStatus:
             if (likeStatus) {
                 // Agregar like
                 transaction.update(postRef, {
-                    likes: increment(1),
                     likedBy: arrayUnion(userId)
                 });
             } else {
                 // Quitar like
-                const currentLikes = postDoc.data().likes || 0;
                 transaction.update(postRef, {
-                    likes: currentLikes > 0 ? increment(-1) : 0,
                     likedBy: arrayRemove(userId)
                 });
             }

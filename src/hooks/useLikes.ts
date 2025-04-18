@@ -86,10 +86,17 @@ export function useLikes(post: Post, currentUser: User | null): UseLikesResult {
 
             // Actualizar en Firestore el usuario con la referencia del post
             const updatedLikedPosts = newLikedState
-                ? [...(currentUser.likedPosts || []), post.id]
-                : (currentUser.likedPosts || []).filter((likedPostId) => likedPostId !== post.id);
+                ? [...(currentUser.stats?.likes || []), post.id]
+                : (currentUser.stats?.likes || []).filter((likedPostId) => likedPostId !== post.id);
 
-            await saveUser({ ...currentUser, likedPosts: updatedLikedPosts });
+            await saveUser({ 
+                ...currentUser, 
+                stats: { 
+                    ...currentUser.stats, 
+                    likes: updatedLikedPosts, 
+                    viewsCount: currentUser.stats?.viewsCount ?? 0 
+                } 
+            });
 
             toast.success(newLikedState ? "Te gusta este post" : "Has quitado tu like");
         } catch {

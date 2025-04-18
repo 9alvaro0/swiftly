@@ -115,7 +115,7 @@ export const useAuthStore = create<AuthState>()(
                                   ...state.user,
                                   stats: {
                                       ...state.user.stats,
-                                      likesCount: state.user.stats?.likesCount || 0,
+                                      likes: Array.isArray(state.user.stats?.likes) ? state.user.stats.likes : [],
                                       viewsCount: state.user.stats?.viewsCount || 0,
                                       [stat]: (state.user.stats?.[stat] || 0) + value,
                                   },

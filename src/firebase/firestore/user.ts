@@ -61,7 +61,7 @@ export const createUserProfile = async (
         isActive: true,
         isBanned: false,
         stats: {
-            likesCount: 0,
+            likes: [],
             viewsCount: 0,
         },
         socialLinks,
