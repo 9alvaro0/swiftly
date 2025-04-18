@@ -11,7 +11,7 @@ export const navItems = [
     { name: "Inicio", path: "/" },
     { name: "Publicaciones", path: "/posts" },
     { name: "Tutoriales", path: "/tutorials" },
-    { name: "Contacto", path: "/contact" }
+    { name: "Contacto", path: "/contact" },
 ];
 
 interface NavLinksProps {

@@ -225,7 +225,7 @@ export default function ProfileHeader({ isLoading, onSave }: ProfileHeaderProps)
                     {/* Estadísticas del perfil - se podrían agregar como complemento */}
                     <div className="flex space-x-4 mt-2 sm:mt-0">
                         <div className="text-center">
-                            <div className="text-xl font-bold">{user?.stats?.likesCount || 0}</div>
+                            <div className="text-xl font-bold">{user?.stats?.likes || 0}</div>
                             <div className="text-sm text-gray-500">Likes</div>
                         </div>
                         <div className="text-center">

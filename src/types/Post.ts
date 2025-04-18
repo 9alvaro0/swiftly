@@ -43,7 +43,7 @@ export interface Post {
 
     // Interacción
     views?: number;
-    likes?: number;
+    likedBy?: string[];
 
     // Opciones adicionales
     draft?: boolean;

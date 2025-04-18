@@ -117,7 +117,7 @@ export const usePostForm = ({ defaultValues, onSubmit }: PostFormOptions = {}) =
                 socialLinks: post.author?.socialLinks,
             },
             views: post.views || 0,
-            likes: post.likes || 0,
+            likedBy: post.likedBy || [],
             draft: post.draft || false,
             featured: post.featured || false,
             language: post.language || "es",

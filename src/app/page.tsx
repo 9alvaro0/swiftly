@@ -7,11 +7,14 @@ import NewsletterSignup from "@/components/home/NewsletterSignup";
 
 export default function Home() {
     return (
-        <div className="space-y-12">
-            <HeroSection />
-            <FeaturedTutorials />
-            <LatestBlogPosts />
-            <NewsletterSignup />
+        <div>
+            {/* Hero y secciones principales */}
+            <div className="space-y-12 mb-16">
+                <HeroSection />
+                <FeaturedTutorials />
+                <LatestBlogPosts />
+                <NewsletterSignup />
+            </div>
         </div>
     );
 }

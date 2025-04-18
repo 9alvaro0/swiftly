@@ -1,12 +1,18 @@
+"use client";
+
 import Image from "next/image";
 import { Clock, Calendar, BookOpen } from "lucide-react";
 import type { Post } from "@/types/Post";
+import LikeButton from "./LikeButton";
+import { useAuthStore } from "@/store/authStore";
 
 type PostHeaderProps = {
     post: Post;
 };
 
 export default function PostHeader({ post }: PostHeaderProps) {
+    const { user } = useAuthStore()
+    
     // Función para formatear la fecha
     const formatDate = (date: string | Date) => {
         const dateObj = new Date(date);
@@ -70,6 +76,11 @@ export default function PostHeader({ post }: PostHeaderProps) {
                         <span>{post.views.toLocaleString()} lecturas</span>
                     </div>
                 )}
+
+                {/* Botón de Like */}
+                <div className="flex items-center gap-2">
+                    <LikeButton post={post} currentUser={user} />
+                </div>
 
                 {/* Avatar y nombre del autor simplificados */}
                 {post.author && (

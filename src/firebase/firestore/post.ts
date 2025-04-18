@@ -1,9 +1,21 @@
 // firebase/firestore/post.ts
 
-import { collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { 
+  collection, 
+  doc, 
+  getDoc, 
+  getDocs, 
+  setDoc, 
+  updateDoc, 
+  deleteDoc, 
+  arrayUnion, 
+  arrayRemove, 
+  runTransaction 
+} from "firebase/firestore";
 import { Post } from "@/types/Post";
 import { db } from "../config";
 import { convertDatesToTimestamps, convertTimestampsToDates } from "@/firebase/utils/utils";
+
 // Colección de Firestore
 const postsCollection = collection(db, "posts");
 
@@ -42,11 +54,53 @@ export const updatePost = async (id: string, updatedFields: Partial<Post>): Prom
     });
 
     await updateDoc(doc(postsCollection, id), updatedData);
-    console.log("Post actualizado:", id);
 };
 
 // Eliminar un post
 export const deletePost = async (id: string): Promise<void> => {
     await deleteDoc(doc(postsCollection, id));
-    console.log("Post eliminado:", id);
+};
+
+// Dar/quitar like a un post
+export const togglePostLike = async (postId: string, userId: string, likeStatus: boolean): Promise<void> => {
+    const postRef = doc(postsCollection, postId);
+    
+    try {
+        await runTransaction(db, async (transaction) => {
+            const postDoc = await transaction.get(postRef);
+            
+            if (!postDoc.exists()) {
+                throw new Error("El post no existe");
+            }
+            
+            // Determinar la operación a realizar según el estado del like
+            if (likeStatus) {
+                // Agregar like
+                transaction.update(postRef, {
+                    likedBy: arrayUnion(userId)
+                });
+            } else {
+                // Quitar like
+                transaction.update(postRef, {
+                    likedBy: arrayRemove(userId)
+                });
+            }
+        });
+        
+    } catch (error) {
+        throw error;
+    }
+};
+
+// Obtener si un usuario ha dado like a un post específico
+export const hasUserLikedPost = async (postId: string, userId: string): Promise<boolean> => {
+    const postRef = doc(postsCollection, postId);
+    const postDoc = await getDoc(postRef);
+    
+    if (!postDoc.exists()) {
+        return false;
+    }
+    
+    const postData = postDoc.data();
+    return Array.isArray(postData.likedBy) && postData.likedBy.includes(userId);
 };

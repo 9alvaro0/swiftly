@@ -3,6 +3,7 @@
 "use client";
 
 import Link from "next/link";
+import { ReactNode } from "react";
 
 interface NavItemProps {
     name: string;
@@ -11,9 +12,18 @@ interface NavItemProps {
     onClick?: () => void;
     isMobile?: boolean;
     className?: string;
+    icon?: ReactNode;
 }
 
-export default function NavItem({ name, path, isActive, onClick, isMobile = false, className = "" }: NavItemProps) {
+export default function NavItem({ 
+    name, 
+    path, 
+    isActive, 
+    onClick, 
+    isMobile = false, 
+    className = "",
+    icon
+}: NavItemProps) {
     return (
         <li>
             <Link
@@ -24,10 +34,12 @@ export default function NavItem({ name, path, isActive, onClick, isMobile = fals
                     ${isActive ? "text-white bg-white/10 backdrop-blur-sm" : "text-white/70 hover:text-white"}
                     ${isMobile ? (isActive ? "border-l-4 border-blue-500" : "") : "rounded-lg hover:bg-white/5"}
                     ${className}
+                    ${icon ? "flex items-center gap-1" : ""}
                 `}
                 onClick={onClick}
             >
-                {name}
+                {icon && <span className="flex items-center">{icon}</span>}
+                <span>{name}</span>
                 {isActive && !isMobile && (
                     <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1/2 h-0.5 bg-blue-500 rounded-full" />
                 )}
