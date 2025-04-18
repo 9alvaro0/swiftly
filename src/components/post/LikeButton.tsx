@@ -7,6 +7,7 @@ import { User } from '@/types/User';
 import { useLikes } from '@/hooks/useLikes';
 import { useState, useRef, useEffect } from 'react';
 import LikeAnimation from './LikeAnimation';
+import { toast } from 'sonner';
 
 interface LikeButtonProps {
   post: Post;
@@ -15,12 +16,11 @@ interface LikeButtonProps {
 }
 
 export default function LikeButton({ post, currentUser, className = "" }: LikeButtonProps) {
-  const [showLoginMessage, setShowLoginMessage] = useState(false);
   const [hasLikeChanged, setHasLikeChanged] = useState(false);
   const previousLikedState = useRef(false);
   
   // Utilizamos el hook personalizado para gestionar la lógica de likes
-  const { isLiked, likesCount, isLoading, error, toggleLike } = useLikes(post, currentUser);
+  const { isLiked, likesCount, isLoading, toggleLike } = useLikes(post, currentUser);
   
   useEffect(() => {
     if (previousLikedState.current !== isLiked) {
@@ -33,8 +33,7 @@ export default function LikeButton({ post, currentUser, className = "" }: LikeBu
 
   const handleLikeClick = async () => {
     if (!currentUser) {
-      setShowLoginMessage(true);
-      setTimeout(() => setShowLoginMessage(false), 3000);
+      toast.info("Inicia sesión para dar like");
       return;
     }
 
@@ -72,13 +71,6 @@ export default function LikeButton({ post, currentUser, className = "" }: LikeBu
         <span className="ml-2 text-xs bg-gradient-to-r from-orange-400 to-red-500 text-white px-1.5 py-0.5 rounded-sm">
           Trending
         </span>
-      )}
-      
-      {/* Mensaje de error/login */}
-      {(error || showLoginMessage) && (
-        <div className="absolute -bottom-10 left-0 z-10 bg-black/80 text-white text-xs p-2 rounded shadow-lg whitespace-nowrap">
-          {error || "Inicia sesión para dar like"}
-        </div>
       )}
     </div>
   );

@@ -5,15 +5,13 @@
 import { usePathname } from "next/navigation";
 import NavItem from "./NavItem";
 import type { User } from "@/types/User";
-import { TrendingUp } from "lucide-react";
 
 // Common navigation items for all users
 export const navItems = [
     { name: "Inicio", path: "/" },
     { name: "Publicaciones", path: "/posts" },
-    { name: "Trending", path: "/trending", icon: <TrendingUp size={16} className="text-red-500" /> },
     { name: "Tutoriales", path: "/tutorials" },
-    { name: "Contacto", path: "/contact" }
+    { name: "Contacto", path: "/contact" },
 ];
 
 interface NavLinksProps {
@@ -56,13 +54,6 @@ export default function NavLinks({
                         isActive={pathname === item.path}
                         onClick={onItemClick}
                         isMobile={isMobile}
-                        icon={item.icon}
-                        // Destacar el enlace de Trending con un estilo especial
-                        className={
-                            item.path === "/trending" && !isMobile 
-                            ? "text-red-400 hover:text-red-300" 
-                            : ""
-                        }
                     />
                 ))}
 

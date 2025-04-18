@@ -4,14 +4,14 @@ import Image from "next/image";
 import { Clock, Calendar, BookOpen } from "lucide-react";
 import type { Post } from "@/types/Post";
 import LikeButton from "./LikeButton";
-import { useAuth } from "@/hooks/useAuth"; // Asumimos que existe este hook
+import { useAuthStore } from "@/store/authStore";
 
 type PostHeaderProps = {
     post: Post;
 };
 
 export default function PostHeader({ post }: PostHeaderProps) {
-    const { user } = useAuth(); // Obtener el usuario actualmente autenticado
+    const { user } = useAuthStore()
     
     // Función para formatear la fecha
     const formatDate = (date: string | Date) => {

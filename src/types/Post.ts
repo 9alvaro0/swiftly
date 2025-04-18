@@ -43,8 +43,7 @@ export interface Post {
 
     // Interacción
     views?: number;
-    likes?: number;
-    likedBy?: string[]; // IDs de usuarios que han dado like al post
+    likedBy?: string[];
 
     // Opciones adicionales
     draft?: boolean;

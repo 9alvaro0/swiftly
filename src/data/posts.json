@@ -60,7 +60,7 @@
         ],
 
         "views": 1250,
-        "likes": 78,
+        "likedBy": ["user-1", "user-2", "user-3"],	
         
         "draft": false,
         "featured": true,
@@ -87,7 +87,7 @@
         "updatedAt": "2024-04-05T00:00:00Z",
         "publishedAt": "2024-03-20T00:00:00Z",
         "views": 980,
-        "likes": 56,
+        "likedBy": ["user-1", "user-2", "user-3"],	
         "draft": false,
         "featured": false,
         "language": "es",
@@ -138,7 +138,7 @@
         "updatedAt": "2024-03-15T00:00:00Z",
         "publishedAt": "2024-02-25T00:00:00Z",
         "views": 1580,
-        "likes": 92,
+        "likedBy": ["user-1", "user-2", "user-3"],	
         "draft": false,
         "featured": false,
         "language": "es",
