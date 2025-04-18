@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 Swiftly
 
-## Getting Started
+**Swiftly** es una plataforma moderna para publicar y descubrir posts y tutoriales sobre **Swift** y **SwiftUI**. Diseñada para desarrolladores iOS, esta app permite compartir conocimiento de forma rápida, elegante y estructurada.
 
-First, run the development server:
+![Swiftly Banner](./public/swiftly-banner.png) <!-- Opcional: añade un banner ilustrativo -->
+
+---
+
+## 🧠 Tecnologías
+
+-   [Next.js 14](https://nextjs.org/) + App Router
+-   TypeScript
+-   Tailwind CSS
+-   Markdown/MDX para contenido enriquecido
+-   API modular para posts/tutoriales
+-   Vercel para despliegue
+-   Soporte para metadatos SEO y vista previa enriquecida
+
+---
+
+## 🔧 Getting Started
+
+Instala las dependencias y lanza el servidor local:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# o
+yarn && yarn dev
+# o
+pnpm install && pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Luego abre [http://localhost:3000](http://localhost:3000) para ver Swiftly en acción 🚀  
+Puedes empezar a editar modificando el archivo `app/page.tsx`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ✍️ Estructura de Contenido
 
-## Learn More
+Los posts y tutoriales se organizan en un modelo JSON enriquecido con:
 
-To learn more about Next.js, take a look at the following resources:
+-   `slug`, `title`, `description`, `content`
+-   `tags`, `category`, `author`
+-   Soporte para imágenes, videos y estadísticas
+-   SEO: `metaTitle`, `metaDescription`, `keywords`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+⚡ El contenido se edita y previsualiza en tiempo real gracias a un formulario dinámico tipo WYSIWYG.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🌐 Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+¿Listo para ir en vivo? Despliega con un solo clic en **Vercel**:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+👉 [Deploy on Vercel](https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app-readme)
+
+O sigue la [guía oficial de despliegue](https://nextjs.org/docs/app/building-your-application/deploying).
+
+---
+
+## 📚 Aprende más
+
+-   [Documentación de Next.js](https://nextjs.org/docs)
+-   [Tutorial interactivo](https://nextjs.org/learn)
+-   [Repositorio en GitHub](https://github.com/vercel/next.js)
+
+---
+
+## 🤝 Contribuciones
+
+¿Quieres ayudar a mejorar Swiftly?
+
+1. Haz un fork del repo
+2. Crea una rama (`feat/nueva-funcionalidad`)
+3. Haz tus cambios y abre un PR
+
+¡Ideas, bugs y sugerencias son bienvenidas!
+
+---
+
+## 🐦 Síguenos
+
+Sigue el desarrollo y comparte tus tutoriales con el hashtag `#SwiftlyApp`.
+
+> Hecho con ❤️ para la comunidad Swift.
+
+---
