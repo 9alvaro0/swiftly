@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Input from "@/components/ui/Input";
 import Textarea from "@/components/ui/Textarea";
 import Select from "@/components/ui/Select";
@@ -13,7 +13,11 @@ import { CATEGORY_OPTIONS, LEVEL_OPTIONS, CODE_SNIPPETS, POST_TYPE_OPTIONS } fro
 import { usePostForm } from "@/hooks/usePostForm";
 import { Post } from "@/types/Post";
 import Image from "next/image";
-
+import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
+import { v4 as uuidv4 } from "uuid";
+import { Tag } from "@/types/Tag";
+import { useTags } from "@/hooks/useTags";
+import { useAuthStore } from "@/store/authStore";
 interface PostFormProps {
     isEdit?: boolean;
     initialData?: Post;
@@ -22,6 +26,11 @@ interface PostFormProps {
 
 export default function PostForm({ isEdit = false, initialData, onSubmit }: PostFormProps) {
     const contentRef = useRef<HTMLTextAreaElement>(null);
+    const { tags, createNewTag, isLoading: loadingTags } = useTags();
+    const [isAddingNewTag, setIsAddingNewTag] = useState(false);
+    const [newTagName, setNewTagName] = useState("");
+    const [tagError, setTagError] = useState("");
+    const { user } = useAuthStore();
 
     const {
         post,
@@ -68,6 +77,50 @@ export default function PostForm({ isEdit = false, initialData, onSubmit }: Post
         }
     };
 
+    // Función para añadir una etiqueta existente
+    const handleAddExistingTag = (tagName: string) => {
+        if (!tagName || (post.tags && post.tags.includes(tagName))) {
+            return;
+        }
+        addTag(tagName);
+    };
+
+    // Función para crear y añadir una nueva etiqueta
+    const handleCreateNewTag = async () => {
+        if (!newTagName.trim()) {
+            setTagError("El nombre de la etiqueta no puede estar vacío");
+            return;
+        }
+
+        // Verificar si la etiqueta ya existe en las etiquetas disponibles
+        const tagExists: boolean = tags.some((tag: Tag) => tag.name.toLowerCase() === newTagName.toLowerCase());
+        if (tagExists) {
+            setTagError("Esta etiqueta ya existe. Por favor selecciónala de la lista.");
+            return;
+        }
+
+        try {
+            // Crear nueva etiqueta en el sistema
+            const newTag: Tag = {
+                id: uuidv4(),
+                name: newTagName.trim(),
+            };
+
+            await createNewTag(newTag);
+
+            // Añadir la etiqueta al post actual
+            addTag(newTagName.trim());
+
+            // Limpiar el estado
+            setNewTagName("");
+            setIsAddingNewTag(false);
+            setTagError("");
+        } catch (error) {
+            setTagError("Error al crear la etiqueta");
+            console.error(error);
+        }
+    };
+
     return (
         <form
             onSubmit={(e) => {
@@ -77,7 +130,7 @@ export default function PostForm({ isEdit = false, initialData, onSubmit }: Post
             }}
             className="space-y-8"
         >
-            {/* Básico */}
+            {/* Secciones básicas y metadatos */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Input
                     id="title"
@@ -148,73 +201,99 @@ export default function PostForm({ isEdit = false, initialData, onSubmit }: Post
                 />
             </div>
 
-            {/* Autor */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Input
-                    id="author.name"
-                    name="author.name"
-                    label="Nombre del Autor"
-                    value={post.author?.name}
-                    onChange={handleChange}
-                />
-                <Input
-                    id="author.username"
-                    name="author.username"
-                    label="Username del Autor"
-                    value={post.author?.username || ""}
-                    onChange={handleChange}
-                />
-                <Input
-                    id="author.avatar"
-                    name="author.avatar"
-                    label="Avatar del Autor"
-                    value={post.author?.avatar || ""}
-                    onChange={handleChange}
-                />
+            {/* Sección de etiquetas mejorada */}
+            <div>
+                <label className="block text-primary font-medium mb-2">Etiquetas</label>
+
+                {/* Mostrar etiquetas seleccionadas */}
+                <div className="flex flex-wrap gap-2 mb-4">
+                    {post.tags?.map((tag) => (
+                        <div
+                            key={tag}
+                            className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full flex items-center"
+                        >
+                            <span className="mr-2">#{tag}</span>
+                            <button
+                                type="button"
+                                onClick={() => removeTag(tag)}
+                                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
+                            >
+                                <AiOutlineClose size={16} />
+                            </button>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Interfaz para añadir etiquetas existentes o crear nuevas */}
+                {!isAddingNewTag ? (
+                    <div className="mb-4">
+                        <div className="items-center space-x-2">
+                            <Select
+                                id="existingTags"
+                                label=""
+                                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                                    handleAddExistingTag(e.target.value)
+                                }
+                                value=""
+                                options={[
+                                    { value: "", label: "Seleccionar etiqueta..." },
+                                    ...tags
+                                        .filter((tag: Tag) => !post.tags?.includes(tag.name))
+                                        .map((tag: Tag) => ({ value: tag.name, label: `#${tag.name}` })),
+                                ]}
+                                disabled={loadingTags}
+                            />
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setIsAddingNewTag(true)}
+                            >
+                                <div className="flex items-center">
+                                    <AiOutlinePlus className="mr-1" /> Añadir nueva etiqueta
+                                </div>
+                            </Button>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="mb-4">
+                        <div className="items-end space-x-2">
+                            <div className="flex-grow">
+                                <Input
+                                    id="newTagName"
+                                    label="Nueva etiqueta"
+                                    value={newTagName}
+                                    onChange={(e) => setNewTagName(e.target.value)}
+                                    error={tagError}
+                                    placeholder="Escribe el nombre de la nueva etiqueta"
+                                />
+                            </div>
+                            <Button
+                                type="button"
+                                variant="primary"
+                                size="sm"
+                                onClick={handleCreateNewTag}
+                            >
+                                Crear y añadir
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                    setIsAddingNewTag(false);
+                                    setNewTagName("");
+                                    setTagError("");
+                                }}
+                            >
+                                Cancelar
+                            </Button>
+                        </div>
+                    </div>
+                )}
             </div>
 
-            <Textarea
-                id="author.bio"
-                name="author.bio"
-                label="Bio del Autor"
-                value={post.author?.bio || ""}
-                onChange={handleChange}
-                rows={3}
-            />
-
-            {/* Redes Sociales */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Input
-                    id="author.socialLinks.twitter"
-                    name="author.socialLinks.twitter"
-                    label="Twitter"
-                    value={post.author?.socialLinks?.twitter || ""}
-                    onChange={handleChange}
-                />
-                <Input
-                    id="author.socialLinks.github"
-                    name="author.socialLinks.github"
-                    label="GitHub"
-                    value={post.author?.socialLinks?.github || ""}
-                    onChange={handleChange}
-                />
-                <Input
-                    id="author.socialLinks.linkedin"
-                    name="author.socialLinks.linkedin"
-                    label="LinkedIn"
-                    value={post.author?.socialLinks?.linkedin || ""}
-                    onChange={handleChange}
-                />
-            </div>
-
-            {/* Etiquetas y Keywords */}
-            <TagInput
-                id="tags"
-                label="Etiquetas"
-                tags={post.tags || []}
-                onAddTag={addTag}
-                onRemoveTag={removeTag}
-            />
+            {/* Keywords para SEO */}
             <TagInput
                 id="keywords"
                 label="Palabras clave (SEO)"
@@ -232,7 +311,7 @@ export default function PostForm({ isEdit = false, initialData, onSubmit }: Post
                 rows={2}
             />
 
-            {/* Markdown */}
+            {/* Markdown editor */}
             <div>
                 <label className="block text-primary font-medium mb-2">Snippets Rápidos</label>
                 <div className="flex flex-wrap gap-2 mb-4">
@@ -275,6 +354,7 @@ export default function PostForm({ isEdit = false, initialData, onSubmit }: Post
                 </div>
             )}
 
+            {/* Subida de imágenes */}
             <div className="mt-6">
                 <label className="block text-primary font-medium mb-2">Subir Imágenes</label>
                 <ImageUploader onImageUpload={handleImageInsert} />
@@ -293,6 +373,8 @@ export default function PostForm({ isEdit = false, initialData, onSubmit }: Post
                                     src={imageUrl}
                                     alt={`Imagen subida ${index + 1}`}
                                     className="object-cover w-full h-32"
+                                    width={300}
+                                    height={200}
                                 />
                                 <button
                                     type="button"
@@ -307,6 +389,105 @@ export default function PostForm({ isEdit = false, initialData, onSubmit }: Post
                 </div>
             )}
 
+            {/* Autor */}
+            <div className="border border-blue-200 dark:border-blue-800 rounded-lg p-6 bg-blue-50 dark:bg-blue-950/30 shadow-sm mt-8">
+                <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-300">Información del Autor</h3>
+
+                    {(post.author?.name || user?.name) && (
+                        <div className="flex items-center">
+                            <span className="text-sm text-blue-600 dark:text-blue-400 mr-2">Usando perfil actual</span>
+                            <Checkbox
+                                id="useProfileInfo"
+                                checked={!!(post.author?.name || user?.name)}
+                                disabled={true}
+                                label=""
+                            />
+                        </div>
+                    )}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <Input
+                        id="author.name"
+                        name="author.name"
+                        label="Nombre del Autor"
+                        value={post.author?.name || user?.name || ""}
+                        onChange={handleChange}
+                        disabled={!!(post.author?.name || user?.name)}
+                        className={post.author?.name || user?.name ? "bg-gray-100 dark:bg-gray-800" : ""}
+                    />
+                    <Input
+                        id="author.username"
+                        name="author.username"
+                        label="Username del Autor"
+                        value={post.author?.username || user?.username || ""}
+                        onChange={handleChange}
+                        disabled={!!(post.author?.username || user?.username)}
+                        className={post.author?.username || user?.username ? "bg-gray-100 dark:bg-gray-800" : ""}
+                    />
+                    <Input
+                        id="author.avatar"
+                        name="author.avatar"
+                        label="Avatar del Autor"
+                        value={post.author?.avatar || user?.photoURL || ""}
+                        onChange={handleChange}
+                        disabled={!!(post.author?.avatar || user?.photoURL)}
+                        className={post.author?.avatar || user?.photoURL ? "bg-gray-100 dark:bg-gray-800" : ""}
+                    />
+                </div>
+
+                <Textarea
+                    id="author.bio"
+                    name="author.bio"
+                    label="Bio del Autor"
+                    value={post.author?.bio || user?.bio || ""}
+                    onChange={handleChange}
+                    rows={3}
+                    disabled={!!(post.author?.bio || user?.bio)}
+                    className={post.author?.bio || user?.bio ? "bg-gray-100 dark:bg-gray-800" : ""}
+                />
+
+                {/* Redes Sociales */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                    <Input
+                        id="author.socialLinks.github"
+                        name="author.socialLinks.github"
+                        label="GitHub"
+                        value={post.author?.socialLinks?.github || user?.socialLinks?.github || ""}
+                        onChange={handleChange}
+                        disabled={!!(post.author?.socialLinks?.github || user?.socialLinks?.github)}
+                        className={
+                            post.author?.socialLinks?.github || user?.socialLinks?.github
+                                ? "bg-gray-100 dark:bg-gray-800"
+                                : ""
+                        }
+                    />
+                    <Input
+                        id="author.socialLinks.linkedin"
+                        name="author.socialLinks.linkedin"
+                        label="LinkedIn"
+                        value={post.author?.socialLinks?.linkedin || user?.socialLinks?.linkedin || ""}
+                        onChange={handleChange}
+                        disabled={!!(post.author?.socialLinks?.linkedin || user?.socialLinks?.linkedin)}
+                        className={
+                            post.author?.socialLinks?.linkedin || user?.socialLinks?.linkedin
+                                ? "bg-gray-100 dark:bg-gray-800"
+                                : ""
+                        }
+                    />
+                </div>
+
+                {(post.author?.name || user?.name) && (
+                    <div className="mt-4 text-sm text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 p-3 rounded border border-gray-200 dark:border-gray-700">
+                        <p>
+                            Los campos del autor están prellenados con tu información de perfil y bloqueados para
+                            edición. Si necesitas cambiar estos datos, por favor actualiza tu perfil.
+                        </p>
+                    </div>
+                )}
+            </div>
+
             {/* Flags adicionales */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <Checkbox
@@ -315,20 +496,6 @@ export default function PostForm({ isEdit = false, initialData, onSubmit }: Post
                     checked={post.isPublished}
                     onChange={(e) => setPost({ ...post, isPublished: e.target.checked })}
                     label="¿Publicar?"
-                />
-                <Checkbox
-                    id="featured"
-                    name="featured"
-                    checked={post.featured || false}
-                    onChange={(e) => setPost({ ...post, featured: e.target.checked })}
-                    label="Destacado"
-                />
-                <Checkbox
-                    id="draft"
-                    name="draft"
-                    checked={post.draft || false}
-                    onChange={(e) => setPost({ ...post, draft: e.target.checked })}
-                    label="Borrador"
                 />
             </div>
 

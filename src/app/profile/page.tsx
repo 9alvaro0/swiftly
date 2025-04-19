@@ -8,7 +8,6 @@ import { toast } from "sonner";
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import ContactInfoSection from "@/components/profile/ContactInfoSection";
 import SocialLinksSection from "@/components/profile/SocialLinksSection";
-import UserStatsSection from "@/components/profile/UserStatsSection";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 export default function ProfilePage() {
@@ -41,18 +40,14 @@ export default function ProfilePage() {
                     <div className="md:col-span-2 space-y-6">
                         <ContactInfoSection/>
                         <SocialLinksSection/>
-                    </div>
-                    <div>
-                        <UserStatsSection />
-                    </div>
-
-                    <button
+                    </div>                
+                </div>
+                <button
                         onClick={logout}
                         className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-600 transition duration-200"
                     >
                         Cerrar sesión
                     </button>
-                </div>
             </div>
         </ProtectedRoute>
     );

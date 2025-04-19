@@ -88,14 +88,6 @@ export default function PostCard({ post, variant = "default" }: PostCardProps) {
                         </div>
                     )}
 
-                    {post.featured && (
-                        <div className="absolute top-4 right-4">
-                            <span className="inline-block bg-yellow-500/90 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full font-medium">
-                                Destacado
-                            </span>
-                        </div>
-                    )}
-
                     {/* Level badge if exists */}
                     {post.level && (
                         <div className="absolute bottom-4 left-4">
