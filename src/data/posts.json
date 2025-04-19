@@ -60,10 +60,8 @@
         ],
 
         "views": 1250,
-        "likedBy": ["user-1", "user-2", "user-3"],	
-        
-        "draft": false,
-        "featured": true,
+        "likedBy": ["user-1", "user-2", "user-3"],
+
         "language": "es"
     },
     {
@@ -87,9 +85,7 @@
         "updatedAt": "2024-04-05T00:00:00Z",
         "publishedAt": "2024-03-20T00:00:00Z",
         "views": 980,
-        "likedBy": ["user-1", "user-2", "user-3"],	
-        "draft": false,
-        "featured": false,
+        "likedBy": ["user-1", "user-2", "user-3"],
         "language": "es",
         "keywords": ["Swift concurrency", "async/await", "actores", "programación asíncrona", "desarrollo iOS"],
         "author": {
@@ -138,9 +134,7 @@
         "updatedAt": "2024-03-15T00:00:00Z",
         "publishedAt": "2024-02-25T00:00:00Z",
         "views": 1580,
-        "likedBy": ["user-1", "user-2", "user-3"],	
-        "draft": false,
-        "featured": false,
+        "likedBy": ["user-1", "user-2", "user-3"],
         "language": "es",
         "keywords": ["MVVM", "SwiftUI", "arquitectura", "patrones de diseño", "desarrollo iOS"],
         "author": {
@@ -189,9 +183,7 @@
         "updatedAt": "2024-03-15T00:00:00Z",
         "publishedAt": "2024-02-25T00:00:00Z",
         "views": 1580,
-        "likedBy": ["user-1", "user-2", "user-3"],	
-        "draft": false,
-        "featured": false,
+        "likedBy": ["user-1", "user-2", "user-3"],
         "language": "es",
         "keywords": ["MVVM", "SwiftUI", "arquitectura", "patrones de diseño", "desarrollo iOS"],
         "author": {
@@ -240,9 +232,7 @@
         "updatedAt": "2024-03-15T00:00:00Z",
         "publishedAt": "2024-02-25T00:00:00Z",
         "views": 1580,
-        "likedBy": ["user-1", "user-2", "user-3"],	
-        "draft": false,
-        "featured": false,
+        "likedBy": ["user-1", "user-2", "user-3"],
         "language": "es",
         "keywords": ["MVVM", "SwiftUI", "arquitectura", "patrones de diseño", "desarrollo iOS"],
         "author": {

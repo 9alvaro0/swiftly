@@ -118,8 +118,6 @@ export const usePostForm = ({ defaultValues, onSubmit }: PostFormOptions = {}) =
             },
             views: post.views || 0,
             likedBy: post.likedBy || [],
-            draft: post.draft || false,
-            featured: post.featured || false,
             language: post.language || "es",
         };
 

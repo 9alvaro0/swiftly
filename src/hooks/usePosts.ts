@@ -11,7 +11,6 @@ interface PostFilters {
     type?: PostType;
     searchTerm?: string;
     tags?: string[];
-    featured?: boolean;
 }
 
 export function usePosts(initialFilters: PostFilters = {}) {
@@ -44,14 +43,13 @@ export function usePosts(initialFilters: PostFilters = {}) {
             const matchCategory = !filters.category || post.category === filters.category;
             const matchLevel = !filters.level || post.level === filters.level;
             const matchType = !filters.type || post.type === filters.type;
-            const matchFeatured = filters.featured === undefined || post.featured === filters.featured;
             const matchSearchTerm =
                 !filters.searchTerm ||
                 post.title.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
                 post.description.toLowerCase().includes(filters.searchTerm.toLowerCase());
             const matchTags = !filters.tags?.length || filters.tags.some((tag) => post.tags.includes(tag));
 
-            return matchCategory && matchLevel && matchType && matchSearchTerm && matchTags && matchFeatured;
+            return matchCategory && matchLevel && matchType && matchSearchTerm && matchTags;
         });
     }, [posts, filters]);
 

@@ -46,8 +46,6 @@ export interface Post {
     likedBy?: string[];
 
     // Opciones adicionales
-    draft?: boolean;
-    featured?: boolean;
     language?: string;
 }
 

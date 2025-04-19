@@ -15,12 +15,6 @@ const footerLinks = {
         { title: "Cursos", href: "/courses" },
         { title: "Contacto", href: "/contact" },
     ],
-    categorias: [
-        { title: "Swift", href: "/categoria/swift" },
-        { title: "SwiftUI", href: "/categoria/swiftui" },
-        { title: "Xcode", href: "/categoria/xcode" },
-        { title: "Frameworks", href: "/categoria/frameworks" },
-    ],
 };
 
 const Footer = () => {
@@ -54,16 +48,6 @@ const Footer = () => {
                     <FooterColumn title="Explorar">
                         <FooterLinkList>
                             {footerLinks.explorar.map((link) => (
-                                <li key={link.href}>
-                                    <FooterLink href={link.href}>{link.title}</FooterLink>
-                                </li>
-                            ))}
-                        </FooterLinkList>
-                    </FooterColumn>
-
-                    <FooterColumn title="Categorías">
-                        <FooterLinkList>
-                            {footerLinks.categorias.map((link) => (
                                 <li key={link.href}>
                                     <FooterLink href={link.href}>{link.title}</FooterLink>
                                 </li>

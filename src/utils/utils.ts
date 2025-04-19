@@ -69,7 +69,5 @@ export const getDefaultPost = (): Post => ({
     likedBy: [],
 
     // Opciones adicionales
-    draft: false,
-    featured: false,
     language: "es",
 });
