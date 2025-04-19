@@ -26,6 +26,7 @@ export default function NavLinks({
     isMobile = false,
     onItemClick = () => {},
     isAuthenticated = false,
+    user = null,
     isLoading = false,
 }: NavLinksProps) {
     const pathname = usePathname();
@@ -56,6 +57,17 @@ export default function NavLinks({
                         isMobile={isMobile}
                     />
                 ))}
+
+                {/* User-specific items */}
+                {user?.role === "admin" && (
+                    <NavItem
+                        name="Administración"
+                        path="/admin"
+                        isActive={pathname === "/admin"}
+                        onClick={onItemClick}
+                        isMobile={isMobile}
+                    />
+                )}
 
                 {/* Authentication-specific items */}
                 {isAuthenticated ? (

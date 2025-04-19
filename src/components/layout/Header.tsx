@@ -1,4 +1,5 @@
 // src/components/layout/Header.tsx
+
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -7,7 +8,7 @@ import DesktopNav from "./header/DesktopNav";
 import MobileNav from "./header/MobileNav";
 import { useAuthStore } from "@/store/authStore";
 
-const Header = () => {
+export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
@@ -52,6 +53,4 @@ const Header = () => {
             </div>
         </header>
     );
-};
-
-export default Header;
+}
