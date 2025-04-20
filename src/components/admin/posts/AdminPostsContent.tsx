@@ -8,13 +8,14 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { usePosts } from "@/hooks/usePosts";
 import AdminPostsSkeleton from "@/components/admin/posts/skeletons/AdminPostsSkeleton";
 import Select from "@/components/ui/Select";
+import { useCallback } from "react";
 
 export default function AdminPostsContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const status = searchParams.get("status");
 
-    const { posts, isLoading } = usePosts();
+    const { posts, isLoading, refetch } = usePosts();
 
     const filteredPosts = status
         ? posts.filter((t) => (status === "published" ? t.isPublished : !t.isPublished))
@@ -41,6 +42,10 @@ export default function AdminPostsContent() {
         if (status === "draft") return "en borrador";
         return "en total";
     };
+
+    const handlePostDeleted = useCallback(() => {
+        refetch();
+    }, [refetch]);
 
     return (
         <div className="p-6 md:p-8 space-y-8">
@@ -108,6 +113,7 @@ export default function AdminPostsContent() {
                         <PostCard
                             key={post.id}
                             post={post}
+                            onPostDeleted={handlePostDeleted}
                         />
                     ))}
                 </div>

@@ -1,4 +1,9 @@
 // types/User.ts
+
+/**
+ * Tipos relacionados con usuarios del sistema
+ */
+
 export interface User {
     uid: string;
     email: string;

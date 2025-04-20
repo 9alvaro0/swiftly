@@ -1,4 +1,4 @@
-import { ref, uploadBytes, getDownloadURL, deleteObject, listAll } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL, deleteObject, listAll, getMetadata } from "firebase/storage";
 import { storage } from "@/firebase/config";
 
 /**
@@ -80,4 +80,20 @@ export const listImages = async (folderPath: string): Promise<string[]> => {
     const downloadURLs = await Promise.all(result.items.map((itemRef) => getDownloadURL(itemRef)));
 
     return downloadURLs;
+};
+
+/**
+ * Checks if an image exists at the given path
+ */
+export const checkImageExists = async (path: string): Promise<boolean> => {
+    try {
+        const storageRef = ref(storage, path);
+        await getMetadata(storageRef);
+        return true;
+    } catch (error) {
+        if ((error as { code?: string }).code === "storage/object-not-found") {
+            return false;
+        }
+        throw error;
+    }
 };

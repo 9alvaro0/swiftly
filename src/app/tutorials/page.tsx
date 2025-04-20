@@ -3,7 +3,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { PostCategory, PostLevel } from "@/types/Post";
+import { PostLevel } from "@/types/Post";
 import { usePosts } from "@/hooks/usePosts";
 import TutorialsHeader from "@/components/tutorials/TutorialsHeader";
 import TutorialsFilters from "@/components/tutorials/TutorialsFilters";
@@ -15,13 +15,11 @@ export default function TutorialsPage() {
     const [showFilters, setShowFilters] = useState(false);
     const itemsPerPage = 9;
 
-    const [categoryFilter, setCategoryFilter] = useState<PostCategory | "">("");
     const [levelFilter, setLevelFilter] = useState<PostLevel | "">("");
     const [searchQuery, setSearchQuery] = useState("");
 
     const {
         posts: tutorials,
-        stats,
         isLoading,
         error,
         filters,
@@ -31,11 +29,10 @@ export default function TutorialsPage() {
 
     const applyFilters = useCallback(() => {
         updateFilters({
-            category: categoryFilter || undefined,
             level: levelFilter || undefined,
             searchTerm: searchQuery || undefined,
         });
-    }, [categoryFilter, levelFilter, searchQuery, updateFilters]);
+    }, [levelFilter, searchQuery, updateFilters]);
 
     useEffect(() => {
         applyFilters();
@@ -51,15 +48,12 @@ export default function TutorialsPage() {
     };
 
     const clearFilters = () => {
-        setCategoryFilter("");
         setLevelFilter("");
         setSearchQuery("");
         resetFilters();
     };
 
-    const hasActiveFilters = Boolean(categoryFilter || levelFilter || searchQuery);
-
-    const categories = Object.keys(stats.postsByCategory || {});
+    const hasActiveFilters = Boolean( levelFilter || searchQuery);
 
     if (isLoading) {
         return <TutorialsSkeleton />;
@@ -82,13 +76,10 @@ export default function TutorialsPage() {
 
                 <TutorialsFilters
                     searchQuery={searchQuery}
-                    categoryFilter={categoryFilter}
                     levelFilter={levelFilter}
-                    categories={categories}
                     showFilters={showFilters}
                     hasActiveFilters={hasActiveFilters}
                     onSearchChange={setSearchQuery}
-                    onCategoryChange={setCategoryFilter}
                     onLevelChange={setLevelFilter}
                     onToggleFilters={() => setShowFilters(!showFilters)}
                     onClearFilters={clearFilters}

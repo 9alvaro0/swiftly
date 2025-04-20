@@ -3,7 +3,7 @@
 "use client";
 
 import { useEffect } from "react";
-import TutorialForm from "@/components/admin/PostForm";
+import PostForm from "@/components/admin/PostForm";
 import { notFound, useParams } from "next/navigation";
 import { usePost } from "@/hooks/usePost";
 
@@ -28,7 +28,7 @@ export default function EditTutorialPage() {
     return (
         <div className="p-8">
             <h1 className="text-2xl font-bold mb-6">Editar Post</h1>
-            <TutorialForm
+            <PostForm
                 isEdit
                 initialData={post!}
             />

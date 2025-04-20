@@ -18,21 +18,11 @@ interface PostAuthorSectionProps {
             };
         };
     };
-    user: {
-        name?: string;
-        username?: string;
-        photoURL?: string;
-        bio?: string;
-        socialLinks?: {
-            github?: string;
-            linkedin?: string;
-        };
-    } | null;
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }
 
-const PostAuthorSection: React.FC<PostAuthorSectionProps> = ({ post, user, onChange }) => {
-    const hasAuthorInfo = !!(post.author?.name || user?.name);
+const PostAuthorSection: React.FC<PostAuthorSectionProps> = ({ post, onChange }) => {
+    const hasAuthorInfo = !!post.author?.name;
 
     return (
         <div className="border border-blue-200 dark:border-blue-800 rounded-lg p-6 bg-blue-50 dark:bg-blue-950/30 shadow-sm">
@@ -57,7 +47,7 @@ const PostAuthorSection: React.FC<PostAuthorSectionProps> = ({ post, user, onCha
                     id="author.name"
                     name="author.name"
                     label="Nombre del Autor"
-                    value={post.author?.name || user?.name || ""}
+                    value={post.author?.name || ""}
                     onChange={onChange}
                     disabled={hasAuthorInfo}
                     className={hasAuthorInfo ? "bg-gray-100 dark:bg-gray-800" : ""}
@@ -66,19 +56,19 @@ const PostAuthorSection: React.FC<PostAuthorSectionProps> = ({ post, user, onCha
                     id="author.username"
                     name="author.username"
                     label="Username del Autor"
-                    value={post.author?.username || user?.username || ""}
+                    value={post.author?.username || ""}
                     onChange={onChange}
-                    disabled={!!(post.author?.username || user?.username)}
-                    className={post.author?.username || user?.username ? "bg-gray-100 dark:bg-gray-800" : ""}
+                    disabled={!!post.author?.username}
+                    className={post.author?.username ? "bg-gray-100 dark:bg-gray-800" : ""}
                 />
                 <Input
                     id="author.avatar"
                     name="author.avatar"
                     label="Avatar del Autor"
-                    value={post.author?.avatar || user?.photoURL || ""}
+                    value={post.author?.avatar || ""}
                     onChange={onChange}
-                    disabled={!!(post.author?.avatar || user?.photoURL)}
-                    className={post.author?.avatar || user?.photoURL ? "bg-gray-100 dark:bg-gray-800" : ""}
+                    disabled={!!post.author?.avatar}
+                    className={post.author?.avatar ? "bg-gray-100 dark:bg-gray-800" : ""}
                 />
             </div>
 
@@ -86,11 +76,11 @@ const PostAuthorSection: React.FC<PostAuthorSectionProps> = ({ post, user, onCha
                 id="author.bio"
                 name="author.bio"
                 label="Bio del Autor"
-                value={post.author?.bio || user?.bio || ""}
+                value={post.author?.bio || ""}
                 onChange={onChange}
                 rows={3}
-                disabled={!!(post.author?.bio || user?.bio)}
-                className={post.author?.bio || user?.bio ? "bg-gray-100 dark:bg-gray-800" : ""}
+                disabled={!!post.author?.bio}
+                className={post.author?.bio ? "bg-gray-100 dark:bg-gray-800" : ""}
             />
 
             {/* Redes Sociales */}
@@ -99,27 +89,19 @@ const PostAuthorSection: React.FC<PostAuthorSectionProps> = ({ post, user, onCha
                     id="author.socialLinks.github"
                     name="author.socialLinks.github"
                     label="GitHub"
-                    value={post.author?.socialLinks?.github || user?.socialLinks?.github || ""}
+                    value={post.author?.socialLinks?.github || ""}
                     onChange={onChange}
-                    disabled={!!(post.author?.socialLinks?.github || user?.socialLinks?.github)}
-                    className={
-                        post.author?.socialLinks?.github || user?.socialLinks?.github
-                            ? "bg-gray-100 dark:bg-gray-800"
-                            : ""
-                    }
+                    disabled={!!post.author?.socialLinks?.github}
+                    className={post.author?.socialLinks?.github ? "bg-gray-100 dark:bg-gray-800" : ""}
                 />
                 <Input
                     id="author.socialLinks.linkedin"
                     name="author.socialLinks.linkedin"
                     label="LinkedIn"
-                    value={post.author?.socialLinks?.linkedin || user?.socialLinks?.linkedin || ""}
+                    value={post.author?.socialLinks?.linkedin || ""}
                     onChange={onChange}
-                    disabled={!!(post.author?.socialLinks?.linkedin || user?.socialLinks?.linkedin)}
-                    className={
-                        post.author?.socialLinks?.linkedin || user?.socialLinks?.linkedin
-                            ? "bg-gray-100 dark:bg-gray-800"
-                            : ""
-                    }
+                    disabled={!!post.author?.socialLinks?.linkedin}
+                    className={post.author?.socialLinks?.linkedin ? "bg-gray-100 dark:bg-gray-800" : ""}
                 />
             </div>
 

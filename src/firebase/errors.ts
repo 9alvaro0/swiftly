@@ -1,74 +1,71 @@
 import { FirebaseError } from "firebase/app";
-import { logAuthError } from "./analytics";
+import { logAuthEvent } from "./analytics";
 import { toast } from "sonner";
 
-export const handleFirebaseError = (error: unknown, context?: string): string => {
-    let message = "Error desconocido. Por favor intenta nuevamente.";
+type FirebaseErrorHandlerConfig = {
+    showToast?: boolean;
+    logAnalytics?: boolean;
+};
+
+/**
+ * Maneja errores de Firebase y devuelve un mensaje amigable
+ * @param error - Error a manejar (puede ser de tipo unknown)
+ * @param context - Contexto donde ocurrió el error (opcional)
+ * @param config - Configuración adicional (opcional)
+ * @returns Mensaje de error traducido
+ */
+export const handleFirebaseError = (
+    error: unknown,
+    context?: string,
+    config: FirebaseErrorHandlerConfig = { showToast: true, logAnalytics: true }
+): string => {
+    const defaultMessage = "Error desconocido. Por favor intenta nuevamente.";
+    let message = defaultMessage;
     let code = "unknown";
-    console.log("Error Context:", context);
-    console.log("Error Details:", error);
+
+    // Extraer información del error si es de Firebase
     if (error instanceof FirebaseError) {
         code = error.code;
-        console.log("Firebase Error Code:", code);
-        console.log("Firebase Error Message:", error.message);
-        switch (error.code) {
+
+        // Mapeo de códigos de error a mensajes amigables
+        const errorMessages: Record<string, string> = {
             // Errores de autenticación
-            case "auth/email-already-in-use":
-                message = "Este correo electrónico ya está registrado.";
-                break;
-            case "auth/weak-password":
-                message = "La contraseña debe ser más fuerte.";
-                break;
-            case "auth/invalid-email":
-                message = "El correo electrónico no es válido.";
-                break;
-            case "auth/missing-email":
-                message = "El correo electrónico es obligatorio.";
-                break;
-            case "auth/user-not-found":
-                message = "El correo electrónico no está registrado.";
-                break;
-            case "auth/wrong-password":
-                message = "La contraseña es incorrecta.";
-                break;
+            "auth/email-already-in-use": "Este correo electrónico ya está registrado.",
+            "auth/weak-password": "La contraseña debe tener al menos 6 caracteres.",
+            "auth/invalid-email": "El correo electrónico no es válido.",
+            "auth/missing-email": "El correo electrónico es obligatorio.",
+            "auth/user-not-found": "El correo electrónico no está registrado.",
+            "auth/wrong-password": "La contraseña es incorrecta.",
 
             // Errores de inicio de sesión social
-            case "auth/account-exists-with-different-credential":
-                message = "Esta cuenta ya existe con un método de inicio de sesión diferente.";
-                break;
-            case "auth/popup-blocked":
-                message =
-                    "La ventana emergente de inicio de sesión fue bloqueada. Por favor, habilite las ventanas emergentes.";
-                break;
-            case "auth/popup-closed-by-user":
-                message = "Inicio de sesión cancelado por el usuario.";
-                break;
-            case "auth/unauthorized-domain":
-                message = "Dominio no autorizado para inicio de sesión.";
-                break;
-            case "auth/network-request-failed":
-                message = "Error de red. Por favor, compruebe su conexión a internet.";
-                break;
+            "auth/account-exists-with-different-credential": "Esta cuenta ya existe con otro método de inicio.",
+            "auth/popup-blocked": "Por favor, habilita las ventanas emergentes para iniciar sesión.",
+            "auth/popup-closed-by-user": "Inicio de sesión cancelado.",
+            "auth/unauthorized-domain": "Dominio no autorizado.",
+            "auth/network-request-failed": "Error de red. Verifica tu conexión.",
+            "auth/too-many-requests": "Demasiados intentos. Intenta más tarde.",
 
-            // Errores generales de red y autenticación
-            case "auth/network-request-failed":
-                message = "Error de red. Compruebe su conexión a internet.";
-                break;
-            case "auth/too-many-requests":
-                message = "Demasiados intentos. Por favor, intente de nuevo más tarde.";
-                break;
+            // Errores de Firestore
+            "permission-denied": "No tienes permisos para esta acción.",
+            "not-found": "El recurso solicitado no existe.",
+        };
 
-            default:
-                message = "Ha ocurrido un error, por favor intenta de nuevo.";
-                break;
-        }
+        message = errorMessages[code] || defaultMessage;
     }
 
-    // Registrar el error para analytics
-    logAuthError(code, context);
+    // Loggear el error si está configurado
+    if (config.logAnalytics) {
+        logAuthEvent("auth_error", {
+            errorCode: code,
+            context: context || "unknown",
+            errorMessage: message,
+        });
+    }
 
-    // Mostrar toast de error
-    toast.error(message);
+    // Mostrar toast si está configurado
+    if (config.showToast) {
+        toast.error(message);
+    }
 
     return message;
 };

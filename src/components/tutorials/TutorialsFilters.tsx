@@ -3,17 +3,14 @@
 "use client";
 
 import { Filter, Search, X } from "lucide-react";
-import { PostCategory, PostLevel } from "@/types/Post";
+import { PostLevel } from "@/types/Post";
 
 interface TutorialsFiltersProps {
     searchQuery: string;
-    categoryFilter: PostCategory | "";
     levelFilter: PostLevel | "";
-    categories: string[];
     showFilters: boolean;
     hasActiveFilters: boolean;
     onSearchChange: (query: string) => void;
-    onCategoryChange: (category: PostCategory | "") => void;
     onLevelChange: (level: PostLevel | "") => void;
     onToggleFilters: () => void;
     onClearFilters: () => void;
@@ -21,13 +18,10 @@ interface TutorialsFiltersProps {
 
 export default function TutorialsFilters({
     searchQuery,
-    categoryFilter,
     levelFilter,
-    categories,
     showFilters,
     hasActiveFilters,
     onSearchChange,
-    onCategoryChange,
     onLevelChange,
     onToggleFilters,
     onClearFilters,
@@ -61,7 +55,7 @@ export default function TutorialsFilters({
                         <span>Filtros</span>
                         {hasActiveFilters && (
                             <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-primary rounded-full">
-                                {(categoryFilter ? 1 : 0) + (levelFilter ? 1 : 0)}
+                                {levelFilter ? 1 : 0}
                             </span>
                         )}
                     </button>
@@ -84,30 +78,6 @@ export default function TutorialsFilters({
                     id="filter-panel"
                     className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-neutral-200 dark:border-neutral-700"
                 >
-                    <div>
-                        <label
-                            htmlFor="category"
-                            className="block text-sm font-medium text-text-secondary mb-1"
-                        >
-                            Categoría
-                        </label>
-                        <select
-                            id="category"
-                            value={categoryFilter}
-                            onChange={(e) => onCategoryChange(e.target.value as PostCategory | "")}
-                            className="w-full rounded-md border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 focus:ring-2 focus:ring-primary focus:border-transparent"
-                        >
-                            <option value="">Todas las categorías</option>
-                            {categories.map((category) => (
-                                <option
-                                    key={category}
-                                    value={category}
-                                >
-                                    {category}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
                     <div>
                         <label
                             htmlFor="level"

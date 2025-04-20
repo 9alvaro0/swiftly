@@ -22,7 +22,7 @@ const PostImageHandler: React.FC<PostImageHandlerProps> = ({
     onInsertInContent,
     initialImages = [],
 }) => {
-    const { upload, loading, error } = useImages();
+    const { uploadOrUpdate, loading, error } = useImages();
     const [uploadedImages, setUploadedImages] = useState<string[]>(initialImages);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
     const [uploadProgress, setUploadProgress] = useState<boolean>(false);
@@ -34,19 +34,8 @@ const PostImageHandler: React.FC<PostImageHandlerProps> = ({
 
         setUploadProgress(true);
         try {
-            console.log(`Procesando archivo: ${file.name}, tipo: ${file.type}, tamaño: ${file.size} bytes`);
-
-            // Generar una ruta para la imagen usando la utilidad
             const path = generatePostImagePath(file.name, postId);
-
-            console.log(`Ruta generada: ${path}`);
-
-            // Subir imagen a Firebase Storage
-            const imageUrl = await upload(file, path);
-
-            console.log(`Imagen subida exitosamente. URL: ${imageUrl}`);
-
-            // Añadir la URL a la lista de imágenes subidas
+            const imageUrl = await uploadOrUpdate(file, path);
             if (!uploadedImages.includes(imageUrl)) {
                 setUploadedImages((prev) => [...prev, imageUrl]);
             }
@@ -54,7 +43,6 @@ const PostImageHandler: React.FC<PostImageHandlerProps> = ({
             console.error("Error subiendo imagen:", error);
         } finally {
             setUploadProgress(false);
-            // Limpiar el input de archivo para permitir subir la misma imagen nuevamente
             if (fileInputRef.current) {
                 fileInputRef.current.value = "";
             }
@@ -70,11 +58,9 @@ const PostImageHandler: React.FC<PostImageHandlerProps> = ({
 
         setIsDeleting(true);
         try {
-            // Eliminar la imagen de Firebase Storage
             const success = await deletePostImageByUrl(imageUrl);
 
             if (success) {
-                // Eliminar la URL de la lista de imágenes subidas
                 setUploadedImages((prev) => prev.filter((url) => url !== imageUrl));
             }
         } catch (error) {
@@ -98,7 +84,7 @@ const PostImageHandler: React.FC<PostImageHandlerProps> = ({
 
     return (
         <div className="space-y-6">
-            <div className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-900">
+            <div className="border rounded-lg p-4">
                 <h3 className="text-lg font-medium mb-4">Gestor de Imágenes</h3>
 
                 {error && (

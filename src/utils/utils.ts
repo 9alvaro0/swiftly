@@ -1,73 +1,40 @@
-import { Post } from "@/types/Post";
+/**
+ * Valida URLs según formato general o específico de plataforma
+ * @param url - URL a validar
+ * @param platform - Plataforma específica para validación (opcional)
+ * @returns boolean - true si la URL es válida para el formato/plataforma
+ */
+export const isValidUrl = (url: string, platform?: string): boolean => {
+    // Validación básica de estructura URL
+    try {
+        const urlObj = new URL(url);
 
-export function formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString("es-ES", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-    });
-}
+        // Verificación adicional de protocolos permitidos (http/https)
+        if (!["http:", "https:"].includes(urlObj.protocol)) {
+            return false;
+        }
+    } catch {
+        return false;
+    }
 
-export const isValidUrl = (url: string) => {
-    const regex = /^(https?:\/\/)?(www\.)?(linkedin\.com|github\.com)\/[a-zA-Z0-9_-]+$/;
-    return regex.test(url);
+    // Si no se especifica plataforma, retornar verdadero (ya pasó validación básica)
+    if (!platform) return true;
+
+    // Patrones de validación para plataformas soportadas
+    const PLATFORM_PATTERNS: Record<string, RegExp> = {
+        linkedin: /^https:\/\/(www\.)?linkedin\.com\/(in|company|school|profile\/view\?id=|pub\/)[a-zA-Z0-9_-]+\/?/i,
+        github: /^https:\/\/(www\.)?github\.com\/[a-zA-Z0-9_-]+\/?/i,
+        twitter: /^https:\/\/(www\.)?(twitter|x)\.com\/[a-zA-Z0-9_]+\/?/i,
+        instagram: /^https:\/\/(www\.)?instagram\.com\/[a-zA-Z0-9_.]+\/?/i,
+        facebook: /^https:\/\/(www\.)?facebook\.com\/[a-zA-Z0-9.]+\/?/i,
+        youtube: /^https:\/\/(www\.)?(youtube\.com\/(channel\/|user\/|c\/)|youtu\.be\/)[a-zA-Z0-9_-]+\/?/i,
+    };
+
+    // Validación para plataforma específica si existe patrón
+    if (platform.toLowerCase() in PLATFORM_PATTERNS) {
+        return PLATFORM_PATTERNS[platform.toLowerCase()].test(url);
+    }
+
+    // Plataforma no soportada específicamente, pero URL es válida
+    return true;
 };
-
-export const getDefaultPost = (): Post => ({
-    // Identificadores
-    id: "",
-    slug: "",
-
-    // Contenido principal
-    title: "",
-    description: "",
-    content: "",
-
-    // Metadatos de publicación
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    isPublished: false,
-
-    // Categorización
-    category: "Swift",
-    tags: [],
-    level: "Principiante",
-    type: "article",
-
-    // Multimedia
-    imageUrl: "",
-    images: [],
-    coverImage: "",
-
-    // Información de lectura
-    readTime: 0,
-    wordCount: 0,
-
-    // Autor
-    author: {
-        id: "",
-        name: "",
-        username: "",
-        avatar: "",
-        bio: "",
-        socialLinks: {
-            twitter: "",
-            github: "",
-            linkedin: "",
-        },
-    },
-
-    // SEO y discoverability
-    keywords: [],
-    metaDescription: "",
-
-    // Relaciones
-    relatedPosts: [],
-
-    // Interacción
-    views: 0,
-    likedBy: [],
-
-    // Opciones adicionales
-    language: "es",
-});

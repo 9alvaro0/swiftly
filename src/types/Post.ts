@@ -1,5 +1,9 @@
 // src/types/Post.ts
 
+/**
+ * Tipos relacionados con publicaciones del blog
+ */
+
 export interface Post {
     // Identificadores
     id: string;
@@ -17,7 +21,6 @@ export interface Post {
     isPublished: boolean;
 
     // Categorización
-    category: PostCategory;
     tags: string[];
     level: PostLevel;
     type: PostType;
@@ -28,28 +31,27 @@ export interface Post {
     coverImage?: string;
 
     // Información de lectura
-    readTime?: number; // en minutos
+    readTime?: number;
     wordCount?: number;
 
     // Autor
-    author: Author; 
+    author: Author;
 
-    // SEO y discoverability
+    // SEO
     keywords?: string[];
     metaDescription?: string;
 
     // Relaciones
-    relatedPosts?: Pick<Post, "id" | "title" | "slug" | "imageUrl" | "category" | "description">[];
+    relatedPosts?: RelatedPost[];
 
     // Interacción
     views?: number;
     likedBy?: string[];
-
-    // Opciones adicionales
-    language?: string;
 }
 
-// Interfaz para el autor
+/**
+ * Tipo relacionado con el autor de la publicación
+ */
 export interface Author {
     id: string;
     name: string;
@@ -63,19 +65,17 @@ export interface Author {
     };
 }
 
-// Enums para tipos
-export type PostCategory =
-    | "Swift"
-    | "SwiftUI"
-    | "Xcode"
-    | "iOS"
-    | "macOS"
-    | "Frameworks"
-    | "visionOS"
-    | "Arquitectura"
-    | "Testing"
-    | "watchOS";
+/**
+ * Tipo relacionado con las publicaciones relacionadas
+ */
+export type RelatedPost = Pick<Post, "id" | "title" | "slug" | "imageUrl" | "description">;
 
+/**
+ * Tipos relacionados con el nivel de las publicaciones
+ */
 export type PostLevel = "Principiante" | "Intermedio" | "Avanzado";
 
+/**
+ * Tipos relacionados con el formato de las publicaciones
+ */
 export type PostType = "article" | "tutorial";

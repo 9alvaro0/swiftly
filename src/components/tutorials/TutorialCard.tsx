@@ -16,34 +16,15 @@ export default function TutorialCard({ tutorial }: TutorialCardProps) {
             <article className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden h-full grid grid-rows-[192px_auto_60px] transition-all duration-300 hover:translate-y-[-4px] hover:shadow-lg hover:shadow-blue-500/10 hover:border-blue-500/30">
                 {/* Image section - fixed height */}
                 <div className="relative bg-black/30 overflow-hidden">
-                    {tutorial.imageUrl ? (
-                        <Image
-                            src={tutorial.imageUrl || "/placeholder.svg"}
-                            alt={tutorial.title}
-                            fill
-                            className="object-cover transition-transform duration-300 group-hover:scale-105"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        />
-                    ) : tutorial.coverImage ? (
-                        <Image
-                            src={tutorial.coverImage || "/placeholder.svg"}
-                            alt={tutorial.title}
-                            fill
-                            className="object-cover transition-transform duration-300 group-hover:scale-105"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        />
-                    ) : (
-                        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-900/40 to-purple-900/40">
-                            <span className="text-4xl text-white/70 font-bold">Swift</span>
-                        </div>
-                    )}
+                    <Image
+                        src={tutorial.imageUrl}
+                        alt={tutorial.title}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
 
                     {/* Glass effect badges */}
-                    <div className="absolute top-0 right-0 m-3">
-                        <span className="inline-block bg-blue-600/80 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full font-medium">
-                            {tutorial.category}
-                        </span>
-                    </div>
                     <div className="absolute bottom-0 left-0 m-3">
                         <span className="inline-block bg-purple-600/80 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full font-medium">
                             {tutorial.level}

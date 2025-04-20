@@ -2,11 +2,10 @@
 
 import React from "react";
 import Select from "@/components/ui/Select";
-import { CATEGORY_OPTIONS, LEVEL_OPTIONS, POST_TYPE_OPTIONS } from "@/constants/post";
+import { LEVEL_OPTIONS, POST_TYPE_OPTIONS } from "@/constants/post";
 
 interface PostCategorizationProps {
     post: {
-        category?: string;
         level?: string;
         type?: string;
     };
@@ -19,15 +18,6 @@ const PostCategorization: React.FC<PostCategorizationProps> = ({ post, onChange 
             <h3 className="text-lg font-medium">Categorización</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Select
-                    id="category"
-                    name="category"
-                    label="Categoría"
-                    value={post.category || ""}
-                    onChange={onChange}
-                    options={CATEGORY_OPTIONS}
-                />
-
                 <Select
                     id="level"
                     name="level"

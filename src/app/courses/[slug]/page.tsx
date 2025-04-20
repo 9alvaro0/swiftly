@@ -25,7 +25,6 @@ export default function CourseDetailPage() {
             count: 342,
         },
         updated: "Abril 2025",
-        language: "Español",
         includes: [
             "24 lecciones en video",
             "Acceso de por vida",

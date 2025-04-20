@@ -1,17 +1,17 @@
 // firebase/firestore/post.ts
 
-import { 
-  collection, 
-  doc, 
-  getDoc, 
-  getDocs, 
-  setDoc, 
-  updateDoc, 
-  deleteDoc, 
-  arrayUnion, 
-  arrayRemove,
-  increment,
-  runTransaction 
+import {
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    setDoc,
+    updateDoc,
+    deleteDoc,
+    arrayUnion,
+    arrayRemove,
+    increment,
+    runTransaction,
 } from "firebase/firestore";
 import { Post } from "@/types/Post";
 import { db } from "../config";
@@ -24,15 +24,14 @@ const postsCollection = collection(db, "posts");
 export const createPost = async (post: Post): Promise<void> => {
     const postWithTimestamps = convertDatesToTimestamps(post);
     await setDoc(doc(postsCollection, post.id), postWithTimestamps);
-    console.log("Post creado:", post.id);
 };
 
-// Obtener un post por ID
-export const getPostById = async (id: string): Promise<Post | null> => {
-    const docRef = doc(postsCollection, id);
-    const snapshot = await getDoc(docRef);
-    if (snapshot.exists()) {
-        const postData = convertTimestampsToDates(snapshot.data());
+// Obtener un post por slug
+export const getPostBySlug = async (slug: string): Promise<Post | null> => {
+    const snapshot = await getDocs(postsCollection);
+    const postDoc = snapshot.docs.find((doc) => doc.data().slug === slug);
+    if (postDoc) {
+        const postData = convertTimestampsToDates(postDoc.data());
         return postData as Post;
     }
     return null;
@@ -42,6 +41,16 @@ export const getPostById = async (id: string): Promise<Post | null> => {
 export const getAllPosts = async (): Promise<Post[]> => {
     const snapshot = await getDocs(postsCollection);
     return snapshot.docs.map((doc) => {
+        const postData = convertTimestampsToDates(doc.data());
+        return postData as Post;
+    });
+};
+
+// Obtener todos los posts publicados
+export const getAllPublishedPosts = async (): Promise<Post[]> => {
+    const snapshot = await getDocs(postsCollection);
+    const querySnapshot = snapshot.docs.filter((doc) => doc.data().published === true);
+    return querySnapshot.map((doc) => {
         const postData = convertTimestampsToDates(doc.data());
         return postData as Post;
     });
@@ -65,29 +74,28 @@ export const deletePost = async (id: string): Promise<void> => {
 // Dar/quitar like a un post
 export const togglePostLike = async (postId: string, userId: string, likeStatus: boolean): Promise<void> => {
     const postRef = doc(postsCollection, postId);
-    
+
     try {
         await runTransaction(db, async (transaction) => {
             const postDoc = await transaction.get(postRef);
-            
+
             if (!postDoc.exists()) {
                 throw new Error("El post no existe");
             }
-            
+
             // Determinar la operación a realizar según el estado del like
             if (likeStatus) {
                 // Agregar like
                 transaction.update(postRef, {
-                    likedBy: arrayUnion(userId)
+                    likedBy: arrayUnion(userId),
                 });
             } else {
                 // Quitar like
                 transaction.update(postRef, {
-                    likedBy: arrayRemove(userId)
+                    likedBy: arrayRemove(userId),
                 });
             }
         });
-        
     } catch (error) {
         throw error;
     }
@@ -97,42 +105,41 @@ export const togglePostLike = async (postId: string, userId: string, likeStatus:
 export const hasUserLikedPost = async (postId: string, userId: string): Promise<boolean> => {
     const postRef = doc(postsCollection, postId);
     const postDoc = await getDoc(postRef);
-    
+
     if (!postDoc.exists()) {
         return false;
     }
-    
+
     const postData = postDoc.data();
     return Array.isArray(postData.likedBy) && postData.likedBy.includes(userId);
 };
 
 // Incrementa el contador de vistas de un post
-export const incrementPostViews = async (postId: string): Promise<{views: number}> => {
+export const incrementPostViews = async (postId: string): Promise<{ views: number }> => {
     const postRef = doc(postsCollection, postId);
-    
+
     try {
         let newViewCount = 0;
-        
+
         await runTransaction(db, async (transaction) => {
             const postDoc = await transaction.get(postRef);
-            
+
             if (!postDoc.exists()) {
                 throw new Error("El post no existe");
             }
-            
+
             // Obtenemos el número actual de vistas o 0 si no existe
             const currentViews = postDoc.data().views || 0;
             newViewCount = currentViews + 1;
-            
+
             // Incrementamos el contador de vistas
             transaction.update(postRef, {
-                views: increment(1)
+                views: increment(1),
             });
         });
-        
+
         return { views: newViewCount };
     } catch (error) {
-        console.error("Error al incrementar vistas:", error);
         throw error;
     }
 };
@@ -141,10 +148,10 @@ export const incrementPostViews = async (postId: string): Promise<{views: number
 export const getPostViews = async (postId: string): Promise<number> => {
     const postRef = doc(postsCollection, postId);
     const postDoc = await getDoc(postRef);
-    
+
     if (!postDoc.exists()) {
         return 0;
     }
-    
+
     return postDoc.data().views || 0;
 };

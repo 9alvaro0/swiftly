@@ -1,23 +1,20 @@
 // src/store/authStore.ts
+
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { User } from "@/types/User";
-import * as UserService from "@/firebase/firestore/user";
 import { toast } from "sonner";
 import { logout } from "@/firebase/auth/auth";
+import { incrementUserStat, updateSocialLinks, updateUser } from "@/firebase/firestore/user";
 
 interface AuthState {
     isAuthenticated: boolean;
     user: User | null;
     isLoading: boolean;
     error: string | null;
-
-    // Acciones de autenticación
     setUser: (user: User | null) => void;
     updateSocialLinks: (socialLinks: Partial<User["socialLinks"]>) => Promise<void>;
     incrementUserStat: (stat: keyof User["stats"], value?: number) => Promise<void>;
-
-    // Acciones de sesión
     setAuthenticated: (status: boolean) => void;
     setLoading: (status: boolean) => void;
     setError: (error: string | null) => void;
@@ -33,115 +30,96 @@ export const useAuthStore = create<AuthState>()(
             error: null,
 
             setUser: async (user) => {
-                if (user) {
-                    try {
-                        if (user.uid) {
-                            await UserService.updateUser(user.uid, {
-                                ...user,
-                                updatedAt: new Date(),
-                            });
-                        }
-                        set({ user });
-                    } catch (error) {
-                        const errorMessage = error instanceof Error ? error.message : "Error desconocido";
-                        set({
-                            error: errorMessage,
-                            user: null,
+                try {
+                    if (user?.uid) {
+                        await updateUser(user.uid, {
+                            ...user,
+                            updatedAt: new Date(),
                         });
-                        console.error("Error actualizando perfil de usuario:", error);
-                        toast.error("No se pudo actualizar el perfil");
                     }
-                } else {
-                    set({ user: null });
+                    set({ user });
+                } catch (error) {
+                    const errorMessage = error instanceof Error ? error.message : "Error desconocido";
+                    set({ error: errorMessage, user: null });
+                    console.error("Error actualizando perfil:", error);
+                    toast.error("Error al actualizar perfil");
                 }
             },
 
-            // Actualización de enlaces sociales
             updateSocialLinks: async (socialLinks) => {
-                const currentUser = get().user;
-                if (!currentUser) {
-                    toast.error("No hay usuario autenticado");
-                    return;
-                }
-
-                if (!socialLinks) {
-                    toast.error("No hay enlaces sociales para actualizar");
+                const { user } = get();
+                if (!user?.uid) {
+                    toast.error("Usuario no autenticado");
                     return;
                 }
 
                 try {
-                    // Actualizar en Firestore
-                    await UserService.updateSocialLinks(currentUser.uid, socialLinks);
+                    const updatedLinks = {
+                        ...(user.socialLinks || {}),
+                        ...socialLinks,
+                    };
 
-                    // Actualizar en el store
-                    set((state) => ({
-                        user: state.user
-                            ? {
-                                  ...state.user,
-                                  socialLinks: {
-                                      ...state.user.socialLinks,
-                                      ...socialLinks,
-                                  },
-                                  updatedAt: new Date(),
-                              }
-                            : null,
-                    }));
+                    await updateSocialLinks(user.uid, updatedLinks);
 
-                    toast.success("Links sociales actualizados");
+                    set({
+                        user: {
+                            ...user,
+                            socialLinks: updatedLinks,
+                            updatedAt: new Date(),
+                        },
+                    });
+                    toast.success("Enlaces actualizados");
                 } catch (error) {
-                    const errorMessage = error instanceof Error ? error.message : "Error desconocido";
+                    const errorMessage = error instanceof Error ? error.message : "Error al actualizar";
                     set({ error: errorMessage });
-                    console.error("Error actualizando links sociales:", error);
-                    toast.error("No se pudieron actualizar los links sociales");
+                    console.error("Error en links sociales:", error);
+                    toast.error("Error al actualizar enlaces");
                 }
             },
 
-            // Incrementar estadística
             incrementUserStat: async (stat, value = 1) => {
-                const currentUser = get().user;
-                if (!currentUser) {
-                    toast.error("No hay usuario autenticado");
+                const { user } = get();
+                if (!user?.uid) {
+                    toast.error("Usuario no autenticado");
                     return;
                 }
 
                 try {
-                    // Incrementar en Firestore
-                    await UserService.incrementUserStat(currentUser.uid, stat, value);
+                    await incrementUserStat(user.uid, stat, value);
+                    const stats = user.stats || { likes: [], viewsCount: 0 };
 
-                    // Actualizar en el store
-                    set((state) => ({
-                        user: state.user
-                            ? {
-                                  ...state.user,
-                                  stats: {
-                                      ...state.user.stats,
-                                      likes: Array.isArray(state.user.stats?.likes) ? state.user.stats.likes : [],
-                                      viewsCount: state.user.stats?.viewsCount || 0,
-                                      [stat]: (state.user.stats?.[stat] || 0) + value,
-                                  },
-                              }
-                            : null,
-                    }));
+                    set({
+                        user: {
+                            ...user,
+                            stats: {
+                                ...(stats || {}),
+                                [stat]: (user.stats?.[stat] || 0) + value,
+                            },
+                        },
+                    });
                 } catch (error) {
-                    const errorMessage = error instanceof Error ? error.message : "Error desconocido";
+                    const errorMessage = error instanceof Error ? error.message : "Error al incrementar";
                     set({ error: errorMessage });
-                    console.error(`Error incrementando ${stat}:`, error);
-                    toast.error(`No se pudo incrementar ${stat}`);
+                    console.error(`Error en ${stat}:`, error);
+                    toast.error(`Error al actualizar ${stat}`);
                 }
             },
 
-            // Acciones de sesión
             setAuthenticated: (status) => set({ isAuthenticated: status }),
             setLoading: (status) => set({ isLoading: status }),
             setError: (error) => set({ error }),
             logout: () => {
                 set({ user: null, isAuthenticated: false, error: null });
                 logout();
-                toast.success("Sesión cerrada correctamente");
+                toast.success("Sesión cerrada");
             },
         }),
         {
             name: "auth-storage",
+            partialize: (state) => ({
+                isAuthenticated: state.isAuthenticated,
+                user: state.user,
+            }),
         }
     )
 );

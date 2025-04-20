@@ -3,7 +3,7 @@ import Image from "next/image";
 import type { Post } from "@/types/Post";
 
 type RelatedPostsProps = {
-    posts: Pick<Post, "id" | "title" | "slug" | "imageUrl" | "category" | "description">[];
+    posts: Pick<Post, "id" | "title" | "slug" | "imageUrl" | "description">[];
 };
 
 export default function RelatedPosts({ posts }: RelatedPostsProps) {
@@ -33,13 +33,6 @@ export default function RelatedPosts({ posts }: RelatedPostsProps) {
                                 ) : (
                                     <div className="absolute inset-0 flex items-center justify-center text-text-secondary">
                                         <span className="text-2xl">Swift</span>
-                                    </div>
-                                )}
-                                {post.category && (
-                                    <div className="absolute top-0 right-0 m-2">
-                                        <span className="inline-block bg-neutral-900 dark:bg-neutral-700 text-white text-xs px-2 py-1 rounded">
-                                            {post.category}
-                                        </span>
                                     </div>
                                 )}
                             </div>

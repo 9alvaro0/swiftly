@@ -1,24 +1,33 @@
-import React, { useState, useRef } from "react";
-import { Edit, Save, Camera, Mail, AtSign } from "lucide-react";
-import { useAuthStore } from "@/store/authStore";
+import React, { useState } from "react";
 import Image from "next/image";
+import { useAuthStore } from "@/store/authStore";
 import Modal from "@/components/ui/Modal";
-import { FaGithub, FaGoogle, FaApple } from "react-icons/fa";
+import UserImageHandler from "./UserImageHandler";
+import {
+    FaEdit,
+    FaCamera,
+    FaEnvelope,
+    FaAt,
+    FaMapMarkerAlt,
+    FaCalendarAlt,
+    FaGithub,
+    FaGoogle,
+    FaApple,
+    FaHeart,
+    FaEye,
+    FaUser,
+    FaArrowRight,
+} from "react-icons/fa";
+import { User } from "@/types/User";
+import { formatDate } from "@/utils/dateUtils";
 
-interface ProfileHeaderProps {
-    isLoading: boolean;
-    onSave: () => void;
-}
-
-export default function ProfileHeader({ isLoading, onSave }: ProfileHeaderProps) {
+export default function ProfileHeader() {
     const { user, setUser } = useAuthStore();
     const [isEditingField, setIsEditingField] = useState<string | null>(null);
-    const [editingValue, setEditingValue] = useState("");
-    const fileInputRef = useRef<HTMLInputElement>(null);
-
-    // Estado para previsualizar la imagen
+    const [editingValue, setEditingValue] = useState<string>("");
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
+    // Función para obtener el icono del proveedor de autenticación
     const getProviderIcon = () => {
         const provider = user?.provider?.toLowerCase();
 
@@ -45,169 +54,161 @@ export default function ProfileHeader({ isLoading, onSave }: ProfileHeaderProps)
             );
         }
 
-        // Si no hay proveedor o no coincide con los conocidos
         return null;
     };
 
-    const handleOpenModal = (field: string) => {
-        const currentValue = user?.[field as keyof typeof user] || "";
+    const handleOpenModal = (field: string): void => {
+        const currentValue = user?.[field as keyof User] || "";
         setEditingValue(currentValue as string);
         setIsEditingField(field);
     };
 
-    const handleCloseModal = () => {
+    const handleCloseModal = (): void => {
         setIsEditingField(null);
         setImagePreview(null);
     };
 
-    const handleSaveField = () => {
-        if (isEditingField) {
-            setUser({ ...user!, [isEditingField]: editingValue });
+    const handleSaveField = (): void => {
+        if (isEditingField && user) {
+            setUser({ ...user, [isEditingField]: editingValue });
             setIsEditingField(null);
         }
     };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            // Crear una URL para previsualizar la imagen
-            const previewUrl = URL.createObjectURL(file);
-            setImagePreview(previewUrl);
-
-            // Aquí puedes manejar la subida de la imagen - para este ejemplo solo actualizamos la vista previa
-            // En una implementación real, subirías el archivo y luego actualizarías la URL en el usuario
-        }
-    };
-
-    const handleSaveImage = () => {
-        if (imagePreview) {
-            // En una app real, aquí esperarías a que la imagen se suba al servidor
-            // y luego actualizarías el usuario con la nueva URL
-            setUser({ ...user!, photoURL: imagePreview });
+    const handleSaveImage = (): void => {
+        if (imagePreview && user) {
+            if (isEditingField === "photo") {
+                setUser({ ...user, photoURL: imagePreview });
+            }
             setIsEditingField(null);
             setImagePreview(null);
         }
     };
 
-    const triggerFileInput = () => {
-        fileInputRef.current?.click();
-    };
-
-    // Componentes para el pie del modal
+    // Componentes para los pies de modal
     const textFieldFooter = (
-        <>
+        <div className="flex gap-3 justify-end w-full">
             <button
                 onClick={handleCloseModal}
-                className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
             >
                 Cancelar
             </button>
             <button
                 onClick={handleSaveField}
-                className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
+                className="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg"
             >
                 Guardar
             </button>
-        </>
+        </div>
     );
 
     const imageModalFooter = (
-        <>
+        <div className="flex gap-3 justify-end w-full">
             <button
                 onClick={handleCloseModal}
-                className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
             >
                 Cancelar
             </button>
             <button
                 onClick={handleSaveImage}
                 disabled={!imagePreview}
-                className={`px-4 py-2 rounded-lg ${
+                className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
                     imagePreview
-                        ? "bg-blue-600 text-white hover:bg-blue-700"
+                        ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700"
                         : "bg-blue-400 text-white cursor-not-allowed"
-                } transition-colors shadow-md`}
+                } transition-all shadow-md`}
             >
-                Guardar
+                Guardar {imagePreview && <FaArrowRight size={12} />}
             </button>
-        </>
+        </div>
     );
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-            {/* Portada/Banner */}
-            <div className="h-32 bg-gradient-to-r from-blue-500 to-purple-600 relative">
-                {/* Botón para editar el perfil completo */}
-                <button
-                    onClick={onSave}
-                    disabled={isLoading}
-                    className="absolute top-4 right-4 bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-white py-1.5 px-3 rounded-lg shadow-md hover:bg-white dark:hover:bg-gray-700 transition-colors flex items-center"
-                >
-                    <Save
-                        className="mr-2"
-                        size={16}
-                    />
-                    Guardar Perfil
-                </button>
+        <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transition-all border border-gray-100 dark:border-gray-700">
+            {/* Banner con degradado mejorado */}
+            <div className="h-48 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 relative overflow-hidden">
+                {/* Overlay para darle un efecto de profundidad */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+
+                {/* Patrones decorativos */}
+                <div className="absolute inset-0 opacity-20 bg-[url('/pattern.svg')] bg-repeat"></div>
             </div>
 
-            <div className="px-6 pb-6 relative">
-                {/* Imagen de perfil superpuesta */}
-                <div className="absolute -top-12 left-6 group">
-                    <div className="w-24 h-24 rounded-full border-4 border-white dark:border-gray-800 overflow-hidden relative">
-                        <Image
-                            src={user?.photoURL || "/default-avatar.png"}
-                            alt={user?.username || "Perfil"}
-                            fill
-                            sizes="(max-width: 96px) 96px"
-                            className="object-cover"
-                        />
+            <div className="px-8 pt-2 pb-8 relative">
+                {/* Foto de perfil con nuevo diseño */}
+                <div className="absolute -top-20 left-8 group">
+                    <div className="w-36 h-36 rounded-full border-4 border-white dark:border-gray-800 shadow-xl overflow-hidden relative bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800">
+                        {user?.photoURL ? (
+                            <Image
+                                src={user.photoURL}
+                                alt={user?.name || "Perfil"}
+                                fill
+                                sizes="(max-width: 144px) 144px"
+                                className="object-cover"
+                            />
+                        ) : (
+                            <div className="absolute inset-0 flex items-center justify-center text-gray-400 dark:text-gray-500">
+                                <FaUser size={64} />
+                            </div>
+                        )}
                         <button
                             onClick={() => handleOpenModal("photo")}
-                            className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                            className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center"
                             aria-label="Cambiar foto de perfil"
                         >
-                            <Camera
+                            <FaCamera
                                 size={24}
-                                className="text-white"
+                                className="text-white group-hover:scale-110 transition-transform"
                             />
                         </button>
                     </div>
                 </div>
 
-                {/* Información del usuario - desplazada para dejar espacio a la imagen */}
-                <div className="ml-32 pt-3 flex flex-wrap justify-between items-center">
-                    <div className="space-y-1">
-                        {/* Nombre con botón de edición */}
-                        <div className="flex items-center space-x-2">
-                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                {/* Información del usuario con mejor espaciado */}
+                <div className="ml-44 pt-5 flex flex-col sm:flex-row justify-between gap-6">
+                    <div className="space-y-3 max-w-xl">
+                        {/* Nombre de usuario */}
+                        <div className="flex items-center gap-2 group">
+                            <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
                                 {user?.name || "Nombre de usuario"}
                             </h1>
                             <button
                                 onClick={() => handleOpenModal("name")}
-                                className="text-blue-500 hover:text-blue-700 transition-colors"
+                                className="text-gray-400 opacity-0 group-hover:opacity-100 hover:text-blue-500 transition-all"
                                 aria-label="Editar nombre"
                             >
-                                <Edit size={16} />
+                                <FaEdit size={16} />
                             </button>
                         </div>
 
-                        {/* Username con ícono */}
-                        <div className="flex items-center space-x-2 text-gray-500 dark:text-gray-400">
-                            <AtSign size={16} />
-                            <span>{user?.username || "username"}</span>
+                        {/* Username mejorado */}
+                        <div className="flex items-center text-gray-500 dark:text-gray-400 group">
+                            <FaAt
+                                size={14}
+                                className="mr-1.5 flex-shrink-0"
+                            />
+                            <span className="text-gray-600 dark:text-gray-300 font-medium">
+                                {user?.username || "username"}
+                            </span>
                             <button
                                 onClick={() => handleOpenModal("username")}
-                                className="text-blue-500 hover:text-blue-700 transition-colors"
+                                className="ml-2 text-gray-400 opacity-0 group-hover:opacity-100 hover:text-blue-500 transition-all"
                                 aria-label="Editar nombre de usuario"
                             >
-                                <Edit size={14} />
+                                <FaEdit size={14} />
                             </button>
                         </div>
 
+                        <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent my-2 opacity-80"></div>
+
                         {/* Email con ícono y proveedor */}
-                        <div className="flex items-center space-x-2 text-gray-500 dark:text-gray-400">
-                            <Mail size={16} />
+                        <div className="flex items-center text-gray-500 dark:text-gray-400">
+                            <FaEnvelope
+                                size={14}
+                                className="mr-1.5 flex-shrink-0 text-gray-500 dark:text-gray-400"
+                            />
                             <span>{user?.email || "email@ejemplo.com"}</span>
 
                             {/* Icono del proveedor */}
@@ -220,39 +221,94 @@ export default function ProfileHeader({ isLoading, onSave }: ProfileHeaderProps)
                                 </div>
                             )}
                         </div>
+
+                        {/* Ubicación */}
+                        <div className="flex items-center text-gray-500 dark:text-gray-400 group">
+                            <FaMapMarkerAlt
+                                size={14}
+                                className="mr-1.5 flex-shrink-0 text-gray-500 dark:text-gray-400"
+                            />
+                            <span>{user?.location || "Sin ubicación"}</span>
+                            <button
+                                onClick={() => handleOpenModal("location")}
+                                className="ml-2 text-gray-400 opacity-0 group-hover:opacity-100 hover:text-blue-500 transition-all"
+                                aria-label="Editar ubicación"
+                            >
+                                <FaEdit size={14} />
+                            </button>
+                        </div>
+
+                        {/* Fecha de registro */}
+                        {user?.createdAt && (
+                            <div className="flex items-center text-gray-500 dark:text-gray-400">
+                                <FaCalendarAlt
+                                    size={14}
+                                    className="mr-1.5 flex-shrink-0 text-gray-500 dark:text-gray-400"
+                                />
+                                <span>Se unió el {formatDate(user.createdAt)}</span>
+                            </div>
+                        )}
                     </div>
 
-                    {/* Estadísticas del perfil - se podrían agregar como complemento */}
-                    <div className="flex space-x-4 mt-2 sm:mt-0">
-                        <div className="text-center">
-                            <div className="text-xl font-bold">{user?.stats?.likes.length}</div>
-                            <div className="text-sm text-gray-500">Likes</div>
+                    {/* Estadísticas del perfil */}
+                    <div className="flex flex-wrap gap-4 items-start">
+                        <div className="text-center px-5 py-3 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl shadow-sm hover:shadow-md transition-all border border-blue-100 dark:border-blue-900/30">
+                            <div className="flex items-center justify-center mb-1">
+                                <FaHeart
+                                    size={16}
+                                    className="text-red-500 mr-2"
+                                />
+                                <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                                    {user?.stats?.likes?.length || 0}
+                                </div>
+                            </div>
+                            <div className="text-sm text-gray-600 dark:text-gray-300">Likes</div>
                         </div>
-                        <div className="text-center">
-                            <div className="text-xl font-bold">{user?.stats?.viewsCount}</div>
-                            <div className="text-sm text-gray-500">Vistas</div>
+
+                        <div className="text-center px-5 py-3 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl shadow-sm hover:shadow-md transition-all border border-purple-100 dark:border-purple-900/30">
+                            <div className="flex items-center justify-center mb-1">
+                                <FaEye
+                                    size={16}
+                                    className="text-purple-500 mr-2"
+                                />
+                                <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                                    {user?.stats?.viewsCount || 0}
+                                </div>
+                            </div>
+                            <div className="text-sm text-gray-600 dark:text-gray-300">Vistas</div>
                         </div>
                     </div>
                 </div>
 
-                {/* Biografía - Con espacio para más texto */}
-                <div className="mt-6 relative group">
-                    <p className="text-gray-700 dark:text-gray-300 pr-8">
-                        {user?.bio || "Sin biografía. Haz clic en editar para agregar información sobre ti."}
-                    </p>
+                {/* Biografía mejorada */}
+                <div className="mt-8 p-5 rounded-xl relative border border-gray-100 dark:border-gray-700 shadow-sm group overflow-hidden">
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3">Biografía</h3>
+                    <div className="max-h-[200px] overflow-y-auto pr-2">
+                        {" "}
+                        {/* Contenedor con scroll */}
+                        <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line leading-relaxed break-words">
+                            {user?.bio || "Sin biografía. Haz clic en editar para agregar información sobre ti."}
+                        </p>
+                    </div>
                     <button
                         onClick={() => handleOpenModal("bio")}
-                        className="absolute top-0 right-0 text-blue-500 hover:text-blue-700 transition-colors"
+                        className="absolute top-3 right-3 text-gray-400 opacity-0 group-hover:opacity-100 hover:text-blue-500 transition-all p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
                         aria-label="Editar biografía"
                     >
-                        <Edit size={16} />
+                        <FaEdit size={16} />
                     </button>
                 </div>
             </div>
 
             {/* Modales para edición */}
             <Modal
-                isOpen={isEditingField === "name" || isEditingField === "username" || isEditingField === "bio"}
+                isOpen={
+                    isEditingField === "name" ||
+                    isEditingField === "username" ||
+                    isEditingField === "bio" ||
+                    isEditingField === "location" ||
+                    isEditingField === "website"
+                }
                 onClose={handleCloseModal}
                 title={`Editar ${
                     isEditingField === "name"
@@ -261,6 +317,10 @@ export default function ProfileHeader({ isLoading, onSave }: ProfileHeaderProps)
                         ? "Nombre de usuario"
                         : isEditingField === "bio"
                         ? "Biografía"
+                        : isEditingField === "location"
+                        ? "Ubicación"
+                        : isEditingField === "website"
+                        ? "Sitio web"
                         : ""
                 }`}
                 footer={textFieldFooter}
@@ -269,8 +329,17 @@ export default function ProfileHeader({ isLoading, onSave }: ProfileHeaderProps)
                     <textarea
                         value={editingValue}
                         onChange={(e) => setEditingValue(e.target.value)}
-                        className="input-field p-3 w-full rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700/50 dark:text-white min-h-[100px] resize-y"
+                        className="input-field p-4 w-full rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700/50 dark:text-white min-h-[150px] resize-y"
                         placeholder="Escribe algo sobre ti..."
+                        autoFocus
+                    />
+                ) : isEditingField === "website" ? (
+                    <input
+                        type="url"
+                        value={editingValue}
+                        onChange={(e) => setEditingValue(e.target.value)}
+                        className="input-field p-4 w-full rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700/50 dark:text-white"
+                        placeholder="https://tusitio.com"
                         autoFocus
                     />
                 ) : (
@@ -278,12 +347,14 @@ export default function ProfileHeader({ isLoading, onSave }: ProfileHeaderProps)
                         type="text"
                         value={editingValue}
                         onChange={(e) => setEditingValue(e.target.value)}
-                        className="input-field p-3 w-full rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700/50 dark:text-white"
+                        className="input-field p-4 w-full rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700/50 dark:text-white"
                         placeholder={
                             isEditingField === "name"
                                 ? "Tu nombre completo"
                                 : isEditingField === "username"
                                 ? "Tu nombre de usuario"
+                                : isEditingField === "location"
+                                ? "Tu ubicación"
                                 : ""
                         }
                         autoFocus
@@ -295,41 +366,15 @@ export default function ProfileHeader({ isLoading, onSave }: ProfileHeaderProps)
             <Modal
                 isOpen={isEditingField === "photo"}
                 onClose={handleCloseModal}
-                title="Cambiar foto de perfil"
+                title={isEditingField === "photo" ? "Cambiar foto de perfil" : "Cambiar imagen de portada"}
                 footer={imageModalFooter}
             >
                 <div className="flex flex-col items-center space-y-4">
-                    {/* Previsualización de la imagen */}
-                    <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-700 relative">
-                        <Image
-                            src={imagePreview || user?.photoURL || "/default-avatar.png"}
-                            alt="Vista previa"
-                            fill
-                            sizes="(max-width: 128px) 128px"
-                            className="object-cover"
-                        />
-                    </div>
-
-                    {/* Input de archivo oculto */}
-                    <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleFileChange}
-                        accept="image/*"
-                        className="hidden"
+                    <UserImageHandler
+                        userId={user?.uid || ""}
+                        initialImage={isEditingField === "photo" ? user?.photoURL : ""}
+                        onClose={handleCloseModal}
                     />
-
-                    {/* Botón para seleccionar archivo */}
-                    <button
-                        onClick={triggerFileInput}
-                        className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors flex items-center"
-                    >
-                        <Camera
-                            className="mr-2"
-                            size={18}
-                        />
-                        Seleccionar imagen
-                    </button>
                 </div>
             </Modal>
         </div>

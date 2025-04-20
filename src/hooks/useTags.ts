@@ -114,7 +114,7 @@ export function useTags(options: UseTagsOptions = {}): UseTagsReturn {
     const deleteTagById = async (tagId: string): Promise<void> => {
         try {
             await deleteTag(tagId);
-            await fetchTags(); // Refrescar la lista después de eliminar
+            await fetchTags();
         } catch (err) {
             setError(err instanceof Error ? err : new Error(`Error al eliminar el tag: ${tagId}`));
             throw err;

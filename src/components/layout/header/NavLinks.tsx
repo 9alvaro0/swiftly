@@ -58,17 +58,6 @@ export default function NavLinks({
                     />
                 ))}
 
-                {/* User-specific items */}
-                {user?.role === "admin" && (
-                    <NavItem
-                        name="Administración"
-                        path="/admin"
-                        isActive={pathname === "/admin"}
-                        onClick={onItemClick}
-                        isMobile={isMobile}
-                    />
-                )}
-
                 {/* Authentication-specific items */}
                 {isAuthenticated ? (
                     <NavItem
@@ -89,6 +78,17 @@ export default function NavLinks({
                             className={isMobile ? "" : "bg-blue-600 hover:bg-blue-700 text-white hover:text-white"}
                         />
                     </>
+                )}
+
+                {/* User-specific items */}
+                {user?.role === "admin" && (
+                    <NavItem
+                        name="Administración"
+                        path="/admin"
+                        isActive={pathname === "/admin"}
+                        onClick={onItemClick}
+                        isMobile={isMobile}
+                    />
                 )}
             </ul>
         </>

@@ -1,37 +1,22 @@
 "use client";
 
-import Image from "next/image";
 import { Clock, Calendar, BookOpen } from "lucide-react";
 import type { Post } from "@/types/Post";
 import LikeButton from "./LikeButton";
 import { useAuthStore } from "@/store/authStore";
+import { formatDate } from "@/utils/dateUtils";
 
 type PostHeaderProps = {
     post: Post;
 };
 
 export default function PostHeader({ post }: PostHeaderProps) {
-    const { user } = useAuthStore()
-    
-    // Función para formatear la fecha
-    const formatDate = (date: string | Date) => {
-        const dateObj = new Date(date);
-        return dateObj.toLocaleDateString("es-ES", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-        });
-    };
+    const { user } = useAuthStore();
 
     return (
         <div className="mb-8">
             {/* Categoría y nivel */}
             <div className="flex flex-wrap items-center gap-2 text-sm mb-4">
-                {post.category && (
-                    <span className="inline-block bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-medium">
-                        {post.category}
-                    </span>
-                )}
                 {post.level && (
                     <span className="inline-block bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-medium">
                         {post.level}
@@ -79,24 +64,11 @@ export default function PostHeader({ post }: PostHeaderProps) {
 
                 {/* Botón de Like */}
                 <div className="flex items-center gap-2">
-                    <LikeButton post={post} currentUser={user} />
+                    <LikeButton
+                        post={post}
+                        currentUser={user}
+                    />
                 </div>
-
-                {/* Avatar y nombre del autor simplificados */}
-                {post.author && (
-                    <div className="flex items-center gap-2 ml-auto">
-                        {post.author.avatar && (
-                            <Image
-                                src={post.author.avatar}
-                                alt={post.author.name || "Autor"}
-                                width={24}
-                                height={24}
-                                className="rounded-full"
-                            />
-                        )}
-                        <span className="font-medium">{post.author.name || "Autor"}</span>
-                    </div>
-                )}
             </div>
         </div>
     );

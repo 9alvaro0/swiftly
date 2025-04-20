@@ -1,18 +1,35 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Post } from "@/types/Post";
-import { getDefaultPost } from "@/utils/utils";
+import { Author, Post } from "@/types/Post";
+import { updatePost, createPost } from "@/firebase/firestore/post";
+import { useAuthStore } from "@/store/authStore";
+import { getDefaultPost, preparePostForSave, validatePost } from "@/utils/postUtils";
 
 interface PostFormOptions {
     defaultValues?: Post;
-    onSubmit?: (post: Post) => void;
 }
 
-export const usePostForm = ({ defaultValues, onSubmit }: PostFormOptions = {}) => {
+export const usePostForm = ({ defaultValues }: PostFormOptions = {}) => {
+    const { user } = useAuthStore();
     const router = useRouter();
 
-    const [post, setPost] = useState<Post>(defaultValues || getDefaultPost());
+    const [post, setPost] = useState<Post>(() => {
+        const initialPost = defaultValues || getDefaultPost();
 
+        if (initialPost.author.id === "" && user) {
+            initialPost.author = {
+                id: user.uid,
+                name: user.name || "",
+                username: user.username || "",
+                avatar: user.photoURL || "",
+                bio: user.bio || "",
+                socialLinks: user.socialLinks ? { ...user.socialLinks } : undefined,
+            };
+        }
+
+        return initialPost;
+    });
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [uploadedImages, setUploadedImages] = useState<string[]>([]);
     const [isPreviewMode, setIsPreviewMode] = useState(false);
@@ -50,20 +67,6 @@ export const usePostForm = ({ defaultValues, onSubmit }: PostFormOptions = {}) =
         }));
     };
 
-    const validateForm = () => {
-        const newErrors: Record<string, string> = {};
-
-        if (!post.title?.trim()) newErrors.title = "El título es obligatorio";
-        if (!post.description?.trim()) newErrors.description = "La descripción es obligatoria";
-        if (!post.content?.trim()) newErrors.content = "El contenido es obligatorio";
-        if (!post.imageUrl?.trim()) newErrors.imageUrl = "La URL de la imagen es obligatoria";
-        if (!post.category) newErrors.category = "La categoría es obligatoria";
-        if (!post.level) newErrors.level = "El nivel es obligatorio";
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
 
@@ -81,36 +84,32 @@ export const usePostForm = ({ defaultValues, onSubmit }: PostFormOptions = {}) =
         }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!validateForm()) return;
+        if (!validatePost(post).isValid) {
+            setErrors(validatePost(post).errors.reduce((acc, error) => ({ ...acc, [error]: true }), {}));
+            return;
+        }
 
+        // Establecer fechas
         const now = new Date();
 
+        // Generar ID si es un post nuevo
         const postId = post.id || crypto.randomUUID();
 
-        const updatedPost: Post = {
+        // Preparar objeto de post con todos los campos requeridos
+        let updatedPost: Post = {
             ...(post as Post),
             id: postId,
-            type: post.type || "article",
+            type: post.type,
             createdAt: post.createdAt || now,
-            updatedAt: now,
-            slug:
-                post.slug ||
-                post.title
-                    ?.toLowerCase()
-                    .replace(/\s+/g, "-")
-                    .replace(/[^\w-]+/g, "") ||
-                "",
-            readTime: Math.ceil(((post.content?.length || 0) / 1000) * 5),
             isPublished: post.isPublished || false,
             tags: post.tags || [],
-            category: post.category || "Swift",
-            level: post.level || "Principiante",
+            level: post.level,
             author: {
                 id: post.author?.id || crypto.randomUUID(),
-                name: post.author?.name || "Autor Anónimo", // Proporciona un valor por defecto
+                name: post.author?.name || "Autor Anónimo",
                 username: post.author?.username,
                 avatar: post.author?.avatar,
                 bio: post.author?.bio,
@@ -118,26 +117,53 @@ export const usePostForm = ({ defaultValues, onSubmit }: PostFormOptions = {}) =
             },
             views: post.views || 0,
             likedBy: post.likedBy || [],
-            language: post.language || "es",
+            // Asegurarse de que todos los campos requeridos tengan al menos un valor vacío
+            imageUrl: post.imageUrl || "",
+            description: post.description || "",
         };
 
-        if (onSubmit) {
-            onSubmit(updatedPost);
-        } else {
-            // Default behavior if no custom submit handler
-            const storedPosts = localStorage.getItem("posts");
-            let posts = storedPosts ? JSON.parse(storedPosts) : [];
+        updatedPost = preparePostForSave(updatedPost);
 
+        try {
+            setIsSubmitting(true);
             if (post.id) {
-                // Update existing post
-                posts = posts.map((p: Post) => (p.id === postId ? updatedPost : p));
+                // Actualizar post existente - solo enviar los campos modificados
+                const updatedFields: Partial<
+                    Record<
+                        keyof Post,
+                        | string
+                        | number
+                        | boolean
+                        | Date
+                        | string[]
+                        | Author
+                        | Pick<Post, "id" | "slug" | "title" | "description" | "imageUrl">[]
+                        | undefined
+                    >
+                > = {};
+
+                // Determinar qué campos han cambiado para actualizar solo esos
+                Object.keys(updatedPost).forEach((key) => {
+                    const typedKey = key as keyof Post;
+                    if (JSON.stringify(updatedPost[typedKey]) !== JSON.stringify(post[typedKey])) {
+                        updatedFields[typedKey] = updatedPost[typedKey];
+                    }
+                });
+
+                console.log("Campos actualizados:", updatedFields);
+                await updatePost(postId, updatedFields as Partial<Post>);
             } else {
-                // Add new post
-                posts.push(updatedPost);
+                // Crear nuevo post
+                console.log("Creando nuevo post:", updatedPost);
+                await createPost(updatedPost);
             }
 
-            localStorage.setItem("posts", JSON.stringify(posts));
+            // Redireccionar después de guardar
             router.push("/admin/posts");
+        } catch (error) {
+            console.error("Error al guardar el post:", error);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -171,8 +197,8 @@ export const usePostForm = ({ defaultValues, onSubmit }: PostFormOptions = {}) =
         handleSubmit,
         addTag,
         removeTag,
-        validateForm,
         addKeyword,
         removeKeyword,
+        isSubmitting,
     };
 };

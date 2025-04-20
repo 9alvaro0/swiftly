@@ -5,11 +5,12 @@ import { useState } from "react";
 
 interface PostFeaturedImageProps {
     imageUrl: string;
+    coverImage?: string;
     title: string;
     caption?: string;
 }
 
-export default function PostFeaturedImage({ imageUrl, title, caption }: PostFeaturedImageProps) {
+export default function PostFeaturedImage({ imageUrl, coverImage, title, caption }: PostFeaturedImageProps) {
     const [isLoading, setIsLoading] = useState(true);
 
     if (!imageUrl) return null;
@@ -28,7 +29,7 @@ export default function PostFeaturedImage({ imageUrl, title, caption }: PostFeat
                 )}
 
                 <Image
-                    src={imageUrl}
+                    src={coverImage || imageUrl}
                     alt={title}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 768px, 1024px"

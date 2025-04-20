@@ -1,9 +1,9 @@
 // src/app/posts/page.tsx
 
-'use client';
+"use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { PostCategory, PostLevel } from "@/types/Post";
+import { PostLevel } from "@/types/Post";
 import { usePosts } from "@/hooks/usePosts";
 import PostsHeader from "@/components/posts/PostsHeader";
 import PostsFilters from "@/components/posts/PostsFilters";
@@ -15,27 +15,17 @@ export default function PostsPage() {
     const [showFilters, setShowFilters] = useState(false);
     const itemsPerPage = 9;
 
-    const [categoryFilter, setCategoryFilter] = useState<PostCategory | "">("");
     const [levelFilter, setLevelFilter] = useState<PostLevel | "">("");
     const [searchQuery, setSearchQuery] = useState("");
 
-    const {
-        posts,
-        stats,
-        isLoading,
-        error,
-        filters,
-        updateFilters,
-        resetFilters
-    } = usePosts({ type: "article" });
+    const { posts, isLoading, error, filters, updateFilters, resetFilters } = usePosts({ type: "article" });
 
     const applyFilters = useCallback(() => {
         updateFilters({
-            category: categoryFilter || undefined,
             level: levelFilter || undefined,
             searchTerm: searchQuery || undefined,
         });
-    }, [categoryFilter, levelFilter, searchQuery, updateFilters]);
+    }, [levelFilter, searchQuery, updateFilters]);
 
     useEffect(() => {
         applyFilters();
@@ -51,15 +41,12 @@ export default function PostsPage() {
     };
 
     const clearFilters = () => {
-        setCategoryFilter("");
         setLevelFilter("");
         setSearchQuery("");
         resetFilters();
     };
 
-    const hasActiveFilters = Boolean(categoryFilter || levelFilter || searchQuery);
-
-    const categories = Object.keys(stats.postsByCategory || {});
+    const hasActiveFilters = Boolean(levelFilter || searchQuery);
 
     if (isLoading) {
         return <PostsSkeleton />;
@@ -82,13 +69,10 @@ export default function PostsPage() {
 
                 <PostsFilters
                     searchQuery={searchQuery}
-                    categoryFilter={categoryFilter}
                     levelFilter={levelFilter}
-                    categories={categories}
                     showFilters={showFilters}
                     hasActiveFilters={hasActiveFilters}
                     onSearchChange={setSearchQuery}
-                    onCategoryChange={setCategoryFilter}
                     onLevelChange={setLevelFilter}
                     onToggleFilters={() => setShowFilters(!showFilters)}
                     onClearFilters={clearFilters}

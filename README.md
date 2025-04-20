@@ -41,7 +41,7 @@ Puedes empezar a editar modificando el archivo `app/page.tsx`.
 Los posts y tutoriales se organizan en un modelo JSON enriquecido con:
 
 -   `slug`, `title`, `description`, `content`
--   `tags`, `category`, `author`
+-   `tags`, `author`
 -   Soporte para imágenes, videos y estadísticas
 -   SEO: `metaTitle`, `metaDescription`, `keywords`
 

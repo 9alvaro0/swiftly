@@ -1,5 +1,5 @@
 // src/hooks/useNewsletterSignup.ts
-import { newsletterService } from "@/services/newsletterService";
+import { signup } from "@/firebase/firestore/newsletter";
 import { useState } from "react";
 
 interface UseNewsletterSignupReturn {
@@ -42,7 +42,7 @@ export function useNewsletterSignup(): UseNewsletterSignupReturn {
         try {
             setIsLoading(true);
             // Llamada al servicio de newsletter
-            await newsletterService.signup(email);
+            await signup(email);
 
             // Resetear formulario
             setEmail("");

@@ -15,17 +15,12 @@ export default function PostCard({ post, variant = "default" }: PostCardProps) {
 
     const isFeatured = variant === "featured";
 
-    // Función segura para obtener la URL de la imagen
     const getImageUrl = () => {
-        if (post.imageUrl) {
-            return post.imageUrl.startsWith("/") ? post.imageUrl : `/${post.imageUrl}`;
-        }
-        if (post.coverImage) {
-            return post.coverImage.startsWith("/") ? post.coverImage : `/${post.coverImage}`;
-        }
-        return "/placeholder.svg";
+        if (post.imageUrl) return post.imageUrl;
+        if (post.coverImage) return post.coverImage;
+        return "/images/default-cover.jpg";
     };
-
+    
     // Función segura para formatear fechas
     const formatDate = (date: Date | string | undefined) => {
         if (!date) return "Fecha no disponible";
@@ -79,14 +74,6 @@ export default function PostCard({ post, variant = "default" }: PostCardProps) {
                         {/* Overlay gradient for better readability of badges */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30"></div>
                     </div>
-
-                    {post.category && (
-                        <div className="absolute top-4 left-4">
-                            <span className="inline-block bg-blue-600/80 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full font-medium">
-                                {post.category}
-                            </span>
-                        </div>
-                    )}
 
                     {/* Level badge if exists */}
                     {post.level && (

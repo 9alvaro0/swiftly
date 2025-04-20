@@ -1,19 +1,6 @@
 // src/constants/posts.ts
 
-import { PostCategory, PostType, PostLevel } from "@/types/Post";
-
-export const CATEGORY_OPTIONS: { value: PostCategory; label: string }[] = [
-    { value: "Swift", label: "Swift" },
-    { value: "SwiftUI", label: "SwiftUI" },
-    { value: "iOS", label: "iOS" },
-    { value: "Xcode", label: "Xcode" },
-    { value: "macOS", label: "macOS" },
-    { value: "Frameworks", label: "Frameworks" },
-    { value: "visionOS", label: "visionOS" },
-    { value: "Arquitectura", label: "Arquitectura" },
-    { value: "Testing", label: "Testing" },
-    { value: "watchOS", label: "watchOS" },
-];
+import { PostType, PostLevel } from "@/types/Post";
 
 export const LEVEL_OPTIONS: { value: PostLevel; label: string }[] = [
     { value: "Principiante", label: "Principiante" },

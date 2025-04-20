@@ -1,5 +1,12 @@
 import { useState, useCallback } from "react";
-import { uploadImage, getImageURL, deleteImage, updateImage, listImages } from "@/firebase/storage/image";
+import {
+    uploadImage,
+    getImageURL,
+    deleteImage,
+    updateImage,
+    listImages,
+    checkImageExists,
+} from "@/firebase/storage/image";
 
 interface UseImagesState {
     loading: boolean;
@@ -8,10 +15,9 @@ interface UseImagesState {
 }
 
 interface UseImagesReturn extends UseImagesState {
-    upload: (file: File, path: string) => Promise<string>;
+    uploadOrUpdate: (file: File, path: string) => Promise<string>;
     getURL: (path: string) => Promise<string>;
     remove: (path: string) => Promise<void>;
-    update: (file: File, path: string) => Promise<string>;
     list: (folderPath: string) => Promise<string[]>;
     resetState: () => void;
 }
@@ -27,7 +33,6 @@ export const useImages = (): UseImagesReturn => {
         urls: [],
     });
 
-    // Restablecer el estado (útil después de errores o al cambiar de componente)
     const resetState = useCallback(() => {
         setState({
             loading: false,
@@ -36,25 +41,34 @@ export const useImages = (): UseImagesReturn => {
         });
     }, []);
 
-    // Subir imagen
-    const upload = useCallback(async (file: File, path: string): Promise<string> => {
+    // Unified upload/update method
+    const uploadOrUpdate = useCallback(async (file: File, path: string): Promise<string> => {
         setState((prev) => ({ ...prev, loading: true, error: null }));
+
         try {
-            const url = await uploadImage(file, path);
+            const exists = await checkImageExists(path);
+            let url: string;
+
+            if (exists) {
+                url = await updateImage(file, path);
+            } else {
+                url = await uploadImage(file, path);
+            }
+
             setState((prev) => ({
                 loading: false,
                 error: null,
-                urls: [...prev.urls, url],
+                urls: [...prev.urls.filter((u) => u !== url), url], // Replace if exists
             }));
+
             return url;
         } catch (error) {
-            const errorObj = error instanceof Error ? error : new Error("Error desconocido al subir imagen");
+            const errorObj = error instanceof Error ? error : new Error("Error al subir/actualizar imagen");
             setState((prev) => ({ ...prev, loading: false, error: errorObj }));
             throw errorObj;
         }
     }, []);
 
-    // Obtener URL de imagen
     const getURL = useCallback(async (path: string): Promise<string> => {
         setState((prev) => ({ ...prev, loading: true, error: null }));
         try {
@@ -62,40 +76,28 @@ export const useImages = (): UseImagesReturn => {
             setState((prev) => ({ loading: false, error: null, urls: prev.urls }));
             return url;
         } catch (error) {
-            const errorObj = error instanceof Error ? error : new Error("Error desconocido al obtener URL");
+            const errorObj = error instanceof Error ? error : new Error("Error al obtener URL");
             setState((prev) => ({ ...prev, loading: false, error: errorObj }));
             throw errorObj;
         }
     }, []);
 
-    // Eliminar imagen
     const remove = useCallback(async (path: string): Promise<void> => {
         setState((prev) => ({ ...prev, loading: true, error: null }));
         try {
             await deleteImage(path);
-            setState((prev) => ({ loading: false, error: null, urls: prev.urls }));
+            setState((prev) => ({
+                loading: false,
+                error: null,
+                urls: prev.urls.filter((url) => !url.includes(path)),
+            }));
         } catch (error) {
-            const errorObj = error instanceof Error ? error : new Error("Error desconocido al eliminar imagen");
+            const errorObj = error instanceof Error ? error : new Error("Error al eliminar imagen");
             setState((prev) => ({ ...prev, loading: false, error: errorObj }));
             throw errorObj;
         }
     }, []);
 
-    // Actualizar imagen
-    const update = useCallback(async (file: File, path: string): Promise<string> => {
-        setState((prev) => ({ ...prev, loading: true, error: null }));
-        try {
-            const url = await updateImage(file, path);
-            setState((prev) => ({ loading: false, error: null, urls: prev.urls }));
-            return url;
-        } catch (error) {
-            const errorObj = error instanceof Error ? error : new Error("Error desconocido al actualizar imagen");
-            setState((prev) => ({ ...prev, loading: false, error: errorObj }));
-            throw errorObj;
-        }
-    }, []);
-
-    // Listar imágenes
     const list = useCallback(async (folderPath: string): Promise<string[]> => {
         setState((prev) => ({ ...prev, loading: true, error: null }));
         try {
@@ -103,7 +105,7 @@ export const useImages = (): UseImagesReturn => {
             setState({ loading: false, error: null, urls });
             return urls;
         } catch (error) {
-            const errorObj = error instanceof Error ? error : new Error("Error desconocido al listar imágenes");
+            const errorObj = error instanceof Error ? error : new Error("Error al listar imágenes");
             setState((prev) => ({ ...prev, loading: false, error: errorObj }));
             throw errorObj;
         }
@@ -111,10 +113,9 @@ export const useImages = (): UseImagesReturn => {
 
     return {
         ...state,
-        upload,
+        uploadOrUpdate,
         getURL,
         remove,
-        update,
         list,
         resetState,
     };

@@ -3,8 +3,6 @@
 import React, { useRef } from "react";
 import { usePostForm } from "@/hooks/usePostForm";
 import { Post } from "@/types/Post";
-import { useAuthStore } from "@/store/authStore";
-
 import PostBasicInfo from "./postFormSections/PostBasicInfo";
 import PostCategorization from "./postFormSections/PostCategorization";
 import PostTagsSection from "./postFormSections/PostTagsSection";
@@ -18,12 +16,10 @@ import Button from "@/components/ui/Button";
 interface PostFormProps {
     isEdit?: boolean;
     initialData?: Post;
-    onSubmit?: (data: Post) => void;
 }
 
-export default function PostForm({ isEdit = false, initialData, onSubmit }: PostFormProps) {
+export default function PostForm({ isEdit = false, initialData }: PostFormProps) {
     const contentRef = useRef<HTMLTextAreaElement>(null);
-    const { user } = useAuthStore();
 
     const {
         post,
@@ -73,15 +69,15 @@ export default function PostForm({ isEdit = false, initialData, onSubmit }: Post
     return (
         <form
             onSubmit={(e) => {
-                e.preventDefault();
+                console.log("PostForm submit", post);
                 handleSubmit(e);
-                onSubmit?.(post);
             }}
             className="space-y-8"
         >
-            {/* Información básica: título, slug, imágenes */}
+            {/* Información básica: título, descripción */}
             <PostBasicInfo
-                post={post}
+                title={post.title}
+                description={post.description}
                 onChange={handleChange}
                 errors={errors}
             />
@@ -120,7 +116,7 @@ export default function PostForm({ isEdit = false, initialData, onSubmit }: Post
 
             {/* Gestor de imágenes */}
             <PostImageSection
-                postId={initialData?.id}
+                post={initialData}
                 uploadedImages={uploadedImages}
                 onSelectMainImage={(imageUrl) => setPost({ ...post, imageUrl })}
                 onSelectCoverImage={(imageUrl) => setPost({ ...post, coverImage: imageUrl })}
@@ -130,7 +126,6 @@ export default function PostForm({ isEdit = false, initialData, onSubmit }: Post
             {/* Información del autor */}
             <PostAuthorSection
                 post={post}
-                user={user}
                 onChange={handleChange}
             />
 
