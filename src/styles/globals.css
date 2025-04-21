@@ -82,3 +82,11 @@ body {
     background: var(--gradient-purple-opacity);
     filter: blur(80px);
 }
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    background-color: #1f2937 !important;
+    -webkit-text-fill-color: #ffffff !important;
+    transition: background-color 9999s ease-in-out 0s;
+}

@@ -1,57 +1,57 @@
+"use client";
+
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { useMemo } from "react";
 
 interface PaginationProps {
     totalItems: number;
     itemsPerPage: number;
-    currentPage: number;
-    onPageChange: (page: number) => void;
 }
 
-export default function Pagination({ totalItems, itemsPerPage, currentPage, onPageChange }: PaginationProps) {
+export default function Pagination({ totalItems, itemsPerPage }: PaginationProps) {
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const currentPage = Number(searchParams.get("page")) || 1;
+
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-    // No mostrar paginación si solo hay una página
-    if (totalPages <= 1) return null;
-
-    // Determinar qué páginas mostrar
-    const getPageNumbers = () => {
-        const pageNumbers = [];
-        const maxPagesToShow = 5; // Ajusta según necesites
+    const getPageNumbers = useMemo(() => {
+        const pageNumbers: (number | "ellipsis")[] = [];
+        const maxPagesToShow = 5;
 
         if (totalPages <= maxPagesToShow) {
-            // Mostrar todas las páginas si hay menos que el máximo
             for (let i = 1; i <= totalPages; i++) {
                 pageNumbers.push(i);
             }
         } else {
-            // Lógica para mostrar páginas con elipsis
             if (currentPage <= 3) {
-                // Cerca del inicio
-                for (let i = 1; i <= 4; i++) {
-                    pageNumbers.push(i);
-                }
-                pageNumbers.push("ellipsis");
-                pageNumbers.push(totalPages);
+                for (let i = 1; i <= 4; i++) pageNumbers.push(i);
+                pageNumbers.push("ellipsis", totalPages);
             } else if (currentPage >= totalPages - 2) {
-                // Cerca del final
-                pageNumbers.push(1);
-                pageNumbers.push("ellipsis");
-                for (let i = totalPages - 3; i <= totalPages; i++) {
-                    pageNumbers.push(i);
-                }
+                pageNumbers.push(1, "ellipsis");
+                for (let i = totalPages - 3; i <= totalPages; i++) pageNumbers.push(i);
             } else {
-                // En medio
-                pageNumbers.push(1);
-                pageNumbers.push("ellipsis");
-                for (let i = currentPage - 1; i <= currentPage + 1; i++) {
-                    pageNumbers.push(i);
-                }
-                pageNumbers.push("ellipsis");
-                pageNumbers.push(totalPages);
+                pageNumbers.push(1, "ellipsis");
+                for (let i = currentPage - 1; i <= currentPage + 1; i++) pageNumbers.push(i);
+                pageNumbers.push("ellipsis", totalPages);
             }
         }
 
         return pageNumbers;
+    }, [currentPage, totalPages]);
+
+    if (totalPages <= 1) return null;
+
+    const createPageUrl = (page: number) => {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set("page", page.toString());
+        return `${pathname}?${params.toString()}`;
+    };
+
+    const goToPage = (page: number) => {
+        router.push(createPageUrl(page), { scroll: false });
     };
 
     return (
@@ -60,31 +60,27 @@ export default function Pagination({ totalItems, itemsPerPage, currentPage, onPa
             aria-label="Paginación"
         >
             <button
-                onClick={() => onPageChange(currentPage - 1)}
+                onClick={() => goToPage(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="p-2 rounded-md text-text-secondary hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 disabled:pointer-events-none"
+                className="p-2 rounded-md text-text-secondary hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
                 aria-label="Página anterior"
             >
                 <ChevronLeft size={16} />
             </button>
 
             <div className="flex space-x-1">
-                {getPageNumbers().map((page, index) => {
-                    if (page === "ellipsis") {
-                        return (
-                            <span
-                                key={`ellipsis-${index}`}
-                                className="px-3 py-2 text-text-secondary"
-                            >
-                                ...
-                            </span>
-                        );
-                    }
-
-                    return (
+                {getPageNumbers.map((page, index) =>
+                    page === "ellipsis" ? (
+                        <span
+                            key={`ellipsis-${index}`}
+                            className="px-3 py-2 text-text-secondary"
+                        >
+                            ...
+                        </span>
+                    ) : (
                         <button
                             key={`page-${page}`}
-                            onClick={() => onPageChange(page as number)}
+                            onClick={() => goToPage(page)}
                             className={`px-3 py-1 rounded-md ${
                                 currentPage === page
                                     ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 font-medium"
@@ -95,14 +91,14 @@ export default function Pagination({ totalItems, itemsPerPage, currentPage, onPa
                         >
                             {page}
                         </button>
-                    );
-                })}
+                    )
+                )}
             </div>
 
             <button
-                onClick={() => onPageChange(currentPage + 1)}
+                onClick={() => goToPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="p-2 rounded-md text-text-secondary hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 disabled:pointer-events-none"
+                className="p-2 rounded-md text-text-secondary hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
                 aria-label="Página siguiente"
             >
                 <ChevronRight size={16} />

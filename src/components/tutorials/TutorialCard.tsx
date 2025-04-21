@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Clock, BookOpen } from "lucide-react";
+import { Clock } from "lucide-react";
 import type { Post } from "@/types/Post";
 
 type TutorialCardProps = {
@@ -54,42 +54,12 @@ export default function TutorialCard({ tutorial }: TutorialCardProps) {
                     </div>
 
                     {/* Title - fixed height with line clamp */}
-                    <h3 className="font-bold text-lg h-14 mb-2 line-clamp-2 text-white group-hover:text-blue-400 transition-colors flex items-center">
+                    <h3 className={`group-hover:underline font-bold text-lg h-14 mb-2 line-clamp-2 text-white group-hover:text-blue-400 transition-colors flex items-center`}>
                         {tutorial.title}
                     </h3>
 
                     {/* Description - fixed height with line clamp */}
-                    <p className="text-white/70 line-clamp-2 h-12">{tutorial.description}</p>
-                </div>
-
-                {/* Footer - fixed height */}
-                <div className="p-5 border-t border-white/5 flex items-center">
-                    <div className="flex justify-between items-center w-full">
-                        <div className="flex items-center text-blue-400 font-medium group-hover:text-blue-300 transition-colors">
-                            <BookOpen
-                                size={16}
-                                className="mr-2"
-                            />
-                            <span className="group-hover:underline">Leer tutorial</span>
-                        </div>
-
-                        <div className="flex items-center">
-                            {tutorial.author?.avatar ? (
-                                <Image
-                                    src={tutorial.author.avatar}
-                                    alt={tutorial.author.name || "Autor"}
-                                    width={24}
-                                    height={24}
-                                    className="rounded-full border border-white/20 mr-2"
-                                />
-                            ) : (
-                                <div className="w-6 h-6 rounded-full bg-purple-500/30 flex items-center justify-center text-xs text-white mr-2">
-                                    {tutorial.author?.name?.charAt(0) || "A"}
-                                </div>
-                            )}
-                            <span className="text-sm text-white/60">{tutorial.author.name}</span>
-                        </div>
-                    </div>
+                    <p className={`text-white/70 line-clamp-2 h-12`}>{tutorial.description}</p>
                 </div>
             </article>
         </Link>

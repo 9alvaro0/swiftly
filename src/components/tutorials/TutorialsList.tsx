@@ -1,49 +1,31 @@
 // src/components/tutorials/TutorialsList.tsx
 
-"use client";
-
-import { Post } from "@/types/Post";
 import TutorialCard from "@/components/tutorials/TutorialCard";
 import Pagination from "@/components/ui/Pagination";
+import { getAllPublishedPosts } from "@/firebase/firestore/post";
 
-interface TutorialsListProps {
-    tutorials: Post[];
-    currentPage: number;
-    itemsPerPage: number;
-    onPageChange: (page: number) => void;
-    hasActiveFilters: boolean;
-    onClearFilters: () => void;
-}
-
-export default function TutorialsList({
-    tutorials,
+export default async function TutorialsList({
+    searchTerm,
+    level,
     currentPage,
-    itemsPerPage,
-    onPageChange,
-    hasActiveFilters,
-    onClearFilters,
-}: TutorialsListProps) {
+}: {
+    searchTerm: string;
+    level: string;
+    currentPage: number;
+}) {
+    const itemsPerPage = 9;
+
+    const tutorials = await getAllPublishedPosts(searchTerm, level, "tutorial");
+    // const tutorials = await getAllPosts();
+
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentTutorials = tutorials.slice(indexOfFirstItem, indexOfLastItem);
 
     if (currentTutorials.length === 0) {
         return (
-            <div className="text-center py-16 bg-neutral-50 dark:bg-neutral-800 rounded-lg">
-                <p className="text-text-secondary text-lg mb-4">
-                    No se encontraron tutoriales con los filtros seleccionados.
-                </p>
-                {hasActiveFilters && (
-                    <div className="mt-4">
-                        <p className="text-gray-600 mb-4">Prueba con otros criterios de búsqueda</p>
-                        <button
-                            onClick={onClearFilters}
-                            className="px-4 py-2 bg-primary text-white rounded-full hover:bg-primary-dark transition-colors"
-                        >
-                            Limpiar filtros
-                        </button>
-                    </div>
-                )}
+            <div className="text-center py-16 ">
+                <p className="text-text-secondary text-lg mb-4">No se encontraron artículos</p>
             </div>
         );
     }
@@ -68,8 +50,6 @@ export default function TutorialsList({
                     <Pagination
                         totalItems={tutorials.length}
                         itemsPerPage={itemsPerPage}
-                        currentPage={currentPage}
-                        onPageChange={onPageChange}
                     />
                 </div>
             )}

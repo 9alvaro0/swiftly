@@ -4,9 +4,10 @@
 
 import { registerWithEmailAndPassword } from "@/firebase/auth/auth";
 import { handleFirebaseError } from "@/firebase/errors";
-import { EyeOffIcon, EyeIcon } from "lucide-react";
 import { useState } from "react";
 import Spinner from "@/components/ui/Spinner";
+import Input from "../ui/Input";
+import { FiEye, FiEyeOff, FiMail } from "react-icons/fi";
 
 export default function RegisterForm() {
     const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ export default function RegisterForm() {
         confirmPassword: "",
     });
     const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -76,102 +78,66 @@ export default function RegisterForm() {
             className="space-y-6"
         >
             <div>
-                <label
-                    htmlFor="name"
-                    className="block text-sm font-medium text-white mb-1"
-                >
-                    Nombre completo
-                </label>
-                <input
+                <Input
                     id="name"
+                    label="Nombre completo"
+                    placeholder="Tu nombre"
                     name="name"
                     type="text"
                     autoComplete="name"
                     required
                     value={formData.name}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 bg-white/5 border ${
-                        errors.name ? "border-red-500" : "border-white/10"
-                    } rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                    placeholder="Tu nombre"
                 />
                 {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
             </div>
 
             <div>
-                <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-white mb-1"
-                >
-                    Email
-                </label>
-                <input
+                <Input
                     id="email"
+                    label="Email"
+                    placeholder="tu@email.com"
+                    icon={<FiMail />}
                     name="email"
                     type="email"
                     autoComplete="email"
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 bg-white/5 border ${
-                        errors.email ? "border-red-500" : "border-white/10"
-                    } rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                    placeholder="tu@email.com"
                 />
                 {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
             </div>
 
             <div>
-                <label
-                    htmlFor="password"
-                    className="block text-sm font-medium text-white mb-1"
-                >
-                    Contraseña
-                </label>
-                <div className="relative">
-                    <input
-                        id="password"
-                        name="password"
-                        type={showPassword ? "text" : "password"}
-                        autoComplete="new-password"
-                        required
-                        value={formData.password}
-                        onChange={handleChange}
-                        className={`w-full px-4 py-3 bg-white/5 border ${
-                            errors.password ? "border-red-500" : "border-white/10"
-                        } rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                        placeholder="••••••••"
-                    />
-                    <button
-                        type="button"
-                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-white/50 hover:text-white/80"
-                        onClick={() => setShowPassword(!showPassword)}
-                    >
-                        {showPassword ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
-                    </button>
-                </div>
+                <Input
+                    id="password"
+                    label="Contraseña"
+                    placeholder="••••••••"
+                    icon={showPassword ? <FiEyeOff /> : <FiEye />}
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="new-password"
+                    required
+                    value={formData.password}
+                    onChange={handleChange}
+                    onIconClick={() => setShowPassword(!showPassword)}
+                />
                 {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password}</p>}
             </div>
 
             <div>
-                <label
-                    htmlFor="confirmPassword"
-                    className="block text-sm font-medium text-white mb-1"
-                >
-                    Confirmar contraseña
-                </label>
-                <input
+                <Input
                     id="confirmPassword"
+                    label="Confirmar contraseña"
+                    placeholder="••••••••"
+                    icon={showConfirmPassword ? <FiEyeOff className="h-5 w-5" /> : <FiEye className="h-5 w-5" />}
                     name="confirmPassword"
-                    type={showPassword ? "text" : "password"}
+                    type={showConfirmPassword ? "text" : "password"}
                     autoComplete="new-password"
                     required
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 bg-white/5 border ${
-                        errors.confirmPassword ? "border-red-500" : "border-white/10"
-                    } rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                    placeholder="••••••••"
+                    onIconClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 />
                 {errors.confirmPassword && <p className="mt-1 text-sm text-red-500">{errors.confirmPassword}</p>}
             </div>

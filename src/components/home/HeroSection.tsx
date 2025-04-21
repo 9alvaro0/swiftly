@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { ArrowRight, Code, BookOpen, Zap } from "lucide-react";
+import LinkButton from "@/components/ui/LinkButton";
 
 export default function HeroSection() {
     return (
@@ -24,19 +24,21 @@ export default function HeroSection() {
 
                 {/* Call to Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                    <Link
+                    <LinkButton
                         href="/tutorials"
-                        className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center justify-center gap-2 transition-colors font-medium"
+                        variant="primary"
+                        size="lg"
                     >
                         Empezar a aprender
                         <ArrowRight size={18} />
-                    </Link>
-                    <Link
+                    </LinkButton>
+                    <LinkButton
                         href="/posts"
-                        className="px-8 py-3 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-lg transition-colors font-medium"
+                        variant="secondary"
+                        size="lg"
                     >
-                        Explorar blog
-                    </Link>
+                        Explorar publicaciones
+                    </LinkButton>
                 </div>
 
                 {/* Features */}

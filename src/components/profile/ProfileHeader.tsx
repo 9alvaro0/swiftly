@@ -20,6 +20,8 @@ import {
 } from "react-icons/fa";
 import { User } from "@/types/User";
 import { formatDate } from "@/utils/dateUtils";
+import Input from "../ui/Input";
+import Textarea from "../ui/Textarea";
 
 export default function ProfileHeader() {
     const { user, setUser } = useAuthStore();
@@ -319,44 +321,43 @@ export default function ProfileHeader() {
                         ? "Biografía"
                         : isEditingField === "location"
                         ? "Ubicación"
-                        : isEditingField === "website"
-                        ? "Sitio web"
                         : ""
                 }`}
                 footer={textFieldFooter}
             >
                 {isEditingField === "bio" ? (
-                    <textarea
+                    <Textarea
+                        id={isEditingField || ""}
+                        label="Biografía"
                         value={editingValue}
                         onChange={(e) => setEditingValue(e.target.value)}
-                        className="input-field p-4 w-full rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700/50 dark:text-white min-h-[150px] resize-y"
                         placeholder="Escribe algo sobre ti..."
                         autoFocus
                     />
-                ) : isEditingField === "website" ? (
-                    <input
-                        type="url"
-                        value={editingValue}
-                        onChange={(e) => setEditingValue(e.target.value)}
-                        className="input-field p-4 w-full rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700/50 dark:text-white"
-                        placeholder="https://tusitio.com"
-                        autoFocus
-                    />
                 ) : (
-                    <input
+                    <Input
+                        id={isEditingField || ""}
+                        label={
+                            isEditingField === "name"
+                                ? "Nombre completo"
+                                : isEditingField === "username"
+                                ? "Nombre de usuario"
+                                : isEditingField === "location"
+                                ? "Ubicación"
+                                : ""
+                        }
+                        placeholder={
+                            isEditingField === "name"
+                                ? "Escribe tu nombre completo"
+                                : isEditingField === "username"
+                                ? "Escribe tu nombre de usuario"
+                                : isEditingField === "location"
+                                ? "Escribe tu ubicación"
+                                : ""
+                        }
                         type="text"
                         value={editingValue}
                         onChange={(e) => setEditingValue(e.target.value)}
-                        className="input-field p-4 w-full rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700/50 dark:text-white"
-                        placeholder={
-                            isEditingField === "name"
-                                ? "Tu nombre completo"
-                                : isEditingField === "username"
-                                ? "Tu nombre de usuario"
-                                : isEditingField === "location"
-                                ? "Tu ubicación"
-                                : ""
-                        }
                         autoFocus
                     />
                 )}

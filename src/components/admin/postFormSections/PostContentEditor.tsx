@@ -58,10 +58,10 @@ const PostContentEditor: React.FC<PostContentEditorProps> = ({
 
             {!isPreview ? (
                 <Textarea
-                    ref={contentRef}
                     id="content"
-                    name="content"
                     label="Contenido (Markdown)"
+                    ref={contentRef}
+                    name="content"
                     value={content}
                     onChange={onChange}
                     rows={15}

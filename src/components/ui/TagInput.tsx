@@ -3,6 +3,7 @@
 
 import React, { useState } from "react";
 import Button from "./Button";
+import Input from "./Input";
 
 interface TagInputProps {
     label: string;
@@ -37,21 +38,19 @@ const TagInput = ({ label, tags, onAddTag, onRemoveTag, id }: TagInputProps) => 
             >
                 {label}
             </label>
-            <div className="flex">
-                <input
-                    type="text"
+            <div className="flex space-x-2">
+                <Input
                     id={id}
+                    placeholder="Añadir etiqueta"
+                    type="text"
                     value={currentTag}
                     onChange={(e) => setCurrentTag(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className="w-full p-2 border border-neutral-300 rounded-l-md focus:ring-2 focus:ring-primary focus:outline-none"
-                    placeholder="Añadir etiqueta"
                 />
                 <Button
                     variant="primary"
                     type="button"
                     onClick={handleAddTag}
-                    className="rounded-l-none"
                 >
                     Añadir
                 </Button>

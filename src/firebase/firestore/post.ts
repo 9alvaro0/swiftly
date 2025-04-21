@@ -37,23 +37,67 @@ export const getPostBySlug = async (slug: string): Promise<Post | null> => {
     return null;
 };
 
+// Obtener posts por tags
+export const getPostsByTag = async (tag: string): Promise<Post[]> => {
+    const snapshot = await getDocs(postsCollection);
+    return snapshot.docs
+        .filter((doc) => {
+            const data = doc.data() as Post;
+            return data.tags && data.tags.includes(tag);
+        })
+        .map((doc) => {
+            const postData = convertTimestampsToDates(doc.data());
+            return postData as Post;
+        });
+};
+
 // Obtener todos los posts
 export const getAllPosts = async (): Promise<Post[]> => {
     const snapshot = await getDocs(postsCollection);
     return snapshot.docs.map((doc) => {
         const postData = convertTimestampsToDates(doc.data());
+        console.log("Post data:", postData); // Log para depuración
         return postData as Post;
     });
 };
 
 // Obtener todos los posts publicados
-export const getAllPublishedPosts = async (): Promise<Post[]> => {
-    const snapshot = await getDocs(postsCollection);
-    const querySnapshot = snapshot.docs.filter((doc) => doc.data().published === true);
-    return querySnapshot.map((doc) => {
-        const postData = convertTimestampsToDates(doc.data());
-        return postData as Post;
+export const getAllPublishedPosts = async (
+    searchTerm: string = "",
+    level: string = "",
+    type: string = ""
+): Promise<Post[]> => {
+    console.log("Buscando posts con los siguientes parámetros:", {
+        searchTerm,
+        level,
+        type,
     });
+    const snapshot = await getDocs(postsCollection);
+
+    return snapshot.docs
+        .filter((doc) => {
+            const data = doc.data() as Post;
+            console.log("Post data:", data); // Log para depuración
+            // Only filter published posts
+            if (data.isPublished !== true) return false;
+
+            // Case-insensitive search
+            if (searchTerm && !data.title.toLowerCase().includes(searchTerm.toLowerCase())) {
+                return false;
+            }
+
+            // Optional level filter
+            if (level && data.level !== level) return false;
+
+            // Optional type filter
+            if (type && data.type !== type) return false;
+
+            return true;
+        })
+        .map((doc) => {
+            const postData = convertTimestampsToDates(doc.data());
+            return postData as Post;
+        });
 };
 
 // Actualizar un post

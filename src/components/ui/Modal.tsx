@@ -54,7 +54,7 @@ export default function Modal({ isOpen, onClose, title, children, footer }: Moda
                 }`}
                 onClick={onClose}
             ></div>
-            
+
             {/* Contenido del modal */}
             <div
                 className={`relative bg-white/90 dark:bg-gray-800/90 p-8 rounded-xl shadow-[0_0_20px_rgba(59,130,246,0.3)] border border-blue-200 dark:border-blue-900 max-w-md w-full transition-all duration-300 ${

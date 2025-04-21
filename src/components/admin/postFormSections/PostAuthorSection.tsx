@@ -31,12 +31,11 @@ const PostAuthorSection: React.FC<PostAuthorSectionProps> = ({ post, onChange })
 
                 {hasAuthorInfo && (
                     <div className="flex items-center">
-                        <span className="text-sm text-blue-600 dark:text-blue-400 mr-2">Usando perfil actual</span>
                         <Checkbox
                             id="useProfileInfo"
                             checked={hasAuthorInfo}
                             disabled={true}
-                            label=""
+                            label="Usando perfil actual"
                         />
                     </div>
                 )}

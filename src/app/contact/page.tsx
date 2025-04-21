@@ -4,37 +4,8 @@ import React, { useState } from "react";
 import { FiArrowRight, FiCheckCircle } from "react-icons/fi";
 import Input from "@/components/ui/Input";
 import Spinner from "@/components/ui/Spinner";
-
-const Textarea = ({
-    label,
-    error,
-    id,
-    className = "",
-    ...props
-}: {
-    label: string;
-    error?: string;
-    id: string;
-    className?: string;
-} & React.TextareaHTMLAttributes<HTMLTextAreaElement>) => {
-    return (
-        <div className="mb-4">
-            <label
-                htmlFor={id}
-                className="block text-primary font-medium mb-2"
-            >
-                {label}
-            </label>
-            <textarea
-                id={id}
-                className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-primary focus:outline-none 
-        ${error ? "border-error" : "border-apple-gray-300 dark:border-apple-gray-600"} ${className}`}
-                {...props}
-            />
-            {error && <p className="text-error text-sm mt-1">{error}</p>}
-        </div>
-    );
-};
+import Button from "@/components/ui/Button";
+import Textarea from "@/components/ui/Textarea";
 
 export default function ContactPage() {
     const [formState, setFormState] = useState({
@@ -163,7 +134,9 @@ export default function ContactPage() {
                             />
 
                             <div className="pt-6">
-                                <button
+                                <Button
+                                    variant="primary"
+                                    size="lg"
                                     type="submit"
                                     disabled={isSubmitting}
                                     className="w-full bg-primary hover:bg-primary-dark text-white rounded-md transition-all duration-300 py-3 px-4 flex items-center justify-center font-medium"
@@ -178,7 +151,7 @@ export default function ContactPage() {
                                             Enviar mensaje <FiArrowRight className="ml-2 h-4 w-4" />
                                         </span>
                                     )}
-                                </button>
+                                </Button>
                             </div>
                         </form>
                     ) : (

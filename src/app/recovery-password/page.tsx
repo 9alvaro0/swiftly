@@ -5,6 +5,7 @@ import AuthLayout from "@/components/auth/AuthLayout";
 import PublicRoute from "@/components/auth/PublicRoute";
 import { FiMail } from "react-icons/fi";
 import Spinner from "@/components/ui/Spinner";
+import Input from "@/components/ui/Input";
 
 export default function RecuperarPasswordPage() {
     const [email, setEmail] = useState("");
@@ -15,15 +16,10 @@ export default function RecuperarPasswordPage() {
         e.preventDefault();
         setIsLoading(true);
 
-        try {
-            // Simulación de envío de correo de recuperación
-            await new Promise((resolve) => setTimeout(resolve, 1500));
-            setIsSubmitted(true);
-        } catch (error) {
-            console.error("Error al enviar correo de recuperación:", error);
-        } finally {
-            setIsLoading(false);
-        }
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+
+        setIsSubmitted(true);
+        setIsLoading(false);
     };
 
     return (
@@ -38,25 +34,18 @@ export default function RecuperarPasswordPage() {
                             onSubmit={handleSubmit}
                             className="space-y-6"
                         >
-                            <div>
-                                <label
-                                    htmlFor="email"
-                                    className="block text-sm font-medium text-white mb-1"
-                                >
-                                    Email
-                                </label>
-                                <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    autoComplete="email"
-                                    required
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    placeholder="tu@email.com"
-                                />
-                            </div>
+                            <Input
+                                id="email"
+                                label="Email"
+                                placeholder="tu@email.com"
+                                icon={<FiMail className="h-5 w-5 text-gray-400" />}
+                                name="email"
+                                type="email"
+                                autoComplete="email"
+                                required
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
 
                             <button
                                 type="submit"

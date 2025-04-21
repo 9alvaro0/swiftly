@@ -2,19 +2,34 @@
 
 import HeroSection from "@/components/home/HeroSection";
 import FeaturedTutorials from "@/components/home/FeaturedTutorials";
-import LatestBlogPosts from "@/components/home/LatestBlogPosts";
+import LatestPosts from "@/components/home/LatestPosts";
 import NewsletterSignup from "@/components/home/NewsletterSignup";
+import { Suspense } from "react";
+import FeaturedTutorialsSkeleton from "@/components/home/skeletons/FeaturedTutorialsSkeleton";
+import LatestPostsSkeleton from "@/components/home/skeletons/LatestPostsSkeleton";
 
-export default function Home() {
+export default function Home({
+    searchParams,
+}: {
+    searchParams?: {
+        page?: string;
+    };
+}) {
+    const currentPage = searchParams?.page ? Number(searchParams.page) : 1;
+
     return (
-        <div>
-            {/* Hero y secciones principales */}
-            <div className="space-y-12 mb-16">
-                <HeroSection />
+        <main className="mb-16">
+            <HeroSection />
+
+            <Suspense fallback={<FeaturedTutorialsSkeleton />}>
                 <FeaturedTutorials />
-                <LatestBlogPosts />
-                <NewsletterSignup />
-            </div>
-        </div>
+            </Suspense>
+
+            <Suspense fallback={<LatestPostsSkeleton />}>
+                <LatestPosts currentPage={currentPage} />
+            </Suspense>
+
+            <NewsletterSignup />
+        </main>
     );
 }

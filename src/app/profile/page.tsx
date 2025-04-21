@@ -9,6 +9,7 @@ import ProfileHeader from "@/components/profile/ProfileHeader";
 import SocialLinksSection from "@/components/profile/SocialLinksSection";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import Modal from "@/components/ui/Modal";
+import Input from "@/components/ui/Input";
 
 export default function ProfilePage() {
     const { logout } = useAuthStore();
@@ -146,29 +147,29 @@ export default function ProfilePage() {
                 >
                     <div className="space-y-4 py-2">
                         <div>
-                            <label className="block text-gray-700 dark:text-gray-300 mb-2">Contraseña actual</label>
-                            <input
-                                type="password"
-                                className="input-field p-3 w-full rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700/50 dark:text-white"
+                            <Input
+                                id="current-password"
+                                label="Contraseña actual"
                                 placeholder="Ingresa tu contraseña actual"
+                                type="password"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-gray-700 dark:text-gray-300 mb-2">Nueva contraseña</label>
-                            <input
-                                type="password"
-                                className="input-field p-3 w-full rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700/50 dark:text-white"
+                            <Input
+                                id="new-password"
+                                label="Nueva contraseña"
                                 placeholder="Ingresa tu nueva contraseña"
+                                type="password"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-gray-700 dark:text-gray-300 mb-2">Confirmar contraseña</label>
-                            <input
-                                type="password"
-                                className="input-field p-3 w-full rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700/50 dark:text-white"
+                            <Input
+                                id="confirm-password"
+                                label="Confirmar contraseña"
                                 placeholder="Confirma tu nueva contraseña"
+                                type="password"
                             />
                         </div>
                     </div>

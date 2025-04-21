@@ -8,6 +8,7 @@ import Modal from "@/components/ui/Modal";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BiEditAlt, BiTrash } from "react-icons/bi";
 import { FaSearch, FaExclamationTriangle } from "react-icons/fa";
+import Input from "@/components/ui/Input";
 
 export default function AdminTagsPage() {
     const { tags, isLoading, createNewTag, updateTagById, deleteTagById, updateFilters } = useTags();
@@ -137,11 +138,11 @@ export default function AdminTagsPage() {
         <div className="container mx-auto px-4 py-8">
             <div className="mb-8 relative">
                 <div className="relative">
-                    <FaSearch className="absolute left-3 top-2.5 w-4 h-4 text-gray-500 dark:text-gray-400" />
-                    <input
-                        type="text"
-                        placeholder="Buscar tags..."
-                        className="pl-10 pr-4 py-2 w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200"
+                    <Input
+                        id="search"
+                        label="Buscar tags..."
+                        placeholder="Escribe el nombre del tag"
+                        icon={<FaSearch size={16} />}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
@@ -169,19 +170,12 @@ export default function AdminTagsPage() {
                     )}
 
                     <div className="mb-4">
-                        <label
-                            htmlFor="name"
-                            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                        >
-                            Nombre del tag
-                        </label>
-                        <input
-                            type="text"
+                        <Input
                             id="name"
+                            label="Nombre del tag"
+                            placeholder="Ingresa el nombre del tag"
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md"
-                            placeholder="Ingresa el nombre del tag"
                         />
                     </div>
 

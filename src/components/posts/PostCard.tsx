@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Eye, Heart, ArrowRight } from "lucide-react";
+import { Eye, Heart } from "lucide-react";
 import { Post } from "@/types/Post";
 
 interface PostCardProps {
@@ -14,28 +14,6 @@ export default function PostCard({ post, variant = "default" }: PostCardProps) {
     if (!post) return null;
 
     const isFeatured = variant === "featured";
-
-    const getImageUrl = () => {
-        if (post.imageUrl) return post.imageUrl;
-        if (post.coverImage) return post.coverImage;
-        return "/images/default-cover.jpg";
-    };
-    
-    // Función segura para formatear fechas
-    const formatDate = (date: Date | string | undefined) => {
-        if (!date) return "Fecha no disponible";
-        try {
-            const dateObj = date instanceof Date ? date : new Date(date);
-            return dateObj.toLocaleDateString("es-ES", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-            });
-        } catch (error) {
-            console.error("Error formatting date:", error);
-            return "Fecha inválida";
-        }
-    };
 
     return (
         <Link
@@ -55,7 +33,7 @@ export default function PostCard({ post, variant = "default" }: PostCardProps) {
                     <div className={`relative w-full ${isFeatured ? "h-96" : "h-56"}`}>
                         {post.imageUrl || post.coverImage ? (
                             <Image
-                                src={getImageUrl()}
+                                src={post.imageUrl}
                                 alt={post.title || "Imagen del post"}
                                 fill
                                 className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -70,75 +48,19 @@ export default function PostCard({ post, variant = "default" }: PostCardProps) {
                                 <span className="text-4xl text-white/70 font-bold">Swift</span>
                             </div>
                         )}
-
-                        {/* Overlay gradient for better readability of badges */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30"></div>
                     </div>
-
-                    {/* Level badge if exists */}
-                    {post.level && (
-                        <div className="absolute bottom-4 left-4">
-                            <span className="inline-block bg-purple-600/80 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full font-medium">
-                                {post.level}
-                            </span>
-                        </div>
-                    )}
                 </div>
 
                 <div className="p-6">
                     {post.title && (
                         <h3
-                            className={`font-bold mb-3 text-white ${
+                            className={`group-hover:underline font-bold mb-3 text-white ${
                                 isFeatured ? "text-2xl" : "text-lg"
                             } line-clamp-2 group-hover:text-blue-400 transition-colors`}
                         >
                             {post.title}
                         </h3>
                     )}
-
-                    <div className="flex items-center text-white/60 text-sm flex-wrap">
-                        {post.createdAt && (
-                            <time
-                                dateTime={
-                                    post.createdAt instanceof Date
-                                        ? post.createdAt.toISOString()
-                                        : String(post.createdAt)
-                                }
-                            >
-                                {formatDate(post.createdAt)}
-                            </time>
-                        )}
-
-                        {post.createdAt && post.readTime && <span className="mx-2">•</span>}
-
-                        {post.readTime !== undefined && <span>{post.readTime} min lectura</span>}
-
-                        {post.author && (
-                            <>
-                                <span className="mx-2">•</span>
-                                <div className="flex items-center">
-                                    {post.author.avatar ? (
-                                        <Image
-                                            src={
-                                                post.author.avatar.startsWith("/")
-                                                    ? post.author.avatar
-                                                    : `/${post.author.avatar}`
-                                            }
-                                            alt={post.author.name || "Avatar del autor"}
-                                            width={20}
-                                            height={20}
-                                            className="rounded-full border border-white/20 mr-1"
-                                        />
-                                    ) : (
-                                        <div className="w-5 h-5 rounded-full bg-blue-500/30 flex items-center justify-center text-xs text-white mr-1">
-                                            {post.author.name?.charAt(0) || "A"}
-                                        </div>
-                                    )}
-                                    <span>{post.author.name || "Autor"}</span>
-                                </div>
-                            </>
-                        )}
-                    </div>
 
                     {post.description && (
                         <p className={`text-white/70 mt-4 ${isFeatured ? "text-base" : "text-sm"} line-clamp-3`}>
@@ -185,14 +107,6 @@ export default function PostCard({ post, variant = "default" }: PostCardProps) {
                             )}
                         </div>
                     )}
-
-                    <div className="inline-flex items-center text-blue-400 group-hover:text-blue-300 font-semibold text-sm mt-4">
-                        Leer artículo
-                        <ArrowRight
-                            size={16}
-                            className="ml-2 transform group-hover:translate-x-1 transition-transform duration-200"
-                        />
-                    </div>
                 </div>
             </article>
         </Link>

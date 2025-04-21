@@ -7,10 +7,14 @@ import { handleFirebaseError } from "@/firebase/errors";
 import Link from "next/link";
 import { useState } from "react";
 import Spinner from "@/components/ui/Spinner";
+import Input from "../ui/Input";
+import { FiEye, FiEyeOff, FiMail } from "react-icons/fi";
+import Checkbox from "../ui/Checkbox";
 
 export default function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -34,33 +38,23 @@ export default function LoginForm() {
             className="space-y-6"
         >
             <div>
-                <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-white mb-1"
-                >
-                    Email
-                </label>
-                <input
+                <Input
                     id="email"
+                    label="Email"
+                    placeholder="tu@email.com"
+                    icon={<FiMail />}
                     name="email"
                     type="email"
                     autoComplete="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="tu@email.com"
                 />
             </div>
 
             <div>
                 <div className="flex items-center justify-between mb-1">
-                    <label
-                        htmlFor="password"
-                        className="block text-sm font-medium text-white"
-                    >
-                        Contraseña
-                    </label>
+                    <div />
                     <Link
                         href="/recovery-password"
                         className="text-sm text-blue-400 hover:text-blue-300"
@@ -68,34 +62,29 @@ export default function LoginForm() {
                         ¿Olvidaste tu contraseña?
                     </Link>
                 </div>
-                <input
+                <Input
                     id="password"
+                    label="Contraseña"
+                    placeholder="••••••••"
+                    icon={showPassword ? <FiEyeOff /> : <FiEye />}
                     name="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     autoComplete="current-password"
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="••••••••"
+                    onIconClick={() => setShowPassword(!showPassword)}
                 />
             </div>
 
             <div className="flex items-center">
-                <input
+                <Checkbox
                     id="remember-me"
+                    label="Recordarme"
                     name="remember-me"
-                    type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="h-4 w-4 text-blue-500 bg-white/5 border-white/20 rounded focus:ring-blue-500"
                 />
-                <label
-                    htmlFor="remember-me"
-                    className="ml-2 block text-sm text-white/70"
-                >
-                    Recordarme
-                </label>
             </div>
 
             <button

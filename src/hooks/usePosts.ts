@@ -7,7 +7,7 @@ import { PostStats } from "@/types/PostStats";
 import { getAllPosts, getAllPublishedPosts } from "@/firebase/firestore/post";
 
 interface PostFilters {
-    level?: PostLevel;
+    level?: string;
     type?: PostType;
     searchTerm?: string;
     tags?: string[];

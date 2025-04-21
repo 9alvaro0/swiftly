@@ -3,6 +3,7 @@ import { FaLinkedin, FaGithub, FaEdit, FaArrowRight } from "react-icons/fa";
 import { useAuthStore } from "@/store/authStore";
 import { isValidUrl } from "@/utils/utils";
 import Modal from "@/components/ui/Modal";
+import Input from "../ui/Input";
 
 // Definir un mapa de iconos sociales
 interface SocialIcons {
@@ -191,16 +192,16 @@ export default function SocialLinksSection() {
                         </div>
                     </div>
 
-                    <input
-                        type="url"
-                        value={editingLink}
-                        onChange={(e) => setEditingLink(e.target.value)}
-                        className="input-field p-4 w-full rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700/50 dark:text-white"
+                    <Input
+                        id="social-link"
                         placeholder={
                             editingPlatform === "linkedin"
                                 ? "https://linkedin.com/in/tu-perfil"
                                 : "https://github.com/tu-usuario"
                         }
+                        type="url"
+                        value={editingLink}
+                        onChange={(e) => setEditingLink(e.target.value)}
                         autoFocus
                     />
 

@@ -9,7 +9,7 @@ import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
     title: "Swiftly - Tutoriales de Swift y SwiftUI",
-    description: "Blog, guías y tutoriales para aprender Swift y SwiftUI de manera efectiva",
+    description: "Publicaciones, guías y tutoriales para aprender Swift y SwiftUI de manera efectiva",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

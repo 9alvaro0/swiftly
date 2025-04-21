@@ -114,7 +114,7 @@ const PostTagsSection: React.FC<PostTagsSectionProps> = ({ tags, onAddTag, onRem
                         </div>
                         <Button
                             type="button"
-                            variant="outline"
+                            variant="primary"
                             size="sm"
                             onClick={() => setIsAddingNewTag(true)}
                         >
@@ -126,7 +126,7 @@ const PostTagsSection: React.FC<PostTagsSectionProps> = ({ tags, onAddTag, onRem
                 </div>
             ) : (
                 <div className="mb-4">
-                    <div className="flex items-end space-x-2">
+                    <div className="flex items-center space-x-2">
                         <div className="flex-grow">
                             <Input
                                 id="newTagName"

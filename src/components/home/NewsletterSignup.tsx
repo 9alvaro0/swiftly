@@ -1,8 +1,11 @@
 // src/components/home/NewsletterSignup.tsx
-'use client';
+"use client";
 
 import { useNewsletterSignup } from "@/hooks/useNewsletterSignup";
 import { ErrorMessage } from "@/components/ui/ErrorMessage";
+import Input from "../ui/Input";
+import { FiMail } from "react-icons/fi";
+import Button from "../ui/Button";
 
 export default function NewsletterSignup() {
     const { email, error, isLoading, handleEmailChange, handleSubmit } = useNewsletterSignup();
@@ -19,29 +22,24 @@ export default function NewsletterSignup() {
                     className="max-w-md mx-auto"
                 >
                     <div className="flex flex-col space-y-2">
-                        <div className="flex gap-2">
-                            <input
+                        <div className="flex gap-2 items-center justify-center">
+                            <Input
+                                id="email"
+                                placeholder="Tu correo electrónico"
+                                icon={<FiMail />}
                                 type="email"
                                 value={email}
                                 onChange={handleEmailChange}
-                                placeholder="Tu correo electrónico"
-                                className={`
-                                    flex-grow px-4 py-2 rounded-md border 
-                                    focus:outline-none focus:ring-2 
-                                    ${error ? "border-red-500 focus:ring-red-500" : "focus:ring-blue-500"}
-                                `}
                                 disabled={isLoading}
                             />
-                            <button
+                            <Button
+                                variant="primary"
+                                size="md"
                                 type="submit"
-                                className={`
-                                    btn-primary 
-                                    ${isLoading ? "opacity-50 cursor-not-allowed" : ""}
-                                `}
                                 disabled={isLoading}
                             >
                                 {isLoading ? "Suscribiendo..." : "Suscribirse"}
-                            </button>
+                            </Button>
                         </div>
                         {error && <ErrorMessage message={error} />}
                     </div>

@@ -7,6 +7,7 @@ import { Tag } from "@/types/Tag";
 import { HiOutlineExclamationCircle, HiOutlineSearch, HiOutlineX } from "react-icons/hi";
 import { BsEmojiFrown } from "react-icons/bs";
 import TagsSkeleton from "@/components/tags/skeletons/TagsSkeleton";
+import Input from "@/components/ui/Input";
 
 export default function TagsPage() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -61,12 +62,12 @@ export default function TagsPage() {
                 <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
                     <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
                         <div className="relative w-full md:w-96">
-                            <input
-                                type="text"
-                                placeholder="Buscar tags..."
+                            <Input
+                                id="tag-search"
+                                label="Buscar tags..."
+                                placeholder="Escribe el nombre del tag"
                                 value={searchQuery}
                                 onChange={(e) => handleSearch(e.target.value)}
-                                className="w-full p-3 pl-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             />
                             <HiOutlineSearch className="absolute left-3 top-3.5 w-4 h-4 text-gray-500 dark:text-gray-400" />
                         </div>
