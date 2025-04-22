@@ -8,7 +8,7 @@ import { Suspense } from "react";
 import FeaturedTutorialsSkeleton from "@/components/home/skeletons/FeaturedTutorialsSkeleton";
 import LatestPostsSkeleton from "@/components/home/skeletons/LatestPostsSkeleton";
 
-export default function Home({
+export default async function Home({
     searchParams,
 }: {
     searchParams?: {
@@ -25,7 +25,10 @@ export default function Home({
                 <FeaturedTutorials />
             </Suspense>
 
-            <Suspense fallback={<LatestPostsSkeleton />}>
+            <Suspense
+                key={currentPage}
+                fallback={<LatestPostsSkeleton />}
+            >
                 <LatestPosts currentPage={currentPage} />
             </Suspense>
 

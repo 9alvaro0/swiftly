@@ -67,17 +67,11 @@ export const getAllPublishedPosts = async (
     level: string = "",
     type: string = ""
 ): Promise<Post[]> => {
-    console.log("Buscando posts con los siguientes parámetros:", {
-        searchTerm,
-        level,
-        type,
-    });
     const snapshot = await getDocs(postsCollection);
 
     return snapshot.docs
         .filter((doc) => {
             const data = doc.data() as Post;
-            console.log("Post data:", data); // Log para depuración
             // Only filter published posts
             if (data.isPublished !== true) return false;
 
