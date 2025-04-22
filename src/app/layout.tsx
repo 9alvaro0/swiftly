@@ -6,6 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 const inter = Inter({ subsets: ["latin"] });
 import AuthInitializer from "@/components/auth/AuthInitializer";
 import { Toaster } from "sonner";
+import SplashWelcomeManager from "@/components/layout/SplashWelcomeManager";
 
 export const metadata: Metadata = {
     title: "Swiftly - Tutoriales de Swift y SwiftUI",
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         expand={false}
                         className="toaster-container"
                     />
+                    <SplashWelcomeManager />
                     <SpeedInsights />
                 </AuthInitializer>
             </body>
