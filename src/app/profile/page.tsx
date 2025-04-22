@@ -3,9 +3,10 @@
 "use client";
 
 import { useAuthStore } from "@/store/authStore";
+import useSplashStore from "@/store/splashStore";
 import { toast } from "sonner";
 import { useState } from "react";
-import { FaSignOutAlt, FaKey, FaChild, FaUserCog } from "react-icons/fa";
+import { FaSignOutAlt, FaKey, FaChild, FaUserCog, FaRocket } from "react-icons/fa";
 
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import SocialLinksSection from "@/components/profile/SocialLinksSection";
@@ -15,6 +16,7 @@ import Input from "@/components/ui/Input";
 
 export default function ProfilePage() {
     const { logout } = useAuthStore();
+    const { hasSeenWelcomeSplash, setHasSeenWelcomeSplash } = useSplashStore();
     const [showLogoutModal, setShowLogoutModal] = useState(false);
     const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
@@ -30,6 +32,11 @@ export default function ProfilePage() {
         toast.success("Contraseña actualizada correctamente");
     };
 
+    const handleReactivateWelcomeSplash = () => {
+        setHasSeenWelcomeSplash(false);
+        toast.success("Mensaje de bienvenida reactivado. Se mostrará en tu próxima visita.");
+    };
+
     return (
         <ProtectedRoute>
             <div className="container mx-auto max-w-4xl p-4 md:p-6 space-y-6">
@@ -40,7 +47,7 @@ export default function ProfilePage() {
                 <SocialLinksSection />
 
                 {/* Acciones rápidas */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
                     {/* Cambiar contraseña */}
                     <button
                         onClick={() => setShowChangePasswordModal(true)}
@@ -80,6 +87,28 @@ export default function ProfilePage() {
                         <div className="text-left">
                             <div className="font-medium text-gray-800 dark:text-gray-200">Seguridad</div>
                             <p className="text-sm text-gray-500 dark:text-gray-400">Revisa la actividad</p>
+                        </div>
+                    </button>
+
+                    {/* Reactivar Splash de Bienvenida */}
+                    <button
+                        onClick={handleReactivateWelcomeSplash}
+                        className="group flex items-center gap-3 p-4 rounded-xl bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-all border border-gray-100 dark:border-gray-700"
+                    >
+                        <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 group-hover:bg-blue-200 dark:group-hover:bg-blue-800/30 transition-all">
+                            <FaRocket size={20} />
+                        </div>
+                        <div className="text-left">
+                            <div className="font-medium text-gray-800 dark:text-gray-200">
+                                {hasSeenWelcomeSplash 
+                                    ? "Reactivar bienvenida" 
+                                    : "Bienvenida activada"}
+                            </div>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                {hasSeenWelcomeSplash 
+                                    ? "Muestra la pantalla inicial" 
+                                    : "Se mostrará en tu próxima visita"}
+                            </p>
                         </div>
                     </button>
                 </div>
