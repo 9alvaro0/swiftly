@@ -6,18 +6,17 @@ import TutorialsList from "@/components/tutorials/TutorialsList";
 import TutorialListSkeleton from "@/components/tutorials/skeletons/TutorialListSkeleton";
 import { Suspense } from "react";
 
-export default async function TutorialsPage({
-    searchParams,
-}: {
-    searchParams?: {
+export default async function TutorialsPage(props: {
+    searchParams?: Promise<{
         query?: string;
         level?: string;
         page?: string;
-    };
+    }>;
 }) {
-    const query = searchParams?.query || "";
-    const level = searchParams?.level || "";
-    const currentPage = searchParams?.page ? Number(searchParams.page) : 1;
+    const resolvedParams = await props.searchParams;
+    const query = resolvedParams?.query || "";
+    const level = resolvedParams?.level || "";
+    const currentPage = Number(resolvedParams?.page) || 1;
 
     return (
         <div className="py-12 px-4 md:px-6 max-w-7xl mx-auto">

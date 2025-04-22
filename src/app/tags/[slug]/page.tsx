@@ -5,12 +5,13 @@ import TagBreadcrumbs from "@/components/tags/TagBreadcrumbs";
 import PostGrid from "@/components/posts/PostGrid";
 import PostGridSkeleton from "@/components/posts/skeletons/PostGridSkeleton";
 
-export default function TagPage({
-    params,
-}: {
-    params: { slug: string };
+export default async function TagPage(props: {
+    searchParams?: Promise<{
+        slug?: string;
+    }>;
 }) {
-    const { slug } = params;
+    const searchParams = await props.searchParams;
+    const { slug } = searchParams || {};
 
     return (
         <div className="container mx-auto px-4 py-8">

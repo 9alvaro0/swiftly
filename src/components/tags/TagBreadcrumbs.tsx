@@ -5,7 +5,7 @@ import Link from "next/link";
 import { FaHome, FaChevronRight, FaChevronLeft } from "react-icons/fa";
 import { AiFillTags } from "react-icons/ai";
 
-export default function TagBreadcrumbs({ tagName }: { tagName: string }) {
+export default function TagBreadcrumbs({ tagName }: { tagName: string | undefined }) {
     return (
         <nav className="flex items-center text-sm mb-8 text-gray-600 dark:text-white/80 font-medium">
             <div className="flex items-center space-x-2">

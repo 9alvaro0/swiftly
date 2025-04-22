@@ -8,14 +8,13 @@ import { Suspense } from "react";
 import FeaturedTutorialsSkeleton from "@/components/home/skeletons/FeaturedTutorialsSkeleton";
 import LatestPostsSkeleton from "@/components/home/skeletons/LatestPostsSkeleton";
 
-export default async function Home({
-    searchParams,
-}: {
-    searchParams?: {
+export default async function Home(props: {
+    searchParams?: Promise<{
         page?: string;
-    };
+    }>;
 }) {
-    const currentPage = searchParams?.page ? Number(searchParams.page) : 1;
+    const searchParams = await props.searchParams;
+    const currentPage = Number(searchParams?.page) || 1;
 
     return (
         <main className="mb-16">

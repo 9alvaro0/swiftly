@@ -6,7 +6,11 @@ import SectionHeader from "../ui/SectionHeader";
 import { getAllPublishedPosts } from "@/firebase/firestore/post";
 import { FiBookOpen, FiFileText } from "react-icons/fi";
 
-export default async function LatestPosts({ currentPage }: { currentPage: number }) {
+export default async function LatestPosts({
+    currentPage
+}: {
+    currentPage: number
+}) {
     const POSTS_PER_PAGE = 4;
 
     const postsFromDB = await getAllPublishedPosts("tutorial");
@@ -35,12 +39,14 @@ export default async function LatestPosts({ currentPage }: { currentPage: number
             {hasPosts ? (
                 <>
                     <PostGrid posts={currentPosts} />
+                    {posts.length > 0 && (
                     <div className="flex justify-center pt-12">
                         <Pagination
                             totalItems={posts.length}
                             itemsPerPage={POSTS_PER_PAGE}
                         />
-                    </div>
+                        </div>
+                    )}
                 </>
             ) : (
                 <div className="bg-white/5 p-8 rounded-lg border border-white/10 max-w-3xl mx-auto">
