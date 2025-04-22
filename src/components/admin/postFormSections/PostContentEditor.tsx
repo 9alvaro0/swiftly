@@ -4,7 +4,7 @@ import React, { RefObject } from "react";
 import Textarea from "@/components/ui/Textarea";
 import Button from "@/components/ui/Button";
 import Checkbox from "@/components/ui/Checkbox";
-import PostContent from "@/components/posts/PostContent";
+import PostContent from "@/components/post/PostContent";
 import { CODE_SNIPPETS } from "@/constants/post";
 
 interface PostContentEditorProps {

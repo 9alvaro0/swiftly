@@ -21,9 +21,19 @@ export const getTagById = async (tagId: string): Promise<Tag | null> => {
 };
 
 // Obtener todos los tags
-export const getAllTags = async (): Promise<Tag[]> => {
+export const getAllTags = async (
+    searchTerm: string = "",
+): Promise<Tag[]> => {
     const snapshot = await getDocs(tagsCollection);
-    return snapshot.docs.map((doc) => doc.data() as Tag);
+    return snapshot.docs
+        .filter((doc) => {
+            const data = doc.data() as Tag;
+            return data.name && data.name.toLowerCase().includes(searchTerm.toLowerCase());
+        })
+        .map((doc) => {
+            const tagData = doc.data() as Tag;
+            return tagData as Tag;
+        });
 };
 
 // Actualizar un tag

@@ -4,7 +4,6 @@
 
 import { loginWithEmailAndPassword } from "@/firebase/auth/auth";
 import { handleFirebaseError } from "@/firebase/errors";
-import Link from "next/link";
 import { useState } from "react";
 import Spinner from "@/components/ui/Spinner";
 import Input from "../ui/Input";
@@ -52,30 +51,19 @@ export default function LoginForm() {
                 />
             </div>
 
-            <div>
-                <div className="flex items-center justify-between mb-1">
-                    <div />
-                    <Link
-                        href="/recovery-password"
-                        className="text-sm text-blue-400 hover:text-blue-300"
-                    >
-                        ¿Olvidaste tu contraseña?
-                    </Link>
-                </div>
-                <Input
-                    id="password"
-                    label="Contraseña"
-                    placeholder="••••••••"
-                    icon={showPassword ? <FiEyeOff /> : <FiEye />}
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    autoComplete="current-password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    onIconClick={() => setShowPassword(!showPassword)}
-                />
-            </div>
+            <Input
+                id="password"
+                label="Contraseña"
+                placeholder="••••••••"
+                icon={showPassword ? <FiEyeOff /> : <FiEye />}
+                name="password"
+                type={showPassword ? "text" : "password"}
+                autoComplete="current-password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onIconClick={() => setShowPassword(!showPassword)}
+            />
 
             <div className="flex items-center">
                 <Checkbox

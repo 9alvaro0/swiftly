@@ -43,7 +43,7 @@ export const getPostsByTag = async (tag: string): Promise<Post[]> => {
     return snapshot.docs
         .filter((doc) => {
             const data = doc.data() as Post;
-            return data.tags && data.tags.includes(tag);
+            return data.tags && data.tags.some((t) => t.toLowerCase() === tag.toLowerCase());
         })
         .map((doc) => {
             const postData = convertTimestampsToDates(doc.data());
@@ -56,7 +56,6 @@ export const getAllPosts = async (): Promise<Post[]> => {
     const snapshot = await getDocs(postsCollection);
     return snapshot.docs.map((doc) => {
         const postData = convertTimestampsToDates(doc.data());
-        console.log("Post data:", postData); // Log para depuración
         return postData as Post;
     });
 };
@@ -180,16 +179,4 @@ export const incrementPostViews = async (postId: string): Promise<{ views: numbe
     } catch (error) {
         throw error;
     }
-};
-
-// Obtiene el número actual de vistas de un post
-export const getPostViews = async (postId: string): Promise<number> => {
-    const postRef = doc(postsCollection, postId);
-    const postDoc = await getDoc(postRef);
-
-    if (!postDoc.exists()) {
-        return 0;
-    }
-
-    return postDoc.data().views || 0;
 };

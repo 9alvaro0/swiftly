@@ -1,3 +1,5 @@
+// src/profile/page.tsx
+
 "use client";
 
 import { useAuthStore } from "@/store/authStore";

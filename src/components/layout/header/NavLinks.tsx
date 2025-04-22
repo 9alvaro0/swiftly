@@ -11,6 +11,7 @@ export const navItems = [
     { name: "Inicio", path: "/" },
     { name: "Publicaciones", path: "/posts" },
     { name: "Tutoriales", path: "/tutorials" },
+    { name: "Cursos", path: "/courses" },
     { name: "Contacto", path: "/contact" },
 ];
 
@@ -55,6 +56,7 @@ export default function NavLinks({
                         isActive={pathname === item.path}
                         onClick={onItemClick}
                         isMobile={isMobile}
+                        disabled={item.path === "/courses"}
                     />
                 ))}
 
@@ -71,8 +73,8 @@ export default function NavLinks({
                     <>
                         <NavItem
                             name="Iniciar Sesión"
-                            path="/login"
-                            isActive={pathname === "/login"}
+                            path="/auth"
+                            isActive={pathname === "/auth"}
                             onClick={onItemClick}
                             isMobile={isMobile}
                             className={isMobile ? "" : "bg-blue-600 hover:bg-blue-700 text-white hover:text-white"}

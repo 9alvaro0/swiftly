@@ -17,7 +17,7 @@ export default function ProtectedRoute({ children, adminOnly = false }: Protecte
     useEffect(() => {
         if (!isLoading) {
             if (!isAuthenticated) {
-                router.push("/login");
+                router.push("/auth");
             } else if (adminOnly && user?.role !== "admin") {
                 router.push("/profile");
             }

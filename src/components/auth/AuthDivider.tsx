@@ -1,4 +1,5 @@
-// src/components/auth/AuthDivider.tsx
+// src/components/auth/AuthDivider.tsx 
+
 interface AuthDividerProps {
     text: string;
 }

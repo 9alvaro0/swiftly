@@ -1,41 +1,29 @@
 // src/app/posts/[slug]/page.tsx
 
-"use client";
-
-import { useEffect } from "react";
-import { notFound, useParams } from "next/navigation";
-import { usePost } from "@/hooks/usePost";
-import TutorialDetailSkeleton from "@/components/tutorials/skeletons/TutorialDetailSkeleton";
 import PostDetail from "@/components/post/PostDetail";
+import DetailError from "@/components/tutorials/DetailError";
+import { getPostBySlug } from "@/firebase/firestore/post";
 
-export default function PostDetailPage() {
-    const routeParams = useParams();
-    const slug = routeParams.slug as string;
-    
-    const { post, isLoading, error } = usePost(slug);
+interface PageProps {
+    params: Promise<{
+        slug: string;
+    }>;
+}
 
-    useEffect(() => {
-        if (error) {
-            console.error("Error fetching post:", error);
-        }
-    }, [error]);
+export default async function PostDetailPage(props: PageProps) {
+    const resolvedParams = await props.params;
+    const { slug } = resolvedParams;
 
-    if (isLoading) {
-        return <TutorialDetailSkeleton />;
-    }
-
-    if (!post && !isLoading) {
-        notFound();
-    }
+    const post = await getPostBySlug(slug);
 
     if (!post) {
-        return (
-            <div className="container mx-auto px-4 py-12 text-center">
-                <h1 className="text-2xl font-bold text-red-500">Error al cargar el post</h1>
-                <p className="mt-4">Ocurrió un error al intentar cargar este post. Por favor, inténtalo más tarde.</p>
-            </div>
-        );
+        return <DetailError />;
     }
 
-    return <PostDetail post={post} branch="articles" />;
+    return (
+        <PostDetail
+            post={post}
+            branch="articles"
+        />
+    );
 }

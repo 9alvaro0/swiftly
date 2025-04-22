@@ -2,16 +2,18 @@
 
 import React, { Suspense } from "react";
 import TagBreadcrumbs from "@/components/tags/TagBreadcrumbs";
-import PostGrid from "@/components/posts/PostGrid";
+import PostGrid from "@/components/home/latestPosts/PostList";
 import PostGridSkeleton from "@/components/posts/skeletons/PostGridSkeleton";
 
-export default async function TagPage(props: {
-    searchParams?: Promise<{
-        slug?: string;
+interface TagPageProps {
+    params: Promise<{
+        slug: string;
     }>;
-}) {
-    const searchParams = await props.searchParams;
-    const { slug } = searchParams || {};
+}
+
+export default async function TagPage(props: TagPageProps) {
+    const resolvedParams = await props.params;
+    const { slug } = resolvedParams;
 
     return (
         <div className="container mx-auto px-4 py-8">

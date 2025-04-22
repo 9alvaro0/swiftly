@@ -7,8 +7,8 @@ import PostBreadcrumbs from "@/components/post/PostBreadcrumbs";
 import PostFeaturedImage from "@/components/post/PostFeaturedImage";
 import PostHeader from "@/components/post/PostHeader";
 import PostTags from "@/components/post/PostTags";
-import PostContent from "@/components/posts/PostContent";
 import { usePostViews } from "@/hooks/usePostViews";
+import PostContent from "@/components/post/PostContent";
 
 interface PostDetailProps {
     post: Post;

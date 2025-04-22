@@ -1,53 +1,35 @@
 // src/components/home/LatestBlogPosts.tsx
 
-import PostGrid from "@/components/posts/PostGrid";
-import Pagination from "../ui/Pagination";
-import SectionHeader from "../ui/SectionHeader";
+import PostList from "@/components/home/latestPosts/PostList";
+import SectionHeader from "../../ui/SectionHeader";
 import { getAllPublishedPosts } from "@/firebase/firestore/post";
 import { FiBookOpen, FiFileText } from "react-icons/fi";
 
-export default async function LatestPosts({
-    currentPage
-}: {
-    currentPage: number
-}) {
-    const POSTS_PER_PAGE = 4;
-
+export default async function LatestPosts() {
+    // Cambiar tutorial por post cuando hayan posts y limitar a 4
     const postsFromDB = await getAllPublishedPosts("tutorial");
     const posts =
         postsFromDB.length === 1
-            ? Array.from({ length: 9 }).map((_, i) => ({
+            ? Array.from({ length: 5 }).map((_, i) => ({
                   ...postsFromDB[0],
                   id: i === 0 ? postsFromDB[0].id : `fake-${i + 1}`,
-                  slug: i === 0 ? postsFromDB[0].slug : `tutorial-fake-${i + 1}`,
+                  slug: i === 0 ? postsFromDB[0].slug : `post-fake-${i + 1}`,
                   title: i === 0 ? postsFromDB[0].title : `${postsFromDB[0].title} (Parte ${i + 1})`,
               }))
             : postsFromDB;
     const hasPosts = posts && posts.length > 0;
-
-    const indexOfLastPost = currentPage * POSTS_PER_PAGE;
-    const indexOfFirstPost = indexOfLastPost - POSTS_PER_PAGE;
-    const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
 
     return (
         <section className="container mx-auto px-4 py-12">
             <SectionHeader
                 title="Últimos artículos"
                 link="/posts"
+                subtitle="Descubre los últimos artículos sobre desarrollo y tecnología."
+                accentColor="purple"
             />
 
             {hasPosts ? (
-                <>
-                    <PostGrid posts={currentPosts} />
-                    {posts.length > 0 && (
-                    <div className="flex justify-center pt-12">
-                        <Pagination
-                            totalItems={posts.length}
-                            itemsPerPage={POSTS_PER_PAGE}
-                        />
-                        </div>
-                    )}
-                </>
+                <PostList posts={posts} />
             ) : (
                 <div className="bg-white/5 p-8 rounded-lg border border-white/10 max-w-3xl mx-auto">
                     <div className="flex items-center gap-6 mb-8">

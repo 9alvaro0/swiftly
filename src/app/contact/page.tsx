@@ -1,85 +1,16 @@
+// src/app/contact/page.tsx
+
 "use client";
 
-import React, { useState } from "react";
 import { FiArrowRight, FiCheckCircle } from "react-icons/fi";
 import Input from "@/components/ui/Input";
 import Spinner from "@/components/ui/Spinner";
 import Button from "@/components/ui/Button";
 import Textarea from "@/components/ui/Textarea";
+import useContactForm from "@/hooks/useContactForm";
 
 export default function ContactPage() {
-    const [formState, setFormState] = useState({
-        name: "",
-        email: "",
-        message: "",
-    });
-    const [errors, setErrors] = useState({
-        name: "",
-        email: "",
-        message: "",
-    });
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isSubmitted, setIsSubmitted] = useState(false);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { id, value } = e.target;
-        setFormState({
-            ...formState,
-            [id]: value,
-        });
-
-        if (errors[id as keyof typeof errors]) {
-            setErrors({
-                ...errors,
-                [id]: "",
-            });
-        }
-    };
-
-    const validateForm = () => {
-        const newErrors = {
-            name: "",
-            email: "",
-            message: "",
-        };
-        let isValid = true;
-
-        if (!formState.name.trim()) {
-            newErrors.name = "El nombre es obligatorio";
-            isValid = false;
-        }
-
-        if (!formState.email.trim()) {
-            newErrors.email = "El correo electrónico es obligatorio";
-            isValid = false;
-        } else if (!/\S+@\S+\.\S+/.test(formState.email)) {
-            newErrors.email = "El correo electrónico no es válido";
-            isValid = false;
-        }
-
-        if (!formState.message.trim()) {
-            newErrors.message = "El mensaje es obligatorio";
-            isValid = false;
-        }
-
-        setErrors(newErrors);
-        return isValid;
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-
-        if (!validateForm()) {
-            return;
-        }
-
-        setIsSubmitting(true);
-
-        setTimeout(() => {
-            setIsSubmitting(false);
-            setIsSubmitted(true);
-        }, 1500);
-    };
+    const { formState, errors, isSubmitting, isSubmitted, handleChange, handleSubmit } = useContactForm();
 
     return (
         <div className="container mx-auto py-16 px-4 sm:px-6 lg:px-8">
@@ -95,7 +26,7 @@ export default function ContactPage() {
                 <div className="bg-card rounded-lg shadow-apple-md p-8">
                     {!isSubmitted ? (
                         <form
-                            onSubmit={handleSubmit}
+                            onSubmit={handleSubmit()}
                             className="space-y-2"
                         >
                             <Input

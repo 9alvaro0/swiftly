@@ -1,36 +1,27 @@
 // src/app/tutorials/[slug]/page.tsx
 
-"use client";
-
-import { useEffect } from "react";
-import { notFound, useParams } from "next/navigation";
 import PostDetail from "@/components/post/PostDetail";
-import TutorialError from "@/components/tutorials/TutorialError";
-import { usePost } from "@/hooks/usePost";
-import TutorialDetailSkeleton from "@/components/tutorials/skeletons/TutorialDetailSkeleton";
+import DetailError from "@/components/tutorials/DetailError";
+import { getPostBySlug } from "@/firebase/firestore/post";
 
-export default function TutorialDetailPage() {
-    const routeParams = useParams();
-    const slug = routeParams.slug as string;
+interface PageProps {
+    params: Promise<{
+        slug: string;
+    }>;
+}
 
-    const { post: tutorial, isLoading, error } = usePost(slug);
+export default async function TutorialDetailPage(props: PageProps) {
+    const resolvedParams = await props.params;
+    const { slug } = resolvedParams;
 
-    useEffect(() => {
-        if (error) {
-            console.error("Error fetching post:", error);
-        }
-    }, [error]);
+    const tutorial = await getPostBySlug(slug);
 
-    if (isLoading) {
-        return <TutorialDetailSkeleton />;
-    }
-
-    if (!tutorial && !isLoading) {
-        notFound();
+    if (!tutorial) {
+        return <DetailError />;
     }
 
     if (!tutorial) {
-        return <TutorialError />;
+        return <DetailError />;
     }
     return (
         <PostDetail

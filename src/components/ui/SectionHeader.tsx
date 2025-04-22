@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { FiArrowRight } from "react-icons/fi";
+import SeeAllButton from "./SeeAllButton";
 
 interface SectionHeaderProps {
     title: string;
@@ -19,7 +18,7 @@ export default function SectionHeader({ title, link, subtitle, accentColor = "bl
     const selectedAccent = accentColors[accentColor];
 
     return (
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-start gap-4 mb-8">
             <div className="flex items-center">
                 <div className={`h-12 w-1 rounded-full bg-gradient-to-b ${selectedAccent.split(" ")[0]} mr-3`}></div>
                 <div>
@@ -28,16 +27,10 @@ export default function SectionHeader({ title, link, subtitle, accentColor = "bl
                 </div>
             </div>
 
-            <Link
-                href={link}
-                className={`group flex items-center px-4 py-2 rounded-lg bg-gradient-to-r ${selectedAccent} border-[1px] font-medium transition-all`}
-            >
-                <span className="mr-1">Ver todos</span>
-                <FiArrowRight
-                    size={16}
-                    className="transform group-hover:translate-x-1 transition-transform duration-200"
-                />
-            </Link>
+            <SeeAllButton
+                link={link}
+                selectedAccent={selectedAccent}
+            />
         </div>
     );
 }

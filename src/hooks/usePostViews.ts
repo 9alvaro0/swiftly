@@ -1,6 +1,6 @@
 // src/hooks/usePostViews.ts
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { incrementPostViews, getPostViews } from '@/firebase/firestore/post';
+import { incrementPostViews } from '@/firebase/firestore/post';
 
 /**
  * Hook para gestionar y actualizar las vistas de un post
@@ -37,27 +37,11 @@ export function usePostViews(postId: string, initialViews: number = 0) {
     }
   }, [postId]);
 
-  // Obtiene el número actual de vistas
-  const refreshViews = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const currentViews = await getPostViews(postId);
-      setViews(currentViews);
-    } catch (err) {
-      console.error('Error al obtener vistas:', err);
-      setError('No se pudo obtener el número de vistas');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     if (postId) {
       registerView();
     }
   }, [postId, registerView]);
 
-  return { views, loading, error, refreshViews };
+  return { views, loading, error };
 }

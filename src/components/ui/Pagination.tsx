@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useMemo } from "react";
 
@@ -55,25 +55,22 @@ export default function Pagination({ totalItems, itemsPerPage }: PaginationProps
     };
 
     return (
-        <nav
-            className="flex justify-center items-center space-x-1"
-            aria-label="Paginación"
-        >
+        <nav className="flex justify-center items-center gap-2 mt-6 select-none">
             <button
                 onClick={() => goToPage(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="p-2 rounded-md text-text-secondary hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
+                className="p-2 rounded-lg text-white/70 hover:bg-white/10 transition-all disabled:opacity-40"
                 aria-label="Página anterior"
             >
-                <ChevronLeft size={16} />
+                <FiChevronLeft size={18} />
             </button>
 
-            <div className="flex space-x-1">
+            <div className="flex gap-1">
                 {getPageNumbers.map((page, index) =>
                     page === "ellipsis" ? (
                         <span
                             key={`ellipsis-${index}`}
-                            className="px-3 py-2 text-text-secondary"
+                            className="px-3 py-2 text-white/40"
                         >
                             ...
                         </span>
@@ -81,10 +78,10 @@ export default function Pagination({ totalItems, itemsPerPage }: PaginationProps
                         <button
                             key={`page-${page}`}
                             onClick={() => goToPage(page)}
-                            className={`px-3 py-1 rounded-md ${
+                            className={`px-4 py-2 rounded-md backdrop-blur-md transition-all duration-200 ${
                                 currentPage === page
-                                    ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 font-medium"
-                                    : "text-text-primary hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                                    ? "bg-blue-600 text-white shadow shadow-blue-500/30"
+                                    : "text-white/70 hover:bg-white/10"
                             }`}
                             aria-current={currentPage === page ? "page" : undefined}
                             aria-label={`Página ${page}`}
@@ -98,10 +95,10 @@ export default function Pagination({ totalItems, itemsPerPage }: PaginationProps
             <button
                 onClick={() => goToPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="p-2 rounded-md text-text-secondary hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
+                className="p-2 rounded-lg text-white/70 hover:bg-white/10 transition-all disabled:opacity-40"
                 aria-label="Página siguiente"
             >
-                <ChevronRight size={16} />
+                <FiChevronRight size={18} />
             </button>
         </nav>
     );

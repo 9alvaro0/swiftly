@@ -1,3 +1,5 @@
+// src/app/admin/layout.tsx
+
 "use client";
 
 import { usePathname } from "next/navigation";
@@ -8,7 +10,11 @@ import { FaBook, FaNewspaper } from "react-icons/fa";
 import { AiFillTags } from "react-icons/ai";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+interface AdminLayoutProps {
+    children: React.ReactNode;
+}
+
+export default function AdminLayout({ children }: AdminLayoutProps) {
     const pathname = usePathname();
 
     const isActive = (path: string) => {

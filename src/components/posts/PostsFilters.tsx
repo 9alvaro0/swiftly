@@ -1,12 +1,10 @@
-// src/components/posts/PostsFilters.tsx
-
 "use client";
 
-import { FaFilter, FaSearch, FaTimes } from "react-icons/fa";
-import { PostLevel } from "@/types/Post";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { FaFilter, FaSearch, FaTimes } from "react-icons/fa";
+import { PostLevel } from "@/types/Post";
 import Select from "@/components/ui/Select";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
@@ -17,8 +15,9 @@ export default function PostsFilters() {
     const { replace } = useRouter();
 
     const [showFilters, setShowFilters] = useState(false);
+    const levelFilter = searchParams.get("level") || "";
+    const query = searchParams.get("query") || "";
 
-    const levelFilter = searchParams.get("level")?.toString() || "";
     const hasActiveFilters = !!levelFilter;
 
     const handleSearch = useDebouncedCallback((term: string) => {
@@ -50,58 +49,53 @@ export default function PostsFilters() {
         replace(`${pathName}?${params.toString()}`);
     };
 
-    const toggleFilters = () => {
-        setShowFilters(!showFilters);
-    };
+    const toggleFilters = () => setShowFilters((prev) => !prev);
 
     return (
-        <div className="bg-surface rounded-lg shadow-sm ">
-            <div className="flex flex-col md:flex-row gap-4">
-                <div className="relative flex-grow">
+        <div className="space-y-4">
+            <div className="flex flex-col md:flex-row md:items-end gap-4">
+                <div className="flex-grow">
                     <Input
                         id="search"
-                        label="Buscar publicaciones..."
-                        placeholder="Escribe aqui la publicación que deseas buscar"
-                        defaultValue={searchParams.get("query")?.toString()}
-                        icon={<FaSearch size={18} />}
+                        label="Buscar publicaciones"
+                        placeholder="Escribe el título o tema..."
+                        defaultValue={query}
+                        icon={<FaSearch size={16} />}
                         onChange={(e) => handleSearch(e.target.value)}
                     />
                 </div>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={toggleFilters}
-                    aria-expanded={showFilters}
-                    aria-controls="filter-panel"
-                >
-                    <FaFilter size={18} />
-                    <span>Filtros</span>
-                    {hasActiveFilters && (
-                        <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-primary rounded-full">
-                            {levelFilter ? 1 : 0}
-                        </span>
-                    )}
-                </Button>
-                <div className="flex gap-2">
+
+                <div className="flex gap-2 items-center">
+                    <Button
+                        variant="outline"
+                        size="lg"
+                        onClick={toggleFilters}
+                        aria-expanded={showFilters}
+                        aria-controls="filter-panel"
+                        className="flex items-center gap-2"
+                    >
+                        <FaFilter size={16} />
+                    </Button>
+
                     {hasActiveFilters && (
                         <Button
-                            onClick={handleClearFilters}
                             variant="outline"
-                            size="sm"
+                            size="lg"
+                            onClick={handleClearFilters}
                             aria-label="Limpiar filtros"
+                            className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400"
                         >
-                            <FaTimes size={18} />
-                            <span>Limpiar</span>
+                            <FaTimes size={14} />
+                            Limpiar
                         </Button>
                     )}
                 </div>
             </div>
 
-            {/* Panel de filtros */}
             {showFilters && (
                 <div
                     id="filter-panel"
-                    className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-neutral-200 dark:border-neutral-700"
+                    className="pt-4 border-t border-neutral-200 dark:border-neutral-700 grid grid-cols-1 sm:grid-cols-2 gap-4"
                 >
                     <Select
                         id="level"
@@ -114,7 +108,7 @@ export default function PostsFilters() {
                         ]}
                         value={levelFilter}
                         onChange={(e) => handleLevelChange(e.target.value as PostLevel | "")}
-                        className="w-full rounded-md border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 focus:ring-2 focus:ring-primary focus:border-transparent"
+                        className="w-full"
                     />
                 </div>
             )}
