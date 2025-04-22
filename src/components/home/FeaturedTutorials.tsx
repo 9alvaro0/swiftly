@@ -4,18 +4,7 @@ import { getAllPublishedPosts } from "@/firebase/firestore/post";
 import { FiBookOpen } from "react-icons/fi";
 
 export default async function FeaturedTutorials() {
-    const tutorialsFromDB = await getAllPublishedPosts("tutorial");
-
-    const tutorials =
-        tutorialsFromDB.length === 1
-            ? Array.from({ length: 9 }).map((_, i) => ({
-                  ...tutorialsFromDB[0],
-                  id: i === 0 ? tutorialsFromDB[0].id : `fake-${i + 1}`,
-                  slug: i === 0 ? tutorialsFromDB[0].slug : `tutorial-fake-${i + 1}`,
-                  title: i === 0 ? tutorialsFromDB[0].title : `${tutorialsFromDB[0].title} (Parte ${i + 1})`,
-              }))
-            : tutorialsFromDB;
-
+    const tutorials = await getAllPublishedPosts("tutorial");
     const hasTutorials = tutorials && tutorials.length > 0;
 
     return (

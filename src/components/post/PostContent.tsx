@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useEffect, memo } from "react";
+import { useEffect, memo, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import remarkGfm from "remark-gfm";
@@ -13,43 +13,195 @@ type PostContentProps = {
     content: string;
 };
 
-// Memoizamos el componente para evitar renderizados innecesarios
+// Función para convertir texto a slug/id
+const slugify = (text: string): string => {
+    if (!text) return "";
+
+    return text
+        .toLowerCase()
+        .normalize("NFD") // Normalizar acentos
+        .replace(/[\u0300-\u036f]/g, "") // Quitar diacríticos
+        .trim()
+        .replace(/[^\w\s-]/g, "") // Eliminar caracteres especiales
+        .replace(/[\s_-]+/g, "-") // Reemplazar espacios con guiones
+        .replace(/^-+|-+$/g, ""); // Eliminar guiones iniciales y finales
+};
+
+// Componente principal
 const PostContent = memo(function PostContent({ content }: PostContentProps) {
-    // Efecto para aplicar estilos adicionales o comportamientos después de renderizar
+    // Referencia para el contenedor del markdown
+    const contentRef = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
-        // Añadir comportamiento para enlaces externos
-        const links = document.querySelectorAll('.prose a[href^="http"]');
-        links.forEach((link) => {
-            if (!(link as HTMLElement).hasAttribute("target")) {
-                (link as HTMLElement).setAttribute("target", "_blank");
-                (link as HTMLElement).setAttribute("rel", "noopener noreferrer");
+        if (!contentRef.current) return;
+
+        // Crear un mapa para facilitar la navegación
+        const headingMap = new Map();
+
+        // Recopilar información sobre todos los encabezados
+        const headings = contentRef.current.querySelectorAll("h1, h2, h3, h4, h5, h6");
+
+        headings.forEach((heading) => {
+            const id = heading.id;
+            const text = heading.textContent || "";
+
+            // Registrar el encabezado en el mapa
+            headingMap.set(id, heading);
+
+            // También mapear el texto normalizado al encabezado
+            const normalizedText = slugify(text);
+            if (normalizedText && normalizedText !== id) {
+                headingMap.set(normalizedText, heading);
             }
         });
+
+        // Función para manejar clics en enlaces
+        const handleLinkClick = (e: MouseEvent) => {
+            const target = e.target as HTMLElement;
+            const link = target.closest("a");
+
+            if (!link) return;
+
+            const href = link.getAttribute("href");
+            if (!href?.startsWith("#")) return;
+
+            // Prevenir la navegación predeterminada
+            e.preventDefault();
+
+            // Obtener el ID del enlace
+            const encodedId = href.substring(1);
+            const decodedId = decodeURIComponent(encodedId);
+            const normalizedId = slugify(decodedId);
+
+            // Intento 1: Búsqueda directa por ID
+            let targetHeading = document.getElementById(normalizedId);
+
+            // Intento 2: Usar el mapa de encabezados
+            if (!targetHeading && headingMap.has(normalizedId)) {
+                targetHeading = headingMap.get(normalizedId);
+            }
+
+            // Intento 3: Buscar por texto del enlace
+            if (!targetHeading && link.textContent) {
+                const linkTextNormalized = slugify(link.textContent);
+
+                // Buscar en el mapa
+                if (headingMap.has(linkTextNormalized)) {
+                    targetHeading = headingMap.get(linkTextNormalized);
+                }
+            }
+
+            // Intento 4: Búsqueda en todos los encabezados
+            if (!targetHeading) {
+                // Buscar encabezado que coincida con el texto del enlace
+                for (const heading of headings) {
+                    if (slugify(heading.textContent || "") === normalizedId) {
+                        targetHeading = heading as HTMLElement;
+                        break;
+                    }
+                }
+            }
+
+            // SOLUCIÓN FORZADA: Mapear los enlaces específicos que sabemos tienen problemas
+            if (!targetHeading) {
+                // Mapa de IDs específicos con problemas
+                const problematicIds: Record<string, string> = {
+                    "conceptos-básicos": "conceptos-basicos",
+                    "botones-con-imágenes": "botones-con-imagenes",
+                    componentización: "componentizacion",
+                    "mejores-prácticas": "mejores-practicas",
+                };
+
+                if (decodedId in problematicIds) {
+                    const mappedId = problematicIds[decodedId];
+                    targetHeading = document.getElementById(mappedId);
+                }
+            }
+
+            // Si encontramos el elemento, hacer scroll
+            if (targetHeading) {
+                targetHeading.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                });
+
+                // Actualizar la URL
+                window.history.pushState(null, "", href);
+            }
+        };
+
+        // Agregar el listener para los clics
+        contentRef.current.addEventListener("click", handleLinkClick);
+
+        // Configurar enlaces externos
+        const externalLinks = contentRef.current.querySelectorAll('a[href^="http"]');
+        externalLinks.forEach((link) => {
+            link.setAttribute("target", "_blank");
+            link.setAttribute("rel", "noopener noreferrer");
+        });
+
+        // Limpieza al desmontar
+        return () => {
+            contentRef.current?.removeEventListener("click", handleLinkClick);
+        };
     }, [content]);
 
     return (
-        <div className="prose prose-lg dark:prose-invert max-w-none mb-12 prose-headings:text-white prose-p:text-white/80 prose-a:text-blue-400 prose-blockquote:border-blue-500 prose-blockquote:text-white/70 prose-strong:text-white">
+        <div
+            ref={contentRef}
+            className="prose prose-lg dark:prose-invert max-w-none mb-12 prose-headings:text-white prose-p:text-white/80 prose-a:text-blue-400 prose-blockquote:border-blue-500 prose-blockquote:text-white/70 prose-strong:text-white"
+        >
             <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
-                    h1: (props) => (
-                        <h1
-                            className="text-3xl font-bold mt-12 mb-6 pb-2 border-b border-white/10"
-                            {...props}
-                        />
-                    ),
-                    h2: (props) => (
-                        <h2
-                            className="text-2xl font-bold mt-10 mb-4 pb-1 border-b border-white/10"
-                            {...props}
-                        />
-                    ),
-                    h3: (props) => (
-                        <h3
-                            className="text-xl font-bold mt-8 mb-3"
-                            {...props}
-                        />
-                    ),
+                    h1: ({ children, ...props }) => {
+                        const id = slugify(children?.toString() || "");
+                        return (
+                            <h1
+                                id={id}
+                                className="text-3xl font-bold mt-12 mb-6 pb-2 border-b border-white/10 scroll-mt-20"
+                                {...props}
+                            >
+                                {children}
+                            </h1>
+                        );
+                    },
+                    h2: ({ children, ...props }) => {
+                        const id = slugify(children?.toString() || "");
+                        return (
+                            <h2
+                                id={id}
+                                className="text-2xl font-bold mt-10 mb-4 pb-1 border-b border-white/10 scroll-mt-20"
+                                {...props}
+                            >
+                                {children}
+                            </h2>
+                        );
+                    },
+                    h3: ({ children, ...props }) => {
+                        const id = slugify(children?.toString() || "");
+                        return (
+                            <h3
+                                id={id}
+                                className="text-xl font-bold mt-8 mb-3 scroll-mt-16"
+                                {...props}
+                            >
+                                {children}
+                            </h3>
+                        );
+                    },
+                    h4: ({ children, ...props }) => {
+                        const id = slugify(children?.toString() || "");
+                        return (
+                            <h4
+                                id={id}
+                                className="text-lg font-bold mt-6 mb-2 scroll-mt-16"
+                                {...props}
+                            >
+                                {children}
+                            </h4>
+                        );
+                    },
                     p: (props) => (
                         <p
                             className="my-4 leading-relaxed"
@@ -74,12 +226,14 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                             {...props}
                         />
                     ),
-                    a: ({ href, ...props }) => (
+                    a: ({ href, children, ...props }) => (
                         <a
                             href={href}
                             className="text-blue-400 hover:text-blue-300 transition-colors hover:underline"
                             {...props}
-                        />
+                        >
+                            {children}
+                        </a>
                     ),
                     blockquote: (props) => (
                         <blockquote
