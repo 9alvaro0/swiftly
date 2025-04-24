@@ -24,10 +24,6 @@ export default function ProtectedRoute({ children, adminOnly = false }: Protecte
         }
     }, [isAuthenticated, isLoading, router, user, adminOnly]);
 
-    if (isLoading) {
-        return <div className="flex justify-center items-center min-h-screen">Cargando...</div>;
-    }
-
     if (!isAuthenticated) {
         return null;
     }

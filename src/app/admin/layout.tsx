@@ -5,8 +5,8 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import type React from "react";
-import { MdDashboard, MdOutlineSettings } from "react-icons/md";
-import { FaBook, FaNewspaper } from "react-icons/fa";
+import { MdDashboard } from "react-icons/md";
+import { FaBook, FaUsers } from "react-icons/fa";
 import { AiFillTags } from "react-icons/ai";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
@@ -40,29 +40,21 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             disabled: false,
         },
         {
-            name: "Blog",
-            href: "/admin/blog",
-            icon: FaNewspaper,
-            disabled: true,
-        },
-        {
-            name: "Configuración",
-            href: "/admin/settings",
-            icon: MdOutlineSettings,
-            disabled: true,
+            name: "Usarios",
+            href: "/admin/users",
+            icon: FaUsers,
+            disabled: false,
         },
     ];
 
     return (
         <ProtectedRoute adminOnly>
             <div className="min-h-screen flex flex-col">
-                {/* Header */}
                 <header className=" backdrop-blur-md border-b border-white/10 shadow-md">
                     <div className="container mx-auto px-4 py-4 flex justify-between items-center"></div>
                 </header>
 
                 <div className="flex flex-1">
-                    {/* Sidebar con efecto glassmorphism */}
                     <aside className="w-64 backdrop-blur-sm border-r border-white/10">
                         <nav className="p-4">
                             <div className="space-y-2">
@@ -108,14 +100,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                         </nav>
                     </aside>
 
-                    {/* Main content */}
                     <main className="flex-1 overflow-auto">
-                        {/* Elementos decorativos de fondo */}
                         <div className="fixed inset-0 -z-10 pointer-events-none">
                             <div className="absolute -top-40 -right-20 w-96 h-96 bg-blue-600/10 rounded-full filter blur-3xl"></div>
                             <div className="absolute bottom-40 -left-20 w-96 h-96 bg-purple-600/10 rounded-full filter blur-3xl"></div>
                         </div>
-
                         <div className="container mx-auto p-6">{children}</div>
                     </main>
                 </div>

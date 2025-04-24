@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Tag } from "@/types/Tag";
 import { createTag, updateTag, getTagById } from "@/firebase/firestore/tags";
 import Input from "@/components/ui/Input";
-import { revalidateTagsPath } from "@/app/actions/revalidateTagsPath";
+import { revalidateTagsPath } from "@/actions/revalidateTagsPath";
 
 export default function TagForm() {
     const searchParams = useSearchParams();

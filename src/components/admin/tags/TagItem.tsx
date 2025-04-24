@@ -8,7 +8,7 @@ import { BiEditAlt, BiTrash } from "react-icons/bi";
 import DeleteTagDialog from "./DeleteTagDialog";
 import { useState } from "react";
 import { deleteTag } from "@/firebase/firestore/tags";
-import { revalidateTagsPath } from "@/app/actions/revalidateTagsPath";
+import { revalidateTagsPath } from "@/actions/revalidateTagsPath";
 
 interface TagItemProps {
     tag: Tag;
@@ -68,9 +68,7 @@ export default function TagItem({ tag }: TagItemProps) {
 
             <DeleteTagDialog
                 tagToDelete={tag}
-                onClose={() => {
-                    setShowDeleteDialog(false);
-                }}
+                onClose={() => { setShowDeleteDialog(false); }}
                 onConfirm={confirmDelete}
                 isOpen={showDeleteDialog}
             />

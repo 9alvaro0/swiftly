@@ -14,6 +14,7 @@ type WithDates<T> = Omit<T, "createdAt" | "updatedAt"> & {
 type WithTimestamps<T> = Omit<T, "createdAt" | "updatedAt"> & {
     createdAt?: Timestamp;
     updatedAt?: Timestamp;
+    lastLogin?: Timestamp;
 };
 
 /**
@@ -39,5 +40,6 @@ export const convertTimestampsToDates = <T>(data: WithTimestamps<T>): WithDates<
         ...data,
         createdAt: data.createdAt?.toDate(),
         updatedAt: data.updatedAt?.toDate(),
+        lastLogin: data.lastLogin?.toDate(),
     };
 };

@@ -11,7 +11,6 @@ import { usePosts } from "@/hooks/usePosts";
 export default function AdminDashboardPage() {
     const { stats, isLoading } = usePosts();
 
-    // Si está cargando, mostrar skeleton
     if (isLoading) {
         return <StatsCardsSkeleton />;
     }

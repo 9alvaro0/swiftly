@@ -24,9 +24,9 @@ export interface User {
     lastLogin: Date;
 
     // Permisos y estado
-    role: "admin" | "editor" | "author" | "user" | "guest"; // Rol en el sistema
-    isActive: boolean; // Si la cuenta está activa
-    isBanned: boolean; // Si la cuenta está suspendida
+    role: "admin" | "editor" | "author" | "user" | "guest";
+    isActive: boolean;
+    isBanned: boolean;
 
     // Estadísticas
     stats?: {

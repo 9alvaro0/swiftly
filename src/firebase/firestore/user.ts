@@ -148,48 +148,54 @@ export const incrementUserStat = async (
     });
 };
 
-// Buscar usuarios por nombre (para búsquedas)
-export const searchUsersByName = async (searchTerm: string, limitCount: number = 10): Promise<UserProfile[]> => {
-    const q = query(
-        usersCollection,
-        where("name", ">=", searchTerm),
-        where("name", "<=", searchTerm + "\uf8ff"),
-        limit(limitCount)
-    );
-
-    const querySnapshot = await getDocs(q);
-
-    return querySnapshot.docs.map((doc) => {
-        const userData = convertTimestampsToDates(doc.data());
-        return userData as UserProfile;
-    });
-};
-
 // Eliminar un perfil de usuario
 export const deleteUserProfile = async (uid: string): Promise<void> => {
     await deleteDoc(doc(usersCollection, uid));
 };
 
 // Obtener usuarios recientes
-export const getRecentUsers = async (limitCount: number = 10): Promise<UserProfile[]> => {
+export const getRecentUsers = async (limitCount: number = 10): Promise<User[]> => {
     const q = query(usersCollection, orderBy("createdAt", "desc"), limit(limitCount));
 
     const querySnapshot = await getDocs(q);
 
     return querySnapshot.docs.map((doc) => {
         const userData = convertTimestampsToDates(doc.data());
-        return userData as UserProfile;
+        return userData as User;
     });
 };
 
 // Obtener usuarios más activos (por último login)
-export const getActiveUsers = async (limitCount: number = 10): Promise<UserProfile[]> => {
+export const getActiveUsers = async (limitCount: number = 10): Promise<User[]> => {
     const q = query(usersCollection, orderBy("lastLogin", "desc"), limit(limitCount));
 
     const querySnapshot = await getDocs(q);
 
     return querySnapshot.docs.map((doc) => {
         const userData = convertTimestampsToDates(doc.data());
-        return userData as UserProfile;
+        return userData as User;
     });
+};
+
+// Obtener todos los usuarios
+export const getAllUsers = async (searchTerm: string = "", role: string = "", status: string = ""): Promise<User[]> => {
+    const q = query(usersCollection, orderBy("createdAt", "desc"));
+    const querySnapshot = await getDocs(q);
+
+    return querySnapshot.docs
+        .map((doc) => {
+            const userData = convertTimestampsToDates(doc.data());
+            return userData as User;
+        })
+        .filter((user) => {
+            const isMatchingRole = role ? user.role === role : true;
+            const isMatchingStatus = status ? user.isActive === (status === "active") : true;
+            const isMatchingSearchTerm = searchTerm
+                ? user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                  user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                  user.username.toLowerCase().includes(searchTerm.toLowerCase())
+                : true;
+
+            return isMatchingRole && isMatchingStatus && isMatchingSearchTerm;
+        });
 };
