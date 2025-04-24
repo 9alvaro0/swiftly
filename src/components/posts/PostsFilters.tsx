@@ -1,3 +1,5 @@
+// src/components/posts/PostsFilters.tsx
+
 "use client";
 
 import { useState } from "react";
