@@ -21,13 +21,6 @@ const PostPublishOptions: React.FC<PostPublishOptionsProps> = ({ isPublished, on
                     onChange={(e) => onChange(e.target.checked)}
                     label="¿Publicar?"
                 />
-
-            {/* Aquí puedes añadir más opciones de publicación como:
-            - Programar publicación
-            - Destacar post
-            - Permitir comentarios
-            - etc.
-            */}
             </div>
 
             {!isPublished && (

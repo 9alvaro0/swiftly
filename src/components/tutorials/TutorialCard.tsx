@@ -13,9 +13,9 @@ export default function TutorialCard({ tutorial }: TutorialCardProps) {
             href={`/tutorials/${tutorial.slug}`}
             className="group block h-full"
         >
-            <article className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden h-full grid grid-rows-[192px_auto_60px] transition-all duration-300 hover:translate-y-[-4px] hover:shadow-lg hover:shadow-blue-500/10 hover:border-blue-500/30">
-                {/* Image section - fixed height */}
-                <div className="relative bg-black/30 overflow-hidden">
+            <article className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden h-full flex flex-col md:flex-row transition-all duration-300 hover:translate-y-[-4px] hover:shadow-lg hover:shadow-blue-500/10 hover:border-blue-500/30">
+                {/* Image section - now on the left with square aspect ratio */}
+                <div className="relative bg-black/30 overflow-hidden w-[200px] min-w-[200px] h-[200px]">
                     <Image
                         src={tutorial.imageUrl}
                         alt={tutorial.title}
@@ -23,7 +23,6 @@ export default function TutorialCard({ tutorial }: TutorialCardProps) {
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
-
                     {/* Glass effect badges */}
                     <div className="absolute bottom-0 left-0 m-3">
                         <span className="inline-block bg-purple-600/80 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full font-medium">
@@ -32,10 +31,10 @@ export default function TutorialCard({ tutorial }: TutorialCardProps) {
                     </div>
                 </div>
 
-                {/* Content area with fixed structure */}
-                <div className="p-5 flex flex-col">
-                    {/* Date and read time - fixed height */}
-                    <div className="flex items-center text-white/60 text-sm h-5 mb-3">
+                {/* Content area */}
+                <div className="p-5 flex flex-col flex-1">
+                    {/* Date and read time */}
+                    <div className="flex items-center text-white/60 text-sm mb-3">
                         <time dateTime={tutorial.createdAt.toISOString()}>
                             {new Date(tutorial.createdAt).toLocaleDateString("es-ES", {
                                 year: "numeric",
@@ -53,13 +52,13 @@ export default function TutorialCard({ tutorial }: TutorialCardProps) {
                         </span>
                     </div>
 
-                    {/* Title - fixed height with line clamp */}
-                    <h3 className={`group-hover:underline font-bold text-lg h-14 mb-2 line-clamp-2 text-white group-hover:text-blue-400 transition-colors flex items-center`}>
+                    {/* Title with line clamp */}
+                    <h3 className="group-hover:underline font-bold text-lg mb-2 line-clamp-2 text-white group-hover:text-blue-400 transition-colors">
                         {tutorial.title}
                     </h3>
 
-                    {/* Description - fixed height with line clamp */}
-                    <p className={`text-white/70 line-clamp-2 h-12`}>{tutorial.description}</p>
+                    {/* Description with line clamp */}
+                    <p className="text-white/70 line-clamp-3">{tutorial.description}</p>
                 </div>
             </article>
         </Link>

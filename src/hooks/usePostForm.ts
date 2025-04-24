@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Author, Post } from "@/types/Post";
+import { Post } from "@/types/Post";
 import { updatePost, createPost } from "@/firebase/firestore/post";
 import { useAuthStore } from "@/store/authStore";
 import { getDefaultPost, preparePostForSave, validatePost } from "@/utils/postUtils";
@@ -127,34 +127,8 @@ export const usePostForm = ({ defaultValues }: PostFormOptions = {}) => {
         try {
             setIsSubmitting(true);
             if (post.id) {
-                // Actualizar post existente - solo enviar los campos modificados
-                const updatedFields: Partial<
-                    Record<
-                        keyof Post,
-                        | string
-                        | number
-                        | boolean
-                        | Date
-                        | string[]
-                        | Author
-                        | Pick<Post, "id" | "slug" | "title" | "description" | "imageUrl">[]
-                        | undefined
-                    >
-                > = {};
-
-                // Determinar qué campos han cambiado para actualizar solo esos
-                Object.keys(updatedPost).forEach((key) => {
-                    const typedKey = key as keyof Post;
-                    if (JSON.stringify(updatedPost[typedKey]) !== JSON.stringify(post[typedKey])) {
-                        updatedFields[typedKey] = updatedPost[typedKey];
-                    }
-                });
-
-                console.log("Campos actualizados:", updatedFields);
-                await updatePost(postId, updatedFields as Partial<Post>);
+                await updatePost(postId, updatedPost);
             } else {
-                // Crear nuevo post
-                console.log("Creando nuevo post:", updatedPost);
                 await createPost(updatedPost);
             }
 

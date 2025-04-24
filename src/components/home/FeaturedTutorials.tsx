@@ -34,76 +34,11 @@ export default async function FeaturedTutorials() {
                                         <TutorialCard tutorial={tutorials[0]} />
                                     </div>
                                 </div>
-                                <div className="lg:col-span-1 bg-white/5 border border-white/10 rounded-xl p-6 flex flex-col justify-center">
-                                    <h3 className="text-xl font-bold text-white mb-4">Tutorial destacado</h3>
-                                    <p className="text-white/70 mb-6">
-                                        Este tutorial ha sido seleccionado por su calidad y relevancia para ayudarte a
-                                        dominar conceptos importantes de desarrollo.
-                                    </p>
-                                    <div className="flex flex-col space-y-4">
-                                        <div className="flex items-center">
-                                            <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center mr-3">
-                                                <FiBookOpen
-                                                    className="text-emerald-400"
-                                                    size={16}
-                                                />
-                                            </div>
-                                            <span className="text-white/80">Contenido paso a paso</span>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
-                                                <FiBookOpen
-                                                    className="text-blue-400"
-                                                    size={16}
-                                                />
-                                            </div>
-                                            <span className="text-white/80">Ejemplos prácticos</span>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         ) : (
                             // Diseño para múltiples tutoriales (conservado para cuando tengas más)
                             <div>
                                 {/* Featured tutorial - destacado */}
-                                <div className="mb-10">
-                                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                                        <div className="lg:col-span-2">
-                                            <div className="transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                                                <TutorialCard tutorial={tutorials[0]} />
-                                            </div>
-                                        </div>
-                                        <div className="lg:col-span-1 bg-white/5 border border-white/10 rounded-xl p-6 flex flex-col justify-center">
-                                            <h3 className="text-xl font-bold text-white mb-4">Tutorial destacado</h3>
-                                            <p className="text-white/70 mb-6">
-                                                Este tutorial ha sido seleccionado por su calidad y relevancia para
-                                                ayudarte a dominar conceptos importantes de desarrollo.
-                                            </p>
-                                            <div className="flex flex-col space-y-4">
-                                                <div className="flex items-center">
-                                                    <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center mr-3">
-                                                        <FiBookOpen
-                                                            className="text-emerald-400"
-                                                            size={16}
-                                                        />
-                                                    </div>
-                                                    <span className="text-white/80">Contenido paso a paso</span>
-                                                </div>
-                                                <div className="flex items-center">
-                                                    <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
-                                                        <FiBookOpen
-                                                            className="text-blue-400"
-                                                            size={16}
-                                                        />
-                                                    </div>
-                                                    <span className="text-white/80">Ejemplos prácticos</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Rest of tutorials */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                     {tutorials.slice(1, 4).map((tutorial) => (
                                         <div

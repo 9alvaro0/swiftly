@@ -33,13 +33,14 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
     const contentRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (!contentRef.current) return;
+        const contentRefCurrent = contentRef.current;
+        if (!contentRefCurrent) return;
 
         // Crear un mapa para facilitar la navegación
         const headingMap = new Map();
 
         // Recopilar información sobre todos los encabezados
-        const headings = contentRef.current.querySelectorAll("h1, h2, h3, h4, h5, h6");
+        const headings = contentRefCurrent.querySelectorAll("h1, h2, h3, h4, h5, h6");
 
         headings.forEach((heading) => {
             const id = heading.id;
@@ -102,22 +103,6 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                 }
             }
 
-            // SOLUCIÓN FORZADA: Mapear los enlaces específicos que sabemos tienen problemas
-            if (!targetHeading) {
-                // Mapa de IDs específicos con problemas
-                const problematicIds: Record<string, string> = {
-                    "conceptos-básicos": "conceptos-basicos",
-                    "botones-con-imágenes": "botones-con-imagenes",
-                    componentización: "componentizacion",
-                    "mejores-prácticas": "mejores-practicas",
-                };
-
-                if (decodedId in problematicIds) {
-                    const mappedId = problematicIds[decodedId];
-                    targetHeading = document.getElementById(mappedId);
-                }
-            }
-
             // Si encontramos el elemento, hacer scroll
             if (targetHeading) {
                 targetHeading.scrollIntoView({
@@ -131,10 +116,10 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
         };
 
         // Agregar el listener para los clics
-        contentRef.current.addEventListener("click", handleLinkClick);
+        contentRefCurrent.addEventListener("click", handleLinkClick);
 
         // Configurar enlaces externos
-        const externalLinks = contentRef.current.querySelectorAll('a[href^="http"]');
+        const externalLinks = contentRefCurrent.querySelectorAll('a[href^="http"]');
         externalLinks.forEach((link) => {
             link.setAttribute("target", "_blank");
             link.setAttribute("rel", "noopener noreferrer");
@@ -142,7 +127,7 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
 
         // Limpieza al desmontar
         return () => {
-            contentRef.current?.removeEventListener("click", handleLinkClick);
+            contentRefCurrent?.removeEventListener("click", handleLinkClick);
         };
     }, [content]);
 
@@ -281,14 +266,15 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                         if (!src) return null;
 
                         return (
-                            <div className="relative my-8 rounded-lg overflow-hidden shadow-md">
+                            <div className="relative my-8 mx-auto max-w-[250px] rounded-lg overflow-hidden shadow-md">
                                 <Image
                                     src={src}
                                     alt={alt || "Imagen del artículo"}
                                     className="w-full h-auto rounded-lg"
-                                    width={800}
-                                    height={600}
+                                    width={500}
+                                    height={300}
                                 />
+                                {alt && <div className="text-center mt-2 text-sm text-gray-400 italic">{alt}</div>}
                             </div>
                         );
                     },

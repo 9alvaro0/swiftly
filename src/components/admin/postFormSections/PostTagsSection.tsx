@@ -95,27 +95,22 @@ const PostTagsSection: React.FC<PostTagsSectionProps> = ({ tags, onAddTag, onRem
             {!isAddingNewTag ? (
                 <div className="mb-4">
                     <div className="flex items-center space-x-2">
-                        <div className="flex-grow">
-                            <Select
-                                id="existingTags"
-                                label=""
-                                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                                    handleAddExistingTag(e.target.value)
-                                }
-                                value=""
-                                options={[
-                                    { value: "", label: "Seleccionar etiqueta..." },
-                                    ...availableTags
-                                        .filter((tag: Tag) => !tags.includes(tag.name))
-                                        .map((tag: Tag) => ({ value: tag.name, label: `#${tag.name}` })),
-                                ]}
-                                disabled={loadingTags}
-                            />
-                        </div>
+                        <Select
+                            id="existingTags"
+                            label=""
+                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleAddExistingTag(e.target.value)}
+                            value=""
+                            options={[
+                                { value: "", label: "Seleccionar etiqueta..." },
+                                ...availableTags
+                                    .filter((tag: Tag) => !tags.includes(tag.name))
+                                    .map((tag: Tag) => ({ value: tag.name, label: `#${tag.name}` })),
+                            ]}
+                            disabled={loadingTags}
+                        />
                         <Button
-                            type="button"
                             variant="primary"
-                            size="sm"
+                            size="md"
                             onClick={() => setIsAddingNewTag(true)}
                         >
                             <div className="flex items-center">
@@ -138,15 +133,13 @@ const PostTagsSection: React.FC<PostTagsSectionProps> = ({ tags, onAddTag, onRem
                             />
                         </div>
                         <Button
-                            type="button"
-                            variant="primary"
+                            variant="outline"
                             size="sm"
                             onClick={handleCreateNewTag}
                         >
                             Crear y añadir
                         </Button>
                         <Button
-                            type="button"
                             variant="outline"
                             size="sm"
                             onClick={() => {

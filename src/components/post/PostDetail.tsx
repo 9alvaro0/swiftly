@@ -20,7 +20,7 @@ export default function PostDetail({ post, branch }: PostDetailProps) {
     const { views } = usePostViews(post.id, post.views || 0);
     const postWithUpdatedViews = {
         ...post,
-        views: views
+        views: views,
     };
 
     return (
@@ -28,7 +28,7 @@ export default function PostDetail({ post, branch }: PostDetailProps) {
             <PostBreadcrumbs branch={branch} />
             <PostHeader post={postWithUpdatedViews} />
             <PostFeaturedImage
-                imageUrl={post.imageUrl || ""}
+                image={post.coverImage || post.imageUrl}
                 title={post.title}
             />
             <PostContent content={post.content} />
