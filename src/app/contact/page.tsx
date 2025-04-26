@@ -54,7 +54,6 @@ export default function ContactPage() {
                                 label="Mensaje"
                                 value={formState.message}
                                 onChange={handleChange}
-                                rows={5}
                                 placeholder="Escribe tu mensaje aquí..."
                                 error={errors.message}
                                 className="bg-surface text-primary resize-none"

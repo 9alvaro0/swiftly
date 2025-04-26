@@ -13,14 +13,11 @@ export default function SocialLoginButtons() {
     const handleLogin = async (provider: "github" | "google" | "apple", loginFn: () => Promise<void>) => {
         setLoadingProvider(provider);
         try {
-            console.log(`Iniciando sesión con ${provider}`);
             await loginFn();
             window.location.href = "/";
         } catch (error) {
-            console.error(`Error al iniciar sesión con ${provider}:`, error);
             handleFirebaseError(error, `${provider.charAt(0).toUpperCase() + provider.slice(1)} Login`);
         } finally {
-            console.log(`Finalizando sesión con ${provider}`);
             setLoadingProvider(null);
         }
     };

@@ -264,15 +264,15 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                     },
                     img: ({ src, alt }) => {
                         if (!src) return null;
-
+                    
                         return (
-                            <div className="relative my-8 mx-auto max-w-[250px] rounded-lg overflow-hidden shadow-md">
+                            <div className="relative my-8 mx-auto w-full max-w-md rounded-lg overflow-hidden shadow-md">
                                 <Image
                                     src={src}
                                     alt={alt || "Imagen del artículo"}
-                                    className="w-full h-auto rounded-lg"
-                                    width={500}
-                                    height={300}
+                                    className="w-auto h-auto max-h-[600px] mx-auto rounded-lg object-contain"
+                                    width={600}
+                                    height={800}
                                 />
                                 {alt && <div className="text-center mt-2 text-sm text-gray-400 italic">{alt}</div>}
                             </div>

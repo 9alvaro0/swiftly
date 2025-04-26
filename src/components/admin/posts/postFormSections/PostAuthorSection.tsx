@@ -77,7 +77,6 @@ const PostAuthorSection: React.FC<PostAuthorSectionProps> = ({ post, onChange })
                 label="Bio del Autor"
                 value={post.author?.bio || ""}
                 onChange={onChange}
-                rows={3}
                 disabled={!!post.author?.bio}
                 className={post.author?.bio ? "bg-gray-100 dark:bg-gray-800" : ""}
             />

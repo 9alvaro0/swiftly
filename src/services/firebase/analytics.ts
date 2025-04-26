@@ -14,7 +14,6 @@ const initializeAnalytics = async (): Promise<void> => {
         const supported = await isSupported();
         if (supported) {
             analytics = getAnalytics(app);
-            console.log("Firebase Analytics inicializado");
         }
     } catch (error) {
         console.error("Error inicializando Analytics:", error);

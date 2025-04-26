@@ -24,7 +24,6 @@ export function usePosts(initialFilters: PostFilters = {}) {
         setError(null);
 
         const fetchedPosts = await getAllPosts();
-        console.log("Fetched posts:", fetchedPosts);
         setPosts(fetchedPosts);
 
         setIsLoading(false);

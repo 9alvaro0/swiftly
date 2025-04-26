@@ -39,9 +39,7 @@ export default function PostForm({ selectedPost }: PostFormProps) {
 
     return (
         <form
-            onSubmit={(e) => {
-                handleSubmit(e);
-            }}
+            onSubmit={handleSubmit}
             className="space-y-8"
         >
             {/* Información básica: título, descripción */}
