@@ -1,5 +1,5 @@
 // firebase/auth.ts
-import { auth } from "@/firebase/config";
+import { auth } from "@/services/firebase/config";
 import {
     signInWithPopup,
     signInWithEmailAndPassword,
@@ -7,7 +7,7 @@ import {
     GithubAuthProvider,
     UserCredential,
 } from "firebase/auth";
-import { createUserProfile, updateLastLogin, getUser } from "@/firebase/firestore/user";
+import { createUserProfile, updateLastLogin, getUser } from "@/services/firebase/firestore/user";
 
 // Función para login con GitHub
 export const loginWithGithub = async (): Promise<UserCredential> => {

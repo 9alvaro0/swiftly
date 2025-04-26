@@ -7,7 +7,7 @@ import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { BiEditAlt, BiTrash } from "react-icons/bi";
 import DeleteTagDialog from "./DeleteTagDialog";
 import { useState } from "react";
-import { deleteTag } from "@/firebase/firestore/tags";
+import { deleteTag } from "@/services/firebase/firestore/tags";
 import { revalidateTagsPath } from "@/actions/revalidateTagsPath";
 
 interface TagItemProps {

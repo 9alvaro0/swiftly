@@ -1,6 +1,6 @@
 // src/components/tags/TagsList.tsx
 
-import { getAllTags } from "@/firebase/firestore/tags";
+import { getAllTags } from "@/services/firebase/firestore/tags";
 import { BsEmojiFrown } from "react-icons/bs";
 import Link from "next/link";
 

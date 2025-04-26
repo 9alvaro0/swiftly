@@ -1,7 +1,7 @@
 // src/components/admin/users/UserList.tsx
 
 import UserItem from "@/components/admin/users/UserItem";
-import { getAllUsers } from "@/firebase/firestore/user";
+import { getAllUsers } from "@/services/firebase/firestore/user";
 import NoUsersFound from "./NoUsersFound";
 import Pagination from "@/components/ui/Pagination";
 

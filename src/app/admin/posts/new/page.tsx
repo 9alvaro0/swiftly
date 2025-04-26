@@ -1,4 +1,4 @@
-import PostForm from "@/components/admin/PostForm";
+import PostForm from "@/components/admin/posts/PostForm";
 
 export default function NewTutorialPage() {
     return (

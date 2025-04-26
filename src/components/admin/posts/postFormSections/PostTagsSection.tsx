@@ -22,7 +22,8 @@ const PostTagsSection: React.FC<PostTagsSectionProps> = ({ tags, onAddTag, onRem
     const [tagError, setTagError] = useState("");
 
     // Función para añadir una etiqueta existente
-    const handleAddExistingTag = (tagName: string) => {
+    const handleAddExistingTag = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const tagName = e.target.value;
         if (!tagName || tags.includes(tagName)) {
             return;
         }
@@ -94,11 +95,16 @@ const PostTagsSection: React.FC<PostTagsSectionProps> = ({ tags, onAddTag, onRem
             {/* Interfaz para añadir etiquetas existentes o crear nuevas */}
             {!isAddingNewTag ? (
                 <div className="mb-4">
-                    <div className="flex items-center space-x-2">
+                    <div className="space-y-4">
+                        <label
+                            className="block text-white font-medium mb-2 tracking-wide"
+                        >
+                            Anadir etiqueta existente
+                        </label>
                         <Select
                             id="existingTags"
                             label=""
-                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleAddExistingTag(e.target.value)}
+                            onChange={handleAddExistingTag}
                             value=""
                             options={[
                                 { value: "", label: "Seleccionar etiqueta..." },
@@ -121,7 +127,7 @@ const PostTagsSection: React.FC<PostTagsSectionProps> = ({ tags, onAddTag, onRem
                 </div>
             ) : (
                 <div className="mb-4">
-                    <div className="flex items-center space-x-2">
+                    <div className=" space-y-4">
                         <div className="flex-grow">
                             <Input
                                 id="newTagName"
@@ -132,24 +138,26 @@ const PostTagsSection: React.FC<PostTagsSectionProps> = ({ tags, onAddTag, onRem
                                 placeholder="Escribe el nombre de la nueva etiqueta"
                             />
                         </div>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handleCreateNewTag}
-                        >
-                            Crear y añadir
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                                setIsAddingNewTag(false);
-                                setNewTagName("");
-                                setTagError("");
-                            }}
-                        >
-                            Cancelar
-                        </Button>
+                        <div className="space-x-2">
+                            <Button
+                                variant="primary"
+                                size="md"
+                                onClick={handleCreateNewTag}
+                            >
+                                Crear y añadir
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="md"
+                                onClick={() => {
+                                    setIsAddingNewTag(false);
+                                    setNewTagName("");
+                                    setTagError("");
+                                }}
+                            >
+                                Cancelar
+                            </Button>
+                        </div>
                     </div>
                 </div>
             )}

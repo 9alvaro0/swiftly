@@ -1,6 +1,6 @@
 // firebase/analytics.ts
 import { getAnalytics, logEvent, isSupported } from "firebase/analytics";
-import { app } from "@/firebase/config";
+import { app } from "@/services/firebase/config";
 
 let analytics: ReturnType<typeof getAnalytics>;
 

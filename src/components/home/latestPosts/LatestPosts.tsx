@@ -2,7 +2,7 @@
 
 import PostList from "@/components/home/latestPosts/PostList";
 import SectionHeader from "../../ui/SectionHeader";
-import { getAllPublishedPosts } from "@/firebase/firestore/post";
+import { getAllPublishedPosts } from "@/services/firebase/firestore/post";
 import { FiBookOpen, FiFileText } from "react-icons/fi";
 
 export default async function LatestPosts() {
@@ -17,6 +17,7 @@ export default async function LatestPosts() {
                 link="/posts"
                 subtitle="Descubre los últimos artículos sobre desarrollo y tecnología."
                 accentColor="purple"
+                hasData={hasPosts}
             />
 
             {hasPosts ? (

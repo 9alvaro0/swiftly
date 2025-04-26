@@ -2,7 +2,7 @@
  * Utilidades para gestión de imágenes de usuario en Firebase Storage
  */
 import { v4 as uuidv4 } from "uuid";
-import { deleteImage } from "@/firebase/storage/image";
+import { deleteImage } from "@/services/firebase/storage/image";
 import { extractImagePathFromUrl } from "./imageUtils";
 
 /**

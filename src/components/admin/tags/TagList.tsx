@@ -2,7 +2,7 @@
 
 import TagItem from "@/components/admin/tags/TagItem";
 import Pagination from "@/components/ui/Pagination";
-import { getAllTags } from "@/firebase/firestore/tags";
+import { getAllTags } from "@/services/firebase/firestore/tags";
 
 interface TagListProps {
     searchTerm: string;

@@ -3,7 +3,7 @@
 import React from "react";
 import PostCard from "@/components/posts/PostCard";
 import Pagination from "@/components/ui/Pagination";
-import { getAllPublishedPosts } from "@/firebase/firestore/post";
+import { getAllPublishedPosts } from "@/services/firebase/firestore/post";
 
 export default async function PostsList({
     searchTerm,

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Post } from "@/types/Post";
-import { updatePost, deletePost, getPostBySlug } from "@/firebase/firestore/post";
+import { deletePost, getPostBySlug, createOrUpdatePost } from "@/services/firebase/firestore/post";
 import { toast } from "sonner";
 
 // Parámetros para el hook cuando se usa para administrar un post existente
@@ -35,7 +35,7 @@ export function usePost(slugOrProps: string | UsePostAdminProps) {
     } = !isSlugMode ? slugOrProps : ({} as UsePostAdminProps);
 
     // Estados compartidos
-    const [post, setPost] = useState<Post | null>(null);
+    const [post, setPost] = useState<Post | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
 
@@ -108,7 +108,7 @@ export function usePost(slugOrProps: string | UsePostAdminProps) {
             const newState = !isPublished;
 
             // Actualiza el post en Firestore
-            await updatePost(postId, {
+            await createOrUpdatePost(postId, {
                 isPublished: newState,
                 updatedAt: new Date(),
             });

@@ -1,6 +1,6 @@
 import SectionHeader from "../ui/SectionHeader";
 import TutorialCard from "../tutorials/TutorialCard";
-import { getAllPublishedPosts } from "@/firebase/firestore/post";
+import { getAllPublishedPosts } from "@/services/firebase/firestore/post";
 import { FiBookOpen } from "react-icons/fi";
 
 export default async function FeaturedTutorials() {
@@ -22,6 +22,7 @@ export default async function FeaturedTutorials() {
                     link="/tutorials"
                     accentColor="blue"
                     subtitle="Aprende nuevas habilidades con nuestros tutoriales más populares y descubre cómo mejorar tus conocimientos de desarrollo."
+                    hasData={hasTutorials}
                 />
 
                 {hasTutorials ? (
@@ -53,8 +54,7 @@ export default async function FeaturedTutorials() {
                         )}
                     </div>
                 ) : (
-                    <div className="bg-white/5 p-8 rounded-lg border border-white/10 max-w-3xl mx-auto relative overflow-hidden">
-                        {/* Background pattern - Más intenso */}
+                    <div className="bg-white/5 p-8 rounded-lg border border-white/10 mx-auto">
                         <div className="absolute inset-0 opacity-10">
                             <div className="absolute top-0 left-0 w-64 h-64 bg-blue-500 rounded-full filter blur-3xl"></div>
                             <div className="absolute bottom-0 right-0 w-64 h-64 bg-indigo-500 rounded-full filter blur-3xl"></div>

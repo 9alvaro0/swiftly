@@ -1,5 +1,6 @@
 // src/hooks/useContactForm.ts
 
+import { validateEmail, validateEmailFormat } from "@/utils/formUtils";
 import { useState } from "react";
 
 export default function useContactForm() {
@@ -17,6 +18,7 @@ export default function useContactForm() {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [submitError, setSubmitError] = useState("");
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { id, value } = e.target;
@@ -40,10 +42,12 @@ export default function useContactForm() {
             isValid = false;
         }
 
-        if (!formState.email.trim()) {
+        if (!validateEmail(formState.email)) {
             newErrors.email = "El correo electrónico es obligatorio";
             isValid = false;
-        } else if (!/\S+@\S+\.\S+/.test(formState.email)) {
+        }
+
+        if (!validateEmailFormat(formState.email)) {
             newErrors.email = "El correo electrónico no es válido";
             isValid = false;
         }
@@ -57,17 +61,35 @@ export default function useContactForm() {
         return isValid;
     };
 
-    const handleSubmit = (onSuccess?: () => void) => (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!validateForm()) return;
 
         setIsSubmitting(true);
+        setSubmitError("");
 
-        setTimeout(() => {
-            setIsSubmitting(false);
+        try {
+            const response = await fetch("/api/contact", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formState),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Error al enviar el mensaje");
+            }
+
             setIsSubmitted(true);
-            onSuccess?.();
-        }, 1500);
+            setFormState({ name: "", email: "", message: "" });
+        } catch (error) {
+            setSubmitError(error instanceof Error ? error.message : "Error al enviar el mensaje");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return {
@@ -75,6 +97,7 @@ export default function useContactForm() {
         errors,
         isSubmitting,
         isSubmitted,
+        submitError,
         handleChange,
         handleSubmit,
     };

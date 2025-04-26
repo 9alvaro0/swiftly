@@ -1,20 +1,23 @@
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
 import { Post } from "@/types/Post";
-import { updatePost, createPost } from "@/firebase/firestore/post";
+import { createOrUpdatePost } from "@/services/firebase/firestore/post";
 import { useAuthStore } from "@/store/authStore";
 import { getDefaultPost, preparePostForSave, validatePost } from "@/utils/postUtils";
+import { useRouter } from "next/navigation";
+import { generateSEO } from "@/services/ai/seo/seoClient";
+
 
 interface PostFormOptions {
-    defaultValues?: Post;
+    selectedPost: Post | undefined;
 }
 
-export const usePostForm = ({ defaultValues }: PostFormOptions = {}) => {
-    const { user } = useAuthStore();
+export default function usePostForm({ selectedPost }: PostFormOptions) {
     const router = useRouter();
+    const { user } = useAuthStore();
+    const contentRef = useRef<HTMLTextAreaElement>(null);
 
     const [post, setPost] = useState<Post>(() => {
-        const initialPost = defaultValues || getDefaultPost();
+        const initialPost = selectedPost || getDefaultPost();
 
         if (initialPost.author.id === "" && user) {
             initialPost.author = {
@@ -31,39 +34,71 @@ export const usePostForm = ({ defaultValues }: PostFormOptions = {}) => {
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
-    const [uploadedImages, setUploadedImages] = useState<string[]>([]);
     const [isPreviewMode, setIsPreviewMode] = useState(false);
 
     const addImageToPost = (imageUrl: string) => {
-        setPost((prev) => ({
-            ...prev,
-            images: [...(prev.images || []), imageUrl],
-        }));
-
-        setUploadedImages((prev) => [...prev, imageUrl]);
-    };
-
-    const insertImageInContent = (imageUrl: string) => {
-        const markdownImage = `\n![Imagen Post](${imageUrl})\n`;
-        setPost((prev) => ({
-            ...prev,
-            content: (prev.content || "") + markdownImage,
-        }));
-    };
-
-    const addKeyword = (keyword: string) => {
-        if (keyword && !post.keywords?.includes(keyword)) {
+        if (!post.images?.includes(imageUrl)) {
             setPost((prev) => ({
                 ...prev,
-                keywords: [...(prev.keywords || []), keyword],
+                images: [...(prev.images || []), imageUrl],
             }));
         }
     };
 
-    const removeKeyword = (keyword: string) => {
+    const removeImageFromPost = (imageUrl: string) => {
         setPost((prev) => ({
             ...prev,
-            keywords: prev.keywords?.filter((k) => k !== keyword) || [],
+            images: (prev.images || []).filter((img) => img !== imageUrl),
+            imageUrl: prev.imageUrl === imageUrl ? "" : prev.imageUrl,
+            coverImage: prev.coverImage === imageUrl ? "" : prev.coverImage,
+        }));
+    };
+
+    const setMainImage = (imageUrl: string) => {
+        setPost((prev) => ({
+            ...prev,
+            imageUrl,
+            images: prev.images?.includes(imageUrl) ? prev.images : [...(prev.images || []), imageUrl],
+        }));
+    };
+
+    const setCoverImage = (imageUrl: string) => {
+        setPost((prev) => ({
+            ...prev,
+            coverImage: imageUrl,
+            // Asegurarse de que la imagen esté en el array de imágenes
+            images: prev.images?.includes(imageUrl) ? prev.images : [...(prev.images || []), imageUrl],
+        }));
+    };
+
+    const insertImageInContent = (imageUrl: string) => {
+        if (contentRef.current) {
+            const textarea = contentRef.current;
+            const cursorPosition = textarea.selectionStart;
+            const currentContent = post.content || "";
+
+            const markdownImage = `\n![Imagen de post](${imageUrl})\n`;
+            const newContent =
+                currentContent.substring(0, cursorPosition) + markdownImage + currentContent.substring(cursorPosition);
+
+            setPost({ ...post, content: newContent });
+            addImageToPost(imageUrl);
+        }
+    };
+
+    const addTag = (tag: string) => {
+        if (tag && !post.tags?.includes(tag)) {
+            setPost((prev) => ({
+                ...prev,
+                tags: [...(prev.tags || []), tag],
+            }));
+        }
+    };
+
+    const removeTag = (tagToRemove: string) => {
+        setPost((prev) => ({
+            ...prev,
+            tags: prev.tags?.filter((tag) => tag !== tagToRemove) || [],
         }));
     };
 
@@ -87,52 +122,61 @@ export const usePostForm = ({ defaultValues }: PostFormOptions = {}) => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!validatePost(post).isValid) {
-            setErrors(validatePost(post).errors.reduce((acc, error) => ({ ...acc, [error]: true }), {}));
+        const validation = validatePost(post);
+        if (!validation.isValid) {
+            setErrors(validation.errors.reduce((acc, error) => ({ ...acc, [error]: true }), {}));
             return;
         }
 
-        // Establecer fechas
-        const now = new Date();
-
-        // Generar ID si es un post nuevo
-        const postId = post.id || crypto.randomUUID();
-
-        // Preparar objeto de post con todos los campos requeridos
-        let updatedPost: Post = {
-            ...(post as Post),
-            id: postId,
-            type: post.type,
-            createdAt: post.createdAt || now,
-            isPublished: post.isPublished || false,
-            tags: post.tags || [],
-            level: post.level,
-            author: {
-                id: post.author?.id || crypto.randomUUID(),
-                name: post.author?.name || "Autor Anónimo",
-                username: post.author?.username,
-                avatar: post.author?.avatar,
-                bio: post.author?.bio,
-                socialLinks: post.author?.socialLinks,
-            },
-            views: post.views || 0,
-            likedBy: post.likedBy || [],
-            // Asegurarse de que todos los campos requeridos tengan al menos un valor vacío
-            imageUrl: post.imageUrl || "",
-            description: post.description || "",
-        };
-
-        updatedPost = preparePostForSave(updatedPost);
-
         try {
             setIsSubmitting(true);
-            if (post.id) {
-                await updatePost(postId, updatedPost);
-            } else {
-                await createPost(updatedPost);
+
+            const shouldGenerateSEO =
+                !post.keywords ||
+                post.keywords.length === 0 ||
+                !post.metaDescription ||
+                post.metaDescription.trim() === "";
+
+            let postWithSEO = { ...post };
+
+            if (shouldGenerateSEO) {
+                postWithSEO = await generateSEO(post);
             }
 
-            // Redireccionar después de guardar
+            // Prepara el post para guardar
+            const now = new Date();
+            const postId = postWithSEO.id || crypto.randomUUID();
+
+            const finalPost: Post = {
+                ...postWithSEO,
+                id: postId,
+                type: postWithSEO.type,
+                createdAt: postWithSEO.createdAt || now,
+                updatedAt: now,
+                isPublished: postWithSEO.isPublished || false,
+                tags: postWithSEO.tags || [],
+                level: postWithSEO.level,
+                author: {
+                    id: postWithSEO.author?.id || crypto.randomUUID(),
+                    name: postWithSEO.author?.name || "Autor Anónimo",
+                    username: postWithSEO.author?.username,
+                    avatar: postWithSEO.author?.avatar,
+                    bio: postWithSEO.author?.bio,
+                    socialLinks: postWithSEO.author?.socialLinks,
+                },
+                views: postWithSEO.views || 0,
+                likedBy: postWithSEO.likedBy || [],
+                imageUrl: postWithSEO.imageUrl || "",
+                coverImage: postWithSEO.coverImage || "",
+                description: postWithSEO.description || "",
+                images: postWithSEO.images || [],
+            };
+
+            // Prepara y guarda el post
+            const preparedPost = preparePostForSave(finalPost);
+            await createOrUpdatePost(postId, preparedPost);
+
+            // Navega a la lista de posts
             router.push("/admin/posts");
         } catch (error) {
             console.error("Error al guardar el post:", error);
@@ -141,29 +185,27 @@ export const usePostForm = ({ defaultValues }: PostFormOptions = {}) => {
         }
     };
 
-    const addTag = (tag: string) => {
-        if (tag && !post.tags?.includes(tag)) {
-            setPost((prev) => ({
-                ...prev,
-                tags: [...(prev.tags || []), tag],
-            }));
-        }
-    };
+    const insertSnippet = (snippet: string) => {
+        if (contentRef.current) {
+            const textarea = contentRef.current;
+            const startPos = textarea.selectionStart;
+            const endPos = textarea.selectionEnd;
+            const currentContent = post.content || "";
 
-    const removeTag = (tagToRemove: string) => {
-        setPost((prev) => ({
-            ...prev,
-            tags: prev.tags?.filter((tag) => tag !== tagToRemove) || [],
-        }));
+            const newContent = currentContent.substring(0, startPos) + snippet + currentContent.substring(endPos);
+
+            setPost({ ...post, content: newContent });
+        }
     };
 
     return {
         post,
         setPost,
         errors,
-        uploadedImages,
-        setUploadedImages,
         addImageToPost,
+        removeImageFromPost,
+        setMainImage,
+        setCoverImage,
         insertImageInContent,
         isPreviewMode,
         setIsPreviewMode,
@@ -171,8 +213,8 @@ export const usePostForm = ({ defaultValues }: PostFormOptions = {}) => {
         handleSubmit,
         addTag,
         removeTag,
-        addKeyword,
-        removeKeyword,
+        insertSnippet,
+        contentRef,
         isSubmitting,
     };
-};
+}

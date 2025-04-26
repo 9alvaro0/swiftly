@@ -1,4 +1,4 @@
-import { getPostsByTag } from "@/firebase/firestore/post";
+import { getPostsByTag } from "@/services/firebase/firestore/post";
 import Link from "next/link";
 import { AiFillTags } from "react-icons/ai";
 import { Post } from "@/types/Post";
@@ -42,14 +42,14 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
             {/* Post destacado (el más reciente) */}
             <div className="rounded-lg overflow-hidden bg-white/5 border border-white/10">
                 <div className="md:flex">
-                    <div className="md:w-2/5 relative">
-                        {featuredPost.coverImage ? (
+                    <div>
+                        {featuredPost.imageUrl ? (
                             <div className="relative h-64 md:h-full">
                                 <Image
-                                    src={featuredPost.coverImage}
+                                    src={featuredPost.imageUrl}
                                     alt={featuredPost.title}
-                                    fill
-                                    className="object-cover"
+                                    width={250}
+                                    height={250}
                                 />
                             </div>
                         ) : (
@@ -57,32 +57,31 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
                                 <span className="text-gray-400">Sin imagen</span>
                             </div>
                         )}
-                        <div className="absolute top-4 left-4 bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded">
-                            DESTACADO
-                        </div>
                     </div>
 
                     <div className="p-6 md:w-3/5 flex flex-col justify-between">
                         <div>
                             <div className="flex items-center mb-2 text-sm text-blue-500">
                                 <span>
-                                    {featuredPost.publishedAt
-                                        ? formatDate(featuredPost.publishedAt)
+                                    {featuredPost.createdAt
+                                        ? formatDate(featuredPost.createdAt)
                                         : "Fecha no disponible"}
                                 </span>
                                 {featuredPost.tags && featuredPost.tags.length > 0 && (
                                     <>
                                         <span className="mx-2">•</span>
                                         <span className="flex flex-wrap gap-1">
-                                            {featuredPost.tags.slice(0, 2).map((tag) => (
-                                                <Link
-                                                    key={tag}
-                                                    href={`/tags/${tag}`}
-                                                    className="hover:underline"
-                                                >
-                                                    #{tag}
-                                                </Link>
-                                            ))}
+                                            {featuredPost.tags
+                                                .filter((t) => t.toLowerCase() !== tag?.toLowerCase())
+                                                .map((tag) => (
+                                                    <Link
+                                                        key={tag}
+                                                        href={`/tags/${tag}`}
+                                                        className="hover:underline"
+                                                    >
+                                                        #{tag}
+                                                    </Link>
+                                                ))}
                                         </span>
                                     </>
                                 )}

@@ -1,10 +1,9 @@
 "use client";
 
 import React from "react";
-import PostImageHandler from "@/components/admin/PostImageHandler";
+import PostImageHandler from "@/components/admin/posts/PostImageHandler";
 import { Post } from "@/types/Post";
 import PostFeaturedImage from "@/components/post/PostFeaturedImage";
-import { getDefaultPost } from "@/utils/postUtils";
 import { HiOutlinePhotograph } from "react-icons/hi";
 import TutorialCard from "@/components/tutorials/TutorialCard";
 import { formatDate } from "@/utils/dateUtils";
@@ -12,36 +11,30 @@ import { Link } from "lucide-react";
 import Image from "next/image";
 
 interface PostImageSectionProps {
-    post: Post | undefined;
-    uploadedImages: string[];
+    post: Post;
     onSelectMainImage: (imageUrl: string) => void;
     onSelectCoverImage: (imageUrl: string) => void;
     onInsertInContent: (imageUrl: string) => void;
+    onImageDeleted: (imageUrl: string) => void;
 }
 
 const PostImageSection: React.FC<PostImageSectionProps> = ({
     post,
-    uploadedImages,
     onSelectMainImage,
     onSelectCoverImage,
     onInsertInContent,
+    onImageDeleted,
 }) => {
-    const defaultPost = getDefaultPost();
-    const previewPost = {
-        ...defaultPost,
-        ...post,
-    };
-
     return (
         <div className="space-y-4">
             <label className="block text-primary font-medium mb-2">Gestión de Imágenes</label>
 
             <PostImageHandler
-                postId={post?.id}
+                post={post}
                 onSelectMainImage={onSelectMainImage}
                 onSelectCoverImage={onSelectCoverImage}
                 onInsertInContent={onInsertInContent}
-                initialImages={uploadedImages}
+                onImageDeleted={onImageDeleted}
             />
 
             <div className="border rounded-lg p-4">
@@ -50,7 +43,7 @@ const PostImageSection: React.FC<PostImageSectionProps> = ({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Vista previa de la tarjeta */}
                     <div className="space-y-3">
-                        {previewPost.imageUrl ? (
+                        {post.imageUrl ? (
                             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
                                 <div className="p-3 border-b border-gray-100 dark:border-gray-700">
                                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -58,16 +51,16 @@ const PostImageSection: React.FC<PostImageSectionProps> = ({
                                     </label>
                                 </div>
                                 <div className="p-4">
-                                    {previewPost?.type === "article" ? (
+                                    {post?.type === "article" ? (
                                         <div
-                                            key={previewPost.id}
+                                            key={post.id}
                                             className="flex border-b border-white/10 pb-6 last:border-0"
                                         >
-                                            {previewPost.coverImage && (
+                                            {post.coverImage && (
                                                 <div className="w-1/4 mr-4 h-24 relative flex-shrink-0 rounded-md overflow-hidden">
                                                     <Image
-                                                        src={previewPost.coverImage}
-                                                        alt={previewPost.title}
+                                                        src={post.coverImage}
+                                                        alt={post.title}
                                                         fill
                                                         className="object-cover"
                                                     />
@@ -77,39 +70,39 @@ const PostImageSection: React.FC<PostImageSectionProps> = ({
                                             <div className="flex-1">
                                                 <div className="flex items-center mb-1 text-xs text-blue-500">
                                                     <span>
-                                                        {previewPost.publishedAt
-                                                            ? formatDate(previewPost.publishedAt)
+                                                        {post.publishedAt
+                                                            ? formatDate(post.publishedAt)
                                                             : "Fecha no disponible"}
                                                     </span>
-                                                    {previewPost.tags && previewPost.tags.length > 0 && (
+                                                    {post.tags && post.tags.length > 0 && (
                                                         <>
                                                             <span className="mx-2">•</span>
                                                             <span>
                                                                 <Link
-                                                                    href={`/tags/${previewPost.tags[0]}`}
+                                                                    href={`/tags/${post.tags[0]}`}
                                                                     className="hover:underline"
                                                                 >
-                                                                    #{previewPost.tags[0]}
+                                                                    #{post.tags[0]}
                                                                 </Link>
                                                             </span>
                                                         </>
                                                     )}
                                                 </div>
 
-                                                <Link href={`/posts/${previewPost.slug}`}>
+                                                <Link href={`/posts/${post.slug}`}>
                                                     <h3 className="text-lg font-semibold mb-1 hover:text-blue-500 transition-colors">
-                                                        {previewPost.title}
+                                                        {post.title}
                                                     </h3>
                                                 </Link>
 
                                                 <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-                                                    {previewPost.description || previewPost.content.substring(0, 100)}
+                                                    {post.description || post.content.substring(0, 100)}
                                                     ...
                                                 </p>
                                             </div>
                                         </div>
                                     ) : (
-                                        <TutorialCard tutorial={previewPost} />
+                                        <TutorialCard tutorial={post} />
                                     )}
                                 </div>
                             </div>
@@ -128,7 +121,7 @@ const PostImageSection: React.FC<PostImageSectionProps> = ({
 
                     {/* Imagen de Portada */}
                     <div className="space-y-3">
-                        {previewPost.imageUrl ? (
+                        {post.imageUrl ? (
                             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
                                 <div className="p-3 border-b border-gray-100 dark:border-gray-700">
                                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -137,8 +130,8 @@ const PostImageSection: React.FC<PostImageSectionProps> = ({
                                 </div>
                                 <div className="p-4">
                                     <PostFeaturedImage
-                                        image={previewPost.coverImage || ""}
-                                        title={previewPost.title}
+                                        image={post.coverImage || ""}
+                                        title={post.title}
                                     />
                                 </div>
                             </div>

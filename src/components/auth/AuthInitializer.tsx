@@ -4,8 +4,8 @@
 
 import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "@/firebase/config";
-import { getUser } from "@/firebase/firestore/user";
+import { auth } from "@/services/firebase/config";
+import { getUser } from "@/services/firebase/firestore/user";
 import { useAuthStore } from "@/store/authStore";
 
 export default function AuthInitializer({ children }: { children: React.ReactNode }) {

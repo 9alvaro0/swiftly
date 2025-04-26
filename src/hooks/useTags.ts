@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { getAllTags, getTagById, createTag, updateTag, deleteTag } from "@/firebase/firestore/tags";
+import { getAllTags, getTagById, createTag, updateTag, deleteTag } from "@/services/firebase/firestore/tags";
 import { Tag } from "@/types/Tag";
 
 interface TagsFilters {

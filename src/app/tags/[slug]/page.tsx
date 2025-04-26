@@ -20,7 +20,7 @@ export default async function TagPage(props: TagPageProps) {
             <TagBreadcrumbs tagName={slug} />
 
             <h1 className="text-3xl font-extrabold text-gray-800 dark:text-white mb-8">
-                Posts etiquetados con <span className="text-blue-600 dark:text-blue-400">#{slug}</span>
+                Posts etiquetados con <span className="text-blue-600 dark:text-blue-400">#{slug.toUpperCase()}</span>
             </h1>
 
             <Suspense

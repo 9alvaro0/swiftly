@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { Tag, FileText } from "lucide-react";
-import PostCard from "@/components/admin/PostCard";
+import PostCard from "@/components/admin/posts/PostCard";
 import { useSearchParams, useRouter } from "next/navigation";
 import { usePosts } from "@/hooks/usePosts";
 import AdminPostsSkeleton from "@/components/admin/posts/skeletons/AdminPostsSkeleton";

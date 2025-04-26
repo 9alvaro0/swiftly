@@ -1,5 +1,5 @@
 import { ref, uploadBytes, getDownloadURL, deleteObject, listAll, getMetadata } from "firebase/storage";
-import { storage } from "@/firebase/config";
+import { storage } from "@/services/firebase/config";
 
 /**
  * Sube una imagen al Firebase Storage
@@ -35,16 +35,6 @@ export const uploadImage = async (file: File, path: string): Promise<string> => 
         console.error("Error al subir imagen:", error);
         throw new Error("No se pudo subir la imagen: " + (error instanceof Error ? error.message : String(error)));
     }
-};
-
-/**
- * Obtiene la URL de descarga de una imagen
- * @param path - Ruta de la imagen en Storage
- * @returns URL de descarga
- */
-export const getImageURL = async (path: string): Promise<string> => {
-    const storageRef = ref(storage, path);
-    return await getDownloadURL(storageRef);
 };
 
 /**

@@ -45,7 +45,7 @@ export default function PostCard({ post, onPostDeleted }: Props) {
     return (
         <>
             <div
-                className="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px] relative"
+                className="border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px] relative"
                 onMouseEnter={() => setIsHovering(true)}
                 onMouseLeave={() => setIsHovering(false)}
             >

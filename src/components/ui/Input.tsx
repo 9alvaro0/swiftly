@@ -7,7 +7,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     error?: string;
     id: string;
     icon?: ReactNode;
-    onIconClick?: () => void; // Prop para manejar el click en el ícono
+    onIconClick?: () => void;
 }
 
 const Input = ({ label, error, id, icon, className = "", onIconClick, ...props }: InputProps) => {

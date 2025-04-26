@@ -8,9 +8,33 @@ export const LEVEL_OPTIONS: { value: PostLevel; label: string }[] = [
     { value: "Avanzado", label: "Avanzado" },
 ];
 
+export const LEVEL_COLORS = {
+    Principiante: {
+        color: "from-green-600 to-emerald-600",
+        hoverBorder: "hover:border-green-500/50",
+        hoverText: "group-hover:text-green-400",
+        badge: "bg-green-700/50",
+        textColor: "text-green-300",
+    },
+    Intermedio: {
+        color: "from-blue-600 to-indigo-600",
+        hoverBorder: "hover:border-blue-500/50",
+        hoverText: "group-hover:text-blue-400",
+        badge: "bg-blue-700/50",
+        textColor: "text-blue-300",
+    },
+    Avanzado: {
+        color: "from-purple-600 to-pink-600",
+        hoverBorder: "hover:border-purple-500/50",
+        hoverText: "group-hover:text-purple-400",
+        badge: "bg-purple-700/50",
+        textColor: "text-purple-300",
+    },
+};
+
 export const POST_TYPE_OPTIONS: { value: PostType; label: string }[] = [
     { value: "article", label: "Articulo" },
-    { value: "tutorial", label: "Tutorial" }
+    { value: "tutorial", label: "Tutorial" },
 ];
 
 export const CODE_SNIPPETS = [

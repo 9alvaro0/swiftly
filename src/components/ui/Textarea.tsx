@@ -33,6 +33,7 @@ const Textarea = ({ label, ref, error, id, icon, className = "", onIconClick, ..
                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400
                         transition-all duration-300 ease-in-out
                         backdrop-blur-md
+                        h-32 min-h-32 max-h-32 resize-none
                         ${icon ? "pl-10" : ""}
                         ${className}
                     `}

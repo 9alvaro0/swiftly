@@ -20,7 +20,6 @@ const PostCategorization: React.FC<PostCategorizationProps> = ({ post, onChange 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Select
                     id="level"
-                    name="level"
                     label="Nivel"
                     value={post.level || ""}
                     onChange={onChange}
@@ -29,7 +28,6 @@ const PostCategorization: React.FC<PostCategorizationProps> = ({ post, onChange 
 
                 <Select
                     id="type"
-                    name="type"
                     label="Tipo de Post"
                     value={post.type || ""}
                     onChange={onChange}

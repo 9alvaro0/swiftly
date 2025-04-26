@@ -6,7 +6,6 @@ import {
     getDoc,
     getDocs,
     setDoc,
-    updateDoc,
     deleteDoc,
     arrayUnion,
     arrayRemove,
@@ -15,26 +14,31 @@ import {
 } from "firebase/firestore";
 import { Post } from "@/types/Post";
 import { db } from "../config";
-import { convertDatesToTimestamps, convertTimestampsToDates } from "@/firebase/utils/utils";
+import { convertDatesToTimestamps, convertTimestampsToDates } from "@/services/firebase/utils/utils";
 
 // Colección de Firestore
 const postsCollection = collection(db, "posts");
 
-// Crear un post
-export const createPost = async (post: Post): Promise<void> => {
-    const postWithTimestamps = convertDatesToTimestamps(post);
-    await setDoc(doc(postsCollection, post.id), postWithTimestamps);
+// Obtener un post por ID
+export const getPostById = async (id: string): Promise<Post | undefined> => {
+    const postRef = doc(postsCollection, id);
+    const postDoc = await getDoc(postRef);
+    if (postDoc.exists()) {
+        const postData = convertTimestampsToDates(postDoc.data());
+        return postData as Post;
+    }
+    return undefined;
 };
 
 // Obtener un post por slug
-export const getPostBySlug = async (slug: string): Promise<Post | null> => {
+export const getPostBySlug = async (slug: string): Promise<Post | undefined> => {
     const snapshot = await getDocs(postsCollection);
     const postDoc = snapshot.docs.find((doc) => doc.data().slug === slug);
     if (postDoc) {
         const postData = convertTimestampsToDates(postDoc.data());
         return postData as Post;
     }
-    return null;
+    return undefined;
 };
 
 // Obtener posts por tags
@@ -55,6 +59,7 @@ export const getPostsByTag = async (tag: string): Promise<Post[]> => {
 export const getAllPosts = async (): Promise<Post[]> => {
     const snapshot = await getDocs(postsCollection);
     return snapshot.docs.map((doc) => {
+        console.log("doc.data()", doc.data());
         const postData = convertTimestampsToDates(doc.data());
         return postData as Post;
     });
@@ -93,14 +98,28 @@ export const getAllPublishedPosts = async (
         });
 };
 
-// Actualizar un post
-export const updatePost = async (id: string, updatedFields: Partial<Post>): Promise<void> => {
-    const updatedData = convertDatesToTimestamps({
-        ...updatedFields,
-        updatedAt: new Date(),
-    });
+// Crea o actualiza un post
+export const createOrUpdatePost = async (id: string, updatedFields: Partial<Post>): Promise<void> => {
+    const existingPost = await getPostById(id);
 
-    await updateDoc(doc(postsCollection, id), updatedData);
+    let post;
+    if (existingPost) {
+        post = {
+            ...existingPost,
+            ...updatedFields,
+            updatedAt: new Date(),
+        };
+    } else {
+        post = {
+            id,
+            createdAt: new Date(),
+            ...updatedFields,
+            updatedAt: new Date(),
+        };
+    }
+
+    const processedData = convertDatesToTimestamps(post);
+    await setDoc(doc(postsCollection, id), processedData);
 };
 
 // Eliminar un post

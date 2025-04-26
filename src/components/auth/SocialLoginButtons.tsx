@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { loginWithGithub } from "@/firebase/auth/auth";
-import { handleFirebaseError } from "@/firebase/errors";
+import { loginWithGithub } from "@/services/firebase/auth/auth";
+import { handleFirebaseError } from "@/services/firebase/errors";
 import { FaGithub, FaGoogle, FaApple } from "react-icons/fa";
 import { toast } from "sonner";
 import Spinner from "@/components/ui/Spinner";

@@ -1,8 +1,7 @@
 /**
  * Utilidades para manejo de imágenes relacionadas a publicaciones
  */
-import { v4 as uuidv4 } from "uuid";
-import { deleteImage } from "@/firebase/storage/image";
+import { deleteImage } from "@/services/firebase/storage/image";
 import { extractImagePathFromUrl } from "./imageUtils";
 
 /**
@@ -11,8 +10,7 @@ import { extractImagePathFromUrl } from "./imageUtils";
  * @param postId - ID de la publicación (opcional, genera uno temporal si no se provee)
  * @returns Ruta formateada para Storage (ej. "posts/post123/1678901234567-filename.jpg")
  */
-export const generatePostImagePath = (fileName: string, postId?: string): string => {
-    const id = postId || `temp-${uuidv4()}`;
+export const generatePostImagePath = (fileName: string, postId: string): string => {
     const timestamp = Date.now();
     
     const safeFileName = fileName
@@ -20,7 +18,7 @@ export const generatePostImagePath = (fileName: string, postId?: string): string
         .replace(/\s+/g, "-")
         .replace(/[^\w\-.]/g, "");
         
-    return `posts/${id}/${timestamp}-${safeFileName}`;
+    return `posts/${postId}/${timestamp}-${safeFileName}`;
 };
 
 /**

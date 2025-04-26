@@ -5,9 +5,10 @@ interface SectionHeaderProps {
     link: string;
     subtitle?: string;
     accentColor?: "blue" | "purple" | "emerald" | "amber";
+    hasData?: boolean;
 }
 
-export default function SectionHeader({ title, link, subtitle, accentColor = "blue" }: SectionHeaderProps) {
+export default function SectionHeader({ title, link, subtitle, accentColor = "blue", hasData: hasPosts }: SectionHeaderProps) {
     const accentColors = {
         blue: "from-blue-500/20 to-blue-400/5 border-blue-500/30 text-blue-400 hover:text-blue-300",
         purple: "from-purple-500/20 to-purple-400/5 border-purple-500/30 text-purple-400 hover:text-purple-300",
@@ -27,10 +28,12 @@ export default function SectionHeader({ title, link, subtitle, accentColor = "bl
                 </div>
             </div>
 
-            <SeeAllButton
-                link={link}
-                selectedAccent={selectedAccent}
-            />
+            {hasPosts && (
+                <SeeAllButton
+                    link={link}
+                    selectedAccent={selectedAccent}
+                />
+            )}
         </div>
     );
 }

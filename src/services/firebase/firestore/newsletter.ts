@@ -1,5 +1,5 @@
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { db } from "@/firebase/config";
+import { db } from "@/services/firebase/config";
 
 // 1. Servicio básico para suscripciones
 export const newsletterService = {

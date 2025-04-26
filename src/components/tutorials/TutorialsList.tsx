@@ -2,7 +2,7 @@
 
 import TutorialCard from "@/components/tutorials/TutorialCard";
 import Pagination from "@/components/ui/Pagination";
-import { getAllPublishedPosts } from "@/firebase/firestore/post";
+import { getAllPublishedPosts } from "@/services/firebase/firestore/post";
 
 export default async function TutorialsList({
     searchTerm,
@@ -16,7 +16,6 @@ export default async function TutorialsList({
     const itemsPerPage = 9;
 
     const tutorials = await getAllPublishedPosts(searchTerm, level, "tutorial");
-    // const tutorials = await getAllPosts();
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;

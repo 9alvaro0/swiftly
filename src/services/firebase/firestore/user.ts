@@ -17,7 +17,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../config";
 import { User } from "@/types/User";
-import { convertDatesToTimestamps, convertTimestampsToDates } from "@/firebase/utils/utils";
+import { convertDatesToTimestamps, convertTimestampsToDates } from "@/services/firebase/utils/utils";
 import { UserProfile } from "firebase/auth";
 
 // Colección de Firestore

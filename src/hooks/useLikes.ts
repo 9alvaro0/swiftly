@@ -1,10 +1,9 @@
 // src/hooks/useLikes.ts
 import { useState, useEffect, useCallback, useRef } from "react";
-import { hasUserLikedPost, togglePostLike } from "@/firebase/firestore/post";
+import { hasUserLikedPost, togglePostLike } from "@/services/firebase/firestore/post";
 import { Post } from "@/types/Post";
 import { User } from "@/types/User";
-import { toast } from "sonner";
-import { saveUser } from "@/firebase/firestore/user";
+import { saveUser } from "@/services/firebase/firestore/user";
 
 interface UseLikesResult {
     isLiked: boolean;
@@ -12,7 +11,6 @@ interface UseLikesResult {
     isLoading: boolean;
     error: string | null;
     toggleLike: () => Promise<void>;
-    checkLikeStatus: () => Promise<void>;
 }
 
 /**
@@ -89,20 +87,17 @@ export function useLikes(post: Post, currentUser: User | null): UseLikesResult {
                 ? [...(currentUser.stats?.likes || []), post.id]
                 : (currentUser.stats?.likes || []).filter((likedPostId) => likedPostId !== post.id);
 
-            await saveUser({ 
-                ...currentUser, 
-                stats: { 
-                    ...currentUser.stats, 
-                    likes: updatedLikedPosts, 
-                    viewsCount: currentUser.stats?.viewsCount ?? 0 
-                } 
+            await saveUser({
+                ...currentUser,
+                stats: {
+                    ...currentUser.stats,
+                    likes: updatedLikedPosts,
+                    viewsCount: currentUser.stats?.viewsCount ?? 0,
+                },
             });
-
-            toast.success(newLikedState ? "Te gusta este post" : "Has quitado tu like");
         } catch {
             setIsLiked(previousLikedState);
             setLikesCount(previousLikesCount);
-            toast.error("No se pudo cambiar el estado del like");
             setError("No se pudo cambiar el estado del like");
         } finally {
             setIsLoading(false);
@@ -114,7 +109,6 @@ export function useLikes(post: Post, currentUser: User | null): UseLikesResult {
         likesCount,
         isLoading,
         error,
-        toggleLike,
-        checkLikeStatus,
+        toggleLike
     };
 }

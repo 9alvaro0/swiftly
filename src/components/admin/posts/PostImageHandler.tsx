@@ -1,32 +1,51 @@
+// src/components/admin/posts/PostImageHandler.tsx
+
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "@/components/ui/Button";
 import { Upload, AlertCircle } from "lucide-react";
 import { useImages } from "@/hooks/useImages";
 import { deletePostImageByUrl, generatePostImagePath } from "@/utils/postImageUtils";
 import Image from "next/image";
+import { Post } from "@/types/Post";
 
 interface PostImageHandlerProps {
-    postId?: string;
-    onSelectMainImage?: (imageUrl: string) => void;
-    onSelectCoverImage?: (imageUrl: string) => void;
-    onInsertInContent?: (imageUrl: string) => void;
-    initialImages?: string[];
+    post: Post;
+    onSelectMainImage: (imageUrl: string) => void;
+    onSelectCoverImage: (imageUrl: string) => void;
+    onInsertInContent: (imageUrl: string) => void;
+    onImageDeleted: (imageUrl: string) => void;
 }
 
-const PostImageHandler: React.FC<PostImageHandlerProps> = ({
-    postId,
+export default function PostImageHandler({
+    post,
     onSelectMainImage,
     onSelectCoverImage,
     onInsertInContent,
-    initialImages = [],
-}) => {
-    const { uploadOrUpdate, loading, error } = useImages();
-    const [uploadedImages, setUploadedImages] = useState<string[]>(initialImages);
+    onImageDeleted,
+}: PostImageHandlerProps) {
+    const { uploadOrUpdate, loading, error, list } = useImages();
+    const [uploadedImages, setUploadedImages] = useState<string[]>([]);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
     const [uploadProgress, setUploadProgress] = useState<boolean>(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Cargar imágenes del post cuando cambie
+    useEffect(() => {
+        const loadImages = async () => {
+            if (post.id) {
+                try {
+                    const images = [...(post.images || [])];
+                    setUploadedImages(images);
+                } catch (error) {
+                    console.error("Error al cargar imágenes:", error);
+                }
+            }
+        };
+
+        loadImages();
+    }, [post.id, post.images, post.imageUrl, post.coverImage, list]);
 
     const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -34,10 +53,12 @@ const PostImageHandler: React.FC<PostImageHandlerProps> = ({
 
         setUploadProgress(true);
         try {
-            const path = generatePostImagePath(file.name, postId);
+            const path = generatePostImagePath(file.name, post.id);
             const imageUrl = await uploadOrUpdate(file, path);
+
             if (!uploadedImages.includes(imageUrl)) {
-                setUploadedImages((prev) => [...prev, imageUrl]);
+                const newImages = [...uploadedImages, imageUrl];
+                setUploadedImages(newImages);
             }
         } catch (error) {
             console.error("Error subiendo imagen:", error);
@@ -61,7 +82,9 @@ const PostImageHandler: React.FC<PostImageHandlerProps> = ({
             const success = await deletePostImageByUrl(imageUrl);
 
             if (success) {
-                setUploadedImages((prev) => prev.filter((url) => url !== imageUrl));
+                const newImages = uploadedImages.filter((url) => url !== imageUrl);
+                setUploadedImages(newImages);
+                onImageDeleted(imageUrl);
             }
         } catch (error) {
             console.error("Error eliminando imagen:", error);
@@ -71,15 +94,11 @@ const PostImageHandler: React.FC<PostImageHandlerProps> = ({
     };
 
     const handleUseAsMainImage = (imageUrl: string) => {
-        if (onSelectMainImage) {
-            onSelectMainImage(imageUrl);
-        }
+        onSelectMainImage(imageUrl);
     };
 
     const handleUseAsCoverImage = (imageUrl: string) => {
-        if (onSelectCoverImage) {
-            onSelectCoverImage(imageUrl);
-        }
+        onSelectCoverImage(imageUrl);
     };
 
     return (
@@ -128,7 +147,7 @@ const PostImageHandler: React.FC<PostImageHandlerProps> = ({
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                             {uploadedImages.map((imageUrl, index) => (
                                 <div
-                                    key={index}
+                                    key={`${imageUrl}-${index}`}
                                     className="relative group border rounded-md overflow-hidden"
                                 >
                                     {/* Imagen */}
@@ -148,42 +167,32 @@ const PostImageHandler: React.FC<PostImageHandlerProps> = ({
                                         flex flex-col items-center justify-center gap-2 transition-opacity"
                                     >
                                         <div className="flex gap-2 mb-2">
-                                            {/* Botón para usar como imagen principal */}
-                                            {onSelectMainImage && (
-                                                <button
-                                                    type="button"
-                                                    onClick={() => handleUseAsMainImage(imageUrl)}
-                                                    className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded"
-                                                >
-                                                    Imagen Principal
-                                                </button>
-                                            )}
+                                            <button
+                                                type="button"
+                                                onClick={() => handleUseAsMainImage(imageUrl)}
+                                                className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded"
+                                            >
+                                                Imagen Principal
+                                            </button>
 
-                                            {/* Botón para usar como imagen de portada */}
-                                            {onSelectCoverImage && (
-                                                <button
-                                                    type="button"
-                                                    onClick={() => handleUseAsCoverImage(imageUrl)}
-                                                    className="bg-purple-500 hover:bg-purple-600 text-white px-2 py-1 text-xs rounded"
-                                                >
-                                                    Portada
-                                                </button>
-                                            )}
+                                            <button
+                                                type="button"
+                                                onClick={() => handleUseAsCoverImage(imageUrl)}
+                                                className="bg-purple-500 hover:bg-purple-600 text-white px-2 py-1 text-xs rounded"
+                                            >
+                                                Portada
+                                            </button>
                                         </div>
 
                                         <div className="flex gap-2">
-                                            {/* Botón para insertar en contenido */}
-                                            {onInsertInContent && (
-                                                <button
-                                                    type="button"
-                                                    onClick={() => onInsertInContent(imageUrl)}
-                                                    className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 text-xs rounded"
-                                                >
-                                                    Insertar
-                                                </button>
-                                            )}
+                                            <button
+                                                type="button"
+                                                onClick={() => onInsertInContent(imageUrl)}
+                                                className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 text-xs rounded"
+                                            >
+                                                Insertar
+                                            </button>
 
-                                            {/* Botón para eliminar */}
                                             <button
                                                 type="button"
                                                 onClick={() => handleDeleteImage(imageUrl)}
@@ -202,6 +211,4 @@ const PostImageHandler: React.FC<PostImageHandlerProps> = ({
             </div>
         </div>
     );
-};
-
-export default PostImageHandler;
+}

@@ -4,7 +4,7 @@ import { useState, useEffect, FormEvent } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { Tag } from "@/types/Tag";
-import { createTag, updateTag, getTagById } from "@/firebase/firestore/tags";
+import { createTag, updateTag, getTagById } from "@/services/firebase/firestore/tags";
 import Input from "@/components/ui/Input";
 import { revalidateTagsPath } from "@/actions/revalidateTagsPath";
 

@@ -4,8 +4,8 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { User } from "@/types/User";
 import { toast } from "sonner";
-import { logout } from "@/firebase/auth/auth";
-import { incrementUserStat, updateSocialLinks, updateUser } from "@/firebase/firestore/user";
+import { logout } from "@/services/firebase/auth/auth";
+import { incrementUserStat, updateSocialLinks, updateUser } from "@/services/firebase/firestore/user";
 
 interface AuthState {
     isAuthenticated: boolean;

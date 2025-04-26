@@ -7,7 +7,7 @@ export default function AdminPostsSkeleton() {
             {skeletonCards.map((item) => (
                 <div
                     key={item}
-                    className="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-sm overflow-hidden animate-pulse"
+                    className="border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-sm overflow-hidden animate-pulse"
                 >
                     <div className="p-5">
                         {/* Title and status badge */}

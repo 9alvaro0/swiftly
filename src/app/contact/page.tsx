@@ -10,7 +10,7 @@ import Textarea from "@/components/ui/Textarea";
 import useContactForm from "@/hooks/useContactForm";
 
 export default function ContactPage() {
-    const { formState, errors, isSubmitting, isSubmitted, handleChange, handleSubmit } = useContactForm();
+    const { formState, errors, isSubmitting, isSubmitted, submitError, handleChange, handleSubmit } = useContactForm();
 
     return (
         <div className="container mx-auto py-16 px-4 sm:px-6 lg:px-8">
@@ -26,7 +26,7 @@ export default function ContactPage() {
                 <div className="bg-card rounded-lg shadow-apple-md p-8">
                     {!isSubmitted ? (
                         <form
-                            onSubmit={handleSubmit()}
+                            onSubmit={handleSubmit}  
                             className="space-y-2"
                         >
                             <Input
@@ -37,19 +37,16 @@ export default function ContactPage() {
                                 placeholder="Tu nombre"
                                 error={errors.name}
                                 className="bg-surface text-primary"
-                                required
                             />
 
                             <Input
                                 id="email"
                                 label="Correo electrónico"
-                                type="email"
                                 value={formState.email}
                                 onChange={handleChange}
                                 placeholder="tucorreo@ejemplo.com"
                                 error={errors.email}
                                 className="bg-surface text-primary"
-                                required
                             />
 
                             <Textarea
@@ -61,7 +58,6 @@ export default function ContactPage() {
                                 placeholder="Escribe tu mensaje aquí..."
                                 error={errors.message}
                                 className="bg-surface text-primary resize-none"
-                                required
                             />
 
                             <div className="pt-6">
@@ -92,6 +88,12 @@ export default function ContactPage() {
                             <p className="text-secondary">
                                 Gracias por contactarnos. Te responderemos lo antes posible.
                             </p>
+                        </div>
+                    )}
+
+                    {submitError && (
+                        <div className="mt-4 text-red-500 text-center">
+                            <p>{submitError}</p>
                         </div>
                     )}
                 </div>

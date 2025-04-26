@@ -1,4 +1,5 @@
 // src/components/home/NewsletterSignup.tsx
+
 "use client";
 
 import { useNewsletterSignup } from "@/hooks/useNewsletterSignup";
@@ -27,7 +28,6 @@ export default function NewsletterSignup() {
                                 id="email"
                                 placeholder="Tu correo electrónico"
                                 icon={<FiMail />}
-                                type="email"
                                 value={email}
                                 onChange={handleEmailChange}
                                 disabled={isLoading}

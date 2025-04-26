@@ -4,7 +4,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { Post, PostLevel, PostType } from "@/types/Post";
 import { PostStats } from "@/types/PostStats";
-import { getAllPosts, getAllPublishedPosts } from "@/firebase/firestore/post";
+import { getAllPosts } from "@/services/firebase/firestore/post";
 
 interface PostFilters {
     level?: string;
@@ -24,6 +24,7 @@ export function usePosts(initialFilters: PostFilters = {}) {
         setError(null);
 
         const fetchedPosts = await getAllPosts();
+        console.log("Fetched posts:", fetchedPosts);
         setPosts(fetchedPosts);
 
         setIsLoading(false);
@@ -32,16 +33,6 @@ export function usePosts(initialFilters: PostFilters = {}) {
     useEffect(() => {
         loadAllPosts();
     }, [loadAllPosts]);
-
-    const loadPublishedPosts = useCallback(async () => {
-        setIsLoading(true);
-        setError(null);
-
-        const fetchedPosts = await getAllPublishedPosts();
-        setPosts(fetchedPosts);
-
-        setIsLoading(false);
-    }, []);
 
     const filteredPosts = useMemo(() => {
         return posts.filter((post) => {
@@ -222,6 +213,7 @@ export function usePosts(initialFilters: PostFilters = {}) {
             topAuthor,
         };
     }, [posts, filteredPosts]);
+    
     const updateFilters = useCallback((newFilters: Partial<PostFilters>) => {
         setFilters((prev) => ({ ...prev, ...newFilters }));
     }, []);
@@ -240,6 +232,5 @@ export function usePosts(initialFilters: PostFilters = {}) {
         updateFilters,
         resetFilters,
         refetch: loadAllPosts,
-        loadPublishedPosts,
     };
 }

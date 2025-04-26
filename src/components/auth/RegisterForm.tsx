@@ -2,8 +2,8 @@
 
 "use client";
 
-import { registerWithEmailAndPassword } from "@/firebase/auth/auth";
-import { handleFirebaseError } from "@/firebase/errors";
+import { registerWithEmailAndPassword } from "@/services/firebase/auth/auth";
+import { handleFirebaseError } from "@/services/firebase/errors";
 import { useState } from "react";
 import Spinner from "@/components/ui/Spinner";
 import Input from "../ui/Input";

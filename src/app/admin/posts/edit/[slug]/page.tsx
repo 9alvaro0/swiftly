@@ -3,9 +3,10 @@
 "use client";
 
 import { useEffect } from "react";
-import PostForm from "@/components/admin/PostForm";
-import { notFound, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { usePost } from "@/hooks/usePost";
+import PostForm from "@/components/admin/posts/PostForm";
+import Spinner from "@/components/ui/Spinner";
 
 export default function EditTutorialPage() {
     const routeParams = useParams();
@@ -19,19 +20,17 @@ export default function EditTutorialPage() {
     }, [error]);
 
     if (isLoading) {
-        return <div className="p-8">Cargando...</div>;
+        return (
+            <div className="p-8">
+                <Spinner />
+            </div>
+        );
     }
 
-    if (!post && !isLoading) {
-        notFound();
-    }
     return (
         <div className="p-8">
             <h1 className="text-2xl font-bold mb-6">Editar Post</h1>
-            <PostForm
-                isEdit
-                initialData={post!}
-            />
+            <PostForm selectedPost={post} />
         </div>
     );
 }
