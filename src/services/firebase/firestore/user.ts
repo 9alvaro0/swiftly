@@ -12,8 +12,8 @@ import {
     where,
     limit,
     orderBy,
-    increment,
     Timestamp,
+    arrayUnion,
 } from "firebase/firestore";
 import { db } from "../config";
 import { User } from "@/types/User";
@@ -61,8 +61,8 @@ export const createUserProfile = async (
         isActive: true,
         isBanned: false,
         stats: {
+            views: [],
             likes: [],
-            viewsCount: 0,
         },
         socialLinks,
     };
@@ -137,13 +137,9 @@ export const updateSocialLinks = async (
 };
 
 // Incrementar una estadística específica del usuario
-export const incrementUserStat = async (
-    uid: string,
-    stat: keyof UserProfile["stats"],
-    value: number = 1
-): Promise<void> => {
+export const incrementUserStat = async (uid: string, stat: keyof User["stats"], value: string): Promise<void> => {
     await updateDoc(doc(usersCollection, uid), {
-        [`stats.${stat}`]: increment(value),
+        [stat]: arrayUnion(value),
         updatedAt: Timestamp.fromDate(new Date()),
     });
 };

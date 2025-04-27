@@ -2,8 +2,6 @@
 
 **Swiftly** es una plataforma moderna para publicar y descubrir posts y tutoriales sobre **Swift** y **SwiftUI**. Diseñada para desarrolladores iOS, esta app permite compartir conocimiento de forma rápida, elegante y estructurada.
 
-![Swiftly Banner](./public/swiftly-banner.png) <!-- Opcional: añade un banner ilustrativo -->
-
 ---
 
 ## 🧠 Tecnologías

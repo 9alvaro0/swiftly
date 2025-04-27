@@ -56,6 +56,7 @@ export const getPostsByTag = async (tag: string): Promise<Post[]> => {
 };
 
 // Obtener todos los posts
+
 export const getAllPosts = async (): Promise<Post[]> => {
     const snapshot = await getDocs(postsCollection);
     return snapshot.docs.map((doc) => {
@@ -66,28 +67,27 @@ export const getAllPosts = async (): Promise<Post[]> => {
 };
 
 // Obtener todos los posts publicados
-export const getAllPublishedPosts = async (
-    searchTerm: string = "",
-    level: string = "",
-    type: string = ""
-): Promise<Post[]> => {
+interface PostFilters {
+    searchTerm?: string;
+    level?: string;
+    type?: string;
+}
+
+export const getAllPublishedPosts = async (filters: PostFilters): Promise<Post[]> => {
+    const { searchTerm = "", level = "", type = "" } = filters;
     const snapshot = await getDocs(postsCollection);
 
     return snapshot.docs
         .filter((doc) => {
             const data = doc.data() as Post;
-            // Only filter published posts
             if (data.isPublished !== true) return false;
 
-            // Case-insensitive search
             if (searchTerm && !data.title.toLowerCase().includes(searchTerm.toLowerCase())) {
                 return false;
             }
 
-            // Optional level filter
             if (level && data.level !== level) return false;
 
-            // Optional type filter
             if (type && data.type !== type) return false;
 
             return true;

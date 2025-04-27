@@ -92,7 +92,7 @@ export function useLikes(post: Post, currentUser: User | null): UseLikesResult {
                 stats: {
                     ...currentUser.stats,
                     likes: updatedLikedPosts,
-                    viewsCount: currentUser.stats?.viewsCount ?? 0,
+                    views: currentUser.stats?.views ?? 0,
                 },
             });
         } catch {

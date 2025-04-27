@@ -29,14 +29,16 @@ export interface User {
     isBanned: boolean;
 
     // Estadísticas
-    stats?: {
-        likes: string[];
-        viewsCount: number;
-    };
+    stats: UserStats;
 
     // Social
     socialLinks?: {
         linkedin?: string;
         github?: string;
     };
+}
+
+export interface UserStats {
+    views: string[];
+    likes: string[];
 }

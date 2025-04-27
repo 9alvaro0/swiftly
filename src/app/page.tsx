@@ -13,9 +13,13 @@ export default async function Home() {
         <main className="mb-16">
             <HeroSection />
 
+            <div className="my-8 h-px bg-gradient-to-r from-blue-500 to-indigo-500 opacity-20"></div>
+
             <Suspense fallback={<FeaturedTutorialsSkeleton />}>
                 <FeaturedTutorials />
             </Suspense>
+
+            <div className="my-8 h-px bg-gradient-to-r from-blue-500 to-indigo-500 opacity-20"></div>
 
             <Suspense fallback={<LatestPostsSkeleton />}>
                 <LatestPosts />

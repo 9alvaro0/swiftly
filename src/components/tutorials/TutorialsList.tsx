@@ -15,7 +15,7 @@ export default async function TutorialsList({
 }) {
     const itemsPerPage = 9;
 
-    const tutorials = await getAllPublishedPosts(searchTerm, level, "tutorial");
+    const tutorials = await getAllPublishedPosts({ searchTerm, level, type: "tutorial" });
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -35,7 +35,7 @@ export default async function TutorialsList({
                 Mostrando {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, tutorials.length)} de {tutorials.length}{" "}
                 tutoriales
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {currentTutorials.map((tutorial) => (
                     <TutorialCard
                         key={tutorial.slug}

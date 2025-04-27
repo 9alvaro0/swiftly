@@ -1,7 +1,6 @@
 /**
  * Utilidades para gestión de imágenes de usuario en Firebase Storage
  */
-import { v4 as uuidv4 } from "uuid";
 import { deleteImage } from "@/services/firebase/storage/image";
 import { extractImagePathFromUrl } from "./imageUtils";
 
@@ -11,18 +10,20 @@ import { extractImagePathFromUrl } from "./imageUtils";
  * @param userId - ID del usuario (si no se provee, genera uno temporal)
  * @returns Ruta completa para almacenamiento (ej. "users/user123/1678901234567-foto-perfil.jpg")
  */
-export const generateUserImagePath = (fileName: string, userId: string): string => {
-    const id = userId || `temp-${uuidv4()}`;
+// src/utils/userImageUtils.ts
+
+export const generateUserImagePath = (userId: string, fileName: string): string => {
     const timestamp = Date.now();
 
     const safeFileName = fileName
         .toLowerCase()
-        .normalize("NFD") // Normaliza caracteres acentuados
-        .replace(/[\u0300-\u036f]/g, "") // Elimina diacríticos
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
         .replace(/\s+/g, "-")
         .replace(/[^\w\-.]/g, "");
 
-    return `users/${id}/${timestamp}-${safeFileName}`;
+    console.log("Path generado:", `users/${userId}/${timestamp}-${safeFileName}`);
+    return `users/${userId}/${timestamp}-${safeFileName}`;
 };
 
 /**
@@ -39,7 +40,6 @@ export const deleteUserImageByUrl = async (imageUrl: string): Promise<boolean> =
         return false;
     }
 
-    // Verificar que la ruta pertenece a la carpeta de usuarios por seguridad
     if (!path.startsWith("users/")) {
         console.error("Intento de eliminar imagen fuera del directorio de usuarios");
         return false;

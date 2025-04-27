@@ -16,7 +16,7 @@ export default async function PostsList({
 }) {
     const POSTS_PER_PAGE = 9;
 
-    const posts = await getAllPublishedPosts(searchTerm, level, "article");
+    const posts = await getAllPublishedPosts({ searchTerm, level, type: "article" });
 
     const indexOfLastItem = currentPage * POSTS_PER_PAGE;
     const indexOfFirstItem = indexOfLastItem - POSTS_PER_PAGE;

@@ -1,28 +1,19 @@
 "use client";
 
-import React, { ReactNode, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Modal from "@/components/ui/Modal";
-import {
-    Upload as UploadIcon,
-    Camera as CameraIcon,
-    Trash2 as TrashIcon,
-    AlertCircle as AlertCircleIcon,
-} from "lucide-react";
+import { Upload as UploadIcon, Camera as CameraIcon, AlertCircle as AlertCircleIcon } from "lucide-react";
 
 interface EditProfileImageProps {
     isOpen: boolean;
-    userId: string;
     initialImage?: string;
     uploadProgress: number;
     isUploading: boolean;
     uploadError: string | null;
     imagePreview: string | null;
     onClose: () => void;
-    onSave: () => void;
     onUploadImage: (file: File) => Promise<void>;
-    onDeleteImage: (url: string) => Promise<void>;
-    footer: ReactNode;
 }
 
 export default function EditProfileImage({
@@ -34,11 +25,8 @@ export default function EditProfileImage({
     imagePreview,
     onClose,
     onUploadImage,
-    onDeleteImage,
-    footer,
 }: EditProfileImageProps) {
     const [isDragging, setIsDragging] = useState<boolean>(false);
-    const [isDeleting, setIsDeleting] = useState<boolean>(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Mostrar imagen actual (preview o inicial)
@@ -79,23 +67,11 @@ export default function EditProfileImage({
         fileInputRef.current?.click();
     };
 
-    const handleDeleteImage = async () => {
-        if (currentImage) {
-            setIsDeleting(true);
-            try {
-                await onDeleteImage(currentImage);
-            } finally {
-                setIsDeleting(false);
-            }
-        }
-    };
-
     return (
         <Modal
             isOpen={isOpen}
             onClose={onClose}
             title="Cambiar foto de perfil"
-            footer={footer}
         >
             <div className="w-full py-4 space-y-6">
                 {uploadError && (
@@ -160,8 +136,8 @@ export default function EditProfileImage({
                     </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex justify-center space-x-3">
+                {/* Action Button */}
+                <div className="flex justify-center">
                     <input
                         type="file"
                         ref={fileInputRef}
@@ -192,18 +168,6 @@ export default function EditProfileImage({
                             </>
                         )}
                     </button>
-
-                    {currentImage && (
-                        <button
-                            type="button"
-                            onClick={handleDeleteImage}
-                            disabled={isUploading || isDeleting}
-                            className="px-4 py-2 rounded-lg text-sm font-medium bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:text-red-400 flex items-center gap-2 transition-colors duration-200 disabled:opacity-50"
-                        >
-                            <TrashIcon className="h-4 w-4" />
-                            {isDeleting ? "Eliminando..." : "Eliminar"}
-                        </button>
-                    )}
                 </div>
 
                 <p className="text-xs text-center text-gray-500">Formatos permitidos: JPG, PNG, GIF, WEBP</p>

@@ -7,7 +7,7 @@ import { FiBookOpen, FiFileText } from "react-icons/fi";
 
 export default async function LatestPosts() {
     // Cambiar tutorial por post cuando hayan posts y limitar a 4
-    const posts = await getAllPublishedPosts("article");
+    const posts = await getAllPublishedPosts({ type: "article" });
     const hasPosts = posts && posts.length > 0;
 
     return (

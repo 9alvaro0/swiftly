@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { incrementPostViews } from "@/services/firebase/firestore/post";
+import { incrementUserStat } from "@/services/firebase/firestore/user";
+import { useAuthStore } from "@/store/authStore";
 
 /**
  * Hook para gestionar y actualizar las vistas de un post
@@ -8,6 +10,7 @@ import { incrementPostViews } from "@/services/firebase/firestore/post";
  * @returns Un objeto con el número de vistas y el estado de carga
  */
 export function usePostViews(postId: string, initialViews: number = 0) {
+    const { user } = useAuthStore();
     const [views, setViews] = useState<number>(initialViews);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -29,6 +32,9 @@ export function usePostViews(postId: string, initialViews: number = 0) {
                 const result = await incrementPostViews(postId);
                 setViews(result.views);
 
+                // anadir visualizacion al user
+                if (!user) return;
+                incrementUserStat(user.uid, "views", postId);
                 sessionStorage.setItem("viewedPosts", JSON.stringify([...viewedPosts, postId]));
 
                 console.log("Vista registrada:", result.views);
@@ -41,7 +47,7 @@ export function usePostViews(postId: string, initialViews: number = 0) {
         };
 
         registerView();
-    }, [postId]);
+    }, [postId, user]);
 
     return { views, loading, error };
 }

@@ -1,122 +1,57 @@
 import SectionHeader from "../ui/SectionHeader";
-import TutorialCard from "../tutorials/TutorialCard";
 import { getAllPublishedPosts } from "@/services/firebase/firestore/post";
 import { FiBookOpen } from "react-icons/fi";
+import TutorialCard from "../tutorials/TutorialCard";
 
 export default async function FeaturedTutorials() {
-    const tutorials = await getAllPublishedPosts("tutorial");
+    const tutorials = await getAllPublishedPosts({ type: "tutorial" });
     const hasTutorials = tutorials && tutorials.length > 0;
 
     return (
-        <section className="py-4 relative">
-            {/* Decorativo: Gradient Backdrop - Más notable */}
-            <div className="absolute inset-0 bg-gradient-to-b from-blue-900/20 via-indigo-900/15 to-transparent pointer-events-none"></div>
-
-            {/* Decorative elements */}
-            <div className="absolute top-20 left-10 w-32 h-32 bg-blue-600/10 rounded-full filter blur-3xl"></div>
-            <div className="absolute bottom-10 right-10 w-40 h-40 bg-indigo-700/10 rounded-full filter blur-3xl"></div>
-
-            <div className="container mx-auto px-4 relative">
+        <section className="relative py-4 overflow-hidden">
+            <div className="relative container mx-auto px-4">
                 <SectionHeader
                     title="Tutoriales destacados"
                     link="/tutorials"
                     accentColor="blue"
-                    subtitle="Aprende nuevas habilidades con nuestros tutoriales más populares y descubre cómo mejorar tus conocimientos de desarrollo."
+                    subtitle="Aprende habilidades con nuestros mejores tutoriales y lleva tu desarrollo al siguiente nivel."
                     hasData={hasTutorials}
                 />
 
                 {hasTutorials ? (
-                    <div>
-                        {tutorials.length === 1 ? (
-                            // Diseño para un solo tutorial
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                                <div className="lg:col-span-2">
-                                    <div className="transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                                        <TutorialCard tutorial={tutorials[0]} />
-                                    </div>
-                                </div>
-                            </div>
-                        ) : (
-                            // Diseño para múltiples tutoriales (conservado para cuando tengas más)
-                            <div>
-                                {/* Featured tutorial - destacado */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                    {tutorials.slice(1, 4).map((tutorial) => (
-                                        <div
-                                            key={tutorial.id}
-                                            className="transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-                                        >
-                                            <TutorialCard tutorial={tutorial} />
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
+                    <div className="grid gap-8 mt-10">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                            {tutorials.map((tutorial) => (
+                                <TutorialCard
+                                    key={tutorial.id}
+                                    tutorial={tutorial}
+                                />
+                            ))}
+                        </div>
                     </div>
                 ) : (
-                    <div className="bg-white/5 p-8 rounded-lg border border-white/10 mx-auto">
-                        <div className="absolute inset-0 opacity-10">
-                            <div className="absolute top-0 left-0 w-64 h-64 bg-blue-500 rounded-full filter blur-3xl"></div>
-                            <div className="absolute bottom-0 right-0 w-64 h-64 bg-indigo-500 rounded-full filter blur-3xl"></div>
-                        </div>
+                    <div className="relative bg-white/5 border border-white/10 p-12 rounded-2xl shadow-lg text-center mt-10">
+                        <FiBookOpen
+                            size={48}
+                            className="text-blue-400 mx-auto mb-6"
+                        />
+                        <h3 className="text-2xl font-bold text-white mb-4">¡Muy pronto nuevos tutoriales!</h3>
+                        <p className="text-white/70 mb-8">
+                            Estamos preparando contenido de alta calidad para ayudarte a seguir creciendo.
+                        </p>
 
-                        <div className="relative">
-                            <div className="flex items-center gap-6 mb-8">
-                                <div className="p-4 bg-blue-500/20 rounded-lg">
-                                    <FiBookOpen
-                                        size={28}
-                                        className="text-blue-400"
-                                    />
-                                </div>
-                                <div className="text-left">
-                                    <h3 className="font-semibold text-white text-xl mb-2">
-                                        Próximamente nuevos tutoriales
-                                    </h3>
-                                    <p className="text-white/70">
-                                        Estamos preparando contenido educativo de alta calidad para mejorar tus
-                                        habilidades.
-                                    </p>
-                                </div>
+                        <div className="grid gap-6 md:grid-cols-2">
+                            <div className="bg-white/5 p-6 rounded-lg">
+                                <h4 className="font-semibold text-white mb-2">Tutoriales detallados</h4>
+                                <p className="text-white/60 text-sm">
+                                    Guías paso a paso, ejemplos prácticos y proyectos reales.
+                                </p>
                             </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                                <div className="bg-white/5 p-6 rounded-lg border border-white/10">
-                                    <div className="flex items-start gap-3">
-                                        <div className="p-2 bg-emerald-500/20 rounded-lg">
-                                            <FiBookOpen
-                                                size={22}
-                                                className="text-emerald-400"
-                                            />
-                                        </div>
-                                        <div>
-                                            <h3 className="font-semibold text-white text-lg mb-2">
-                                                Tutoriales detallados
-                                            </h3>
-                                            <p className="text-white/70">
-                                                Guías paso a paso con ejemplos prácticos y código fuente completo.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="bg-white/5 p-6 rounded-lg border border-white/10">
-                                    <div className="flex items-start gap-3">
-                                        <div className="p-2 bg-blue-500/20 rounded-lg">
-                                            <FiBookOpen
-                                                size={22}
-                                                className="text-blue-400"
-                                            />
-                                        </div>
-                                        <div>
-                                            <h3 className="font-semibold text-white text-lg mb-2">
-                                                Tecnologías actuales
-                                            </h3>
-                                            <p className="text-white/70">
-                                                Contenido actualizado con las últimas versiones y mejores prácticas.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div className="bg-white/5 p-6 rounded-lg">
+                                <h4 className="font-semibold text-white mb-2">Actualizados y relevantes</h4>
+                                <p className="text-white/60 text-sm">
+                                    Tecnologías actuales, últimas versiones y mejores prácticas.
+                                </p>
                             </div>
                         </div>
                     </div>

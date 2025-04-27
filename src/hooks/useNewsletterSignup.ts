@@ -1,5 +1,6 @@
 // src/hooks/useNewsletterSignup.ts
-import { signup } from "@/services/firebase/firestore/newsletter";
+
+import { subscribe } from "@/services/firebase/firestore/newsletter";
 import { validateEmail, validateEmailFormat } from "@/utils/formUtils";
 import { useState } from "react";
 
@@ -7,6 +8,7 @@ interface UseNewsletterSignupReturn {
     email: string;
     error: string;
     isLoading: boolean;
+    isSuccess: boolean;
     handleEmailChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }
@@ -15,6 +17,7 @@ export function useNewsletterSignup(): UseNewsletterSignupReturn {
     const [email, setEmail] = useState("");
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
@@ -36,10 +39,15 @@ export function useNewsletterSignup(): UseNewsletterSignupReturn {
 
         try {
             setIsLoading(true);
-            await signup(email);
+            await subscribe(email);
+            setIsSuccess(true);
             resetForm();
-        } catch {
-            setError("Hubo un problema al suscribirte. Inténtalo de nuevo.");
+        } catch(error: unknown) {
+            if (error instanceof Error) {
+                setError(error.message);
+            } else {
+                setError("Hubo un error al suscribirte. Por favor, intenta de nuevo más tarde.");
+            }
         } finally {
             setIsLoading(false);
         }
@@ -54,6 +62,7 @@ export function useNewsletterSignup(): UseNewsletterSignupReturn {
         email,
         error,
         isLoading,
+        isSuccess, // Ahora devolvemos el estado de éxito
         handleEmailChange,
         handleSubmit,
     };
