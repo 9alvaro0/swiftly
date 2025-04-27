@@ -10,29 +10,13 @@ import { storage } from "@/services/firebase/config";
 
 export const uploadImage = async (file: File, path: string): Promise<string> => {
     try {
-        console.log("🛠 Subiendo imagen a Firebase Storage en:", path);
-        console.log("🔍 Detalles del archivo:", {
-            name: file.name,
-            size: file.size,
-            type: file.type,
-        });
-        // Crear metadatos con el tipo MIME correcto
-        const metadata = {
-            contentType: file.type,
-        };
-
-        console.log(`Subiendo archivo: ${file.name}, tipo: ${file.type}, tamaño: ${file.size} bytes`);
-
+        const metadata = { contentType: file.type };
         const storageRef = ref(storage, path);
         const snapshot = await uploadBytes(storageRef, file, metadata);
-        console.log("Subida completada con éxito:", snapshot);
-
         const downloadURL = await getDownloadURL(snapshot.ref);
-        console.log("URL de descarga obtenida:", downloadURL);
 
         return downloadURL;
     } catch (error) {
-        console.error("Error al subir imagen:", error);
         throw new Error("No se pudo subir la imagen: " + (error instanceof Error ? error.message : String(error)));
     }
 };

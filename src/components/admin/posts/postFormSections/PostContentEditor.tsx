@@ -64,9 +64,8 @@ const PostContentEditor: React.FC<PostContentEditorProps> = ({
                     name="content"
                     value={content}
                     onChange={onChange}
-                    rows={15}
-                    className="font-mono"
                     error={error}
+                    height={500}
                 />
             ) : (
                 <div className="border rounded-md p-4 h-[30rem] overflow-auto">

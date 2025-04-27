@@ -9,9 +9,20 @@ interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
     id: string;
     icon?: ReactNode;
     onIconClick?: () => void;
+    height?: number; // Nueva prop opcional
 }
 
-const Textarea = ({ label, ref, error, id, icon, className = "", onIconClick, ...props }: TextareaProps) => {
+const Textarea = ({
+    label,
+    ref,
+    error,
+    id,
+    icon,
+    height = 128, // Valor por defecto: 128px (igual que h-32)
+    className = "",
+    onIconClick,
+    ...props
+}: TextareaProps) => {
     return (
         <div>
             {label && (
@@ -27,13 +38,14 @@ const Textarea = ({ label, ref, error, id, icon, className = "", onIconClick, ..
                 <textarea
                     ref={ref}
                     id={id}
+                    style={{ height }} // Usamos height dinámico
                     className={`w-full px-4 py-2 rounded-lg bg-white/5 
                         border ${error ? "border-red-500" : "border-white/10"} 
                         text-white placeholder-white/40
                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400
                         transition-all duration-300 ease-in-out
                         backdrop-blur-md
-                        h-32 min-h-32 max-h-32 resize-none
+                        resize-none
                         ${icon ? "pl-10" : ""}
                         ${className}
                     `}

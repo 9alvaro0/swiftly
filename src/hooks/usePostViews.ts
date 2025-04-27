@@ -36,10 +36,7 @@ export function usePostViews(postId: string, initialViews: number = 0) {
                 if (!user) return;
                 incrementUserStat(user.uid, "views", postId);
                 sessionStorage.setItem("viewedPosts", JSON.stringify([...viewedPosts, postId]));
-
-                console.log("Vista registrada:", result.views);
-            } catch (err) {
-                console.error("Error al registrar vista:", err);
+            } catch {
                 setError("No se pudo registrar la vista");
             } finally {
                 setLoading(false);

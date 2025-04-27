@@ -6,7 +6,7 @@ import { Post } from "@/types/Post";
  */
 export const getDefaultPost = (): Post => ({
     // Identificación
-    id: "",
+    id: crypto.randomUUID(),
     slug: "",
 
     // Contenido

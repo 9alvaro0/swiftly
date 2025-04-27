@@ -37,7 +37,6 @@ const PostBasicInfo: React.FC<PostBasicInfoProps> = ({ title, description, onCha
                 label="Descripción Corta"
                 value={description || ""}
                 onChange={onChange}
-                rows={2}
                 error={errors.description}
             />
         </div>
