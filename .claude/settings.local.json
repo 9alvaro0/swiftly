@@ -14,7 +14,9 @@
       "Bash(firebase --version)",
       "Bash(firebase projects:list:*)",
       "Bash(firebase init:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(gh:*)",
+      "Bash(brew install:*)"
     ],
     "deny": []
   }
