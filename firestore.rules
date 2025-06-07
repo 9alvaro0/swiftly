@@ -135,8 +135,7 @@ service cloud.firestore {
       allow read: if isAdmin();
       
       // Create rules: Anyone (including non-authenticated users) can subscribe to newsletter
-      allow create: if request.resource.data.keys().hasAll(['email', 'createdAt']) &&
-                       request.resource.data.email is string &&
+      allow create: if request.resource.data.email is string &&
                        request.resource.data.email.size() > 0 &&
                        request.resource.data.email.matches('.*@.*\\..*') &&
                        request.resource.data.isActive == true;
