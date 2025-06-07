@@ -1,6 +1,6 @@
-# 🚀 Swiftly
+# 🚀 aprendeSwift
 
-**Swiftly** es una plataforma moderna para publicar y descubrir posts y tutoriales sobre **Swift** y **SwiftUI**. Diseñada para desarrolladores iOS, esta app permite compartir conocimiento de forma rápida, elegante y estructurada.
+**aprendeSwift** es una plataforma moderna para publicar y descubrir posts y tutoriales sobre **Swift** y **SwiftUI**. Diseñada para desarrolladores iOS, esta app permite compartir conocimiento de forma rápida, elegante y estructurada.
 
 ---
 
@@ -29,7 +29,7 @@ yarn && yarn dev
 pnpm install && pnpm dev
 ```
 
-Luego abre [http://localhost:3000](http://localhost:3000) para ver Swiftly en acción 🚀  
+Luego abre [http://localhost:3000](http://localhost:3000) para ver aprendeSwift en acción 🚀  
 Puedes empezar a editar modificando el archivo `app/page.tsx`.
 
 ---
@@ -67,7 +67,7 @@ O sigue la [guía oficial de despliegue](https://nextjs.org/docs/app/building-yo
 
 ## 🤝 Contribuciones
 
-¿Quieres ayudar a mejorar Swiftly?
+¿Quieres ayudar a mejorar aprendeSwift?
 
 1. Haz un fork del repo
 2. Crea una rama (`feat/nueva-funcionalidad`)
@@ -79,7 +79,7 @@ O sigue la [guía oficial de despliegue](https://nextjs.org/docs/app/building-yo
 
 ## 🐦 Síguenos
 
-Sigue el desarrollo y comparte tus tutoriales con el hashtag `#SwiftlyApp`.
+Sigue el desarrollo y comparte tus tutoriales con el hashtag `#aprendeSwiftApp`.
 
 > Hecho con ❤️ para la comunidad Swift.
 

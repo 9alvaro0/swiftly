@@ -1,7 +1,7 @@
 import { getPostBySlug } from "@/services/firebase/firestore/post";
 import type { Metadata } from "next";
 
-const siteUrl = "https://swifly.com";
+const siteUrl = "https://aprendeswift.dev";
 
 interface GenerateMetadataProps {
     params: Promise<{
@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: GenerateMetadataProps): Promi
             url: url,
             type: "article",
             images: post.coverImage ? [{ url: post.coverImage }] : [],
-            siteName: "Swiftly",
+            siteName: "aprendeSwift",
         },
         twitter: {
             card: "summary_large_image",

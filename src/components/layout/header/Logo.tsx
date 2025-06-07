@@ -16,7 +16,7 @@ export default function Logo() {
                 width={40}
                 height={40}
             />
-            <span className="text-xl font-bold tracking-tight">Swiftly</span>
+            <span className="text-xl font-bold tracking-tight">aprendeSwift</span>
         </Link>
     );
 }

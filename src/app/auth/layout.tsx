@@ -20,7 +20,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
                 <div className="relative z-20 p-12 flex flex-col justify-center items-center h-full w-full text-center">
                     <div className="mb-8 flex items-center gap-4">
                         <FaSwift className="text-white text-5xl" />
-                        <h2 className="text-5xl font-extrabold tracking-tight">Swiftly</h2>
+                        <h2 className="text-5xl font-extrabold tracking-tight">aprendeSwift</h2>
                     </div>
 
                     <p className="text-xl max-w-md font-light opacity-90">

@@ -31,13 +31,13 @@ const Footer = () => {
                             width={40}
                             height={40}
                         />
-                        <span className="text-xl font-bold tracking-tight text-primary">Swiftly</span>
+                        <span className="text-xl font-bold tracking-tight text-primary">aprendeSwift</span>
                     </div>
                 </div>
 
                 {/* Columnas de enlaces del footer */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <FooterColumn title="Sobre Swiftly">
+                    <FooterColumn title="Sobre aprendeSwift">
                         <p className="text-secondary mb-4">
                             Tu recurso principal para aprender Swift y SwiftUI. Tutoriales actualizados, ejemplos
                             prácticos y recursos para todos los niveles.
@@ -61,7 +61,7 @@ const Footer = () => {
             <div className="border-t border-neutral-200 dark:border-neutral-800 py-6 bg-surface-secondary">
                 <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
                     <p className="text-secondary text-sm">
-                        © {new Date().getFullYear()} Swiftly. Todos los derechos reservados.
+                        © {new Date().getFullYear()} aprendeSwift. Todos los derechos reservados.
                     </p>
                     <div className="flex space-x-6 mt-4 md:mt-0">
                         <FooterLink href="/privacidad">Política de privacidad</FooterLink>

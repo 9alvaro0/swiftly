@@ -28,7 +28,7 @@ export default function PostDetail({ post, branch }: PostDetailProps) {
     // Generate full URL for sharing
     const currentUrl = typeof window !== 'undefined' 
         ? window.location.href 
-        : `https://swiftly.dev/${branch}/${post.slug}`;
+        : `https://aprendeswift.dev/${branch}/${post.slug}`;
 
     return (
         <>
