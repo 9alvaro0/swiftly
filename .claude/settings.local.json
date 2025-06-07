@@ -16,7 +16,9 @@
       "Bash(firebase init:*)",
       "Bash(rm:*)",
       "Bash(gh:*)",
-      "Bash(brew install:*)"
+      "Bash(brew install:*)",
+      "Bash(git tag:*)",
+      "Bash(git branch:*)"
     ],
     "deny": []
   }

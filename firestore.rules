@@ -122,11 +122,28 @@ service cloud.firestore {
       allow read: if isAdmin();
       
       // Create rules: Anyone can subscribe to newsletter
-      allow create: if request.resource.data.keys().hasAll(['email', 'subscribedAt']) &&
+      allow create: if request.resource.data.keys().hasAll(['email', 'createdAt']) &&
                        isValidEmail(request.resource.data.email);
       
       // Update/Delete rules: Only admins can manage subscriptions
       allow update, delete: if isAdmin();
+    }
+    
+    // Newsletter subscribers collection rules (used by the service)
+    match /newsletterSubscribers/{subscriberId} {
+      // Read rules: Only admins can read newsletter subscriptions
+      allow read: if isAdmin();
+      
+      // Create rules: Anyone can subscribe to newsletter
+      allow create: if request.resource.data.keys().hasAll(['email', 'createdAt']) &&
+                       isValidEmail(request.resource.data.email) &&
+                       request.resource.data.isActive == true;
+      
+      // Update rules: Only admins can manage subscriptions
+      allow update: if isAdmin();
+      
+      // Delete rules: Only admins can delete subscriptions
+      allow delete: if isAdmin();
     }
     
     // Analytics and stats collections (read-only for users, write for system)
