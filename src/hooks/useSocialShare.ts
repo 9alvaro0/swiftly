@@ -28,7 +28,7 @@ const platforms: Record<string, SharePlatform> = {
     twitter: {
         name: "Twitter",
         shareUrl: (url, title, description) => 
-            `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}${description ? `&via=SwiftlyBlog` : ''}`
+            `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}${description ? `&via=aprendeSwiftBlog` : ''}`
     },
     facebook: {
         name: "Facebook", 

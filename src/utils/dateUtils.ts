@@ -39,3 +39,81 @@ export function formatDate(dateInput: string | Date | Timestamp): string {
         return "Fecha inválida";
     }
 }
+
+/**
+ * Safely converts a Firebase Timestamp or Date to a JavaScript Date
+ */
+export function toJSDate(dateValue: Date | Timestamp | undefined | null): Date {
+    if (!dateValue) {
+        return new Date();
+    }
+    
+    if (dateValue instanceof Date) {
+        return dateValue;
+    }
+    
+    // Handle Firebase Timestamp
+    if (dateValue && typeof dateValue === 'object' && 'toDate' in dateValue) {
+        return (dateValue as Timestamp).toDate();
+    }
+    
+    // Fallback
+    return new Date();
+}
+
+/**
+ * Formats a date for RSS feeds (RFC 2822 format)
+ */
+export function formatRssDate(date: Date | Timestamp | undefined | null): string {
+    return toJSDate(date).toUTCString();
+}
+
+/**
+ * Formats a date for Atom feeds (ISO 8601 format)
+ */
+export function formatAtomDate(date: Date | Timestamp | undefined | null): string {
+    return toJSDate(date).toISOString();
+}
+
+/**
+ * Gets the more recent of two dates, useful for determining last modified times
+ */
+export function getLatestDate(date1: Date | Timestamp | undefined | null, date2: Date | Timestamp | undefined | null): Date {
+    const jsDate1 = toJSDate(date1);
+    const jsDate2 = toJSDate(date2);
+    
+    return jsDate1 > jsDate2 ? jsDate1 : jsDate2;
+}
+
+/**
+ * Creates an excerpt from content, removing HTML tags
+ */
+export function createExcerpt(content: string, maxLength: number = 300): string {
+    // Basic HTML tag removal
+    const textContent = content.replace(/<[^>]*>/g, '');
+    
+    if (textContent.length <= maxLength) {
+        return textContent;
+    }
+    
+    const truncated = textContent.substring(0, maxLength);
+    const lastSpace = truncated.lastIndexOf(' ');
+    
+    if (lastSpace > 0) {
+        return truncated.substring(0, lastSpace) + '...';
+    }
+    
+    return truncated + '...';
+}
+
+/**
+ * Escapes XML special characters for safe inclusion in XML documents
+ */
+export function escapeXml(text: string): string {
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}

@@ -11,22 +11,22 @@ interface SocialLink {
 const socialLinks: SocialLink[] = [
     {
         name: "Twitter",
-        href: "https://twitter.com/swiftly",
+        href: "https://twitter.com/aprendeswift",
         icon: <TwitterIcon size={18} />,
     },
     {
         name: "GitHub",
-        href: "https://github.com/swiftly",
+        href: "https://github.com/aprendeswift",
         icon: <GithubIcon size={18} />,
     },
     {
         name: "LinkedIn",
-        href: "https://linkedin.com/in/swiftly",
+        href: "https://linkedin.com/in/aprendeswift",
         icon: <LinkedinIcon size={18} />,
     },
     {
         name: "Email",
-        href: "mailto:info@swiftly.dev",
+        href: "mailto:info@aprendeswift.dev",
         icon: <MailIcon size={18} />,
     },
 ];
