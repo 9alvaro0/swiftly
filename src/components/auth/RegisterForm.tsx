@@ -5,11 +5,13 @@
 import { registerWithEmailAndPassword } from "@/services/firebase/auth/auth";
 import { handleFirebaseError } from "@/services/firebase/errors";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Spinner from "@/components/ui/Spinner";
 import Input from "../ui/Input";
 import { FiEye, FiEyeOff, FiMail } from "react-icons/fi";
 
 export default function RegisterForm() {
+    const router = useRouter();
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -64,7 +66,7 @@ export default function RegisterForm() {
 
         try {
             await registerWithEmailAndPassword(formData.email, formData.password, formData.name);
-            window.location.href = "/";
+            router.push("/");
         } catch (error) {
             handleFirebaseError(error, "Email Login");
         } finally {

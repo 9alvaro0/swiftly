@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { loginWithGithub } from "@/services/firebase/auth/auth";
 import { handleFirebaseError } from "@/services/firebase/errors";
 import { FaGithub, FaGoogle, FaApple } from "react-icons/fa";
@@ -8,13 +9,14 @@ import { toast } from "sonner";
 import Spinner from "@/components/ui/Spinner";
 
 export default function SocialLoginButtons() {
+    const router = useRouter();
     const [loadingProvider, setLoadingProvider] = useState<"github" | "google" | "apple" | null>(null);
 
     const handleLogin = async (provider: "github" | "google" | "apple", loginFn: () => Promise<void>) => {
         setLoadingProvider(provider);
         try {
             await loginFn();
-            window.location.href = "/";
+            router.push("/");
         } catch (error) {
             handleFirebaseError(error, `${provider.charAt(0).toUpperCase() + provider.slice(1)} Login`);
         } finally {

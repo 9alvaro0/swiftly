@@ -7,6 +7,7 @@ import PostBreadcrumbs from "@/components/post/PostBreadcrumbs";
 import PostFeaturedImage from "@/components/post/PostFeaturedImage";
 import PostHeader from "@/components/post/PostHeader";
 import PostTags from "@/components/post/PostTags";
+import CommentsSection from "@/components/post/CommentsSection";
 import { usePostViews } from "@/hooks/usePostViews";
 import PostContent from "@/components/post/PostContent";
 
@@ -34,7 +35,17 @@ export default function PostDetail({ post, branch }: PostDetailProps) {
             <PostContent content={post.content} />
             <PostTags tags={post.tags || []} />
             <PostAuthorBio author={post.author} />
-            {relatedPosts.length > 0 && <RelatedPosts posts={relatedPosts} />}
+            
+            {/* Sección de comentarios */}
+            <div className="mt-12">
+                <CommentsSection postId={post.id} />
+            </div>
+            
+            {relatedPosts.length > 0 && (
+                <div className="mt-12">
+                    <RelatedPosts posts={relatedPosts} />
+                </div>
+            )}
         </div>
     );
 }

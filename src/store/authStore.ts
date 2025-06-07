@@ -4,7 +4,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { User } from "@/types/User";
 import { toast } from "sonner";
-import { logout } from "@/services/firebase/auth/auth";
+import { logout as firebaseLogout } from "@/services/firebase/auth/auth";
 
 interface AuthState {
     isAuthenticated: boolean;
@@ -15,7 +15,7 @@ interface AuthState {
     setAuthenticated: (status: boolean) => void;
     setLoading: (status: boolean) => void;
     setError: (error: string | null) => void;
-    logout: () => void;
+    logout: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -26,16 +26,21 @@ export const useAuthStore = create<AuthState>()(
             isLoading: true,
             error: null,
 
-            setUser: async (user) => {
+            setUser: (user) => {
                 set({ user });
             },
             setAuthenticated: (status) => set({ isAuthenticated: status }),
             setLoading: (status) => set({ isLoading: status }),
             setError: (error) => set({ error }),
-            logout: () => {
-                set({ user: null, isAuthenticated: false, error: null });
-                logout();
-                toast.success("Sesión cerrada");
+            logout: async () => {
+                try {
+                    set({ user: null, isAuthenticated: false, error: null });
+                    await firebaseLogout();
+                    toast.success("Sesión cerrada");
+                } catch (error) {
+                    console.error("Error during logout:", error);
+                    toast.error("Error al cerrar sesión");
+                }
             },
         }),
         {
