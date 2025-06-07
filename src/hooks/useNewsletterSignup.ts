@@ -40,6 +40,24 @@ export function useNewsletterSignup(): UseNewsletterSignupReturn {
         try {
             setIsLoading(true);
             await subscribe(email);
+            
+            // Send welcome email
+            try {
+                const response = await fetch('/api/newsletter/welcome', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email }),
+                });
+                
+                if (!response.ok) {
+                    console.warn('Failed to send welcome email');
+                }
+            } catch (error) {
+                console.warn('Error sending welcome email:', error);
+            }
+            
             setIsSuccess(true);
             resetForm();
         } catch(error: unknown) {

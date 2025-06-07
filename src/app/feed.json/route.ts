@@ -11,6 +11,8 @@ const siteTitle = 'aprendeSwift Blog';
 const siteDescription = 'Artículos y tutoriales sobre desarrollo web, programación y tecnología moderna';
 const authorName = 'aprendeSwift Team';
 
+export const dynamic = 'force-static';
+
 export async function GET(): Promise<NextResponse> {
     try {
         // Get latest published posts

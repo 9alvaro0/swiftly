@@ -10,7 +10,9 @@ const baseUrl = 'https://aprendeswift.dev';
 const siteTitle = 'aprendeSwift Blog';
 const siteDescription = 'Artículos y tutoriales sobre desarrollo web, programación y tecnología moderna';
 const siteLanguage = 'es-ES';
-const authorEmail = 'hello@aprendeswift.dev';
+const authorEmail = '9alvaro0@gmail.com';
+
+export const dynamic = 'force-static';
 
 export async function GET(): Promise<NextResponse> {
     try {

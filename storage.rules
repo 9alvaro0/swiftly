@@ -1,0 +1,131 @@
+rules_version = '2';
+
+// Firebase Storage Security Rules for aprendeSwift
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+             request.auth.token.admin == true;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && 
+             request.auth.uid == userId;
+    }
+    
+    function hasContentRole() {
+      return isAuthenticated() && 
+             request.auth.token.role in ['admin', 'editor', 'author'];
+    }
+    
+    function isValidImageType() {
+      return request.resource.contentType.matches('image/.*');
+    }
+    
+    function isValidFileSize(maxSizeInMB) {
+      return request.resource.size < maxSizeInMB * 1024 * 1024;
+    }
+    
+    // User profile images
+    match /users/{userId}/profile/{filename} {
+      // Users can read their own profile images, all can read if public
+      allow read: if true; // Profile images are generally public
+      
+      // Users can upload their own profile images
+      allow write: if isOwner(userId) &&
+                      isValidImageType() &&
+                      isValidFileSize(5) && // 5MB limit
+                      filename.matches('.*\\.(jpg|jpeg|png|webp)$');
+      
+      // Delete: User can delete their own, admins can delete any
+      allow delete: if isOwner(userId) || isAdmin();
+    }
+    
+    // Post images (covers, content images)
+    match /posts/{postId}/{filename} {
+      // Public read access for published posts
+      allow read: if true; // Post images are public once uploaded
+      
+      // Content creators can upload post images
+      allow write: if hasContentRole() &&
+                      isValidImageType() &&
+                      isValidFileSize(10) && // 10MB limit for post images
+                      filename.matches('.*\\.(jpg|jpeg|png|webp|gif)$');
+      
+      // Delete: Only admins and the post author can delete
+      allow delete: if isAdmin() ||
+                       hasContentRole();
+    }
+    
+    // Temporary uploads (for image processing/optimization)
+    match /temp/{userId}/{filename} {
+      // Authenticated users can upload to their temp folder
+      allow read, write: if isOwner(userId) &&
+                            isValidImageType() &&
+                            isValidFileSize(20) && // 20MB limit for temp files
+                            filename.matches('.*\\.(jpg|jpeg|png|webp|gif)$');
+      
+      // Auto-delete rule should be set up via Firebase Functions
+      allow delete: if isOwner(userId) || isAdmin();
+    }
+    
+    // Site assets (logos, icons, etc.)
+    match /assets/{filename} {
+      // Public read access for site assets
+      allow read: if true;
+      
+      // Only admins can manage site assets
+      allow write, delete: if isAdmin() &&
+                              isValidImageType() &&
+                              isValidFileSize(5);
+    }
+    
+    // Comment attachments (if implemented)
+    match /comments/{commentId}/{filename} {
+      // Public read access
+      allow read: if true;
+      
+      // Authenticated users can upload small images to comments
+      allow write: if isAuthenticated() &&
+                      isValidImageType() &&
+                      isValidFileSize(2) && // 2MB limit for comments
+                      filename.matches('.*\\.(jpg|jpeg|png|webp)$');
+      
+      // Delete: Comment author or admin
+      allow delete: if isAdmin(); // We'd need to check comment ownership via Firestore
+    }
+    
+    // Media library (centralized image management)
+    match /media/{year}/{month}/{filename} {
+      // Public read access
+      allow read: if true;
+      
+      // Content creators can upload to media library
+      allow write: if hasContentRole() &&
+                      isValidImageType() &&
+                      isValidFileSize(15) && // 15MB limit
+                      filename.matches('.*\\.(jpg|jpeg|png|webp|gif|svg)$');
+      
+      // Delete: Only admins can delete from media library
+      allow delete: if isAdmin();
+    }
+    
+    // Backup and export files (admin only)
+    match /exports/{filename} {
+      allow read, write, delete: if isAdmin() &&
+                                    filename.matches('.*\\.(json|csv|zip)$') &&
+                                    isValidFileSize(100); // 100MB limit for exports
+    }
+    
+    // Deny all other paths by default
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

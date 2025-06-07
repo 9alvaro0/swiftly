@@ -1,0 +1,164 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions for authentication and authorization
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+             request.auth.token.admin == true;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && 
+             request.auth.uid == userId;
+    }
+    
+    function hasValidRole(role) {
+      return role in ['admin', 'editor', 'author', 'user', 'guest'];
+    }
+    
+    function isValidEmail(email) {
+      return email is string && 
+             email.matches('.*@.*\\..*');
+    }
+    
+    // Posts collection rules
+    match /posts/{postId} {
+      // Read rules: Published posts are public, drafts only for admins/authors
+      allow read: if resource.data.isPublished == true ||
+                     isAdmin() ||
+                     (isAuthenticated() && request.auth.uid == resource.data.author.id);
+      
+      // Create rules: Only admins and editors can create posts
+      allow create: if isAdmin() || 
+                       (isAuthenticated() && 
+                        request.auth.token.role in ['admin', 'editor', 'author'] &&
+                        request.auth.uid == request.resource.data.author.id &&
+                        // Validate required fields
+                        request.resource.data.keys().hasAll(['title', 'content', 'author', 'createdAt']) &&
+                        request.resource.data.title is string &&
+                        request.resource.data.title.size() > 0 &&
+                        request.resource.data.content is string &&
+                        request.resource.data.content.size() > 0);
+      
+      // Update rules: Admins can update any, authors can update their own
+      allow update: if isAdmin() ||
+                       (isAuthenticated() && 
+                        request.auth.uid == resource.data.author.id &&
+                        // Ensure author can't change ownership
+                        request.resource.data.author.id == resource.data.author.id);
+      
+      // Delete rules: Only admins can delete posts
+      allow delete: if isAdmin();
+    }
+    
+    // Comments collection rules
+    match /comments/{commentId} {
+      // Read rules: All comments are public
+      allow read: if true;
+      
+      // Create rules: Authenticated users can create comments
+      allow create: if isAuthenticated() &&
+                       request.auth.uid == request.resource.data.authorId &&
+                       // Validate required fields
+                       request.resource.data.keys().hasAll(['content', 'authorId', 'postId', 'createdAt']) &&
+                       request.resource.data.content is string &&
+                       request.resource.data.content.size() > 0 &&
+                       request.resource.data.content.size() <= 1000 &&
+                       // Rate limiting: max 5 comments per minute per user
+                       request.time > resource.data.createdAt + duration.value(1, 'm') ||
+                       !exists(/databases/$(database)/documents/comments/$(commentId));
+      
+      // Update rules: Users can edit their own comments, admins can edit any
+      allow update: if isOwner(resource.data.authorId) ||
+                       isAdmin();
+      
+      // Delete rules: Users can delete their own comments, admins can delete any
+      allow delete: if isOwner(resource.data.authorId) ||
+                       isAdmin();
+    }
+    
+    // Users collection rules
+    match /users/{userId} {
+      // Read rules: Users can read their own profile, admins can read any
+      allow read: if isOwner(userId) ||
+                     isAdmin();
+      
+      // Create rules: Users can create their own profile during registration
+      allow create: if isOwner(userId) &&
+                       // Validate required fields
+                       request.resource.data.keys().hasAll(['uid', 'email', 'createdAt']) &&
+                       request.resource.data.uid == userId &&
+                       isValidEmail(request.resource.data.email) &&
+                       (request.resource.data.role == null || hasValidRole(request.resource.data.role));
+      
+      // Update rules: Users can update their own profile, admins can update any
+      allow update: if isOwner(userId) ||
+                       isAdmin();
+      
+      // Delete rules: Only admins can delete user accounts
+      allow delete: if isAdmin();
+    }
+    
+    // Tags collection rules
+    match /tags/{tagId} {
+      // Read rules: Tags are public
+      allow read: if true;
+      
+      // Create/Update/Delete rules: Only admins and editors can manage tags
+      allow write: if isAdmin() || 
+                      (isAuthenticated() && 
+                       request.auth.token.role in ['admin', 'editor']);
+    }
+    
+    // Newsletter collection rules
+    match /newsletter/{subscriberId} {
+      // Read rules: Only admins can read newsletter subscriptions
+      allow read: if isAdmin();
+      
+      // Create rules: Anyone can subscribe to newsletter
+      allow create: if request.resource.data.keys().hasAll(['email', 'subscribedAt']) &&
+                       isValidEmail(request.resource.data.email);
+      
+      // Update/Delete rules: Only admins can manage subscriptions
+      allow update, delete: if isAdmin();
+    }
+    
+    // Analytics and stats collections (read-only for users, write for system)
+    match /analytics/{document} {
+      allow read: if isAdmin();
+      allow write: if false; // Only server-side functions should write analytics
+    }
+    
+    // System configuration (admin only)
+    match /config/{configId} {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+    
+    // Contact form submissions
+    match /contacts/{contactId} {
+      // Create rules: Anyone can submit contact form
+      allow create: if request.resource.data.keys().hasAll(['name', 'email', 'message', 'createdAt']) &&
+                       request.resource.data.name is string &&
+                       request.resource.data.name.size() > 0 &&
+                       isValidEmail(request.resource.data.email) &&
+                       request.resource.data.message is string &&
+                       request.resource.data.message.size() > 0 &&
+                       request.resource.data.message.size() <= 2000;
+      
+      // Read/Update/Delete rules: Only admins can manage contact submissions
+      allow read, update, delete: if isAdmin();
+    }
+    
+    // Deny all other collections by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
