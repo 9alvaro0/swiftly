@@ -134,9 +134,11 @@ service cloud.firestore {
       // Read rules: Only admins can read newsletter subscriptions
       allow read: if isAdmin();
       
-      // Create rules: Anyone can subscribe to newsletter
+      // Create rules: Anyone (including non-authenticated users) can subscribe to newsletter
       allow create: if request.resource.data.keys().hasAll(['email', 'createdAt']) &&
-                       isValidEmail(request.resource.data.email) &&
+                       request.resource.data.email is string &&
+                       request.resource.data.email.size() > 0 &&
+                       request.resource.data.email.matches('.*@.*\\..*') &&
                        request.resource.data.isActive == true;
       
       // Update rules: Only admins can manage subscriptions
