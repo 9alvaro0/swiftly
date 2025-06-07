@@ -2,8 +2,53 @@ import { type NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import Mail from "nodemailer/lib/mailer";
 
+// Validation functions
+const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+};
+
+const validateInput = (data: unknown) => {
+    // Type guard to ensure data is an object
+    if (!data || typeof data !== 'object') {
+        throw new Error('Datos inválidos');
+    }
+    
+    const typedData = data as Record<string, unknown>;
+    
+    if (!typedData.name || typeof typedData.name !== 'string' || typedData.name.trim().length === 0) {
+        throw new Error('El nombre es obligatorio');
+    }
+    if (typedData.name.trim().length > 100) {
+        throw new Error('El nombre debe tener máximo 100 caracteres');
+    }
+    
+    if (!typedData.email || typeof typedData.email !== 'string' || !validateEmail(typedData.email)) {
+        throw new Error('Email inválido');
+    }
+    if (typedData.email.length > 254) {
+        throw new Error('Email demasiado largo');
+    }
+    
+    if (!typedData.message || typeof typedData.message !== 'string' || typedData.message.trim().length === 0) {
+        throw new Error('El mensaje es obligatorio');
+    }
+    if (typedData.message.trim().length > 5000) {
+        throw new Error('El mensaje debe tener máximo 5000 caracteres');
+    }
+    
+    // Sanitize inputs
+    return {
+        name: typedData.name.trim(),
+        email: typedData.email.trim().toLowerCase(),
+        message: typedData.message.trim()
+    };
+};
+
 export async function POST(request: NextRequest) {
-    const { email, name, message } = await request.json();
+    try {
+        const body = await request.json();
+        const { email, name, message } = validateInput(body);
 
     const transport = nodemailer.createTransport({
         service: "gmail",
@@ -109,10 +154,18 @@ export async function POST(request: NextRequest) {
             });
         });
 
-    try {
-        await sendMailPromise();
-        return NextResponse.json({ message: "Email sent" });
+        try {
+            await sendMailPromise();
+            return NextResponse.json({ message: "Email sent" });
+        } catch (err) {
+            console.error("Error sending email:", err);
+            return NextResponse.json({ error: "Error al enviar el email" }, { status: 500 });
+        }
     } catch (err) {
-        return NextResponse.json({ error: err }, { status: 500 });
+        console.error("Validation or request error:", err);
+        const errorMessage = err instanceof Error ? err.message : "Error en la solicitud";
+        return NextResponse.json({ 
+            error: errorMessage 
+        }, { status: 400 });
     }
 }

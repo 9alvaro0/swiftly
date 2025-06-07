@@ -11,6 +11,10 @@ import {
     arrayRemove,
     increment,
     runTransaction,
+    query,
+    where,
+    orderBy,
+    limit,
 } from "firebase/firestore";
 import { Post } from "@/types/Post";
 import { db } from "../config";
@@ -21,49 +25,83 @@ const postsCollection = collection(db, "posts");
 
 // Obtener un post por ID
 export const getPostById = async (id: string): Promise<Post | undefined> => {
-    const postRef = doc(postsCollection, id);
-    const postDoc = await getDoc(postRef);
-    if (postDoc.exists()) {
-        const postData = convertTimestampsToDates(postDoc.data());
-        return postData as Post;
+    try {
+        const postRef = doc(postsCollection, id);
+        const postDoc = await getDoc(postRef);
+        if (postDoc.exists()) {
+            const postData = convertTimestampsToDates(postDoc.data());
+            return postData as Post;
+        }
+        return undefined;
+    } catch (error) {
+        console.error("Error getting post by ID:", error);
+        return undefined;
     }
-    return undefined;
 };
 
 // Obtener un post por slug
 export const getPostBySlug = async (slug: string): Promise<Post | undefined> => {
-    const snapshot = await getDocs(postsCollection);
-    const postDoc = snapshot.docs.find((doc) => doc.data().slug === slug);
-    if (postDoc) {
-        const postData = convertTimestampsToDates(postDoc.data());
-        return postData as Post;
+    try {
+        const q = query(postsCollection, where("slug", "==", slug), limit(1));
+        const snapshot = await getDocs(q);
+        
+        if (!snapshot.empty) {
+            const postDoc = snapshot.docs[0];
+            const postData = convertTimestampsToDates(postDoc.data());
+            return postData as Post;
+        }
+        return undefined;
+    } catch (error) {
+        console.error("Error getting post by slug:", error);
+        return undefined;
     }
-    return undefined;
 };
 
 // Obtener posts por tags
 export const getPostsByTag = async (tag: string): Promise<Post[]> => {
-    const snapshot = await getDocs(postsCollection);
-    return snapshot.docs
-        .filter((doc) => {
-            const data = doc.data() as Post;
-            return data.tags && data.tags.some((t) => t.toLowerCase() === tag.toLowerCase());
-        })
-        .map((doc) => {
+    try {
+        // Use simple query to avoid composite index requirements
+        const q = query(
+            postsCollection, 
+            where("tags", "array-contains", tag)
+        );
+        const snapshot = await getDocs(q);
+        
+        let posts = snapshot.docs.map((doc) => {
             const postData = convertTimestampsToDates(doc.data());
             return postData as Post;
         });
+        
+        // Filter for published posts client-side
+        posts = posts.filter((post) => post.isPublished === true);
+        
+        // Sort by publishedAt descending
+        posts.sort((a, b) => {
+            const dateA = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
+            const dateB = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
+            return dateB - dateA;
+        });
+        
+        return posts;
+    } catch (error) {
+        console.error("Error getting posts by tag:", error);
+        return [];
+    }
 };
 
 // Obtener todos los posts
-
 export const getAllPosts = async (): Promise<Post[]> => {
-    const snapshot = await getDocs(postsCollection);
-    return snapshot.docs.map((doc) => {
-        console.log("doc.data()", doc.data());
-        const postData = convertTimestampsToDates(doc.data());
-        return postData as Post;
-    });
+    try {
+        const q = query(postsCollection, orderBy("createdAt", "desc"));
+        const snapshot = await getDocs(q);
+        return snapshot.docs.map((doc) => {
+            const postData = convertTimestampsToDates(doc.data());
+            return postData as Post;
+        });
+    } catch (error) {
+        console.error("Error getting all posts:", error);
+        return [];
+    }
 };
 
 // Obtener todos los posts publicados
@@ -74,28 +112,49 @@ interface PostFilters {
 }
 
 export const getAllPublishedPosts = async (filters: PostFilters): Promise<Post[]> => {
-    const { searchTerm = "", level = "", type = "" } = filters;
-    const snapshot = await getDocs(postsCollection);
-
-    return snapshot.docs
-        .filter((doc) => {
-            const data = doc.data() as Post;
-            if (data.isPublished !== true) return false;
-
-            if (searchTerm && !data.title.toLowerCase().includes(searchTerm.toLowerCase())) {
-                return false;
-            }
-
-            if (level && data.level !== level) return false;
-
-            if (type && data.type !== type) return false;
-
-            return true;
-        })
-        .map((doc) => {
+    try {
+        const { searchTerm = "", level = "", type = "" } = filters;
+        
+        // Use simple query that doesn't require composite indexes
+        const q = query(
+            postsCollection,
+            where("isPublished", "==", true)
+        );
+        
+        const snapshot = await getDocs(q);
+        let posts = snapshot.docs.map((doc) => {
             const postData = convertTimestampsToDates(doc.data());
             return postData as Post;
         });
+        
+        // Apply all filtering client-side to avoid index requirements
+        if (level) {
+            posts = posts.filter((post) => post.level === level);
+        }
+        
+        if (type) {
+            posts = posts.filter((post) => post.type === type);
+        }
+        
+        if (searchTerm) {
+            posts = posts.filter((post) =>
+                post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                post.description.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        }
+        
+        // Sort by publishedAt descending
+        posts.sort((a, b) => {
+            const dateA = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
+            const dateB = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
+            return dateB - dateA;
+        });
+        
+        return posts;
+    } catch (error) {
+        console.error("Error getting published posts:", error);
+        return [];
+    }
 };
 
 // Crea o actualiza un post

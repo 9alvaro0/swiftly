@@ -5,12 +5,14 @@
 import { loginWithEmailAndPassword } from "@/services/firebase/auth/auth";
 import { handleFirebaseError } from "@/services/firebase/errors";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Spinner from "@/components/ui/Spinner";
 import Input from "../ui/Input";
 import { FiEye, FiEyeOff, FiMail } from "react-icons/fi";
 import Checkbox from "../ui/Checkbox";
 
 export default function LoginForm() {
+    const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -22,8 +24,8 @@ export default function LoginForm() {
         setIsLoading(true);
 
         try {
-            loginWithEmailAndPassword(email, password);
-            window.location.href = "/";
+            await loginWithEmailAndPassword(email, password);
+            router.push("/");
         } catch (error) {
             handleFirebaseError(error, "Email Login");
         } finally {
