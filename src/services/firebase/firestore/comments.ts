@@ -52,9 +52,9 @@ export const createComment = async (commentData: CreateCommentData, author: Comm
             cleanAuthor.avatar = author.avatar;
         }
         
-        const newComment: Omit<Comment, 'id'> = {
+        const newComment = {
             postId: commentData.postId,
-            parentId: commentData.parentId || null,
+            parentId: commentData.parentId,
             content: commentData.content.trim(),
             author: cleanAuthor,
             createdAt: serverTimestamp(),
@@ -279,11 +279,11 @@ export const toggleCommentLike = async (commentId: string, userId: string): Prom
 /**
  * Incrementar contador de respuestas de un comentario
  */
-const incrementReplyCount = async (commentId: string, increment: number): Promise<void> => {
+const incrementReplyCount = async (commentId: string, incrementValue: number): Promise<void> => {
     try {
         const commentRef = doc(commentsCollection, commentId);
         await setDoc(commentRef, {
-            replyCount: increment(increment),
+            replyCount: increment(incrementValue),
         }, { merge: true });
     } catch (error) {
         console.error("Error updating reply count:", error);

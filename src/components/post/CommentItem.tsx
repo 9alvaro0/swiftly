@@ -220,6 +220,7 @@ export default function CommentItem({
                     {showEditForm ? (
                         <div className={`space-y-4 ${depth === 0 ? 'p-5' : 'p-4'} bg-white/5 rounded-xl border border-white/10 backdrop-blur-sm`}>
                             <Textarea
+                                id={`edit-comment-${comment.id}`}
                                 value={editContent}
                                 onChange={(e) => setEditContent(e.target.value)}
                                 placeholder="Edita tu comentario..."
@@ -296,6 +297,7 @@ export default function CommentItem({
                                     </span>
                                 </div>
                                 <Textarea
+                                    id={`reply-comment-${comment.id}`}
                                     value={replyContent}
                                     onChange={(e) => setReplyContent(e.target.value)}
                                     placeholder={`Escribe tu respuesta...`}
