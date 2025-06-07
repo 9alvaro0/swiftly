@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+:root {
+    --background: #ffffff;
+    --foreground: #171717;
+
+    /* Colores para el gradiente */
+    --gradient-blue: #2563eb;
+    --gradient-purple: #8b5cf6;
+    --gradient-dark: #000000;
+
+    /* Versión con opacidad para el fondo */
+    --gradient-blue-opacity: rgba(37, 99, 235, 0.15);
+    --gradient-purple-opacity: rgba(139, 92, 246, 0.15);
+}
+
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: #0a0a0a;
+        --foreground: #ededed;
+
+        /* Ajustar opacidad para modo oscuro si es necesario */
+        --gradient-blue-opacity: rgba(37, 99, 235, 0.2);
+        --gradient-purple-opacity: rgba(139, 92, 246, 0.2);
+    }
+}
+
+.toaster-container {
+    @apply z-[100];
+}
+
+/* Estilo base para el body */
+body {
+    color: var(--foreground);
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: var(--gradient-dark);
+    background-image: radial-gradient(circle at top left, var(--gradient-blue-opacity) 0%, transparent 50%),
+        radial-gradient(circle at bottom right, var(--gradient-purple-opacity) 0%, transparent 50%);
+    background-attachment: fixed;
+    background-size: 100% 100%;
+    min-height: 100vh;
+}
+
+/* Opcionalmente, puedes agregar elementos decorativos fijos */
+.bg-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.bg-glow::before {
+    content: "";
+    position: absolute;
+    top: -10vh;
+    left: -10vw;
+    width: 70vw;
+    height: 70vh;
+    border-radius: 50%;
+    background: var(--gradient-blue-opacity);
+    filter: blur(80px);
+}
+
+.bg-glow::after {
+    content: "";
+    position: absolute;
+    bottom: -10vh;
+    right: -10vw;
+    width: 70vw;
+    height: 70vh;
+    border-radius: 50%;
+    background: var(--gradient-purple-opacity);
+    filter: blur(80px);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    background-color: #1f2937 !important;
+    -webkit-text-fill-color: #ffffff !important;
+    transition: background-color 9999s ease-in-out 0s;
+}

@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run lint)",
+      "Bash(npm install:*)",
+      "Bash(git add:*)",
+      "Bash(git checkout:*)",
+      "Bash(git pull:*)",
+      "Bash(npm run build:*)",
+      "Bash(gh pr list:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(openssl rand:*)",
+      "Bash(find:*)",
+      "Bash(firebase --version)",
+      "Bash(firebase projects:list:*)",
+      "Bash(firebase init:*)",
+      "Bash(rm:*)",
+      "Bash(gh:*)",
+      "Bash(brew install:*)"
+    ],
+    "deny": []
+  }
+}

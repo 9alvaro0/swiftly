@@ -1,0 +1,38 @@
+# Robots.txt for aprendeSwift Blog
+# https://aprendeswift.dev
+
+User-agent: *
+Allow: /
+
+# Allow all crawlers to access main content
+Allow: /posts/
+Allow: /tutorials/
+Allow: /tags/
+Allow: /contact
+
+# Disallow admin and auth pages
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /api/
+
+# Disallow draft or private content
+Disallow: /posts/draft/
+Disallow: /tutorials/draft/
+
+# Allow specific API endpoints that provide useful content
+Allow: /api/contact
+Allow: /feed.xml
+
+# Sitemap and feed locations
+Sitemap: https://aprendeswift.dev/sitemap.xml
+
+# Feed URLs for discovery
+# RSS Feed: https://aprendeswift.dev/feed.xml
+# Atom Feed: https://aprendeswift.dev/atom.xml
+# JSON Feed: https://aprendeswift.dev/feed.json
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1
+
+# Host declaration
+Host: https://aprendeswift.dev
