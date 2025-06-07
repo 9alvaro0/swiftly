@@ -8,7 +8,6 @@ import PostFeaturedImage from "@/components/post/PostFeaturedImage";
 import PostHeader from "@/components/post/PostHeader";
 import PostTags from "@/components/post/PostTags";
 import CommentsSection from "@/components/post/CommentsSection";
-import SocialShareButtons from "@/components/post/SocialShareButtons";
 import FloatingSocialShare from "@/components/post/FloatingSocialShare";
 import { usePostViews } from "@/hooks/usePostViews";
 import PostContent from "@/components/post/PostContent";
@@ -42,19 +41,6 @@ export default function PostDetail({ post, branch }: PostDetailProps) {
                 />
                 <PostContent content={post.content} />
                 <PostTags tags={post.tags || []} />
-                
-                {/* Social sharing section */}
-                <div className="mt-8 pt-8 border-t border-white/10">
-                    <SocialShareButtons
-                        url={currentUrl}
-                        title={post.title}
-                        description={post.description}
-                        variant="horizontal"
-                        showLabels={true}
-                        className="justify-center"
-                    />
-                </div>
-                
                 <PostAuthorBio author={post.author} />
                 
                 {/* Sección de comentarios */}
@@ -75,6 +61,7 @@ export default function PostDetail({ post, branch }: PostDetailProps) {
                 title={post.title}
                 description={post.description}
                 threshold={400}
+                postId={post.id}
             />
         </>
     );

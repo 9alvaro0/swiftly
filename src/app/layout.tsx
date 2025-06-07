@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/styles/globals.css";
 import MainLayout from "@/components/layout/MainLayout";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 const inter = Inter({ subsets: ["latin"] });
 import AuthInitializer from "@/components/auth/AuthInitializer";
 import { Toaster } from "sonner";
@@ -24,7 +23,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         expand={false}
                         className="toaster-container"
                     />
-                    <SpeedInsights />
                 </AuthInitializer>
             </body>
         </html>

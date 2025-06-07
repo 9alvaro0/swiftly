@@ -11,13 +11,15 @@ interface FloatingSocialShareProps {
     title: string;
     description?: string;
     threshold?: number; // Scroll threshold to show the component
+    postId?: string; // For Firebase analytics
 }
 
 export default function FloatingSocialShare({
     url,
     title,
     description,
-    threshold = 300
+    threshold = 300,
+    postId
 }: FloatingSocialShareProps) {
     const [isVisible, setIsVisible] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
@@ -111,6 +113,8 @@ export default function FloatingSocialShare({
                         variant="vertical"
                         showLabels={false}
                         className="space-y-2"
+                        postId={postId}
+                        trackInFirebase={!!postId}
                     />
                 </div>
             )}

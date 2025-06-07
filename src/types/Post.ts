@@ -47,6 +47,9 @@ export interface Post {
     // Interacción
     views?: number;
     likedBy?: string[];
+    
+    // Estadísticas de compartir
+    shareStats?: ShareStats;
 }
 
 /**
@@ -79,3 +82,23 @@ export type PostLevel = "Principiante" | "Intermedio" | "Avanzado";
  * Tipos relacionados con el formato de las publicaciones
  */
 export type PostType = "article" | "tutorial";
+
+/**
+ * Estadísticas de compartir de una publicación
+ */
+export interface ShareStats {
+    totalShares: number;
+    platforms: {
+        twitter: number;
+        facebook: number;
+        linkedin: number;
+        whatsapp: number;
+        telegram: number;
+        reddit: number;
+        clipboard: number;
+        native: number;
+    };
+    lastShared?: Date;
+    sharesThisWeek: number;
+    sharesThisMonth: number;
+}

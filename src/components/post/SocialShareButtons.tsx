@@ -23,6 +23,8 @@ interface SocialShareButtonsProps {
     className?: string;
     variant?: "horizontal" | "vertical" | "dropdown";
     showLabels?: boolean;
+    postId?: string;
+    trackInFirebase?: boolean;
 }
 
 interface SharePlatform {
@@ -91,7 +93,9 @@ export default function SocialShareButtons({
     description,
     className = "",
     variant = "horizontal",
-    showLabels = false
+    showLabels = false,
+    postId,
+    trackInFirebase = false
 }: SocialShareButtonsProps) {
     const [copied, setCopied] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
@@ -104,6 +108,8 @@ export default function SocialShareButtons({
         isNativeShareSupported
     } = useSocialShare({
         trackAnalytics: true,
+        trackInFirebase,
+        postId,
         onShare: (analytics) => {
             // Custom analytics handling can be added here
             console.log('Share analytics:', analytics);

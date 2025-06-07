@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
+import { incrementPostShareStat } from "@/services/firebase/firestore/shareStats";
+import { ShareStats } from "@/types/Post";
 
 interface ShareAnalytics {
     platform: string;
@@ -12,6 +14,8 @@ interface ShareAnalytics {
 
 interface UseSocialShareOptions {
     trackAnalytics?: boolean;
+    trackInFirebase?: boolean;
+    postId?: string;
     onShare?: (analytics: ShareAnalytics) => void;
 }
 
@@ -54,7 +58,7 @@ const platforms: Record<string, SharePlatform> = {
 };
 
 export function useSocialShare(options: UseSocialShareOptions = {}) {
-    const { trackAnalytics = true, onShare } = options;
+    const { trackAnalytics = true, trackInFirebase = false, postId, onShare } = options;
     const [isSharing, setIsSharing] = useState(false);
     const [shareCount, setShareCount] = useState(0);
 
@@ -108,6 +112,17 @@ export function useSocialShare(options: UseSocialShareOptions = {}) {
                 // Increment local share count
                 setShareCount(prev => prev + 1);
                 
+                // Track in Firebase if enabled
+                if (trackInFirebase && postId) {
+                    try {
+                        const firebasePlatformKey = platformKey.toLowerCase() as keyof ShareStats['platforms'];
+                        await incrementPostShareStat(postId, firebasePlatformKey);
+                    } catch (error) {
+                        console.error('Error tracking share in Firebase:', error);
+                        // Don't fail the share operation if Firebase tracking fails
+                    }
+                }
+                
                 // Call custom analytics handler if provided
                 if (onShare) {
                     onShare(analytics);
@@ -139,7 +154,7 @@ export function useSocialShare(options: UseSocialShareOptions = {}) {
         } finally {
             setIsSharing(false);
         }
-    }, [trackAnalytics, onShare]);
+    }, [trackAnalytics, trackInFirebase, postId, onShare]);
 
     const copyToClipboard = useCallback(async (url: string, title?: string) => {
         try {
@@ -162,6 +177,15 @@ export function useSocialShare(options: UseSocialShareOptions = {}) {
                 
                 setShareCount(prev => prev + 1);
                 
+                // Track in Firebase if enabled
+                if (trackInFirebase && postId) {
+                    try {
+                        await incrementPostShareStat(postId, 'clipboard');
+                    } catch (error) {
+                        console.error('Error tracking clipboard share in Firebase:', error);
+                    }
+                }
+                
                 if (onShare) {
                     onShare(analytics);
                 }
@@ -176,7 +200,7 @@ export function useSocialShare(options: UseSocialShareOptions = {}) {
         } finally {
             setIsSharing(false);
         }
-    }, [trackAnalytics, onShare]);
+    }, [trackAnalytics, trackInFirebase, postId, onShare]);
 
     const nativeShare = useCallback(async (
         url: string,
@@ -213,6 +237,15 @@ export function useSocialShare(options: UseSocialShareOptions = {}) {
                 
                 setShareCount(prev => prev + 1);
                 
+                // Track in Firebase if enabled
+                if (trackInFirebase && postId) {
+                    try {
+                        await incrementPostShareStat(postId, 'native');
+                    } catch (error) {
+                        console.error('Error tracking native share in Firebase:', error);
+                    }
+                }
+                
                 if (onShare) {
                     onShare(analytics);
                 }
@@ -229,7 +262,7 @@ export function useSocialShare(options: UseSocialShareOptions = {}) {
         } finally {
             setIsSharing(false);
         }
-    }, [trackAnalytics, onShare]);
+    }, [trackAnalytics, trackInFirebase, postId, onShare]);
 
     const getShareHistory = useCallback(() => {
         try {
