@@ -6,6 +6,7 @@ import StatsCardsSkeleton from "@/components/admin/dashboard/skeletons/StatsCard
 import StatsCategoriesSection from "@/components/admin/dashboard/stats/StatsCategoriesSection";
 import StatsEngagementSection from "@/components/admin/dashboard/stats/StatsEngagementSection";
 import StatsGeneralSection from "@/components/admin/dashboard/stats/StatsGeneralSection";
+import StatsShareSection from "@/components/admin/dashboard/stats/StatsShareSection";
 import { usePosts } from "@/hooks/usePosts";
 
 export default function AdminDashboardPage() {
@@ -25,6 +26,9 @@ export default function AdminDashboardPage() {
 
             {/* Sección de categorización */}
             <StatsCategoriesSection stats={stats} />
+
+            {/* Seccion de compartir */}
+            <StatsShareSection />
         </div>
     );
 }

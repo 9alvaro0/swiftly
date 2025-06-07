@@ -87,6 +87,7 @@ export default function CommentsSection({ postId }: CommentsSectionProps) {
                     <div className="space-y-4">
                         <div className="relative">
                             <Textarea
+                                id={`new-comment-${postId}`}
                                 value={newComment}
                                 onChange={(e) => setNewComment(e.target.value)}
                                 placeholder="Comparte tu experiencia con este tutorial..."
@@ -109,7 +110,7 @@ export default function CommentsSection({ postId }: CommentsSectionProps) {
                             >
                                 {submitting ? (
                                     <>
-                                        <Spinner size="sm" />
+                                        <Spinner />
                                         <span className="ml-2">Publicando...</span>
                                     </>
                                 ) : (
