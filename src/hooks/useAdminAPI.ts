@@ -6,7 +6,7 @@ import { auth } from '@/services/firebase/config';
 import { onAuthStateChanged } from 'firebase/auth';
 import { User } from '@/types/User';
 import { Post } from '@/types/Post';
-import { NewsletterSubscriber } from '@/types/NewsletterSubscriber';
+import NewsletterSubscriber from '@/types/NewsletterSubscriber';
 
 interface AdminAPIResponse<T> {
   data: T | null;

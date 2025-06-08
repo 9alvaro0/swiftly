@@ -2,7 +2,7 @@
 import { NextRequest } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
 import { verifyAdminToken, createAuthResponse } from '@/lib/auth-helpers';
-import { NewsletterSubscriber } from '@/types/NewsletterSubscriber';
+import NewsletterSubscriber from '@/types/NewsletterSubscriber';
 
 export async function GET(request: NextRequest) {
   // Verify admin authentication
@@ -27,10 +27,12 @@ export async function GET(request: NextRequest) {
         const data = doc.data();
         // Convert Firestore timestamps to dates
         return {
-          ...data,
           id: doc.id,
+          email: data.email || '',
+          isActive: data.isActive || false,
           createdAt: data.createdAt?.toDate() || new Date(),
-          updatedAt: data.updatedAt?.toDate() || new Date(),
+          lastEmailSent: data.lastEmailSent?.toDate(),
+          metadata: data.metadata,
         } as NewsletterSubscriber;
       })
       .filter(subscriber => {
