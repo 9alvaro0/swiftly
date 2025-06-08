@@ -69,7 +69,7 @@ export default function useContactForm() {
         setSubmitError("");
 
         try {
-            const response = await fetch("/api/contact", {
+            const response = await fetch("https://us-central1-swiftly-by-warwere.cloudfunctions.net/contactForm", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

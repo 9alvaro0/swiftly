@@ -1,23 +1,10 @@
-import { collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../config";
 import { Tag } from "@/types/Tag"; // Importar el objeto Tag
 
 // Colección de Firestore
 const tagsCollection = collection(db, "tags");
 
-// Crear un tag
-export const createTag = async (tag: Tag): Promise<void> => {
-    try {
-        if (!tag || !tag.id) {
-            throw new Error("Tag data or tag ID is required");
-        }
-        await setDoc(doc(tagsCollection, tag.id), tag);
-        console.log(`Tag created successfully with ID: ${tag.id}`);
-    } catch (error) {
-        console.error("Error creating tag:", error);
-        throw new Error(`Failed to create tag: ${error instanceof Error ? error.message : String(error)}`);
-    }
-};
 
 // Obtener un tag por ID
 export const getTagById = async (tagId: string): Promise<Tag | null> => {
@@ -46,10 +33,8 @@ export const getTagById = async (tagId: string): Promise<Tag | null> => {
     }
 };
 
-// Obtener todos los tags
-export const getAllTags = async (
-    searchTerm: string = "",
-): Promise<Tag[]> => {
+// Obtener todos los tags (solo para uso público)
+export const getAllTags = async (): Promise<Tag[]> => {
     try {
         const snapshot = await getDocs(tagsCollection);
         
@@ -61,7 +46,7 @@ export const getAllTags = async (
                         console.warn(`Invalid tag data found in document: ${doc.id}`);
                         return false;
                     }
-                    return data.name.toLowerCase().includes(searchTerm.toLowerCase());
+                    return true;
                 } catch (error) {
                     console.warn(`Error processing tag document ${doc.id}:`, error);
                     return false;
@@ -72,45 +57,29 @@ export const getAllTags = async (
                 return tagData;
             });
             
-        console.log(`Retrieved ${tags.length} tags${searchTerm ? ` matching "${searchTerm}"` : ''}`);
+        console.log(`Retrieved ${tags.length} tags`);
         return tags;
     } catch (error) {
         console.error("Error getting all tags:", error);
-        // Return empty array as fallback to prevent app crashes
         return [];
     }
 };
 
-// Actualizar un tag
-export const updateTag = async (tagId: string, updatedFields: Partial<Tag>): Promise<void> => {
-    try {
-        if (!tagId || typeof tagId !== 'string') {
-            throw new Error("Valid tag ID is required");
-        }
-        
-        if (!updatedFields || Object.keys(updatedFields).length === 0) {
-            throw new Error("Updated fields are required");
-        }
-        
-        await updateDoc(doc(tagsCollection, tagId), updatedFields);
-        console.log(`Tag updated successfully: ${tagId}`);
-    } catch (error) {
-        console.error(`Error updating tag (${tagId}):`, error);
-        throw new Error(`Failed to update tag: ${error instanceof Error ? error.message : String(error)}`);
-    }
+// Deprecated admin functions - now handled by Firebase Functions
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const createTag = async (_tag: Tag): Promise<void> => {
+    console.error('createTag is deprecated - use Firebase Functions instead');
+    throw new Error('This operation must be performed through Firebase Functions');
 };
 
-// Eliminar un tag
-export const deleteTag = async (tagId: string): Promise<void> => {
-    try {
-        if (!tagId || typeof tagId !== 'string') {
-            throw new Error("Valid tag ID is required");
-        }
-        
-        await deleteDoc(doc(tagsCollection, tagId));
-        console.log(`Tag deleted successfully: ${tagId}`);
-    } catch (error) {
-        console.error(`Error deleting tag (${tagId}):`, error);
-        throw new Error(`Failed to delete tag: ${error instanceof Error ? error.message : String(error)}`);
-    }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const updateTag = async (_tagId: string, _updatedFields: Partial<Tag>): Promise<void> => {
+    console.error('updateTag is deprecated - use Firebase Functions instead');
+    throw new Error('This operation must be performed through Firebase Functions');
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const deleteTag = async (_tagId: string): Promise<void> => {
+    console.error('deleteTag is deprecated - use Firebase Functions instead');
+    throw new Error('This operation must be performed through Firebase Functions');
 };

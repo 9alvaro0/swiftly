@@ -11,6 +11,10 @@ interface TagPageProps {
     }>;
 }
 
+export async function generateStaticParams() {
+    return [];
+}
+
 export default async function TagPage(props: TagPageProps) {
     const resolvedParams = await props.params;
     const { slug } = resolvedParams;

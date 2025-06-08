@@ -7,7 +7,6 @@ import {
     getDocs,
     setDoc,
     updateDoc,
-    deleteDoc,
     query,
     where,
     limit,
@@ -276,20 +275,6 @@ export const incrementUserStat = async (uid: string, stat: keyof User["stats"], 
     }
 };
 
-// Eliminar un perfil de usuario
-export const deleteUserProfile = async (uid: string): Promise<void> => {
-    try {
-        if (!uid || typeof uid !== 'string') {
-            throw new Error("Valid user UID is required");
-        }
-        
-        await deleteDoc(doc(usersCollection, uid));
-        console.log(`User profile deleted successfully: ${uid}`);
-    } catch (error) {
-        console.error(`Error deleting user profile (${uid}):`, error);
-        throw new Error(`Failed to delete user profile: ${error instanceof Error ? error.message : String(error)}`);
-    }
-};
 
 // Obtener usuarios recientes
 export const getRecentUsers = async (limitCount: number = 10): Promise<User[]> => {
@@ -355,45 +340,10 @@ export const getActiveUsers = async (limitCount: number = 10): Promise<User[]> =
     }
 };
 
-// Obtener todos los usuarios
+
+// Deprecated admin functions - now handled by Firebase Functions
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getAllUsers = async (searchTerm: string = "", role: string = "", status: string = ""): Promise<User[]> => {
-    try {
-        const q = query(usersCollection, orderBy("createdAt", "desc"));
-        const querySnapshot = await getDocs(q);
-
-        const users = querySnapshot.docs
-            .map((doc) => {
-                try {
-                    const userData = convertTimestampsToDates(doc.data());
-                    return userData as User;
-                } catch (error) {
-                    console.warn(`Error processing user document ${doc.id}:`, error);
-                    return null;
-                }
-            })
-            .filter((user): user is User => user !== null)
-            .filter((user) => {
-                try {
-                    const isMatchingRole = role ? user.role === role : true;
-                    const isMatchingStatus = status ? user.isActive === (status === "active") : true;
-                    const isMatchingSearchTerm = searchTerm
-                        ? (user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           user.name?.toLowerCase().includes(searchTerm.toLowerCase()))
-                        : true;
-
-                    return isMatchingRole && isMatchingStatus && isMatchingSearchTerm;
-                } catch (error) {
-                    console.warn(`Error filtering user ${user.uid}:`, error);
-                    return false;
-                }
-            });
-            
-        console.log(`Retrieved ${users.length} users with filters - search: "${searchTerm}", role: "${role}", status: "${status}"`);
-        return users;
-    } catch (error) {
-        console.error("Error getting all users:", error);
-        // Return empty array as fallback
-        return [];
-    }
+    console.error('getAllUsers is deprecated - use Firebase Functions instead');
+    return [];
 };

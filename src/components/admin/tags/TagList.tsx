@@ -12,7 +12,10 @@ interface TagListProps {
 export default async function TagListProps({ searchTerm, currentPage }: TagListProps) {
     const TAGS_PER_PAGE = 5;
 
-    const tags = await getAllTags(searchTerm);
+    const allTags = await getAllTags();
+    const tags = allTags.filter(tag => 
+        tag.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     const indexOfLastItem = currentPage * TAGS_PER_PAGE;
     const indexOfFirstItem = indexOfLastItem - TAGS_PER_PAGE;

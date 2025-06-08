@@ -5,20 +5,17 @@ import {
     doc,
     getDoc,
     getDocs,
-    setDoc,
-    deleteDoc,
     arrayUnion,
     arrayRemove,
     increment,
     runTransaction,
     query,
     where,
-    orderBy,
     limit,
 } from "firebase/firestore";
 import { Post } from "@/types/Post";
 import { db } from "../config";
-import { convertDatesToTimestamps, convertTimestampsToDates } from "@/services/firebase/utils/utils";
+import { convertTimestampsToDates } from "@/services/firebase/utils/utils";
 
 // Colección de Firestore
 const postsCollection = collection(db, "posts");
@@ -89,21 +86,6 @@ export const getPostsByTag = async (tag: string): Promise<Post[]> => {
     }
 };
 
-// Obtener todos los posts
-export const getAllPosts = async (): Promise<Post[]> => {
-    try {
-        const q = query(postsCollection, orderBy("createdAt", "desc"));
-        const snapshot = await getDocs(q);
-        return snapshot.docs.map((doc) => {
-            const postData = convertTimestampsToDates(doc.data());
-            return postData as Post;
-        });
-    } catch (error) {
-        console.error("Error getting all posts:", error);
-        return [];
-    }
-};
-
 // Obtener todos los posts publicados
 interface PostFilters {
     searchTerm?: string;
@@ -157,33 +139,23 @@ export const getAllPublishedPosts = async (filters: PostFilters): Promise<Post[]
     }
 };
 
-// Crea o actualiza un post
-export const createOrUpdatePost = async (id: string, updatedFields: Partial<Post>): Promise<void> => {
-    const existingPost = await getPostById(id);
 
-    let post;
-    if (existingPost) {
-        post = {
-            ...existingPost,
-            ...updatedFields,
-            updatedAt: new Date(),
-        };
-    } else {
-        post = {
-            id,
-            createdAt: new Date(),
-            ...updatedFields,
-            updatedAt: new Date(),
-        };
-    }
-
-    const processedData = convertDatesToTimestamps(post);
-    await setDoc(doc(postsCollection, id), processedData);
+// Deprecated admin functions - now handled by Firebase Functions
+export const getAllPosts = async (): Promise<Post[]> => {
+    console.error('getAllPosts is deprecated - use Firebase Functions instead');
+    return [];
 };
 
-// Eliminar un post
-export const deletePost = async (id: string): Promise<void> => {
-    await deleteDoc(doc(postsCollection, id));
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const createOrUpdatePost = async (_id: string, _updatedFields: Partial<Post>): Promise<void> => {
+    console.error('createOrUpdatePost is deprecated - use Firebase Functions instead');
+    throw new Error('This operation must be performed through Firebase Functions');
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const deletePost = async (_id: string): Promise<void> => {
+    console.error('deletePost is deprecated - use Firebase Functions instead');
+    throw new Error('This operation must be performed through Firebase Functions');
 };
 
 // Dar/quitar like a un post

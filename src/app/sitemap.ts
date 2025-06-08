@@ -9,6 +9,9 @@ import { getLatestDate } from '@/utils/dateUtils';
 
 const baseUrl = 'https://aprendeswift.dev';
 
+export const dynamic = 'force-static';
+export const revalidate = false;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     try {
         const sitemapEntries: MetadataRoute.Sitemap = [];

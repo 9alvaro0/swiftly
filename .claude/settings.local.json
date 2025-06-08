@@ -25,7 +25,13 @@
       "Bash(firebase apphosting:backends:list:*)",
       "Bash(firebase apphosting:rollouts:list:*)",
       "Bash(git commit:*)",
-      "Bash(firebase apphosting:backends:get:*)"
+      "Bash(firebase apphosting:backends:get:*)",
+      "Bash(cp:*)",
+      "Bash(ls:*)",
+      "Bash(firebase functions:list:*)",
+      "Bash(npm run export:*)",
+      "Bash(mv:*)",
+      "Bash(grep:*)"
     ],
     "deny": []
   }

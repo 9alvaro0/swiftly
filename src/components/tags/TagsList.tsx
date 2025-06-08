@@ -5,9 +5,9 @@ import { BsEmojiFrown } from "react-icons/bs";
 import Link from "next/link";
 
 export default async function TagsList({ searchTerm }: { searchTerm: string }) {
-    const tags = await getAllTags(searchTerm);
-
-    const filteredTags = tags.filter((tag) => tag.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    const allTags = await getAllTags();
+    
+    const filteredTags = allTags.filter((tag) => tag.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
     return (
         <div className="rounded-2xl shadow-lg transition-all">

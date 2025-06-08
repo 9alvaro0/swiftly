@@ -54,7 +54,7 @@ export function useAdminUsers(
       if (role) params.append('role', role);
       if (status) params.append('status', status);
 
-      const response = await fetch(`/api/admin/users?${params}`, {
+      const response = await fetch(`https://us-central1-swiftly-by-warwere.cloudfunctions.net/adminUsers?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ export function useAdminPosts(
       if (status) params.append('status', status);
       if (type) params.append('type', type);
 
-      const response = await fetch(`/api/admin/posts?${params}`, {
+      const response = await fetch(`https://us-central1-swiftly-by-warwere.cloudfunctions.net/adminPosts?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -190,7 +190,7 @@ export function useAdminNewsletter(
       if (searchTerm) params.append('search', searchTerm);
       if (status) params.append('status', status);
 
-      const response = await fetch(`/api/admin/newsletter?${params}`, {
+      const response = await fetch(`https://us-central1-swiftly-by-warwere.cloudfunctions.net/adminNewsletter?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',

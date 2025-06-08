@@ -7,6 +7,10 @@ import { generateMetadata as generatePostMetadata } from "@/utils/metadataUtils"
 
 export const generateMetadata = generatePostMetadata;
 
+export async function generateStaticParams() {
+    return [];
+}
+
 interface PageProps {
     params: Promise<{
         slug: string;

@@ -42,7 +42,7 @@ export function useNewsletterSignup(): UseNewsletterSignupReturn {
             await subscribe(email);
             
             // Send welcome email
-            const response = await fetch('/api/newsletter/welcome', {
+            const response = await fetch('https://us-central1-swiftly-by-warwere.cloudfunctions.net/newsletterWelcome', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
