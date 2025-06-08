@@ -5,7 +5,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import type React from "react";
-import { MdDashboard } from "react-icons/md";
+import { MdDashboard, MdEmail } from "react-icons/md";
 import { FaBook, FaUsers } from "react-icons/fa";
 import { AiFillTags } from "react-icons/ai";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
@@ -40,9 +40,15 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             disabled: false,
         },
         {
-            name: "Usarios",
+            name: "Usuarios",
             href: "/admin/users",
             icon: FaUsers,
+            disabled: false,
+        },
+        {
+            name: "Newsletter",
+            href: "/admin/newsletter",
+            icon: MdEmail,
             disabled: false,
         },
     ];

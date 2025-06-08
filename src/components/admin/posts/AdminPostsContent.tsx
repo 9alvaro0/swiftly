@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Tag, FileText } from "lucide-react";
 import PostCard from "@/components/admin/posts/PostCard";
 import { useSearchParams, useRouter } from "next/navigation";
-import { usePosts } from "@/hooks/usePosts";
+import { useAdminPosts } from "@/hooks/useAdminAPI";
 import AdminPostsSkeleton from "@/components/admin/posts/skeletons/AdminPostsSkeleton";
 import Select from "@/components/ui/Select";
 import { useCallback } from "react";
@@ -15,11 +15,11 @@ export default function AdminPostsContent() {
     const router = useRouter();
     const status = searchParams.get("status");
 
-    const { posts, isLoading, refetch } = usePosts();
+    const { data: posts, isLoading, refetch } = useAdminPosts();
 
-    const filteredPosts = status
+    const filteredPosts = posts && status
         ? posts.filter((t) => (status === "published" ? t.isPublished : !t.isPublished))
-        : posts;
+        : posts || [];
 
     const statusOptions = [
         { value: "", label: "Todos" },

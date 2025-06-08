@@ -1,23 +1,18 @@
-// src/components/admin/users/AdminUsersPage.tsx
+// src/app/admin/users/page.tsx
+"use client";
 
 import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import UserSkeleton from "@/components/admin/users/skeletons/UserSkeleton";
 import UserFilters from "@/components/admin/users/UserFilters";
-import UserList from "@/components/admin/users/UserList";
+import UserListClient from "@/components/admin/users/UserListClient";
 
-export default async function AdminUsersPage(props: {
-    searchParams?: Promise<{
-        query?: string;
-        role?: string;
-        status?: string;
-        page?: string;
-    }>;
-}) {
-    const searchParams = await props.searchParams;
-    const query = searchParams?.query || "";
-    const role = searchParams?.role || "";
-    const status = searchParams?.status || "";
-    const currentPage = Number(searchParams?.page) || 1;
+export default function AdminUsersPage() {
+    const searchParams = useSearchParams();
+    const query = searchParams.get("query") || "";
+    const role = searchParams.get("role") || "";
+    const status = searchParams.get("status") || "";
+    const currentPage = Number(searchParams.get("page")) || 1;
 
     return (
         <>
@@ -27,7 +22,7 @@ export default async function AdminUsersPage(props: {
                 key={query + currentPage + status + role}
                 fallback={<UserSkeleton />}
             >
-                <UserList
+                <UserListClient
                     searchTerm={query}
                     currentPage={currentPage}
                     role={role}
