@@ -1,10 +1,15 @@
 // src/app/api/admin/newsletter/route.ts
 import { NextRequest } from 'next/server';
-import { adminDb } from '@/lib/firebase-admin';
+import { adminDb, adminAuth } from '@/lib/firebase-admin';
 import { verifyAdminToken, createAuthResponse } from '@/lib/auth-helpers';
 import NewsletterSubscriber from '@/types/NewsletterSubscriber';
 
 export async function GET(request: NextRequest) {
+  // Check if admin services are available
+  if (!adminDb || !adminAuth) {
+    return createAuthResponse('Admin services not available - missing Firebase Admin configuration', 503);
+  }
+
   // Verify admin authentication
   const adminUser = await verifyAdminToken(request);
   if (!adminUser) {

@@ -24,7 +24,8 @@
       "Bash(npm run dev:*)",
       "Bash(firebase apphosting:backends:list:*)",
       "Bash(firebase apphosting:rollouts:list:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(firebase apphosting:backends:get:*)"
     ],
     "deny": []
   }

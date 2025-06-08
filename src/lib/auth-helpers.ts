@@ -10,6 +10,11 @@ export interface AdminUser {
 
 export async function verifyAdminToken(request: NextRequest): Promise<AdminUser | null> {
   try {
+    if (!adminAuth) {
+      console.error('Firebase Admin Auth not initialized');
+      return null;
+    }
+
     const authHeader = request.headers.get('authorization');
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
