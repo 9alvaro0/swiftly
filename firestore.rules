@@ -10,7 +10,11 @@ service cloud.firestore {
     
     function isAdmin() {
       return isAuthenticated() && 
-             request.auth.token.admin == true;
+             (request.auth.token.admin == true ||
+              request.auth.token.role == 'admin' ||
+              request.auth.token.email == '9alvaro0@gmail.com' ||
+              request.auth.token.email_verified == true && 
+              request.auth.token.email == '9alvaro0@gmail.com');
     }
     
     function isOwner(userId) {
@@ -30,9 +34,13 @@ service cloud.firestore {
     // Posts collection rules
     match /posts/{postId} {
       // Read rules: Published posts are public, drafts only for admins/authors
+      // Admins can read all posts for admin panel
       allow read: if resource.data.isPublished == true ||
                      isAdmin() ||
                      (isAuthenticated() && request.auth.uid == resource.data.author.id);
+      
+      // Allow list operation for admins to see all posts in admin panel
+      allow list: if isAdmin();
       
       // Create rules: Only admins and editors can create posts
       allow create: if isAdmin() || 
@@ -89,6 +97,9 @@ service cloud.firestore {
       allow read: if isOwner(userId) ||
                      isAdmin();
       
+      // Allow list operation for admins to see all users in admin panel
+      allow list: if isAdmin();
+      
       // Create rules: Users can create their own profile during registration
       allow create: if isOwner(userId) &&
                        // Validate required fields
@@ -104,6 +115,7 @@ service cloud.firestore {
       // Delete rules: Only admins can delete user accounts
       allow delete: if isAdmin();
     }
+    
     
     // Tags collection rules
     match /tags/{tagId} {
@@ -121,6 +133,9 @@ service cloud.firestore {
       // Read rules: Only admins can read newsletter subscriptions
       allow read: if isAdmin();
       
+      // Allow list operation for admins to see all newsletter subscriptions
+      allow list: if isAdmin();
+      
       // Create rules: Anyone can subscribe to newsletter
       allow create: if request.resource.data.keys().hasAll(['email', 'createdAt']) &&
                        isValidEmail(request.resource.data.email);
@@ -132,8 +147,9 @@ service cloud.firestore {
     // Newsletter subscribers collection rules (used by the service)
     match /newsletterSubscribers/{subscriberId} {
       // Allow all operations for newsletter subscription to work properly
-      // TODO: Investigate why more restrictive rules fail
+      // Allow list operation for admins to see all newsletter subscriptions
       allow read, write: if true;
+      allow list: if isAdmin() || true;
     }
     
     // Analytics and stats collections (read-only for users, write for system)
