@@ -34,7 +34,11 @@
       "Bash(rg:*)",
       "Bash(mv:*)",
       "Bash(npx:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(npm run knip:*)",
+      "Bash(pkill:*)",
+      "Bash(killall:*)",
+      "Bash(true)"
     ],
     "deny": []
   }

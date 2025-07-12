@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '@/services/firebase/config';
 import NewsletterSubscriber from '@/types/NewsletterSubscriber';
-import { convertTimestampsToDates } from '@/services/firebase/utils/utils';
+import { serializeFirestoreData } from '@/services/firebase/utils/utils';
 import { headers } from 'next/headers';
 
 export async function GET(request: NextRequest) {
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
       const subscribers: NewsletterSubscriber[] = subscribersSnapshot.docs
         .map(doc => {
           try {
-            const data = convertTimestampsToDates(doc.data()) as Record<string, unknown>;
+            const data = serializeFirestoreData(doc.data()) as Record<string, unknown>;
             return {
               id: doc.id,
               email: data.email || '',

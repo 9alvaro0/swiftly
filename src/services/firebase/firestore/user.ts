@@ -14,10 +14,11 @@ import {
     orderBy,
     Timestamp,
     arrayUnion,
+    FieldValue,
 } from "firebase/firestore";
 import { db } from "../config";
 import { User } from "@/types/User";
-import { convertDatesToTimestamps, convertTimestampsToDates } from "@/services/firebase/utils/utils";
+import { convertDatesToTimestamps, serializeFirestoreData } from "@/services/firebase/utils/utils";
 import { UserProfile } from "firebase/auth";
 import { createOrUpdateAuthorProfile } from "./authors";
 
@@ -137,7 +138,7 @@ export const getUser = async (uid: string): Promise<User | null> => {
         const userDoc = await getDoc(doc(usersCollection, uid));
 
         if (userDoc.exists()) {
-            const userData = convertTimestampsToDates(userDoc.data());
+            const userData = serializeFirestoreData(userDoc.data());
             console.log(`User retrieved successfully: ${uid}`);
             return userData as User;
         }
@@ -238,7 +239,7 @@ export const updateUser = async (uid: string, updatedFields: Partial<User>): Pro
             updatedAt: new Date(),
         });
 
-        await updateDoc(doc(usersCollection, uid), updatedData);
+        await updateDoc(doc(usersCollection, uid), updatedData as Record<string, FieldValue | Partial<unknown> | undefined>);
         
         // También actualizar el perfil de autor si se cambiaron campos relevantes
         const authorRelevantFields = ['name', 'username', 'photoURL', 'bio', 'socialLinks'];
@@ -251,7 +252,7 @@ export const updateUser = async (uid: string, updatedFields: Partial<User>): Pro
                 // Obtener el usuario completo para actualizar el autor
                 const userDoc = await getDoc(doc(usersCollection, uid));
                 if (userDoc.exists()) {
-                    const userData = convertTimestampsToDates(userDoc.data()) as User;
+                    const userData = serializeFirestoreData(userDoc.data()) as User;
                     await createOrUpdateAuthorProfile(userData);
                 }
             } catch (error) {
@@ -346,7 +347,7 @@ export const getRecentUsers = async (limitCount: number = 10): Promise<User[]> =
 
         const users = querySnapshot.docs.map((doc) => {
             try {
-                const userData = convertTimestampsToDates(doc.data());
+                const userData = serializeFirestoreData(doc.data());
                 return userData as User;
             } catch (error) {
                 console.warn(`Error processing user document ${doc.id}:`, error);
@@ -378,7 +379,7 @@ export const getActiveUsers = async (limitCount: number = 10): Promise<User[]> =
 
         const users = querySnapshot.docs.map((doc) => {
             try {
-                const userData = convertTimestampsToDates(doc.data());
+                const userData = serializeFirestoreData(doc.data());
                 return userData as User;
             } catch (error) {
                 console.warn(`Error processing user document ${doc.id}:`, error);
@@ -407,7 +408,7 @@ export const getAllUsers = async (searchTerm: string = "", role: string = "", st
         const users = querySnapshot.docs
             .map((doc) => {
                 try {
-                    const userData = convertTimestampsToDates(doc.data());
+                    const userData = serializeFirestoreData(doc.data());
                     return userData as User;
                 } catch (error) {
                     console.warn(`Error processing user document ${doc.id}:`, error);

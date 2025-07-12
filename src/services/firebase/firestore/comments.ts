@@ -16,7 +16,7 @@ import {
 } from "firebase/firestore";
 import { Comment, CreateCommentData, CommentAuthor } from "@/types/Comment";
 import { db } from "../config";
-import { convertTimestampsToDates } from "@/services/firebase/utils/utils";
+import { serializeFirestoreData } from "@/services/firebase/utils/utils";
 
 // Colección de comentarios
 const commentsCollection = collection(db, "comments");
@@ -101,7 +101,7 @@ export const getPostComments = async (postId: string, includeReplies: boolean = 
         // Filtrar en el cliente para evitar problemas de índices
         let comments = snapshot.docs
             .map((doc) => {
-                const commentData = convertTimestampsToDates(doc.data());
+                const commentData = serializeFirestoreData(doc.data());
                 const comment = { id: doc.id, ...commentData } as Comment;
                 return comment;
             })
@@ -148,7 +148,7 @@ export const getCommentById = async (commentId: string): Promise<Comment | null>
             return null;
         }
 
-        const commentData = convertTimestampsToDates(commentDoc.data());
+        const commentData = serializeFirestoreData(commentDoc.data());
         return { id: commentDoc.id, ...commentData } as Comment;
     } catch (error) {
         console.error("Error getting comment by ID:", error);

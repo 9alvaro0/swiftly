@@ -91,9 +91,10 @@ export function formatAtomDate(date: Date | Timestamp | undefined | null | unkno
     try {
         // Si es un objeto con seconds/nanoseconds (Timestamp serializado)
         if (typeof date === 'object' && 'seconds' in date && 'nanoseconds' in date) {
-            return new Date(date.seconds * 1000).toISOString();
+            const timestampLike = date as { seconds: number; nanoseconds: number };
+            return new Date(timestampLike.seconds * 1000).toISOString();
         }
-        return toJSDate(date).toISOString();
+        return toJSDate(date as Date | Timestamp | null | undefined).toISOString();
     } catch (error) {
         console.error('Error formatting atom date:', error);
         return '';

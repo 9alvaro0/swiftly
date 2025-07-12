@@ -33,8 +33,16 @@ export function useProfileEditor() {
     const handleSaveField = async (): Promise<void> => {
         if (isEditingField && user) {
             try {
+                // Only update if value actually changed
+                const currentValue = user[isEditingField as keyof User];
+                if (currentValue === editingValue) {
+                    setIsEditingField(null);
+                    return;
+                }
+                
                 // Update local state first
-                setUser({ ...user, [isEditingField]: editingValue });
+                const updatedUser = { ...user, [isEditingField]: editingValue };
+                setUser(updatedUser);
                 
                 // Persist to Firebase
                 await updateUser(user.uid, { [isEditingField]: editingValue });
@@ -54,8 +62,16 @@ export function useProfileEditor() {
         if (imagePreview && user) {
             try {
                 if (isEditingField === "photo") {
+                    // Only update if photo URL actually changed
+                    if (user.photoURL === imagePreview) {
+                        setIsEditingField(null);
+                        setImagePreview(null);
+                        return;
+                    }
+                    
                     // Update local state first
-                    setUser({ ...user, photoURL: imagePreview });
+                    const updatedUser = { ...user, photoURL: imagePreview };
+                    setUser(updatedUser);
                     
                     // Persist to Firebase
                     await updateUser(user.uid, { photoURL: imagePreview });
@@ -112,11 +128,15 @@ export function useProfileEditor() {
             setImagePreview(imageUrl);
             setUploadProgress(100);
             
-            // Update local state
-            setUser({ ...user, photoURL: imageUrl });
-            
-            // Persist to Firebase
-            await updateUser(user.uid, { photoURL: imageUrl });
+            // Only update if photo URL actually changed
+            if (user.photoURL !== imageUrl) {
+                // Update local state
+                const updatedUser = { ...user, photoURL: imageUrl };
+                setUser(updatedUser);
+                
+                // Persist to Firebase
+                await updateUser(user.uid, { photoURL: imageUrl });
+            }
             
             toast.success('Foto de perfil actualizada correctamente');
 

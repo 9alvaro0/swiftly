@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 import { headers } from 'next/headers';
 import { adminDb } from '@/lib/firebase-admin';
 import { User } from '@/types/User';
-import { convertTimestampsToDates } from '@/services/firebase/utils/utils';
+import { serializeFirestoreData } from '@/services/firebase/utils/utils';
 
 export async function GET(request: NextRequest) {
   try {
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
           try {
             const data = doc.data();
             // Convert Firestore timestamps to dates
-            const userData = convertTimestampsToDates(data) as User;
+            const userData = serializeFirestoreData(data) as User;
             return { ...userData, uid: doc.id };
           } catch (parseError) {
             console.error(`Error parsing user document ${doc.id}:`, parseError);
