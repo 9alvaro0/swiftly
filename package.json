@@ -6,16 +6,16 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "knip": "knip",
+    "knip:production": "knip --production"
   },
   "dependencies": {
     "@sendgrid/mail": "^8.1.5",
     "@types/uuid": "^10.0.0",
-    "@vercel/speed-insights": "^1.2.0",
     "date-fns": "^4.1.0",
     "firebase": "^11.6.0",
     "firebase-admin": "^13.4.0",
-    "framer-motion": "^12.7.4",
     "lucide-react": "^0.487.0",
     "next": "15.3.0",
     "openai": "^4.96.0",
@@ -24,7 +24,6 @@
     "react-icons": "^5.5.0",
     "react-markdown": "^10.1.0",
     "react-syntax-highlighter": "^15.6.1",
-    "recharts": "^2.15.2",
     "remark-gfm": "^4.0.1",
     "sonner": "^2.0.3",
     "use-debounce": "10.0.4",
@@ -40,7 +39,8 @@
     "@types/react-dom": "^19",
     "@types/react-syntax-highlighter": "^15.5.13",
     "eslint": "^9",
-    "eslint-config-next": "15.3.0",
+    "eslint-config-next": "^15.3.5",
+    "knip": "^5.61.3",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

@@ -1,14 +1,34 @@
 // src/components/posts/PostsHeader.tsx
 
+"use client";
+
+import { BookOpen } from "lucide-react";
+import ContentHeader from "@/components/shared/ContentHeader";
+import { useContentStats } from "@/hooks/useContentStats";
+
 export default function PostsHeader() {
+    const { totalPosts, postsReadingHours, loading } = useContentStats();
+
     return (
-        <div className="space-y-2">
-            <h1 className="text-3xl md:text-4xl font-bold">Artículos</h1>
-            <p className="text-gray-600 max-w-3xl">
-                Explora nuestra colección de artículos sobre desarrollo, tecnología, y buenas prácticas. Filtrar por
-                categoría o nivel para encontrar exactamente lo que estás buscando.
-            </p>
-        </div>
+        <ContentHeader
+            title="Artículos"
+            description="Explora nuestra colección de artículos sobre desarrollo Swift, buenas prácticas y las últimas tendencias en iOS. Encuentra contenido especializado para cada nivel."
+            icon={<BookOpen size={24} className="text-blue-400" />}
+            badge={{
+                text: "Blog",
+                variant: "primary"
+            }}
+            stats={loading ? undefined : [
+                {
+                    label: "Artículos",
+                    value: totalPosts
+                },
+                {
+                    label: "Horas", 
+                    value: `${postsReadingHours}+`
+                }
+            ]}
+        />
     );
 };
 

@@ -10,10 +10,14 @@ import { Timestamp } from "firebase/firestore";
  * formatDate(new Date()) // => Fecha actual formateada
  * formatDate(firestoreTimestamp) // => Fecha de timestamp formateada
  */
-export function formatDate(dateInput: string | Date | Timestamp): string {
+export function formatDate(dateInput: string | Date | Timestamp | null | undefined): string {
     let date: Date;
 
     try {
+        if (!dateInput) {
+            throw new Error("Fecha no proporcionada");
+        }
+        
         if (typeof dateInput === "string") {
             date = new Date(dateInput);
         } else if (dateInput instanceof Date) {
@@ -21,6 +25,16 @@ export function formatDate(dateInput: string | Date | Timestamp): string {
         } else if (dateInput?.toDate instanceof Function) {
             // Para Firestore Timestamp
             date = dateInput.toDate();
+        } else if (typeof dateInput === 'object' && dateInput !== null) {
+            // Para objetos que podrían ser Timestamps serializados o con propiedades de fecha
+            if ('seconds' in dateInput && 'nanoseconds' in dateInput) {
+                // Firestore Timestamp serializado
+                const timestampLike = dateInput as { seconds: number; nanoseconds: number };
+                date = new Date(timestampLike.seconds * 1000);
+            } else {
+                // Objeto vacío o no reconocido - tratar como fecha inválida
+                throw new Error("Objeto de fecha vacío o no reconocido");
+            }
         } else {
             throw new Error(`Formato de fecha no soportado: ${typeof dateInput}`);
         }
@@ -71,8 +85,19 @@ export function formatRssDate(date: Date | Timestamp | undefined | null): string
 /**
  * Formats a date for Atom feeds (ISO 8601 format)
  */
-export function formatAtomDate(date: Date | Timestamp | undefined | null): string {
-    return toJSDate(date).toISOString();
+export function formatAtomDate(date: Date | Timestamp | undefined | null | unknown): string {
+    if (!date) return '';
+    
+    try {
+        // Si es un objeto con seconds/nanoseconds (Timestamp serializado)
+        if (typeof date === 'object' && 'seconds' in date && 'nanoseconds' in date) {
+            return new Date(date.seconds * 1000).toISOString();
+        }
+        return toJSDate(date).toISOString();
+    } catch (error) {
+        console.error('Error formatting atom date:', error);
+        return '';
+    }
 }
 
 /**

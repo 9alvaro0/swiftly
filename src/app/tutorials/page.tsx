@@ -1,42 +1,56 @@
 // src/app/tutorials/page.tsx
 
 import TutorialsHeader from "@/components/tutorials/TutorialsHeader";
-import PostsFilters from "@/components/posts/PostsFilters";
 import TutorialsList from "@/components/tutorials/TutorialsList";
 import TutorialListSkeleton from "@/components/tutorials/skeletons/TutorialListSkeleton";
-import { Suspense } from "react";
+import ContentPageLayout from "@/components/shared/ContentPageLayout";
+import ContentFilters from "@/components/shared/ContentFilters";
+import { ViewMode } from "@/components/posts/ViewToggle";
+import { SortOption } from "@/components/posts/SortOptions";
 
-interface TutorialDetailPageProps {
+export default async function TutorialsPage(props: {
     searchParams?: Promise<{
         query?: string;
         level?: string;
+        tag?: string;
         page?: string;
+        view?: string;
+        sort?: string;
     }>;
-}
-export default async function TutorialsPage(props: TutorialDetailPageProps) {
-    const resolvedParams = await props.searchParams;
-    const query = resolvedParams?.query || "";
-    const level = resolvedParams?.level || "";
-    const currentPage = Number(resolvedParams?.page) || 1;
+}) {
+    const searchParams = await props.searchParams;
+    const query = searchParams?.query || "";
+    const level = searchParams?.level || "";
+    const tag = searchParams?.tag || "";
+    const viewMode = (searchParams?.view as ViewMode) || "grid";
+    const sortBy = (searchParams?.sort as SortOption) || "recent";
+    const currentPage = Number(searchParams?.page) || 1;
 
     return (
-        <div className="py-12 px-4 md:px-6 max-w-7xl mx-auto">
-            <div className="space-y-6 mb-10">
-                <TutorialsHeader />
-
-                <PostsFilters />
-            </div>
-
-            <Suspense
-                key={query + level + currentPage}
-                fallback={<TutorialListSkeleton />}
-            >
-                <TutorialsList
-                    searchTerm={query}
-                    level={level}
-                    currentPage={currentPage}
+        <ContentPageLayout
+            header={<TutorialsHeader />}
+            filters={
+                <ContentFilters
+                    viewMode={viewMode}
+                    sortBy={sortBy}
+                    levelLabel="Nivel de dificultad"
+                    showViewToggle={true}
+                    showSortOptions={true}
+                    showTags={true}
+                    showMobileFilters={true}
                 />
-            </Suspense>
-        </div>
+            }
+            suspenseKey={query + level + tag + currentPage + viewMode + sortBy}
+            fallback={<TutorialListSkeleton />}
+        >
+            <TutorialsList
+                searchTerm={query}
+                level={level}
+                tag={tag}
+                currentPage={currentPage}
+                viewMode={viewMode}
+                sortBy={sortBy}
+            />
+        </ContentPageLayout>
     );
 }

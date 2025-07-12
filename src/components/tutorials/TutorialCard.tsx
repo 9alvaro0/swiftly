@@ -3,12 +3,14 @@ import Image from "next/image";
 import { Post } from "@/types/Post";
 import { LEVEL_COLORS } from "@/constants/post";
 import { FiClock } from "react-icons/fi";
+import HighlightText from "@/components/ui/HighlightText";
 
 type TutorialCardProps = {
     tutorial: Post;
+    searchTerm?: string;
 };
 
-export default function TutorialCard({ tutorial }: TutorialCardProps) {
+export default function TutorialCard({ tutorial, searchTerm = "" }: TutorialCardProps) {
     const levelStyle = LEVEL_COLORS[tutorial.level];
 
     return (
@@ -26,7 +28,9 @@ export default function TutorialCard({ tutorial }: TutorialCardProps) {
                         className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                 </div>
-                <h2 className="font-bold text-white text-lg leading-tight mb-2">{tutorial.title}</h2>
+                <h2 className="font-bold text-white text-lg leading-tight mb-2">
+                    <HighlightText text={tutorial.title} searchTerm={searchTerm} />
+                </h2>
                 <div className="mt-4 flex items-center justify-between text-xs">
                     <span className="flex items-center gap-1 px-2 py-1 bg-blue-400/20 rounded-full text-white/70 capitalize">
                         <FiClock size={14} className="text-blue-300" />

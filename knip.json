@@ -1,0 +1,36 @@
+{
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "workspaces": {
+    ".": {
+      "entry": [
+        "src/app/**/*.{js,jsx,ts,tsx}",
+        "src/middleware.ts",
+        "next.config.js",
+        "tailwind.config.js"
+      ],
+      "project": [
+        "src/**/*.{js,jsx,ts,tsx}",
+        "!src/**/*.test.{js,jsx,ts,tsx}",
+        "!src/**/*.spec.{js,jsx,ts,tsx}"
+      ],
+      "ignore": [
+        "src/app/globals.css",
+        "src/app/**/loading.tsx",
+        "src/app/**/error.tsx",
+        "src/app/**/not-found.tsx",
+        "src/app/**/layout.tsx",
+        "src/app/**/page.tsx"
+      ],
+      "ignoreDependencies": [
+        "@types/node",
+        "typescript",
+        "eslint",
+        "tailwindcss",
+        "postcss",
+        "autoprefixer"
+      ]
+    }
+  },
+  "includeEntryExports": true,
+  "ignoreExportsUsedInFile": true
+}

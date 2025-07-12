@@ -8,7 +8,7 @@ interface EditProfileFieldProps {
     value: string;
     onChange: (value: string) => void;
     onClose: () => void;
-    onSave: () => void;
+    onSave: () => Promise<void>;
     footer: ReactNode;
 }
 
