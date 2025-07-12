@@ -2,9 +2,9 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { Post, PostLevel, PostType } from "@/types/Post";
+import { PostWithAuthor, PostLevel, PostType } from "@/types/Post";
 import { PostStats } from "@/types/PostStats";
-import { getAllPosts } from "@/services/firebase/firestore/post";
+import { getAllPostsWithAuthor } from "@/services/firebase/firestore/post";
 
 interface PostFilters {
     level?: string;
@@ -14,7 +14,7 @@ interface PostFilters {
 }
 
 export function usePosts(initialFilters: PostFilters = {}) {
-    const [posts, setPosts] = useState<Post[]>([]);
+    const [posts, setPosts] = useState<PostWithAuthor[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
     const [filters, setFilters] = useState<PostFilters>(initialFilters);
@@ -23,7 +23,7 @@ export function usePosts(initialFilters: PostFilters = {}) {
         setIsLoading(true);
         setError(null);
 
-        const fetchedPosts = await getAllPosts();
+        const fetchedPosts = await getAllPostsWithAuthor();
         setPosts(fetchedPosts);
 
         setIsLoading(false);

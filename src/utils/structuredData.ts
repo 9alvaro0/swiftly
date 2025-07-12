@@ -1,6 +1,6 @@
 // src/utils/structuredData.ts
 
-import { Post } from '@/types/Post';
+import { PostWithAuthor } from '@/types/Post';
 import { User } from '@/types/User';
 
 const baseUrl = 'https://aprendeswift.dev';
@@ -58,7 +58,7 @@ export function generateWebsiteLD(): object {
 }
 
 // Article structured data
-export function generateArticleLD(post: Post, author?: User): object {
+export function generateArticleLD(post: PostWithAuthor, author?: User): object {
     const postUrl = post.type === 'tutorial' 
         ? `${baseUrl}/tutorials/${post.slug}`
         : `${baseUrl}/posts/${post.slug}`;
@@ -177,7 +177,7 @@ export function generateBlogLD(): object {
 }
 
 // Collection page (tags) structured data
-export function generateCollectionPageLD(tagName: string, tagSlug: string, posts: Post[]): object {
+export function generateCollectionPageLD(tagName: string, tagSlug: string, posts: PostWithAuthor[]): object {
     return {
         '@context': 'https://schema.org',
         '@type': 'CollectionPage',

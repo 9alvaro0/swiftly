@@ -1,6 +1,6 @@
 "use client";
 
-import { Post } from "@/types/Post";
+import { PostWithAuthor } from "@/types/Post";
 import RelatedPosts from "@/components/post/RelatedPosts";
 import PostAuthorBio from "@/components/post/PostAuthorBio";
 import PostBreadcrumbs from "@/components/post/PostBreadcrumbs";
@@ -13,14 +13,14 @@ import { usePostViews } from "@/hooks/usePostViews";
 import PostContent from "@/components/post/PostContent";
 
 interface PostDetailProps {
-    post: Post;
+    post: PostWithAuthor;
     branch: string;
 }
 
 export default function PostDetail({ post, branch }: PostDetailProps) {
     const relatedPosts = post.relatedPosts || [];
     const { views } = usePostViews(post.id, post.views || 0);
-    const postWithUpdatedViews = {
+    const postWithUpdatedViews: PostWithAuthor = {
         ...post,
         views: views,
     };

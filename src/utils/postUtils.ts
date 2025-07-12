@@ -33,19 +33,8 @@ export const getDefaultPost = (): Post => ({
     readTime: 0,
     wordCount: 0,
 
-    // Autor
-    author: {
-        id: "",
-        name: "",
-        username: "",
-        avatar: "",
-        bio: "",
-        socialLinks: {
-            twitter: "",
-            github: "",
-            linkedin: "",
-        },
-    },
+    // Autor (solo el ID)
+    authorId: "",
 
     // SEO
     keywords: [],
@@ -99,7 +88,7 @@ export const validatePost = (post: Post): { isValid: boolean; errors: string[] }
     if (!post.type) errors.push("El tipo de post es obligatorio");
     if (!post.level) errors.push("El nivel es obligatorio");
     if (!post.imageUrl?.trim()) errors.push("La URL de la imagen es obligatoria");
-    if (!post.author?.name?.trim()) errors.push("El autor es obligatorio");
+    if (!post.authorId?.trim()) errors.push("El ID del autor es obligatorio");
 
     return {
         isValid: errors.length === 0,

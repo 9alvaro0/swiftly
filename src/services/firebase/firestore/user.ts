@@ -19,6 +19,7 @@ import { db } from "../config";
 import { User } from "@/types/User";
 import { convertDatesToTimestamps, convertTimestampsToDates } from "@/services/firebase/utils/utils";
 import { UserProfile } from "firebase/auth";
+import { createOrUpdateAuthorProfile } from "./authors";
 
 // Colección de Firestore
 const usersCollection = collection(db, "users");
@@ -78,6 +79,15 @@ export const createUserProfile = async (
         
         const userWithTimestamps = convertDatesToTimestamps(newUser);
         await setDoc(doc(usersCollection, uid), userWithTimestamps);
+        
+        // También crear el perfil de autor público
+        try {
+            await createOrUpdateAuthorProfile(newUser);
+        } catch (error) {
+            console.warn(`Failed to create author profile for user ${uid}:`, error);
+            // No fallar la creación del usuario si falla la creación del autor
+        }
+        
         console.log(`User profile created successfully: ${uid}`);
     } catch (error) {
         console.error(`Error creating user profile (${uid}):`, error);
@@ -98,6 +108,18 @@ export const saveUser = async (user: User): Promise<void> => {
         });
 
         await setDoc(doc(usersCollection, user.uid), userWithTimestamps);
+        
+        // También actualizar el perfil de autor público
+        try {
+            await createOrUpdateAuthorProfile({
+                ...user,
+                updatedAt: new Date(),
+            });
+        } catch (error) {
+            console.warn(`Failed to update author profile for user ${user.uid}:`, error);
+            // No fallar la actualización del usuario si falla la actualización del autor
+        }
+        
         console.log(`User saved successfully: ${user.uid}`);
     } catch (error) {
         console.error(`Error saving user (${user?.uid || 'unknown'}):`, error);
@@ -217,6 +239,27 @@ export const updateUser = async (uid: string, updatedFields: Partial<User>): Pro
         });
 
         await updateDoc(doc(usersCollection, uid), updatedData);
+        
+        // También actualizar el perfil de autor si se cambiaron campos relevantes
+        const authorRelevantFields = ['name', 'username', 'photoURL', 'bio', 'socialLinks'];
+        const hasAuthorRelevantChanges = Object.keys(updatedFields).some(key => 
+            authorRelevantFields.includes(key)
+        );
+        
+        if (hasAuthorRelevantChanges) {
+            try {
+                // Obtener el usuario completo para actualizar el autor
+                const userDoc = await getDoc(doc(usersCollection, uid));
+                if (userDoc.exists()) {
+                    const userData = convertTimestampsToDates(userDoc.data()) as User;
+                    await createOrUpdateAuthorProfile(userData);
+                }
+            } catch (error) {
+                console.warn(`Failed to update author profile for user ${uid}:`, error);
+                // No fallar la actualización del usuario si falla la actualización del autor
+            }
+        }
+        
         console.log(`User updated successfully: ${uid}`);
     } catch (error) {
         console.error(`Error updating user (${uid}):`, error);

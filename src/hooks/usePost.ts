@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Post } from "@/types/Post";
-import { deletePost, getPostBySlug, createOrUpdatePost } from "@/services/firebase/firestore/post";
+import { PostWithAuthor } from "@/types/Post";
+import { deletePost, getPostBySlugWithAuthor, createOrUpdatePost } from "@/services/firebase/firestore/post";
 import { toast } from "sonner";
 
 // Parámetros para el hook cuando se usa para administrar un post existente
@@ -35,7 +35,7 @@ export function usePost(slugOrProps: string | UsePostAdminProps) {
     } = !isSlugMode ? slugOrProps : ({} as UsePostAdminProps);
 
     // Estados compartidos
-    const [post, setPost] = useState<Post | undefined>(undefined);
+    const [post, setPost] = useState<PostWithAuthor | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
 
@@ -65,7 +65,7 @@ export function usePost(slugOrProps: string | UsePostAdminProps) {
         setError(null);
 
         try {
-            const fetchedPost = await getPostBySlug(slug);
+            const fetchedPost = await getPostBySlugWithAuthor(slug);
             setPost(fetchedPost);
 
             // Si estamos en modo combinado, actualizar el estado de publicación

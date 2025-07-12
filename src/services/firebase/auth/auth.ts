@@ -11,34 +11,40 @@ import { createUserProfile, updateLastLogin, getUser } from "@/services/firebase
 
 // Función para login con GitHub
 export const loginWithGithub = async (): Promise<UserCredential> => {
-    const provider = new GithubAuthProvider();
+    try {
+        const provider = new GithubAuthProvider();
+        provider.addScope('user:email');
 
-    const result = await signInWithPopup(auth, provider);
-    const user = result.user;
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
 
-    const userProfile = await getUser(user.uid);
+        const userProfile = await getUser(user.uid);
 
-    if (!userProfile) {
-        const githubUsername = user.email?.split("@")[0] || "";
-        const githubUrl = `https://github.com/${githubUsername}`;
+        if (!userProfile) {
+            const githubUsername = user.email?.split("@")[0] || "";
+            const githubUrl = `https://github.com/${githubUsername}`;
 
-        // Crear el perfil de usuario en Firestore
-        await createUserProfile(user.uid, {
-            email: user.email || "",
-            name: user.displayName || "",
-            username: githubUsername,
-            photoURL: user.photoURL || "",
-            emailVerified: user.emailVerified,
-            phone: user.phoneNumber || undefined,
-            provider: "github",
-            socialLinks: {
-                github: githubUrl,
-            },
-        });
-    } else {
-        await updateLastLogin(user.uid);
+            // Crear el perfil de usuario en Firestore
+            await createUserProfile(user.uid, {
+                email: user.email || "",
+                name: user.displayName || "",
+                username: githubUsername,
+                photoURL: user.photoURL || "",
+                emailVerified: user.emailVerified,
+                phone: user.phoneNumber || undefined,
+                provider: "github",
+                socialLinks: {
+                    github: githubUrl,
+                },
+            });
+        } else {
+            await updateLastLogin(user.uid);
+        }
+        return result;
+    } catch (error: unknown) {
+        console.error('Error al iniciar sesión con GitHub:', error);
+        throw error;
     }
-    return result;
 };
 
 export const loginWithEmailAndPassword = async (email: string, password: string): Promise<UserCredential> => {

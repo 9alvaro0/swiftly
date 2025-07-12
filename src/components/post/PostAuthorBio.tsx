@@ -10,7 +10,7 @@ interface PostAuthorBioProps {
 }
 
 export default function PostAuthorBio({ author }: PostAuthorBioProps) {
-    if (!author || !author.bio) return null;
+    if (!author) return null;
 
     return (
         <div className="mb-12 p-6 bg-white/5 border border-white/10 rounded-lg">
@@ -74,11 +74,13 @@ export default function PostAuthorBio({ author }: PostAuthorBioProps) {
                 </div>
             </div>
 
-            <div className="text-white/80 leading-relaxed space-y-3">
-                {author.bio.split("\n").map((paragraph, index) => (
-                    <p key={index}>{paragraph}</p>
-                ))}
-            </div>
+            {author.bio && (
+                <div className="text-white/80 leading-relaxed space-y-3">
+                    {author.bio.split("\n").map((paragraph, index) => (
+                        <p key={index}>{paragraph}</p>
+                    ))}
+                </div>
+            )}
 
             {author.username && (
                 <Link

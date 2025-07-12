@@ -16,12 +16,32 @@ import {
     orderBy,
     limit,
 } from "firebase/firestore";
-import { Post } from "@/types/Post";
+import { Post, PostWithAuthor } from "@/types/Post";
 import { db } from "../config";
 import { convertDatesToTimestamps, convertTimestampsToDates } from "@/services/firebase/utils/utils";
+import { getAuthor } from "./authors";
 
 // Colección de Firestore
 const postsCollection = collection(db, "posts");
+
+// Helper function to populate author data in a post
+const populatePostAuthor = async (post: Post): Promise<PostWithAuthor | null> => {
+    try {
+        const author = await getAuthor(post.authorId);
+        if (!author) {
+            console.warn(`Author not found for post ${post.id}, authorId: ${post.authorId}`);
+            return null;
+        }
+        
+        return {
+            ...post,
+            author,
+        };
+    } catch (error) {
+        console.error(`Error populating author for post ${post.id}:`, error);
+        return null;
+    }
+};
 
 // Obtener un post por ID
 export const getPostById = async (id: string): Promise<Post | undefined> => {
@@ -256,5 +276,92 @@ export const incrementPostViews = async (postId: string): Promise<{ views: numbe
         return { views: newViewCount };
     } catch (error) {
         throw error;
+    }
+};
+
+// === FUNCTIONS WITH POPULATED AUTHOR DATA ===
+
+// Obtener un post por ID con datos del autor
+export const getPostByIdWithAuthor = async (id: string): Promise<PostWithAuthor | undefined> => {
+    try {
+        const post = await getPostById(id);
+        if (!post) return undefined;
+        
+        const postWithAuthor = await populatePostAuthor(post);
+        return postWithAuthor || undefined;
+    } catch (error) {
+        console.error("Error getting post by ID with author:", error);
+        return undefined;
+    }
+};
+
+// Obtener un post por slug con datos del autor
+export const getPostBySlugWithAuthor = async (slug: string): Promise<PostWithAuthor | undefined> => {
+    try {
+        const post = await getPostBySlug(slug);
+        if (!post) return undefined;
+        
+        const postWithAuthor = await populatePostAuthor(post);
+        return postWithAuthor || undefined;
+    } catch (error) {
+        console.error("Error getting post by slug with author:", error);
+        return undefined;
+    }
+};
+
+// Obtener posts por tags con datos del autor
+export const getPostsByTagWithAuthor = async (tag: string): Promise<PostWithAuthor[]> => {
+    try {
+        const posts = await getPostsByTag(tag);
+        
+        const postsWithAuthor = await Promise.all(
+            posts.map(async (post) => {
+                const postWithAuthor = await populatePostAuthor(post);
+                return postWithAuthor;
+            })
+        );
+        
+        return postsWithAuthor.filter((post): post is PostWithAuthor => post !== null);
+    } catch (error) {
+        console.error("Error getting posts by tag with author:", error);
+        return [];
+    }
+};
+
+// Obtener todos los posts con datos del autor
+export const getAllPostsWithAuthor = async (): Promise<PostWithAuthor[]> => {
+    try {
+        const posts = await getAllPosts();
+        
+        const postsWithAuthor = await Promise.all(
+            posts.map(async (post) => {
+                const postWithAuthor = await populatePostAuthor(post);
+                return postWithAuthor;
+            })
+        );
+        
+        return postsWithAuthor.filter((post): post is PostWithAuthor => post !== null);
+    } catch (error) {
+        console.error("Error getting all posts with author:", error);
+        return [];
+    }
+};
+
+// Obtener todos los posts publicados con datos del autor
+export const getAllPublishedPostsWithAuthor = async (filters: PostFilters): Promise<PostWithAuthor[]> => {
+    try {
+        const posts = await getAllPublishedPosts(filters);
+        
+        const postsWithAuthor = await Promise.all(
+            posts.map(async (post) => {
+                const postWithAuthor = await populatePostAuthor(post);
+                return postWithAuthor;
+            })
+        );
+        
+        return postsWithAuthor.filter((post): post is PostWithAuthor => post !== null);
+    } catch (error) {
+        console.error("Error getting published posts with author:", error);
+        return [];
     }
 };

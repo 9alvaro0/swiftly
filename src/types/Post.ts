@@ -34,8 +34,8 @@ export interface Post {
     readTime?: number;
     wordCount?: number;
 
-    // Autor
-    author: Author;
+    // Autor (referencia al ID del usuario)
+    authorId: string;
 
     // SEO
     keywords?: string[];
@@ -82,6 +82,21 @@ export type PostLevel = "Principiante" | "Intermedio" | "Avanzado";
  * Tipos relacionados con el formato de las publicaciones
  */
 export type PostType = "article" | "tutorial";
+
+/**
+ * Post con datos del autor poblados (para uso en componentes)
+ */
+export interface PostWithAuthor extends Omit<Post, 'authorId'> {
+    author: Author;
+}
+
+/**
+ * Convierte PostWithAuthor a Post (extrae authorId del author)
+ */
+export const postWithAuthorToPost = (postWithAuthor: PostWithAuthor): Post => ({
+    ...postWithAuthor,
+    authorId: postWithAuthor.author.id,
+});
 
 /**
  * Estadísticas de compartir de una publicación
