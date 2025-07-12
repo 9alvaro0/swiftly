@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { loginWithGithub } from "@/services/firebase/auth/auth";
+import { loginWithGithub, loginWithGoogle } from "@/services/firebase/auth/auth";
 import { handleFirebaseError } from "@/services/firebase/errors";
 import { FaGithub, FaGoogle, FaApple } from "react-icons/fa";
 import { toast } from "sonner";
@@ -66,8 +66,7 @@ export default function SocialLoginButtons() {
             })}
 
             {renderButton(FaGoogle, "Continuar con Google", "google", async () => {
-                toast.info("Inicio de sesión con Google próximamente");
-                // Implementación real de Google Login
+                await loginWithGoogle();
             })}
 
             {renderButton(FaApple, "Continuar con Apple", "apple", async () => {
