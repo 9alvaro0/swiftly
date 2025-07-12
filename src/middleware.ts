@@ -68,12 +68,12 @@ export function middleware(request: NextRequest) {
   response.headers.set(
     'Content-Security-Policy',
     "default-src 'self'; " +
-    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; " +
+    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://apis.google.com https://accounts.google.com https://github.com; " +
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
     "font-src 'self' https://fonts.gstatic.com; " +
     "img-src 'self' data: https: blob:; " +
-    "connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://firestore.googleapis.com; " +
-    "frame-src 'self' https://www.youtube.com https://player.vimeo.com;"
+    "connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://firestore.googleapis.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com; " +
+    "frame-src 'self' https://www.youtube.com https://player.vimeo.com https://accounts.google.com https://*.firebaseapp.com https://github.com;"
   );
 
   // Rate limiting for API routes
