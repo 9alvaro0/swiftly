@@ -14,7 +14,7 @@ interface ProfileActionModalsProps {
     user: User | null;
     onEditValueChange: (value: string) => void;
     onClose: () => void;
-    onSaveField: () => void;
+    onSaveField: () => Promise<void>;
     onUploadImage: (file: File) => Promise<void>;
 }
 
@@ -41,7 +41,7 @@ export default function ProfileActionModals({
                 Cancelar
             </button>
             <button
-                onClick={onSaveField}
+                onClick={() => onSaveField()}
                 className="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg"
             >
                 Guardar

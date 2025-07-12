@@ -1,57 +1,36 @@
 // src/components/tutorials/TutorialsList.tsx
 
-import TutorialCard from "@/components/tutorials/TutorialCard";
-import Pagination from "@/components/ui/Pagination";
 import { getAllPublishedPosts } from "@/services/firebase/firestore/post";
+import TutorialsListClient from "./TutorialsListClient";
+import { ViewMode } from "@/components/posts/ViewToggle";
+import { SortOption } from "@/components/posts/SortOptions";
 
 export default async function TutorialsList({
     searchTerm,
     level,
+    tag,
     currentPage,
+    viewMode = "grid",
+    sortBy = "recent",
 }: {
     searchTerm: string;
     level: string;
+    tag?: string;
     currentPage: number;
+    viewMode?: ViewMode;
+    sortBy?: SortOption;
 }) {
-    const itemsPerPage = 9;
+    // Obtener datos en el servidor
+    const tutorials = await getAllPublishedPosts({ searchTerm, level, tag, type: "tutorial" });
 
-    const tutorials = await getAllPublishedPosts({ searchTerm, level, type: "tutorial" });
-
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentTutorials = tutorials.slice(indexOfFirstItem, indexOfLastItem);
-
-    if (currentTutorials.length === 0) {
-        return (
-            <div className="text-center py-16 ">
-                <p className="text-text-secondary text-lg mb-4">No se encontraron artículos</p>
-            </div>
-        );
-    }
-
+    // Pasar datos al componente cliente
     return (
-        <>
-            <div className="mb-4 text-text-secondary">
-                Mostrando {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, tutorials.length)} de {tutorials.length}{" "}
-                tutoriales
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {currentTutorials.map((tutorial) => (
-                    <TutorialCard
-                        key={tutorial.slug}
-                        tutorial={tutorial}
-                    />
-                ))}
-            </div>
-
-            {tutorials.length > 0 && (
-                <div className="flex justify-center pt-12">
-                    <Pagination
-                        totalItems={tutorials.length}
-                        itemsPerPage={itemsPerPage}
-                    />
-                </div>
-            )}
-        </>
+        <TutorialsListClient
+            tutorials={tutorials}
+            searchTerm={searchTerm}
+            currentPage={currentPage}
+            viewMode={viewMode}
+            sortBy={sortBy}
+        />
     );
 }

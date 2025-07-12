@@ -1,0 +1,203 @@
+// src/components/shared/ContentFilters.tsx
+
+"use client";
+
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { FaTimes, FaTag } from "react-icons/fa";
+import { PostLevel } from "@/types/Post";
+import Select from "@/components/ui/Select";
+import Button from "@/components/ui/Button";
+import { useTags } from "@/hooks/useTags";
+import PostsSearchBar from "@/components/posts/PostsSearchBar";
+import PostsFiltersMobile from "@/components/posts/PostsFiltersMobile";
+import ViewToggle, { ViewMode } from "@/components/posts/ViewToggle";
+import SortOptions, { SortOption } from "@/components/posts/SortOptions";
+
+interface ContentFiltersProps {
+    viewMode: ViewMode;
+    sortBy: SortOption;
+    levelLabel?: string;
+    showViewToggle?: boolean;
+    showSortOptions?: boolean;
+    showTags?: boolean;
+    showMobileFilters?: boolean;
+}
+
+export default function ContentFilters({
+    viewMode,
+    sortBy,
+    levelLabel = "Nivel",
+    showViewToggle = true,
+    showSortOptions = true,
+    showTags = true,
+    showMobileFilters = true
+}: ContentFiltersProps) {
+    const searchParams = useSearchParams();
+    const pathName = usePathname();
+    const { replace } = useRouter();
+    const { tags, isLoading: tagsLoading } = useTags();
+
+    const levelFilter = searchParams.get("level") || "";
+    const tagFilter = searchParams.get("tag") || "";
+
+    const hasActiveFilters = !!(levelFilter || tagFilter);
+
+    const handleLevelChange = (level: PostLevel | "") => {
+        const params = new URLSearchParams(searchParams);
+        if (level) {
+            params.set("level", level);
+        } else {
+            params.delete("level");
+        }
+        params.set("page", "1");
+        replace(`${pathName}?${params.toString()}`);
+    };
+
+    const handleTagChange = (tag: string) => {
+        const params = new URLSearchParams(searchParams);
+        if (tag) {
+            params.set("tag", tag);
+        } else {
+            params.delete("tag");
+        }
+        params.set("page", "1");
+        replace(`${pathName}?${params.toString()}`);
+    };
+
+    const handleClearFilters = () => {
+        const params = new URLSearchParams(searchParams);
+        params.delete("level");
+        params.delete("tag");
+        params.set("page", "1");
+        replace(`${pathName}?${params.toString()}`);
+    };
+
+    const handleViewChange = (mode: ViewMode) => {
+        const params = new URLSearchParams(searchParams);
+        params.set("view", mode);
+        params.set("page", "1");
+        replace(`${pathName}?${params.toString()}`);
+    };
+
+    const handleSortChange = (sort: SortOption) => {
+        const params = new URLSearchParams(searchParams);
+        params.set("sort", sort);
+        params.set("page", "1");
+        replace(`${pathName}?${params.toString()}`);
+    };
+
+    return (
+        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
+            {/* Fila principal: Búsqueda + Controles + Botón móvil */}
+            <div className="flex flex-col lg:flex-row gap-4 lg:items-end lg:justify-between mb-6">
+                {/* Búsqueda */}
+                <div className="flex-1 max-w-md">
+                    <PostsSearchBar />
+                </div>
+
+                {/* Filtros desktop */}
+                <div className="hidden lg:flex items-end gap-4">
+                    {/* Filtro de Nivel */}
+                    <div className="w-48">
+                        <label className="block text-sm font-medium text-white/80 mb-2">
+                            {levelLabel}
+                        </label>
+                        <Select
+                            id="level"
+                            label=""
+                            options={[
+                                { value: "", label: "Todos los niveles" },
+                                { value: "Principiante", label: "Principiante" },
+                                { value: "Intermedio", label: "Intermedio" },
+                                { value: "Avanzado", label: "Avanzado" },
+                            ]}
+                            value={levelFilter}
+                            onChange={(e) => handleLevelChange(e.target.value as PostLevel | "")}
+                            className="w-full"
+                        />
+                    </div>
+
+                    {/* Ordenamiento */}
+                    {showSortOptions && (
+                        <SortOptions 
+                            sortBy={sortBy} 
+                            onSortChange={handleSortChange} 
+                        />
+                    )}
+
+                    {/* Toggle de vista */}
+                    {showViewToggle && (
+                        <div>
+                            <label className="block text-sm font-medium text-white/80 mb-2">
+                                Vista
+                            </label>
+                            <ViewToggle 
+                                viewMode={viewMode} 
+                                onViewChange={handleViewChange} 
+                            />
+                        </div>
+                    )}
+
+                    {/* Botón limpiar */}
+                    {hasActiveFilters && (
+                        <Button
+                            variant="outline"
+                            size="lg"
+                            onClick={handleClearFilters}
+                            className="text-red-400 border-red-400 hover:bg-red-400/10"
+                        >
+                            <FaTimes size={14} className="mr-2" />
+                            Limpiar
+                        </Button>
+                    )}
+                </div>
+
+                {/* Filtros móviles */}
+                {showMobileFilters && (
+                    <div className="lg:hidden flex justify-end">
+                        <PostsFiltersMobile />
+                    </div>
+                )}
+            </div>
+
+            {/* Tags como chips - siempre visibles */}
+            {showTags && !tagsLoading && tags.length > 0 && (
+                <div>
+                    <label className="block text-sm font-medium text-white/80 mb-3">
+                        <FaTag className="inline mr-2" size={14} />
+                        Filtrar por tag
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                        {tags.slice(0, 15).map(tag => (
+                            <button
+                                key={tag.id}
+                                onClick={() => handleTagChange(tagFilter === tag.name ? "" : tag.name)}
+                                className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
+                                    tagFilter === tag.name
+                                        ? "bg-blue-500 text-white border-blue-500"
+                                        : "bg-white/10 text-white/80 border-white/20 hover:bg-white/20 hover:border-white/30"
+                                }`}
+                            >
+                                #{tag.name}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {showTags && tagsLoading && (
+                <div>
+                    <label className="block text-sm font-medium text-white/80 mb-3">
+                        <FaTag className="inline mr-2" size={14} />
+                        Filtrar por tag
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                        {[...Array(10)].map((_, i) => (
+                            <div key={i} className="h-7 w-16 bg-white/10 rounded-full animate-pulse"></div>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}

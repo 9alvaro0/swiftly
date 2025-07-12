@@ -18,7 +18,7 @@ import {
 } from "firebase/firestore";
 import { Post, PostWithAuthor } from "@/types/Post";
 import { db } from "../config";
-import { convertDatesToTimestamps, convertTimestampsToDates } from "@/services/firebase/utils/utils";
+import { convertDatesToTimestamps, serializePost } from "@/services/firebase/utils/utils";
 import { getAuthor } from "./authors";
 
 // Colección de Firestore
@@ -49,8 +49,7 @@ export const getPostById = async (id: string): Promise<Post | undefined> => {
         const postRef = doc(postsCollection, id);
         const postDoc = await getDoc(postRef);
         if (postDoc.exists()) {
-            const postData = convertTimestampsToDates(postDoc.data());
-            return postData as Post;
+            return serializePost(postDoc.data() as Post);
         }
         return undefined;
     } catch (error) {
@@ -67,8 +66,7 @@ export const getPostBySlug = async (slug: string): Promise<Post | undefined> => 
         
         if (!snapshot.empty) {
             const postDoc = snapshot.docs[0];
-            const postData = convertTimestampsToDates(postDoc.data());
-            return postData as Post;
+            return serializePost(postDoc.data() as Post);
         }
         return undefined;
     } catch (error) {
@@ -88,8 +86,7 @@ export const getPostsByTag = async (tag: string): Promise<Post[]> => {
         const snapshot = await getDocs(q);
         
         let posts = snapshot.docs.map((doc) => {
-            const postData = convertTimestampsToDates(doc.data());
-            return postData as Post;
+            return serializePost(doc.data() as Post);
         });
         
         // Filter for published posts client-side
@@ -115,8 +112,7 @@ export const getAllPosts = async (): Promise<Post[]> => {
         const q = query(postsCollection, orderBy("createdAt", "desc"));
         const snapshot = await getDocs(q);
         return snapshot.docs.map((doc) => {
-            const postData = convertTimestampsToDates(doc.data());
-            return postData as Post;
+            return serializePost(doc.data() as Post);
         });
     } catch (error) {
         console.error("Error getting all posts:", error);
@@ -128,12 +124,13 @@ export const getAllPosts = async (): Promise<Post[]> => {
 interface PostFilters {
     searchTerm?: string;
     level?: string;
+    tag?: string;
     type?: string;
 }
 
 export const getAllPublishedPosts = async (filters: PostFilters): Promise<Post[]> => {
     try {
-        const { searchTerm = "", level = "", type = "" } = filters;
+        const { searchTerm = "", level = "", tag = "", type = "" } = filters;
         
         // Use simple query that doesn't require composite indexes
         const q = query(
@@ -143,13 +140,20 @@ export const getAllPublishedPosts = async (filters: PostFilters): Promise<Post[]
         
         const snapshot = await getDocs(q);
         let posts = snapshot.docs.map((doc) => {
-            const postData = convertTimestampsToDates(doc.data());
-            return postData as Post;
+            return serializePost(doc.data() as Post);
         });
         
         // Apply all filtering client-side to avoid index requirements
         if (level) {
             posts = posts.filter((post) => post.level === level);
+        }
+        
+        if (tag) {
+            posts = posts.filter((post) => 
+                post.tags && post.tags.some(postTag => 
+                    postTag.toLowerCase() === tag.toLowerCase()
+                )
+            );
         }
         
         if (type) {

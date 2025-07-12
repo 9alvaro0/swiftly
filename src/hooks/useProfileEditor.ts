@@ -5,6 +5,8 @@ import { User } from "@/types/User";
 import { deleteUserImageByUrl, generateUserImagePath } from "@/utils/userImageUtils";
 import { checkImageExists, deleteImage, uploadImage } from "@/services/firebase/storage/image";
 import { extractImagePathFromUrl } from "@/utils/imageUtils";
+import { updateUser } from "@/services/firebase/firestore/user";
+import { toast } from "sonner";
 
 export function useProfileEditor() {
     const { user, setUser } = useAuthStore();
@@ -28,20 +30,62 @@ export function useProfileEditor() {
         setUploadError(null);
     };
 
-    const handleSaveField = (): void => {
+    const handleSaveField = async (): Promise<void> => {
         if (isEditingField && user) {
-            setUser({ ...user, [isEditingField]: editingValue });
-            setIsEditingField(null);
+            try {
+                // Only update if value actually changed
+                const currentValue = user[isEditingField as keyof User];
+                if (currentValue === editingValue) {
+                    setIsEditingField(null);
+                    return;
+                }
+                
+                // Update local state first
+                const updatedUser = { ...user, [isEditingField]: editingValue };
+                setUser(updatedUser);
+                
+                // Persist to Firebase
+                await updateUser(user.uid, { [isEditingField]: editingValue });
+                
+                toast.success(`${isEditingField === 'bio' ? 'Biografía' : 'Campo'} actualizado correctamente`);
+                setIsEditingField(null);
+            } catch (error) {
+                console.error('Error updating user field:', error);
+                toast.error('Error al actualizar el perfil');
+                // Revert local state on error
+                setUser(user);
+            }
         }
     };
 
-    const handleSaveImage = (): void => {
+    const handleSaveImage = async (): Promise<void> => {
         if (imagePreview && user) {
-            if (isEditingField === "photo") {
-                setUser({ ...user, photoURL: imagePreview });
+            try {
+                if (isEditingField === "photo") {
+                    // Only update if photo URL actually changed
+                    if (user.photoURL === imagePreview) {
+                        setIsEditingField(null);
+                        setImagePreview(null);
+                        return;
+                    }
+                    
+                    // Update local state first
+                    const updatedUser = { ...user, photoURL: imagePreview };
+                    setUser(updatedUser);
+                    
+                    // Persist to Firebase
+                    await updateUser(user.uid, { photoURL: imagePreview });
+                    
+                    toast.success('Foto de perfil actualizada correctamente');
+                }
+                setIsEditingField(null);
+                setImagePreview(null);
+            } catch (error) {
+                console.error('Error updating profile photo:', error);
+                toast.error('Error al actualizar la foto de perfil');
+                // Revert local state on error
+                setUser(user);
             }
-            setIsEditingField(null);
-            setImagePreview(null);
         }
     };
 
@@ -83,7 +127,18 @@ export function useProfileEditor() {
 
             setImagePreview(imageUrl);
             setUploadProgress(100);
-            setUser({ ...user, photoURL: imageUrl });
+            
+            // Only update if photo URL actually changed
+            if (user.photoURL !== imageUrl) {
+                // Update local state
+                const updatedUser = { ...user, photoURL: imageUrl };
+                setUser(updatedUser);
+                
+                // Persist to Firebase
+                await updateUser(user.uid, { photoURL: imageUrl });
+            }
+            
+            toast.success('Foto de perfil actualizada correctamente');
 
             setTimeout(() => {
                 handleCloseModal();

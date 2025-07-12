@@ -1,6 +1,6 @@
 "use client";
 
-import React, { InputHTMLAttributes, ReactNode } from "react";
+import React, { InputHTMLAttributes, ReactNode, forwardRef } from "react";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     label?: string;
@@ -10,7 +10,8 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     onIconClick?: () => void;
 }
 
-const Input = ({ label, error, id, icon, className = "", onIconClick, ...props }: InputProps) => {
+const Input = forwardRef<HTMLInputElement, InputProps>(
+    ({ label, error, id, icon, className = "", onIconClick, ...props }, ref) => {
     return (
         <div>
             {label && (
@@ -24,6 +25,7 @@ const Input = ({ label, error, id, icon, className = "", onIconClick, ...props }
 
             <div className="relative">
                 <input
+                    ref={ref}
                     id={id}
                     className={`w-full px-4 py-2 rounded-lg bg-white/5 
                         border ${error ? "border-red-500" : "border-white/10"} 
@@ -55,6 +57,8 @@ const Input = ({ label, error, id, icon, className = "", onIconClick, ...props }
             {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
     );
-};
+});
+
+Input.displayName = "Input";
 
 export default Input;

@@ -27,7 +27,13 @@ export const useAuthStore = create<AuthState>()(
             error: null,
 
             setUser: (user) => {
-                set({ user });
+                set((state) => {
+                    // Only update if user data has actually changed
+                    if (JSON.stringify(state.user) === JSON.stringify(user)) {
+                        return state;
+                    }
+                    return { user };
+                });
             },
             setAuthenticated: (status) => set({ isAuthenticated: status }),
             setLoading: (status) => set({ isLoading: status }),

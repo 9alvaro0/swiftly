@@ -4,7 +4,7 @@ import { Clock, Calendar, BookOpen } from "lucide-react";
 import type { PostWithAuthor } from "@/types/Post";
 import LikeButton from "./LikeButton";
 import { useAuthStore } from "@/store/authStore";
-import { formatDate } from "@/utils/dateUtils";
+import { formatDate, formatAtomDate } from "@/utils/dateUtils";
 
 type PostHeaderProps = {
     post: PostWithAuthor;
@@ -41,7 +41,9 @@ export default function PostHeader({ post }: PostHeaderProps) {
                         size={16}
                         className="text-blue-400"
                     />
-                    <time dateTime={new Date(post.createdAt).toISOString()}>{formatDate(post.createdAt)}</time>
+                    <time dateTime={formatAtomDate(post.createdAt)}>
+                        {formatDate(post.createdAt)}
+                    </time>
                 </div>
 
                 <div className="flex items-center gap-2">

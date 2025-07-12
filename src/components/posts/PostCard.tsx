@@ -4,13 +4,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { Eye, Heart } from "lucide-react";
 import { Post } from "@/types/Post";
+import HighlightText from "@/components/ui/HighlightText";
 
 interface PostCardProps {
     post: Post;
     variant?: "default" | "featured";
+    searchTerm?: string;
 }
 
-export default function PostCard({ post, variant = "default" }: PostCardProps) {
+export default function PostCard({ post, variant = "default", searchTerm = "" }: PostCardProps) {
     if (!post) return null;
 
     const isFeatured = variant === "featured";
@@ -58,13 +60,13 @@ export default function PostCard({ post, variant = "default" }: PostCardProps) {
                                 isFeatured ? "text-2xl" : "text-lg"
                             } line-clamp-2 group-hover:text-blue-400 transition-colors`}
                         >
-                            {post.title}
+                            <HighlightText text={post.title} searchTerm={searchTerm} />
                         </h3>
                     )}
 
                     {post.description && (
                         <p className={`text-white/70 mt-4 ${isFeatured ? "text-base" : "text-sm"} line-clamp-3`}>
-                            {post.description}
+                            <HighlightText text={post.description} searchTerm={searchTerm} />
                         </p>
                     )}
 
