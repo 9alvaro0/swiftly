@@ -97,3 +97,54 @@ This is a Next.js 15 blog platform called "Swiftly" focused on Swift/SwiftUI con
 **Validation**: Implement both client-side and server-side validation. Never trust client-side data in API routes.
 
 **State Management**: Use Zustand for global state, custom hooks for component-specific logic. Ensure proper cleanup in useEffect hooks.
+
+## GitFlow & Deployment Strategy
+
+### Branch Structure & Environments
+```
+develop → aprende-swift-dev (https://aprende-swift-dev--swiftly-by-warwere.web.app)
+   ↓
+release → aprende-swift-pre (https://aprende-swift-pre--swiftly-by-warwere.web.app)
+   ↓
+master → aprende-swift-prod (https://aprendeswift.dev)
+```
+
+### Deployment Flow
+**Feature Development**:
+```bash
+git checkout develop
+git merge feature/feature-name
+git push origin develop
+# Auto-deploys to DEV via App Hosting
+```
+
+**Promote to Pre-Production**:
+```bash
+git checkout release
+git pull origin release
+git merge develop
+git push origin release
+# Auto-deploys to PRE via App Hosting
+# Optional: git tag v1.0.0-beta.1
+```
+
+**Deploy to Production**:
+```bash
+git checkout master
+git pull origin master
+git merge release
+git tag v1.0.0  # REQUIRED for production
+git push origin master --tags
+# Auto-deploys to PROD via App Hosting
+```
+
+### Version Tagging Strategy
+- **Production tags**: `v1.0.0` (major.minor.patch)
+- **Pre-release tags**: `v1.0.0-beta.1`, `v1.0.0-rc.1`
+- **Always tag production deployments**
+
+### CI/CD Pipeline
+- GitHub Actions runs quality checks on all branches
+- Linting and type checking must pass before deploy
+- App Hosting handles automatic deployments
+- No manual deploy actions needed
