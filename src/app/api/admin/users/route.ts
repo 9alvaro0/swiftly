@@ -9,20 +9,8 @@ export async function GET(request: NextRequest) {
     const role = searchParams.get('role') || '';
     const status = searchParams.get('status') || '';
 
-    // Get all users
-    const allUsers = await getAllUsers();
-    
-    // Apply filters
-    const users = allUsers.filter(user => {
-      const matchesRole = role ? user.role === role : true;
-      const matchesStatus = status ? user.isActive === (status === 'active') : true;
-      const matchesSearch = searchTerm ? 
-        (user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-         user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-         user.name?.toLowerCase().includes(searchTerm.toLowerCase())) : true;
-
-      return matchesRole && matchesStatus && matchesSearch;
-    });
+    // Use the regular Firebase service instead of Admin SDK
+    const users = await getAllUsers(searchTerm, role, status);
 
     return Response.json({ users });
   } catch (error) {
