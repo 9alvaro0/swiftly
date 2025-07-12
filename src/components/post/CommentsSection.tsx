@@ -143,18 +143,20 @@ export default function CommentsSection({ postId }: CommentsSectionProps) {
             {/* Lista de comentarios */}
             <div className="px-6">
                 {comments.length === 0 ? (
-                    <div className="text-center py-16">
-                        <div className="inline-flex p-6 bg-gradient-to-br from-blue-500/10 to-purple-600/10 rounded-full backdrop-blur-sm border border-white/10 mb-6">
-                            <FiMessageCircle className="text-blue-400" size={32} />
+                    isAuthenticated ? (
+                        <div className="text-center py-16">
+                            <div className="inline-flex p-6 bg-gradient-to-br from-blue-500/10 to-purple-600/10 rounded-full backdrop-blur-sm border border-white/10 mb-6">
+                                <FiMessageCircle className="text-blue-400" size={32} />
+                            </div>
+                            <h4 className="text-xl font-semibold text-white mb-3">
+                                Sé el primero en comentar
+                            </h4>
+                            <p className="text-white/70 max-w-md mx-auto leading-relaxed">
+                                Comparte tus pensamientos sobre este {postId.includes('tutorial') ? 'tutorial' : 'artículo'} 
+                                y ayuda a otros desarrolladores de la comunidad Swift.
+                            </p>
                         </div>
-                        <h4 className="text-xl font-semibold text-white mb-3">
-                            Sé el primero en comentar
-                        </h4>
-                        <p className="text-white/70 max-w-md mx-auto leading-relaxed">
-                            Comparte tus pensamientos sobre este {postId.includes('tutorial') ? 'tutorial' : 'artículo'} 
-                            y ayuda a otros desarrolladores de la comunidad Swift.
-                        </p>
-                    </div>
+                    ) : null
                 ) : (
                     <div className="divide-y divide-white/10">
                         {comments.map((comment) => (
