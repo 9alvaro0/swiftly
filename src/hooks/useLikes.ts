@@ -1,7 +1,7 @@
 // src/hooks/useLikes.ts
 import { useState, useEffect, useCallback, useRef } from "react";
 import { hasUserLikedPost, togglePostLike } from "@/services/firebase/firestore/post";
-import { Post } from "@/types/Post";
+import { PostWithAuthor } from "@/types/Post";
 import { User } from "@/types/User";
 import { saveUser } from "@/services/firebase/firestore/user";
 
@@ -16,7 +16,7 @@ interface UseLikesResult {
 /**
  * Hook personalizado para manejar la lógica de likes en posts
  */
-export function useLikes(post: Post, currentUser: User | null): UseLikesResult {
+export function useLikes(post: PostWithAuthor, currentUser: User | null): UseLikesResult {
     const [isLiked, setIsLiked] = useState(false);
     const [likesCount, setLikesCount] = useState(Array.isArray(post.likedBy) ? post.likedBy.length : 0);
     const [isLoading, setIsLoading] = useState(false);

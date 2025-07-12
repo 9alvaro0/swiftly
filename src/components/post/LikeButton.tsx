@@ -3,14 +3,14 @@
 "use client";
 
 import { Heart } from "lucide-react";
-import { Post } from "@/types/Post";
+import { PostWithAuthor } from "@/types/Post";
 import { User } from "@/types/User";
 import { useLikes } from "@/hooks/useLikes";
 import { toast } from "sonner";
 import { useEffect } from "react";
 
 interface LikeButtonProps {
-    post: Post;
+    post: PostWithAuthor;
     currentUser: User | null;
     className?: string;
 }

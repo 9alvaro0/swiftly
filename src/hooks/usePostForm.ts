@@ -19,15 +19,8 @@ export default function usePostForm({ selectedPost }: PostFormOptions) {
     const [post, setPost] = useState<Post>(() => {
         const initialPost = selectedPost || getDefaultPost();
 
-        if (initialPost.author.id === "" && user) {
-            initialPost.author = {
-                id: user.uid,
-                name: user.name || "",
-                username: user.username || "",
-                avatar: user.photoURL || "",
-                bio: user.bio || "",
-                socialLinks: user.socialLinks ? { ...user.socialLinks } : undefined,
-            };
+        if (initialPost.authorId === "" && user) {
+            initialPost.authorId = user.uid;
         }
 
         return initialPost;
@@ -156,14 +149,7 @@ export default function usePostForm({ selectedPost }: PostFormOptions) {
                 isPublished: postWithSEO.isPublished || false,
                 tags: postWithSEO.tags || [],
                 level: postWithSEO.level,
-                author: {
-                    id: postWithSEO.author?.id || crypto.randomUUID(),
-                    name: postWithSEO.author?.name || "Autor Anónimo",
-                    username: postWithSEO.author?.username,
-                    avatar: postWithSEO.author?.avatar,
-                    bio: postWithSEO.author?.bio,
-                    socialLinks: postWithSEO.author?.socialLinks,
-                },
+                authorId: postWithSEO.authorId || (user?.uid || ""),
                 views: postWithSEO.views || 0,
                 likedBy: postWithSEO.likedBy || [],
                 imageUrl: postWithSEO.imageUrl || "",

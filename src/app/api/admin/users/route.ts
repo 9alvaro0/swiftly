@@ -1,7 +1,6 @@
 // src/app/api/admin/users/route.ts
 import { NextRequest } from 'next/server';
 import { getAllUsers } from '@/services/firebase/firestore/user';
-import { User } from '@/types/User';
 
 export async function GET(request: NextRequest) {
   try {

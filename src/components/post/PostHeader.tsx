@@ -1,13 +1,13 @@
 "use client";
 
 import { Clock, Calendar, BookOpen } from "lucide-react";
-import type { Post } from "@/types/Post";
+import type { PostWithAuthor } from "@/types/Post";
 import LikeButton from "./LikeButton";
 import { useAuthStore } from "@/store/authStore";
 import { formatDate } from "@/utils/dateUtils";
 
 type PostHeaderProps = {
-    post: Post;
+    post: PostWithAuthor;
 };
 
 export default function PostHeader({ post }: PostHeaderProps) {

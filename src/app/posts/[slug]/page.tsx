@@ -2,7 +2,7 @@
 
 import PostDetail from "@/components/post/PostDetail";
 import DetailError from "@/components/tutorials/DetailError";
-import { getPostBySlug } from "@/services/firebase/firestore/post";
+import { getPostBySlugWithAuthor } from "@/services/firebase/firestore/post";
 import { generateMetadata as generatePostMetadata } from "@/utils/metadataUtils";
 
 export const generateMetadata = generatePostMetadata;
@@ -17,7 +17,7 @@ export default async function PostDetailPage(props: PageProps) {
     const resolvedParams = await props.params;
     const { slug } = resolvedParams;
 
-    const post = await getPostBySlug(slug);
+    const post = await getPostBySlugWithAuthor(slug);
 
     if (!post) {
         return <DetailError />;

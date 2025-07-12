@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
 
     const subscribers: NewsletterSubscriber[] = subscribersSnapshot.docs
       .map(doc => {
-        const data = convertTimestampsToDates(doc.data()) as any;
+        const data = convertTimestampsToDates(doc.data()) as Record<string, unknown>;
         return {
           id: doc.id,
           email: data.email || '',

@@ -1,12 +1,11 @@
 "use client";
 
-import { Post } from "@/types/Post";
+import { Post, PostWithAuthor, postWithAuthorToPost } from "@/types/Post";
 import PostBasicInfo from "@/components/admin/posts/postFormSections/PostBasicInfo";
 import PostCategorization from "@/components/admin/posts/postFormSections/PostCategorization";
 import PostTagsSection from "@/components/admin/posts/postFormSections/PostTagsSection";
 import PostContentEditor from "@/components/admin/posts/postFormSections/PostContentEditor";
 import PostImageSection from "@/components/admin/posts/postFormSections/PostImageSection";
-import PostAuthorSection from "@/components/admin/posts/postFormSections/PostAuthorSection";
 import PostPublishOptions from "@/components/admin/posts/postFormSections/PostPublishOptions";
 import Button from "@/components/ui/Button";
 import usePostForm from "@/hooks/usePostForm";
@@ -14,7 +13,7 @@ import Spinner from "@/components/ui/Spinner";
 import { FiArrowRight } from "react-icons/fi";
 
 interface PostFormProps {
-    selectedPost?: Post;
+    selectedPost?: Post | PostWithAuthor;
 }
 
 export default function PostForm({ selectedPost }: PostFormProps) {
@@ -35,7 +34,11 @@ export default function PostForm({ selectedPost }: PostFormProps) {
         insertSnippet,
         contentRef,
         isSubmitting,
-    } = usePostForm({ selectedPost });
+    } = usePostForm({ 
+        selectedPost: selectedPost && 'author' in selectedPost 
+            ? postWithAuthorToPost(selectedPost) 
+            : selectedPost 
+    });
 
     return (
         <form
@@ -81,12 +84,6 @@ export default function PostForm({ selectedPost }: PostFormProps) {
                 onSelectCoverImage={setCoverImage}
                 onInsertInContent={insertImageInContent}
                 onImageDeleted={removeImageFromPost}
-            />
-
-            {/* Información del autor */}
-            <PostAuthorSection
-                post={post}
-                onChange={handleChange}
             />
 
             {/* Opciones de publicación */}

@@ -1,4 +1,4 @@
-import { getPostBySlug } from "@/services/firebase/firestore/post";
+import { getPostBySlugWithAuthor } from "@/services/firebase/firestore/post";
 import type { Metadata } from "next";
 
 const siteUrl = "https://aprendeswift.dev";
@@ -12,7 +12,7 @@ interface GenerateMetadataProps {
 export async function generateMetadata({ params }: GenerateMetadataProps): Promise<Metadata> {
     const resolvedParams = await params;
     const { slug } = resolvedParams;
-    const post = await getPostBySlug(slug);
+    const post = await getPostBySlugWithAuthor(slug);
 
     if (!post) {
         return {

@@ -34,10 +34,17 @@ service cloud.firestore {
     // Posts collection rules
     match /posts/{postId} {
       // Read rules: Published posts are public, drafts only for admins/authors
-      // Admins can read all posts for admin panel
-      allow read: if resource.data.isPublished == true ||
-                     isAdmin() ||
-                     (isAuthenticated() && request.auth.uid == resource.data.author.id);
+      // Public access to published posts
+      allow read: if resource.data.isPublished == true;
+      
+      // Admins can read all posts
+      allow read: if isAdmin();
+      
+      // Authors can read their own posts
+      allow read: if isAuthenticated() && request.auth.uid == resource.data.authorId;
+      
+      // Allow list operation for published posts (public)
+      allow list: if true;
       
       // Allow list operation for admins to see all posts in admin panel
       allow list: if isAdmin();
@@ -46,9 +53,9 @@ service cloud.firestore {
       allow create: if isAdmin() || 
                        (isAuthenticated() && 
                         request.auth.token.role in ['admin', 'editor', 'author'] &&
-                        request.auth.uid == request.resource.data.author.id &&
+                        request.auth.uid == request.resource.data.authorId &&
                         // Validate required fields
-                        request.resource.data.keys().hasAll(['title', 'content', 'author', 'createdAt']) &&
+                        request.resource.data.keys().hasAll(['title', 'content', 'authorId', 'createdAt']) &&
                         request.resource.data.title is string &&
                         request.resource.data.title.size() > 0 &&
                         request.resource.data.content is string &&
@@ -57,9 +64,9 @@ service cloud.firestore {
       // Update rules: Admins can update any, authors can update their own
       allow update: if isAdmin() ||
                        (isAuthenticated() && 
-                        request.auth.uid == resource.data.author.id &&
+                        request.auth.uid == resource.data.authorId &&
                         // Ensure author can't change ownership
-                        request.resource.data.author.id == resource.data.author.id);
+                        request.resource.data.authorId == resource.data.authorId);
       
       // Delete rules: Only admins can delete posts
       allow delete: if isAdmin();
@@ -113,6 +120,19 @@ service cloud.firestore {
                        isAdmin();
       
       // Delete rules: Only admins can delete user accounts
+      allow delete: if isAdmin();
+    }
+    
+    // Authors collection rules (public profile data for posts)
+    match /authors/{authorId} {
+      // Read rules: Authors data is public for displaying in posts
+      allow read: if true;
+      
+      // Create/Update rules: Users can manage their own author profile, admins can manage any
+      allow create, update: if isOwner(authorId) ||
+                               isAdmin();
+      
+      // Delete rules: Only admins can delete author profiles
       allow delete: if isAdmin();
     }
     

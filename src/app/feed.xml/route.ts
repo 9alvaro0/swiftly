@@ -1,10 +1,9 @@
 // src/app/feed.xml/route.ts
 
 import { NextResponse } from 'next/server';
-import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
-import { db } from '@/services/firebase/config';
-import { Post } from '@/types/Post';
-import { toJSDate, formatRssDate, createExcerpt, escapeXml } from '@/utils/dateUtils';
+import { getAllPublishedPostsWithAuthor } from '@/services/firebase/firestore/post';
+import { PostWithAuthor } from '@/types/Post';
+import { formatRssDate, createExcerpt, escapeXml } from '@/utils/dateUtils';
 
 const baseUrl = 'https://aprendeswift.dev';
 const siteTitle = 'aprendeSwift Blog';
@@ -16,28 +15,17 @@ export const dynamic = 'force-static';
 
 export async function GET(): Promise<NextResponse> {
     try {
-        // Get latest published posts
-        const postsQuery = query(
-            collection(db, 'posts'),
-            where('isPublished', '==', true),
-            where('status', '==', 'published'),
-            orderBy('publishedAt', 'desc'),
-            limit(20) // Limit to latest 20 posts
-        );
-
-        const postsSnapshot = await getDocs(postsQuery);
-        const posts = postsSnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        } as Post));
+        // Get latest published posts with author data
+        const allPosts = await getAllPublishedPostsWithAuthor({});
+        const posts = allPosts.slice(0, 20); // Limit to 20 posts
 
         // Generate RSS XML
-        const rssItems = posts.map(post => {
+        const rssItems = posts.map((post: PostWithAuthor) => {
             const postUrl = post.type === 'tutorial' 
                 ? `${baseUrl}/tutorials/${post.slug}`
                 : `${baseUrl}/posts/${post.slug}`;
             
-            const publishDate = toJSDate(post.publishedAt);
+            const publishDate = new Date(post.publishedAt || post.createdAt);
             const excerpt = createExcerpt(post.content || post.description || '', 300);
             
             // Generate categories from tags
