@@ -1,59 +1,21 @@
 // src/app/api/admin/users/route.ts
 import { NextRequest } from 'next/server';
-import { adminDb, adminAuth } from '@/lib/firebase-admin';
-import { verifyAdminToken, createAuthResponse } from '@/lib/auth-helpers';
+import { getAllUsers } from '@/services/firebase/firestore/user';
 import { User } from '@/types/User';
 
 export async function GET(request: NextRequest) {
-  // Check if admin services are available
-  if (!adminDb || !adminAuth) {
-    return createAuthResponse('Admin services not available - missing Firebase Admin configuration', 503);
-  }
-
-  // Verify admin authentication
-  const adminUser = await verifyAdminToken(request);
-  if (!adminUser) {
-    return createAuthResponse('Unauthorized: Admin access required');
-  }
-
   try {
     const { searchParams } = new URL(request.url);
     const searchTerm = searchParams.get('search') || '';
     const role = searchParams.get('role') || '';
     const status = searchParams.get('status') || '';
 
-    // Get all users from Firestore
-    const usersSnapshot = await adminDb
-      .collection('users')
-      .orderBy('createdAt', 'desc')
-      .get();
-
-    const users: User[] = usersSnapshot.docs
-      .map(doc => {
-        const data = doc.data();
-        // Convert Firestore timestamps to dates
-        return {
-          ...data,
-          createdAt: data.createdAt?.toDate() || new Date(),
-          updatedAt: data.updatedAt?.toDate() || new Date(),
-          lastLogin: data.lastLogin?.toDate() || new Date(),
-        } as User;
-      })
-      .filter(user => {
-        // Apply filters
-        const matchesRole = role ? user.role === role : true;
-        const matchesStatus = status ? user.isActive === (status === 'active') : true;
-        const matchesSearch = searchTerm ? 
-          (user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-           user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-           user.name?.toLowerCase().includes(searchTerm.toLowerCase())) : true;
-
-        return matchesRole && matchesStatus && matchesSearch;
-      });
+    // Use the regular Firebase service instead of Admin SDK
+    const users = await getAllUsers(searchTerm, role, status);
 
     return Response.json({ users });
   } catch (error) {
     console.error('Error getting users:', error);
-    return createAuthResponse('Internal server error', 500);
+    return Response.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

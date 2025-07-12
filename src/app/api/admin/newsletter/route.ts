@@ -1,42 +1,30 @@
 // src/app/api/admin/newsletter/route.ts
 import { NextRequest } from 'next/server';
-import { adminDb, adminAuth } from '@/lib/firebase-admin';
-import { verifyAdminToken, createAuthResponse } from '@/lib/auth-helpers';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { db } from '@/services/firebase/config';
 import NewsletterSubscriber from '@/types/NewsletterSubscriber';
+import { convertTimestampsToDates } from '@/services/firebase/utils/utils';
 
 export async function GET(request: NextRequest) {
-  // Check if admin services are available
-  if (!adminDb || !adminAuth) {
-    return createAuthResponse('Admin services not available - missing Firebase Admin configuration', 503);
-  }
-
-  // Verify admin authentication
-  const adminUser = await verifyAdminToken(request);
-  if (!adminUser) {
-    return createAuthResponse('Unauthorized: Admin access required');
-  }
-
   try {
     const { searchParams } = new URL(request.url);
     const searchTerm = searchParams.get('search') || '';
     const status = searchParams.get('status') || '';
 
-    // Get all newsletter subscribers from Firestore
-    const subscribersSnapshot = await adminDb
-      .collection('newsletterSubscribers')
-      .orderBy('createdAt', 'desc')
-      .get();
+    // Get all newsletter subscribers from Firestore using regular Firebase SDK
+    const subscribersRef = collection(db, 'newsletterSubscribers');
+    const q = query(subscribersRef, orderBy('createdAt', 'desc'));
+    const subscribersSnapshot = await getDocs(q);
 
     const subscribers: NewsletterSubscriber[] = subscribersSnapshot.docs
       .map(doc => {
-        const data = doc.data();
-        // Convert Firestore timestamps to dates
+        const data = convertTimestampsToDates(doc.data()) as any;
         return {
           id: doc.id,
           email: data.email || '',
           isActive: data.isActive || false,
-          createdAt: data.createdAt?.toDate() || new Date(),
-          lastEmailSent: data.lastEmailSent?.toDate(),
+          createdAt: data.createdAt || new Date(),
+          lastEmailSent: data.lastEmailSent,
           metadata: data.metadata,
         } as NewsletterSubscriber;
       })
@@ -52,6 +40,6 @@ export async function GET(request: NextRequest) {
     return Response.json({ subscribers });
   } catch (error) {
     console.error('Error getting newsletter subscribers:', error);
-    return createAuthResponse('Internal server error', 500);
+    return Response.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
