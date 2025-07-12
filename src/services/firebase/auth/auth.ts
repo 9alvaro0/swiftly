@@ -5,9 +5,11 @@ import {
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
     GithubAuthProvider,
+    GoogleAuthProvider,
     UserCredential,
 } from "firebase/auth";
 import { createUserProfile, updateLastLogin, getUser } from "@/services/firebase/firestore/user";
+
 
 // Función para login con GitHub
 export const loginWithGithub = async (): Promise<UserCredential> => {
@@ -41,8 +43,55 @@ export const loginWithGithub = async (): Promise<UserCredential> => {
             await updateLastLogin(user.uid);
         }
         return result;
-    } catch (error: unknown) {
+    } catch (error: any) {
         console.error('Error al iniciar sesión con GitHub:', error);
+        
+        // Manejar error de cuenta existente con diferente proveedor
+        if (error?.code === 'auth/account-exists-with-different-credential') {
+            const email = error.customData?.email as string;
+            throw new Error(`Ya tienes una cuenta con este email (${email}) usando Google. Por favor, inicia sesión con Google primero.`);
+        }
+        
+        throw error;
+    }
+};
+
+// Función para login con Google
+export const loginWithGoogle = async (): Promise<UserCredential> => {
+    try {
+        const provider = new GoogleAuthProvider();
+        provider.addScope('profile');
+        provider.addScope('email');
+
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+
+        const userProfile = await getUser(user.uid);
+
+        if (!userProfile) {
+            // Crear el perfil de usuario en Firestore
+            await createUserProfile(user.uid, {
+                email: user.email || "",
+                name: user.displayName || "",
+                username: user.email?.split("@")[0] || "",
+                photoURL: user.photoURL || "",
+                emailVerified: user.emailVerified,
+                phone: user.phoneNumber || undefined,
+                provider: "google",
+            });
+        } else {
+            await updateLastLogin(user.uid);
+        }
+        return result;
+    } catch (error: any) {
+        console.error('Error al iniciar sesión con Google:', error);
+        
+        // Manejar error de cuenta existente con diferente proveedor
+        if (error?.code === 'auth/account-exists-with-different-credential') {
+            const email = error.customData?.email as string;
+            throw new Error(`Ya tienes una cuenta con este email (${email}) usando GitHub. Por favor, inicia sesión con GitHub primero.`);
+        }
+        
         throw error;
     }
 };

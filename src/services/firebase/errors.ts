@@ -51,6 +51,10 @@ export const handleFirebaseError = (
         };
 
         message = errorMessages[code] || defaultMessage;
+    } else if (error instanceof Error) {
+        // Manejar errores personalizados con mensaje directo
+        message = error.message;
+        code = "custom_error";
     }
 
     // Loggear el error si está configurado
