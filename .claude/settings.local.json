@@ -27,7 +27,10 @@
       "Bash(git commit:*)",
       "Bash(firebase apphosting:backends:get:*)",
       "Bash(npx tsc:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(git push:*)",
+      "Bash(git fetch:*)",
+      "Bash(git merge:*)"
     ],
     "deny": []
   }
