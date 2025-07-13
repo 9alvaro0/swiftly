@@ -62,7 +62,7 @@ export default function NewsletterSignup() {
                                 Suscríbete a nuestro boletín y recibe tutoriales, noticias y recursos sobre Swift y SwiftUI.
                             </p>
                             <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-xl">
-                                <h3 className="text-xl font-semibold text-white mb-2">¡Hola {user.displayName || user.email}!</h3>
+                                <h3 className="text-xl font-semibold text-white mb-2">¡Hola {user.name || user.email}!</h3>
                                 <p className="text-white/70 mb-4">
                                     Como usuario registrado, puedes gestionar tu suscripción al newsletter desde tu perfil.
                                 </p>
