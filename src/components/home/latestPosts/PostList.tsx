@@ -21,12 +21,12 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
 
     if (displayPosts.length === 0) {
         return (
-            <div className="text-center bg-white/5 rounded-lg border border-white/10 p-8">
-                <AiFillTags className="mx-auto text-gray-400 dark:text-gray-500 text-5xl mb-4" />
-                <p className="text-gray-600 dark:text-gray-400 mb-2">No hay posts asociados a esta etiqueta.</p>
+            <div className="text-center bg-[var(--color-card)] border-[var(--color-card-border)] rounded-lg border p-8">
+                <AiFillTags className="mx-auto text-[var(--color-muted)] text-5xl mb-4" />
+                <p className="text-[var(--color-muted)] mb-2">No hay posts asociados a esta etiqueta.</p>
                 <Link
                     href="/tags"
-                    className="inline-block mt-4 text-blue-500 hover:text-blue-400 hover:underline"
+                    className="inline-block mt-4 text-[var(--color-blue-light)] hover:underline"
                 >
                     Ver todas las etiquetas
                 </Link>
@@ -40,7 +40,7 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
     return (
         <div className="space-y-8">
             {/* Post destacado (el más reciente) */}
-            <div className="rounded-lg overflow-hidden bg-white/5 border border-white/10">
+            <div className="rounded-lg overflow-hidden bg-[var(--color-card)] border-[var(--color-card-border)] border">
                 <div className="md:flex">
                     <div>
                         {featuredPost.imageUrl ? (
@@ -53,15 +53,15 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
                                 />
                             </div>
                         ) : (
-                            <div className="h-64 md:h-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
-                                <span className="text-gray-400">Sin imagen</span>
+                            <div className="h-64 md:h-full bg-[var(--color-border)] text-[var(--color-muted)] flex items-center justify-center">
+                                <span>Sin imagen</span>
                             </div>
                         )}
                     </div>
 
                     <div className="p-6 md:w-3/5 flex flex-col justify-between">
                         <div>
-                            <div className="flex items-center mb-2 text-sm text-blue-500">
+                            <div className="flex items-center mb-2 text-sm text-[var(--color-blue-light)]">
                                 <span>
                                     {featuredPost.createdAt
                                         ? formatDate(featuredPost.createdAt)
@@ -77,7 +77,7 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
                                                     <Link
                                                         key={tag}
                                                         href={`/tags/${tag}`}
-                                                        className="hover:underline"
+                                                        className="text-[var(--color-blue-light)] hover:underline"
                                                     >
                                                         #{tag}
                                                     </Link>
@@ -88,12 +88,12 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
                             </div>
 
                             <Link href={`/posts/${featuredPost.slug}`}>
-                                <h2 className="text-2xl font-bold mb-3 hover:text-blue-500 transition-colors">
+                                <h2 className="text-2xl font-bold mb-3 text-[var(--color-foreground)] hover:text-[var(--color-blue-light)] transition-colors">
                                     {featuredPost.title}
                                 </h2>
                             </Link>
 
-                            <p className="text-gray-600 dark:text-gray-300 line-clamp-3">
+                            <p className="text-[var(--color-muted)] line-clamp-3">
                                 {featuredPost.description || featuredPost.content.substring(0, 160)}...
                             </p>
                         </div>
@@ -101,7 +101,7 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
                         <div className="mt-4">
                             <Link
                                 href={`/posts/${featuredPost.slug}`}
-                                className="text-blue-500 font-medium hover:underline"
+                                className="text-[var(--color-blue-light)] font-medium hover:underline"
                             >
                                 Leer más →
                             </Link>
@@ -115,7 +115,7 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
                 {remainingPosts.map((post) => (
                     <div
                         key={post.id}
-                        className="flex border-b border-white/10 pb-6 last:border-0"
+                        className="flex border-b border-[var(--color-border)] pb-6 last:border-0"
                     >
                         {post.coverImage && (
                             <div className="w-1/4 mr-4 h-24 relative flex-shrink-0 rounded-md overflow-hidden">
@@ -129,7 +129,7 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
                         )}
 
                         <div className="flex-1">
-                            <div className="flex items-center mb-1 text-xs text-blue-500">
+                            <div className="flex items-center mb-1 text-xs text-[var(--color-blue-light)]">
                                 <span>{post.publishedAt ? formatDate(post.publishedAt) : "Fecha no disponible"}</span>
                                 {post.tags && post.tags.length > 0 && (
                                     <>
@@ -137,7 +137,7 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
                                         <span>
                                             <Link
                                                 href={`/tags/${post.tags[0]}`}
-                                                className="hover:underline"
+                                                className="text-[var(--color-blue-light)] hover:underline"
                                             >
                                                 #{post.tags[0]}
                                             </Link>
@@ -147,12 +147,12 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
                             </div>
 
                             <Link href={`/posts/${post.slug}`}>
-                                <h3 className="text-lg font-semibold mb-1 hover:text-blue-500 transition-colors">
+                                <h3 className="text-lg font-semibold mb-1 text-[var(--color-foreground)] hover:text-[var(--color-blue-light)] transition-colors">
                                     {post.title}
                                 </h3>
                             </Link>
 
-                            <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                            <p className="text-sm text-[var(--color-muted)] line-clamp-2">
                                 {post.description || post.content.substring(0, 100)}...
                             </p>
                         </div>

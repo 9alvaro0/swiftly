@@ -32,10 +32,10 @@ export default function NavItem({
     ${icon ? "flex items-center gap-1" : ""}
     ${
         disabled
-            ? "text-white/40 cursor-not-allowed"
+            ? "text-[var(--color-muted)] cursor-not-allowed"
             : isActive
-            ? "text-white bg-white/10 backdrop-blur-sm"
-            : "text-white/70 hover:text-white hover:bg-white/5"
+            ? "text-[var(--color-nav-text-active)] bg-[var(--color-nav-active)]"
+            : "text-[var(--color-nav-text)] hover:text-[var(--color-nav-text-hover)] hover:bg-[var(--color-nav-hover)]"
     }
     ${className}
   `;
@@ -56,11 +56,11 @@ export default function NavItem({
                 {icon && <span>{icon}</span>}
                 <span>{name}</span>
                 {isActive && !isMobile && !disabled && (
-                    <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1/2 h-0.5 bg-blue-500 rounded-full" />
+                    <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1/2 h-0.5 bg-[var(--color-nav-indicator)] rounded-full" />
                 )}
 
                 {disabled && !isMobile && (
-                    <span className="ml-1 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-medium rounded bg-yellow-500/20 text-yellow-300">
+                    <span className="ml-1 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-medium rounded bg-[var(--color-nav-disabled-bg)] text-[var(--color-nav-disabled-text)]">
                         {comingSoonText}
                     </span>
                 )}

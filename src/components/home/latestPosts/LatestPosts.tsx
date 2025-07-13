@@ -23,33 +23,33 @@ export default async function LatestPosts() {
             {hasPosts ? (
                 <PostList posts={posts} />
             ) : (
-                <div className="bg-white/5 p-8 rounded-lg border border-white/10 mx-auto">
+                <div className="bg-[var(--color-card)] border-[var(--color-card-border)] p-8 rounded-lg border mx-auto">
                     <div className="flex items-center gap-6 mb-8">
-                        <div className="p-4 bg-purple-500/20 rounded-lg">
+                        <div className="p-4 bg-[var(--color-purple-bg)] rounded-lg">
                             <FiFileText
                                 size={28}
-                                className="text-purple-400"
+                                className="text-[var(--color-purple-light)]"
                             />
                         </div>
                         <div className="text-left">
-                            <h3 className="font-semibold text-white text-xl mb-2">Próximamente nuevos artículos</h3>
-                            <p className="text-white/70">
+                            <h3 className="font-semibold text-[var(--color-foreground)] text-xl mb-2">Próximamente nuevos artículos</h3>
+                            <p className="text-[var(--color-muted)]">
                                 Estamos preparando artículos interesantes sobre desarrollo y tecnología.
                             </p>
                         </div>
                     </div>
 
-                    <div className="bg-white/5 p-6 rounded-lg border border-white/10 mb-6">
+                    <div className="bg-[var(--color-card)] border-[var(--color-card-border)] p-6 rounded-lg border mb-6">
                         <div className="flex items-start gap-3">
-                            <div className="p-2 bg-emerald-500/20 rounded-lg">
+                            <div className="p-2 bg-[var(--color-emerald-bg)] rounded-lg">
                                 <FiBookOpen
                                     size={22}
-                                    className="text-emerald-400"
+                                    className="text-[var(--color-emerald-light)]"
                                 />
                             </div>
                             <div>
-                                <h3 className="font-semibold text-white text-lg mb-2">Contenido en desarrollo</h3>
-                                <p className="text-white/70">
+                                <h3 className="font-semibold text-[var(--color-foreground)] text-lg mb-2">Contenido en desarrollo</h3>
+                                <p className="text-[var(--color-muted)]">
                                     Nuestro equipo de redactores está trabajando en artículos con información valiosa y
                                     actualizada.
                                 </p>

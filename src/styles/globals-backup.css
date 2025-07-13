@@ -1,0 +1,774 @@
+@import "tailwindcss";
+
+:root {
+    /* Modo oscuro por defecto */
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --background-secondary: #1a1a1a;
+    --border: #374151;
+    --border-light: #2d3748;
+    --text-primary: #ffffff;
+    --text-secondary: #d1d5db;
+    --text-muted: #9ca3af;
+    
+    /* Navigation */
+    --nav-background: rgba(0, 0, 0, 0.5);
+    --nav-background-scrolled: rgba(0, 0, 0, 0.8);
+    --nav-text: rgba(255, 255, 255, 0.7);
+    --nav-text-hover: #ffffff;
+    --nav-text-active: #ffffff;
+    --nav-bg-hover: rgba(255, 255, 255, 0.05);
+    --nav-bg-active: rgba(255, 255, 255, 0.1);
+    --nav-active-indicator: #3b82f6;
+    --nav-disabled-bg: rgba(245, 158, 11, 0.2);
+    --nav-disabled-text: #fbbf24;
+    
+    /* Theme Toggle */
+    --toggle-background: #374151;
+    --toggle-background-hover: #4b5563;
+    --toggle-border: #4b5563;
+    --toggle-focus-ring: #3b82f6;
+    --toggle-focus-offset: #000000;
+    --toggle-sun-color: #fbbf24;
+    --toggle-sun-hover: #f59e0b;
+    --toggle-moon-color: #60a5fa;
+    --toggle-moon-hover: #3b82f6;
+    
+    /* Buttons */
+    --button-primary: #3b82f6;
+    --button-primary-hover: #2563eb;
+    --button-secondary: #374151;
+    --button-secondary-hover: #4b5563;
+    
+    /* Cards */
+    --card-background: #1a1a1a;
+    --card-border: #374151;
+    --card-shadow: rgba(0, 0, 0, 0.3);
+    
+    /* Colores para el gradiente */
+    --gradient-blue: #2563eb;
+    --gradient-purple: #8b5cf6;
+    --gradient-background: #000000;
+    --gradient-blue-opacity: rgba(37, 99, 235, 0.2);
+    --gradient-purple-opacity: rgba(139, 92, 246, 0.2);
+    
+    /* Hero Section */
+    --hero-eyebrow-bg: rgba(59, 130, 246, 0.2);
+    --hero-eyebrow-border: rgba(59, 130, 246, 0.3);
+    --hero-eyebrow-text: #60a5fa;
+    --hero-title-primary: #ffffff;
+    --hero-title-gradient-from: #60a5fa;
+    --hero-title-gradient-to: #a855f7;
+    --hero-subtitle: rgba(255, 255, 255, 0.8);
+    --hero-subtitle-accent: #ffffff;
+    --hero-card-bg: rgba(255, 255, 255, 0.05);
+    --hero-card-border: rgba(255, 255, 255, 0.1);
+    --hero-card-title: #ffffff;
+    --hero-card-text: rgba(255, 255, 255, 0.7);
+    --hero-icon-blue-bg: rgba(59, 130, 246, 0.2);
+    --hero-icon-blue: #60a5fa;
+    --hero-icon-purple-bg: rgba(168, 85, 247, 0.2);
+    --hero-icon-purple: #a855f7;
+    --hero-icon-emerald-bg: rgba(16, 185, 129, 0.2);
+    --hero-icon-emerald: #34d399;
+    
+    /* Featured Sections */
+    --section-divider: linear-gradient(to right, #3b82f6, #6366f1);
+    --section-divider-opacity: 0.2;
+    --section-header-title: #ffffff;
+    --section-header-subtitle: rgba(255, 255, 255, 0.6);
+    --section-header-accent-bar: #3b82f6;
+    
+    /* Empty State Cards */
+    --empty-card-bg: rgba(255, 255, 255, 0.05);
+    --empty-card-border: rgba(255, 255, 255, 0.1);
+    --empty-card-title: #ffffff;
+    --empty-card-text: rgba(255, 255, 255, 0.7);
+    --empty-card-text-muted: rgba(255, 255, 255, 0.6);
+    
+    /* Tutorial/Post Cards */
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --card-border-hover: rgba(59, 130, 246, 0.3);
+    --card-bg-hover: rgba(255, 255, 255, 0.1);
+    --card-title: #ffffff;
+    --card-image-bg: rgba(255, 255, 255, 0.1);
+    --card-meta-bg: rgba(59, 130, 246, 0.2);
+    --card-meta-text: rgba(255, 255, 255, 0.7);
+    --card-meta-icon: #93c5fd;
+    
+    /* Accent Colors */
+    --accent-blue-bg: rgba(59, 130, 246, 0.2);
+    --accent-blue-border: rgba(59, 130, 246, 0.3);
+    --accent-blue-text: #60a5fa;
+    --accent-blue-hover: #3b82f6;
+    --accent-purple-bg: rgba(168, 85, 247, 0.2);
+    --accent-purple-border: rgba(168, 85, 247, 0.3);
+    --accent-purple-text: #a855f7;
+    --accent-purple-hover: #7c3aed;
+    --accent-emerald-bg: rgba(16, 185, 129, 0.2);
+    --accent-emerald-border: rgba(16, 185, 129, 0.3);
+    --accent-emerald-text: #34d399;
+    --accent-emerald-hover: #059669;
+    
+    /* Post List Specific */
+    --post-featured-bg: rgba(255, 255, 255, 0.05);
+    --post-featured-border: rgba(255, 255, 255, 0.1);
+    --post-list-border: rgba(255, 255, 255, 0.1);
+    --post-title: #ffffff;
+    --post-title-hover: #60a5fa;
+    --post-description: rgba(255, 255, 255, 0.7);
+    --post-meta-date: #60a5fa;
+    --post-meta-tag: #60a5fa;
+    --post-link: #60a5fa;
+    --post-image-placeholder-bg: #374151;
+    --post-image-placeholder-text: #9ca3af;
+    
+    /* Newsletter Section */
+    --newsletter-title: #ffffff;
+    --newsletter-subtitle: rgba(255, 255, 255, 0.7);
+    --newsletter-card-bg: rgba(255, 255, 255, 0.05);
+    --newsletter-card-border: rgba(255, 255, 255, 0.1);
+    --newsletter-success-title: #ffffff;
+    --newsletter-success-text: rgba(255, 255, 255, 0.7);
+    --newsletter-input-bg: rgba(255, 255, 255, 0.05);
+    --newsletter-input-border: rgba(255, 255, 255, 0.1);
+    --newsletter-input-text: #ffffff;
+    --newsletter-input-placeholder: rgba(255, 255, 255, 0.4);
+    --newsletter-button-bg: #2563eb;
+    --newsletter-button-hover: #1d4ed8;
+    --newsletter-loading-text: rgba(255, 255, 255, 0.7);
+}
+
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
+}
+
+/* Modo claro - cuando el sistema prefiere claro */
+@media (prefers-color-scheme: light) {
+    :root {
+        --background: #ffffff;
+        --foreground: #171717;
+        --background-secondary: #f8fafc;
+        --border: #e2e8f0;
+        --border-light: #f1f5f9;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --text-muted: #94a3b8;
+        
+        /* Navigation */
+        --nav-background: rgba(255, 255, 255, 0.8);
+        --nav-background-scrolled: rgba(255, 255, 255, 0.9);
+        --nav-text: #374151;
+        --nav-text-hover: #111827;
+        --nav-text-active: #1e40af;
+        --nav-bg-hover: rgba(59, 130, 246, 0.1);
+        --nav-bg-active: rgba(59, 130, 246, 0.15);
+        --nav-active-indicator: #2563eb;
+        --nav-disabled-bg: rgba(245, 158, 11, 0.15);
+        --nav-disabled-text: #d97706;
+        
+        /* Theme Toggle */
+        --toggle-background: #f1f5f9;
+        --toggle-background-hover: #e2e8f0;
+        --toggle-border: #d1d5db;
+        --toggle-focus-ring: #3b82f6;
+        --toggle-focus-offset: #ffffff;
+        --toggle-sun-color: #f59e0b;
+        --toggle-sun-hover: #d97706;
+        --toggle-moon-color: #3b82f6;
+        --toggle-moon-hover: #2563eb;
+        
+        /* Buttons */
+        --button-primary: #2563eb;
+        --button-primary-hover: #1d4ed8;
+        --button-secondary: #f1f5f9;
+        --button-secondary-hover: #e2e8f0;
+        
+        /* Cards */
+        --card-background: #ffffff;
+        --card-border: #e2e8f0;
+        --card-shadow: rgba(0, 0, 0, 0.1);
+        
+        /* Gradientes */
+        --gradient-background: #f8fafc;
+        --gradient-blue-opacity: rgba(59, 130, 246, 0.08);
+        --gradient-purple-opacity: rgba(139, 92, 246, 0.08);
+        
+        /* Hero Section */
+        --hero-eyebrow-bg: rgba(59, 130, 246, 0.1);
+        --hero-eyebrow-border: rgba(59, 130, 246, 0.2);
+        --hero-eyebrow-text: #2563eb;
+        --hero-title-primary: #1e293b;
+        --hero-title-gradient-from: #2563eb;
+        --hero-title-gradient-to: #7c3aed;
+        --hero-subtitle: rgba(30, 41, 59, 0.8);
+        --hero-subtitle-accent: #1e293b;
+        --hero-card-bg: rgba(255, 255, 255, 0.7);
+        --hero-card-border: rgba(226, 232, 240, 0.5);
+        --hero-card-title: #1e293b;
+        --hero-card-text: rgba(30, 41, 59, 0.7);
+        --hero-icon-blue-bg: rgba(59, 130, 246, 0.1);
+        --hero-icon-blue: #2563eb;
+        --hero-icon-purple-bg: rgba(124, 58, 237, 0.1);
+        --hero-icon-purple: #7c3aed;
+        --hero-icon-emerald-bg: rgba(16, 185, 129, 0.1);
+        --hero-icon-emerald: #059669;
+        
+        /* Featured Sections */
+        --section-divider: linear-gradient(to right, #2563eb, #4f46e5);
+        --section-divider-opacity: 0.3;
+        --section-header-title: #1e293b;
+        --section-header-subtitle: rgba(30, 41, 59, 0.7);
+        --section-header-accent-bar: #2563eb;
+        
+        /* Empty State Cards */
+        --empty-card-bg: rgba(255, 255, 255, 0.8);
+        --empty-card-border: rgba(226, 232, 240, 0.6);
+        --empty-card-title: #1e293b;
+        --empty-card-text: rgba(30, 41, 59, 0.8);
+        --empty-card-text-muted: rgba(30, 41, 59, 0.6);
+        
+        /* Tutorial/Post Cards */
+        --card-bg: rgba(255, 255, 255, 0.9);
+        --card-border: rgba(226, 232, 240, 0.6);
+        --card-border-hover: rgba(37, 99, 235, 0.4);
+        --card-bg-hover: rgba(255, 255, 255, 1);
+        --card-title: #1e293b;
+        --card-image-bg: rgba(226, 232, 240, 0.3);
+        --card-meta-bg: rgba(37, 99, 235, 0.1);
+        --card-meta-text: rgba(30, 41, 59, 0.8);
+        --card-meta-icon: #2563eb;
+        
+        /* Accent Colors */
+        --accent-blue-bg: rgba(37, 99, 235, 0.1);
+        --accent-blue-border: rgba(37, 99, 235, 0.2);
+        --accent-blue-text: #2563eb;
+        --accent-blue-hover: #1d4ed8;
+        --accent-purple-bg: rgba(124, 58, 237, 0.1);
+        --accent-purple-border: rgba(124, 58, 237, 0.2);
+        --accent-purple-text: #7c3aed;
+        --accent-purple-hover: #5b21b6;
+        --accent-emerald-bg: rgba(16, 185, 129, 0.1);
+        --accent-emerald-border: rgba(16, 185, 129, 0.2);
+        --accent-emerald-text: #059669;
+        --accent-emerald-hover: #047857;
+        
+        /* Post List Specific */
+        --post-featured-bg: rgba(255, 255, 255, 0.9);
+        --post-featured-border: rgba(226, 232, 240, 0.6);
+        --post-list-border: rgba(226, 232, 240, 0.6);
+        --post-title: #1e293b;
+        --post-title-hover: #2563eb;
+        --post-description: rgba(30, 41, 59, 0.8);
+        --post-meta-date: #2563eb;
+        --post-meta-tag: #2563eb;
+        --post-link: #2563eb;
+        --post-image-placeholder-bg: #f1f5f9;
+        --post-image-placeholder-text: #64748b;
+        
+        /* Newsletter Section */
+        --newsletter-title: #1e293b;
+        --newsletter-subtitle: rgba(30, 41, 59, 0.8);
+        --newsletter-card-bg: rgba(255, 255, 255, 0.8);
+        --newsletter-card-border: rgba(226, 232, 240, 0.6);
+        --newsletter-success-title: #1e293b;
+        --newsletter-success-text: rgba(30, 41, 59, 0.8);
+        --newsletter-input-bg: rgba(255, 255, 255, 0.9);
+        --newsletter-input-border: rgba(226, 232, 240, 0.6);
+        --newsletter-input-text: #1e293b;
+        --newsletter-input-placeholder: rgba(30, 41, 59, 0.4);
+        --newsletter-button-bg: #2563eb;
+        --newsletter-button-hover: #1d4ed8;
+        --newsletter-loading-text: rgba(30, 41, 59, 0.8);
+    }
+}
+
+/* Modo claro por clase (para el toggle manual) */
+.light {
+    --background: #ffffff;
+    --foreground: #171717;
+    --background-secondary: #f8fafc;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    
+    /* Navigation */
+    --nav-background: rgba(255, 255, 255, 0.8);
+    --nav-background-scrolled: rgba(255, 255, 255, 0.9);
+    --nav-text: #374151;
+    --nav-text-hover: #111827;
+    --nav-text-active: #1e40af;
+    --nav-bg-hover: rgba(59, 130, 246, 0.1);
+    --nav-bg-active: rgba(59, 130, 246, 0.15);
+    
+    /* Theme Toggle */
+    --toggle-background: #f1f5f9;
+    --toggle-background-hover: #e2e8f0;
+    --toggle-border: #d1d5db;
+    --toggle-focus-ring: #3b82f6;
+    --toggle-focus-offset: #ffffff;
+    --toggle-sun-color: #f59e0b;
+    --toggle-sun-hover: #d97706;
+    --toggle-moon-color: #3b82f6;
+    --toggle-moon-hover: #2563eb;
+    
+    /* Buttons */
+    --button-primary: #2563eb;
+    --button-primary-hover: #1d4ed8;
+    --button-secondary: #f1f5f9;
+    --button-secondary-hover: #e2e8f0;
+    
+    /* Cards */
+    --card-background: #ffffff;
+    --card-border: #e2e8f0;
+    --card-shadow: rgba(0, 0, 0, 0.1);
+    
+    /* Gradientes */
+    --gradient-background: #f8fafc;
+    --gradient-blue-opacity: rgba(59, 130, 246, 0.08);
+    --gradient-purple-opacity: rgba(139, 92, 246, 0.08);
+    
+    /* Hero Section */
+    --hero-eyebrow-bg: rgba(59, 130, 246, 0.1);
+    --hero-eyebrow-border: rgba(59, 130, 246, 0.2);
+    --hero-eyebrow-text: #2563eb;
+    --hero-title-primary: #1e293b;
+    --hero-title-gradient-from: #2563eb;
+    --hero-title-gradient-to: #7c3aed;
+    --hero-subtitle: rgba(30, 41, 59, 0.8);
+    --hero-subtitle-accent: #1e293b;
+    --hero-card-bg: rgba(255, 255, 255, 0.7);
+    --hero-card-border: rgba(226, 232, 240, 0.5);
+    --hero-card-title: #1e293b;
+    --hero-card-text: rgba(30, 41, 59, 0.7);
+    --hero-icon-blue-bg: rgba(59, 130, 246, 0.1);
+    --hero-icon-blue: #2563eb;
+    --hero-icon-purple-bg: rgba(124, 58, 237, 0.1);
+    --hero-icon-purple: #7c3aed;
+    --hero-icon-emerald-bg: rgba(16, 185, 129, 0.1);
+    --hero-icon-emerald: #059669;
+    
+    /* Featured Sections */
+    --section-divider: linear-gradient(to right, #2563eb, #4f46e5);
+    --section-divider-opacity: 0.3;
+    --section-header-title: #1e293b;
+    --section-header-subtitle: rgba(30, 41, 59, 0.7);
+    --section-header-accent-bar: #2563eb;
+    
+    /* Empty State Cards */
+    --empty-card-bg: rgba(255, 255, 255, 0.8);
+    --empty-card-border: rgba(226, 232, 240, 0.6);
+    --empty-card-title: #1e293b;
+    --empty-card-text: rgba(30, 41, 59, 0.8);
+    --empty-card-text-muted: rgba(30, 41, 59, 0.6);
+    
+    /* Tutorial/Post Cards */
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --card-border: rgba(226, 232, 240, 0.6);
+    --card-border-hover: rgba(37, 99, 235, 0.4);
+    --card-bg-hover: rgba(255, 255, 255, 1);
+    --card-title: #1e293b;
+    --card-image-bg: rgba(226, 232, 240, 0.3);
+    --card-meta-bg: rgba(37, 99, 235, 0.1);
+    --card-meta-text: rgba(30, 41, 59, 0.8);
+    --card-meta-icon: #2563eb;
+    
+    /* Accent Colors */
+    --accent-blue-bg: rgba(37, 99, 235, 0.1);
+    --accent-blue-border: rgba(37, 99, 235, 0.2);
+    --accent-blue-text: #2563eb;
+    --accent-blue-hover: #1d4ed8;
+    --accent-purple-bg: rgba(124, 58, 237, 0.1);
+    --accent-purple-border: rgba(124, 58, 237, 0.2);
+    --accent-purple-text: #7c3aed;
+    --accent-purple-hover: #5b21b6;
+    --accent-emerald-bg: rgba(16, 185, 129, 0.1);
+    --accent-emerald-border: rgba(16, 185, 129, 0.2);
+    --accent-emerald-text: #059669;
+    --accent-emerald-hover: #047857;
+    
+    /* Newsletter Section */
+    --newsletter-title: #1e293b;
+    --newsletter-subtitle: rgba(30, 41, 59, 0.8);
+    --newsletter-card-bg: rgba(255, 255, 255, 0.8);
+    --newsletter-card-border: rgba(226, 232, 240, 0.6);
+    --newsletter-success-title: #1e293b;
+    --newsletter-success-text: rgba(30, 41, 59, 0.8);
+    --newsletter-input-bg: rgba(255, 255, 255, 0.9);
+    --newsletter-input-border: rgba(226, 232, 240, 0.6);
+    --newsletter-input-text: #1e293b;
+    --newsletter-input-placeholder: rgba(30, 41, 59, 0.4);
+    --newsletter-button-bg: #2563eb;
+    --newsletter-button-hover: #1d4ed8;
+    --newsletter-loading-text: rgba(30, 41, 59, 0.8);
+}
+
+/* Modo oscuro por clase (para el toggle manual) */
+.dark {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --background-secondary: #1a1a1a;
+    --border: #374151;
+    --border-light: #2d3748;
+    --text-primary: #ffffff;
+    --text-secondary: #d1d5db;
+    --text-muted: #9ca3af;
+    
+    /* Navigation */
+    --nav-background: rgba(0, 0, 0, 0.5);
+    --nav-background-scrolled: rgba(0, 0, 0, 0.8);
+    --nav-text: rgba(255, 255, 255, 0.7);
+    --nav-text-hover: #ffffff;
+    --nav-text-active: #ffffff;
+    --nav-bg-hover: rgba(255, 255, 255, 0.05);
+    --nav-bg-active: rgba(255, 255, 255, 0.1);
+    --nav-active-indicator: #3b82f6;
+    --nav-disabled-bg: rgba(245, 158, 11, 0.2);
+    --nav-disabled-text: #fbbf24;
+    
+    /* Theme Toggle */
+    --toggle-background: #374151;
+    --toggle-background-hover: #4b5563;
+    --toggle-border: #4b5563;
+    --toggle-focus-ring: #3b82f6;
+    --toggle-focus-offset: #000000;
+    --toggle-sun-color: #fbbf24;
+    --toggle-sun-hover: #f59e0b;
+    --toggle-moon-color: #60a5fa;
+    --toggle-moon-hover: #3b82f6;
+    
+    /* Buttons */
+    --button-primary: #3b82f6;
+    --button-primary-hover: #2563eb;
+    --button-secondary: #374151;
+    --button-secondary-hover: #4b5563;
+    
+    /* Cards */
+    --card-background: #1a1a1a;
+    --card-border: #374151;
+    --card-shadow: rgba(0, 0, 0, 0.3);
+    
+    /* Gradientes */
+    --gradient-background: #000000;
+    --gradient-blue-opacity: rgba(37, 99, 235, 0.2);
+    --gradient-purple-opacity: rgba(139, 92, 246, 0.2);
+    
+    /* Hero Section */
+    --hero-eyebrow-bg: rgba(59, 130, 246, 0.2);
+    --hero-eyebrow-border: rgba(59, 130, 246, 0.3);
+    --hero-eyebrow-text: #60a5fa;
+    --hero-title-primary: #ffffff;
+    --hero-title-gradient-from: #60a5fa;
+    --hero-title-gradient-to: #a855f7;
+    --hero-subtitle: rgba(255, 255, 255, 0.8);
+    --hero-subtitle-accent: #ffffff;
+    --hero-card-bg: rgba(255, 255, 255, 0.05);
+    --hero-card-border: rgba(255, 255, 255, 0.1);
+    --hero-card-title: #ffffff;
+    --hero-card-text: rgba(255, 255, 255, 0.7);
+    --hero-icon-blue-bg: rgba(59, 130, 246, 0.2);
+    --hero-icon-blue: #60a5fa;
+    --hero-icon-purple-bg: rgba(168, 85, 247, 0.2);
+    --hero-icon-purple: #a855f7;
+    --hero-icon-emerald-bg: rgba(16, 185, 129, 0.2);
+    --hero-icon-emerald: #34d399;
+    
+    /* Featured Sections */
+    --section-divider: linear-gradient(to right, #3b82f6, #6366f1);
+    --section-divider-opacity: 0.2;
+    --section-header-title: #ffffff;
+    --section-header-subtitle: rgba(255, 255, 255, 0.6);
+    --section-header-accent-bar: #3b82f6;
+    
+    /* Empty State Cards */
+    --empty-card-bg: rgba(255, 255, 255, 0.05);
+    --empty-card-border: rgba(255, 255, 255, 0.1);
+    --empty-card-title: #ffffff;
+    --empty-card-text: rgba(255, 255, 255, 0.7);
+    --empty-card-text-muted: rgba(255, 255, 255, 0.6);
+    
+    /* Tutorial/Post Cards */
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --card-border-hover: rgba(59, 130, 246, 0.3);
+    --card-bg-hover: rgba(255, 255, 255, 0.1);
+    --card-title: #ffffff;
+    --card-image-bg: rgba(255, 255, 255, 0.1);
+    --card-meta-bg: rgba(59, 130, 246, 0.2);
+    --card-meta-text: rgba(255, 255, 255, 0.7);
+    --card-meta-icon: #93c5fd;
+    
+    /* Accent Colors */
+    --accent-blue-bg: rgba(59, 130, 246, 0.2);
+    --accent-blue-border: rgba(59, 130, 246, 0.3);
+    --accent-blue-text: #60a5fa;
+    --accent-blue-hover: #3b82f6;
+    --accent-purple-bg: rgba(168, 85, 247, 0.2);
+    --accent-purple-border: rgba(168, 85, 247, 0.3);
+    --accent-purple-text: #a855f7;
+    --accent-purple-hover: #7c3aed;
+    --accent-emerald-bg: rgba(16, 185, 129, 0.2);
+    --accent-emerald-border: rgba(16, 185, 129, 0.3);
+    --accent-emerald-text: #34d399;
+    --accent-emerald-hover: #059669;
+    
+    /* Post List Specific */
+    --post-featured-bg: rgba(255, 255, 255, 0.05);
+    --post-featured-border: rgba(255, 255, 255, 0.1);
+    --post-list-border: rgba(255, 255, 255, 0.1);
+    --post-title: #ffffff;
+    --post-title-hover: #60a5fa;
+    --post-description: rgba(255, 255, 255, 0.7);
+    --post-meta-date: #60a5fa;
+    --post-meta-tag: #60a5fa;
+    --post-link: #60a5fa;
+    --post-image-placeholder-bg: #374151;
+    --post-image-placeholder-text: #9ca3af;
+    
+    /* Newsletter Section */
+    --newsletter-title: #ffffff;
+    --newsletter-subtitle: rgba(255, 255, 255, 0.7);
+    --newsletter-card-bg: rgba(255, 255, 255, 0.05);
+    --newsletter-card-border: rgba(255, 255, 255, 0.1);
+    --newsletter-success-title: #ffffff;
+    --newsletter-success-text: rgba(255, 255, 255, 0.7);
+    --newsletter-input-bg: rgba(255, 255, 255, 0.05);
+    --newsletter-input-border: rgba(255, 255, 255, 0.1);
+    --newsletter-input-text: #ffffff;
+    --newsletter-input-placeholder: rgba(255, 255, 255, 0.4);
+    --newsletter-button-bg: #2563eb;
+    --newsletter-button-hover: #1d4ed8;
+    --newsletter-loading-text: rgba(255, 255, 255, 0.7);
+}
+
+.toaster-container {
+    @apply z-[100];
+}
+
+/* Estilo base para el body */
+body {
+    color: var(--foreground);
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: var(--gradient-background);
+    background-image: radial-gradient(circle at top left, var(--gradient-blue-opacity) 0%, transparent 50%),
+        radial-gradient(circle at bottom right, var(--gradient-purple-opacity) 0%, transparent 50%);
+    background-attachment: fixed;
+    background-size: 100% 100%;
+    min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Opcionalmente, puedes agregar elementos decorativos fijos */
+.bg-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.bg-glow::before {
+    content: "";
+    position: absolute;
+    top: -10vh;
+    left: -10vw;
+    width: 70vw;
+    height: 70vh;
+    border-radius: 50%;
+    background: var(--gradient-blue-opacity);
+    filter: blur(80px);
+}
+
+.bg-glow::after {
+    content: "";
+    position: absolute;
+    bottom: -10vh;
+    right: -10vw;
+    width: 70vw;
+    height: 70vh;
+    border-radius: 50%;
+    background: var(--gradient-purple-opacity);
+    filter: blur(80px);
+}
+
+/* Clases utilitarias para usar las variables CSS */
+.nav-bg {
+    background-color: var(--nav-background);
+    backdrop-filter: blur(12px);
+}
+
+.nav-bg-scrolled {
+    background-color: var(--nav-background-scrolled);
+    backdrop-filter: blur(16px);
+}
+
+.nav-text {
+    color: var(--nav-text);
+}
+
+.nav-text-hover:hover {
+    color: var(--nav-text-hover);
+}
+
+.nav-text-active {
+    color: var(--nav-text-active);
+}
+
+.nav-bg-hover:hover {
+    background-color: var(--nav-bg-hover);
+}
+
+.nav-bg-active {
+    background-color: var(--nav-bg-active);
+}
+
+.card-bg {
+    background-color: var(--card-background);
+    border-color: var(--card-border);
+}
+
+.text-primary {
+    color: var(--text-primary);
+}
+
+.text-secondary {
+    color: var(--text-secondary);
+}
+
+.text-muted {
+    color: var(--text-muted);
+}
+
+.bg-secondary {
+    background-color: var(--background-secondary);
+}
+
+.border-theme {
+    border-color: var(--border);
+}
+
+.border-light {
+    border-color: var(--border-light);
+}
+
+/* Theme Toggle Styles */
+.theme-toggle {
+    background-color: var(--toggle-background);
+    border-color: var(--toggle-border);
+}
+
+.theme-toggle:hover {
+    background-color: var(--toggle-background-hover);
+}
+
+.theme-toggle:focus {
+    --tw-ring-color: var(--toggle-focus-ring);
+    --tw-ring-offset-color: var(--toggle-focus-offset);
+}
+
+.theme-toggle-sun {
+    color: var(--toggle-sun-color);
+}
+
+.theme-toggle-sun:hover {
+    color: var(--toggle-sun-hover);
+}
+
+.theme-toggle-moon {
+    color: var(--toggle-moon-color);
+}
+
+.theme-toggle-moon:hover {
+    color: var(--toggle-moon-hover);
+}
+
+/* Navigation Additional Styles */
+.nav-active-indicator {
+    background-color: var(--nav-active-indicator);
+}
+
+.nav-disabled-badge {
+    background-color: var(--nav-disabled-bg);
+    color: var(--nav-disabled-text);
+}
+
+/* Hero Section Styles */
+.hero-eyebrow {
+    background-color: var(--hero-eyebrow-bg);
+    border-color: var(--hero-eyebrow-border);
+    color: var(--hero-eyebrow-text);
+}
+
+.hero-title-primary {
+    color: var(--hero-title-primary);
+}
+
+.hero-title-gradient {
+    background: linear-gradient(to right, var(--hero-title-gradient-from), var(--hero-title-gradient-to));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+    color: var(--hero-subtitle);
+}
+
+.hero-subtitle-accent {
+    color: var(--hero-subtitle-accent);
+}
+
+.hero-card {
+    background-color: var(--hero-card-bg);
+    border-color: var(--hero-card-border);
+}
+
+.hero-card-title {
+    color: var(--hero-card-title);
+}
+
+.hero-card-text {
+    color: var(--hero-card-text);
+}
+
+.hero-icon-blue-bg {
+    background-color: var(--hero-icon-blue-bg);
+}
+
+.hero-icon-blue {
+    color: var(--hero-icon-blue);
+}
+
+.hero-icon-purple-bg {
+    background-color: var(--hero-icon-purple-bg);
+}
+
+.hero-icon-purple {
+    color: var(--hero-icon-purple);
+}
+
+.hero-icon-emerald-bg {
+    background-color: var(--hero-icon-emerald-bg);
+}
+
+.hero-icon-emerald {
+    color: var(--hero-icon-emerald);
+}
+
+/* Utility classes using CSS variables - Tailwind v4 approach */
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    background-color: var(--card-background);
+    -webkit-text-fill-color: var(--foreground);
+    transition: background-color 9999s ease-in-out 0s;
+}

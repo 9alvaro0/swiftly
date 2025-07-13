@@ -32,8 +32,8 @@ export default function Header() {
         <header
             className={`sticky top-0 z-40 transition-all duration-300 ${
                 scrolled
-                    ? "bg-black/50 shadow-lg shadow-blue-900/10 backdrop-blur-md py-3"
-                    : "bg-transparent backdrop-blur-sm py-4"
+                    ? "bg-[var(--color-nav-scrolled)] backdrop-blur-2xl shadow-lg py-3"
+                    : "bg-[var(--color-nav)] backdrop-blur-xl py-4"
             }`}
         >
             <div className="container mx-auto px-4 flex justify-between items-center">

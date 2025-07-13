@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 import MainLayout from "@/components/layout/MainLayout";
 const inter = Inter({ subsets: ["latin"] });
 import AuthInitializer from "@/components/auth/AuthInitializer";
+import ThemeInitializer from "@/components/theme/ThemeInitializer";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
@@ -58,15 +59,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
             </head>
             <body className={inter.className}>
-                <AuthInitializer>
-                    <MainLayout>{children}</MainLayout>
-                    <Toaster
-                        position="top-right"
-                        richColors
-                        expand={false}
-                        className="toaster-container"
-                    />
-                </AuthInitializer>
+                <ThemeInitializer>
+                    <AuthInitializer>
+                        <MainLayout>{children}</MainLayout>
+                        <Toaster
+                            position="top-right"
+                            richColors
+                            expand={false}
+                            className="toaster-container"
+                        />
+                    </AuthInitializer>
+                </ThemeInitializer>
             </body>
         </html>
     );

@@ -18,8 +18,8 @@ export default function TutorialCard({ tutorial, searchTerm = "" }: TutorialCard
             href={`/tutorials/${tutorial.slug}`}
             className="group block"
         >
-            <div className="group rounded-2xl border border-white/10 bg-white/5 p-4 shadow-md transition hover:shadow-lg hover:-translate-y-1 hover:border-blue-400/30 hover:bg-white/10 flex flex-col justify-between h-full">
-                <div className="aspect-w-16 aspect-h-9 mb-4 overflow-hidden rounded-lg bg-white/10">
+            <div className="group rounded-2xl border-[var(--color-card-border)] bg-[var(--color-card)] hover:border-[var(--color-card-border-hover)] hover:bg-[var(--color-card-hover)] border p-4 shadow-md transition hover:shadow-lg hover:-translate-y-1 flex flex-col justify-between h-full">
+                <div className="aspect-w-16 aspect-h-9 mb-4 overflow-hidden rounded-lg bg-[var(--color-border)]">
                     <Image
                         src={tutorial.coverImage || ""}
                         alt={tutorial.title}
@@ -28,17 +28,17 @@ export default function TutorialCard({ tutorial, searchTerm = "" }: TutorialCard
                         className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                 </div>
-                <h2 className="font-bold text-white text-lg leading-tight mb-2">
+                <h2 className="font-bold text-[var(--color-foreground)] text-lg leading-tight mb-2">
                     <HighlightText text={tutorial.title} searchTerm={searchTerm} />
                 </h2>
                 <div className="mt-4 flex items-center justify-between text-xs">
-                    <span className="flex items-center gap-1 px-2 py-1 bg-blue-400/20 rounded-full text-white/70 capitalize">
-                        <FiClock size={14} className="text-blue-300" />
+                    <span className="flex items-center gap-1 px-2 py-1 bg-[var(--color-blue-bg)] text-[var(--color-muted)] rounded-full capitalize">
+                        <FiClock size={14} className="text-[var(--color-blue-light)]" />
                         {tutorial.readTime} min
                     </span>
 
                     <span
-                        className={`px-2 py-1 rounded-full capitalize text-white/70 ${levelStyle.badge || "bg-white/10"}`}
+                        className={`px-2 py-1 rounded-full capitalize bg-[var(--color-blue-bg)] text-[var(--color-muted)] ${levelStyle.badge || ""}`}
                     >
                         {tutorial.level}
                     </span>

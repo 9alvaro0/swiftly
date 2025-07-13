@@ -30,26 +30,26 @@ export default async function FeaturedTutorials() {
                         </div>
                     </div>
                 ) : (
-                    <div className="relative bg-white/5 border border-white/10 p-12 rounded-2xl shadow-lg text-center mt-10">
+                    <div className="relative bg-[var(--color-card)] border-[var(--color-card-border)] border p-12 rounded-2xl shadow-lg text-center mt-10">
                         <FiBookOpen
                             size={48}
-                            className="text-blue-400 mx-auto mb-6"
+                            className="text-[var(--color-blue-light)] mx-auto mb-6"
                         />
-                        <h3 className="text-2xl font-bold text-white mb-4">¡Muy pronto nuevos tutoriales!</h3>
-                        <p className="text-white/70 mb-8">
+                        <h3 className="text-2xl font-bold text-[var(--color-foreground)] mb-4">¡Muy pronto nuevos tutoriales!</h3>
+                        <p className="text-[var(--color-muted)] mb-8">
                             Estamos preparando contenido de alta calidad para ayudarte a seguir creciendo.
                         </p>
 
                         <div className="grid gap-6 md:grid-cols-2">
-                            <div className="bg-white/5 p-6 rounded-lg">
-                                <h4 className="font-semibold text-white mb-2">Tutoriales detallados</h4>
-                                <p className="text-white/60 text-sm">
+                            <div className="bg-[var(--color-card)] p-6 rounded-lg">
+                                <h4 className="font-semibold text-[var(--color-foreground)] mb-2">Tutoriales detallados</h4>
+                                <p className="text-[var(--color-muted)] text-sm">
                                     Guías paso a paso, ejemplos prácticos y proyectos reales.
                                 </p>
                             </div>
-                            <div className="bg-white/5 p-6 rounded-lg">
-                                <h4 className="font-semibold text-white mb-2">Actualizados y relevantes</h4>
-                                <p className="text-white/60 text-sm">
+                            <div className="bg-[var(--color-card)] p-6 rounded-lg">
+                                <h4 className="font-semibold text-[var(--color-foreground)] mb-2">Actualizados y relevantes</h4>
+                                <p className="text-[var(--color-muted)] text-sm">
                                     Tecnologías actuales, últimas versiones y mejores prácticas.
                                 </p>
                             </div>

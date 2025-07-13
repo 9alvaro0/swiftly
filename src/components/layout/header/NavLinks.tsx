@@ -1,4 +1,4 @@
-// src/components/layout/header/MobileNav.tsx
+// src/components/layout/header/NavLinks.tsx
 
 "use client";
 
@@ -77,7 +77,7 @@ export default function NavLinks({
                             isActive={pathname === "/auth"}
                             onClick={onItemClick}
                             isMobile={isMobile}
-                            className={isMobile ? "" : "bg-blue-600 hover:bg-blue-700 text-white hover:text-white"}
+                            className={isMobile ? "" : "bg-[var(--color-button)] hover:bg-[var(--color-button-hover)] text-white hover:text-white"}
                         />
                     </>
                 )}

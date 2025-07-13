@@ -1,92 +1,198 @@
 @import "tailwindcss";
 
-:root {
-    --background: #ffffff;
-    --foreground: #171717;
-
-    /* Colores para el gradiente */
-    --gradient-blue: #2563eb;
-    --gradient-purple: #8b5cf6;
-    --gradient-dark: #000000;
-
-    /* Versión con opacidad para el fondo */
-    --gradient-blue-opacity: rgba(37, 99, 235, 0.15);
-    --gradient-purple-opacity: rgba(139, 92, 246, 0.15);
-}
-
+/* Tailwind v4 Theme Configuration */
 @theme inline {
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-    --font-sans: var(--font-geist-sans);
-    --font-mono: var(--font-geist-mono);
+  /* Base semantic colors */
+  --color-background: #ffffff;
+  --color-foreground: #171717;
+  --color-muted: #64748b;
+  --color-border: #e2e8f0;
+  
+  /* Surface colors - cards, containers */
+  --color-card: #ffffff;
+  --color-card-hover: #f8fafc;
+  --color-card-border: #e2e8f0;
+  --color-card-border-hover: rgba(37, 99, 235, 0.4);
+  
+  /* Navigation specific */
+  --color-nav: rgba(255, 255, 255, 0.8);
+  --color-nav-scrolled: rgba(255, 255, 255, 0.9);
+  --color-nav-text: #374151;
+  --color-nav-text-hover: #111827;
+  --color-nav-text-active: #1e40af;
+  --color-nav-hover: rgba(59, 130, 246, 0.1);
+  --color-nav-active: rgba(59, 130, 246, 0.15);
+  --color-nav-indicator: #2563eb;
+  --color-nav-disabled-bg: rgba(245, 158, 11, 0.15);
+  --color-nav-disabled-text: #d97706;
+  
+  /* Hero section */
+  --color-hero-eyebrow: rgba(59, 130, 246, 0.1);
+  --color-hero-gradient-from: #2563eb;
+  --color-hero-gradient-to: #7c3aed;
+  
+  /* Accent colors system */
+  --color-blue: #2563eb;
+  --color-blue-light: #60a5fa;
+  --color-blue-bg: rgba(37, 99, 235, 0.1);
+  --color-purple: #7c3aed;
+  --color-purple-light: #a855f7;
+  --color-purple-bg: rgba(124, 58, 237, 0.1);
+  --color-emerald: #059669;
+  --color-emerald-light: #34d399;
+  --color-emerald-bg: rgba(16, 185, 129, 0.1);
+  
+  /* Interactive states */
+  --color-button: #2563eb;
+  --color-button-hover: #1d4ed8;
+  
+  /* Form elements */
+  --color-input: #ffffff;
+  --color-input-border: #e2e8f0;
+  --color-input-placeholder: rgba(30, 41, 59, 0.4);
+  
+  /* Theme toggle */
+  --color-toggle: #f1f5f9;
+  --color-toggle-hover: #e2e8f0;
+  --color-toggle-sun: #f59e0b;
+  --color-toggle-moon: #3b82f6;
 }
 
+/* Dark mode overrides */
 @media (prefers-color-scheme: dark) {
-    :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
-
-        /* Ajustar opacidad para modo oscuro si es necesario */
-        --gradient-blue-opacity: rgba(37, 99, 235, 0.2);
-        --gradient-purple-opacity: rgba(139, 92, 246, 0.2);
-    }
+  @theme inline {
+    /* Base semantic colors */
+    --color-background: #0a0a0a;
+    --color-foreground: #ededed;
+    --color-muted: #9ca3af;
+    --color-border: #374151;
+    
+    /* Surface colors */
+    --color-card: rgba(255, 255, 255, 0.05);
+    --color-card-hover: rgba(255, 255, 255, 0.1);
+    --color-card-border: rgba(255, 255, 255, 0.1);
+    --color-card-border-hover: rgba(59, 130, 246, 0.3);
+    
+    /* Navigation */
+    --color-nav: rgba(0, 0, 0, 0.5);
+    --color-nav-scrolled: rgba(0, 0, 0, 0.8);
+    --color-nav-text: rgba(255, 255, 255, 0.7);
+    --color-nav-text-hover: #ffffff;
+    --color-nav-text-active: #ffffff;
+    --color-nav-hover: rgba(255, 255, 255, 0.05);
+    --color-nav-active: rgba(255, 255, 255, 0.1);
+    --color-nav-indicator: #3b82f6;
+    --color-nav-disabled-bg: rgba(245, 158, 11, 0.2);
+    --color-nav-disabled-text: #fbbf24;
+    
+    /* Hero section */
+    --color-hero-eyebrow: rgba(59, 130, 246, 0.2);
+    --color-hero-gradient-from: #60a5fa;
+    --color-hero-gradient-to: #a855f7;
+    
+    /* Accent colors - darker variants */
+    --color-blue: #3b82f6;
+    --color-blue-light: #60a5fa;
+    --color-blue-bg: rgba(59, 130, 246, 0.2);
+    --color-purple: #a855f7;
+    --color-purple-light: #a855f7;
+    --color-purple-bg: rgba(168, 85, 247, 0.2);
+    --color-emerald: #34d399;
+    --color-emerald-light: #34d399;
+    --color-emerald-bg: rgba(16, 185, 129, 0.2);
+    
+    /* Form elements */
+    --color-input: rgba(255, 255, 255, 0.05);
+    --color-input-border: rgba(255, 255, 255, 0.1);
+    --color-input-placeholder: rgba(255, 255, 255, 0.4);
+    
+    /* Theme toggle */
+    --color-toggle: #374151;
+    --color-toggle-hover: #4b5563;
+    --color-toggle-sun: #fbbf24;
+    --color-toggle-moon: #60a5fa;
+  }
 }
 
-.toaster-container {
-    @apply z-[100];
+/* Manual dark class support */
+.dark {
+  @theme inline {
+    /* Base semantic colors */
+    --color-background: #0a0a0a;
+    --color-foreground: #ededed;
+    --color-muted: #9ca3af;
+    --color-border: #374151;
+    
+    /* Surface colors */
+    --color-card: rgba(255, 255, 255, 0.05);
+    --color-card-hover: rgba(255, 255, 255, 0.1);
+    --color-card-border: rgba(255, 255, 255, 0.1);
+    --color-card-border-hover: rgba(59, 130, 246, 0.3);
+    
+    /* Navigation */
+    --color-nav: rgba(0, 0, 0, 0.5);
+    --color-nav-scrolled: rgba(0, 0, 0, 0.8);
+    --color-nav-text: rgba(255, 255, 255, 0.7);
+    --color-nav-text-hover: #ffffff;
+    --color-nav-text-active: #ffffff;
+    --color-nav-hover: rgba(255, 255, 255, 0.05);
+    --color-nav-active: rgba(255, 255, 255, 0.1);
+    --color-nav-indicator: #3b82f6;
+    --color-nav-disabled-bg: rgba(245, 158, 11, 0.2);
+    --color-nav-disabled-text: #fbbf24;
+    
+    /* Hero section */
+    --color-hero-eyebrow: rgba(59, 130, 246, 0.2);
+    --color-hero-gradient-from: #60a5fa;
+    --color-hero-gradient-to: #a855f7;
+    
+    /* Accent colors - darker variants */
+    --color-blue: #3b82f6;
+    --color-blue-light: #60a5fa;
+    --color-blue-bg: rgba(59, 130, 246, 0.2);
+    --color-purple: #a855f7;
+    --color-purple-light: #a855f7;
+    --color-purple-bg: rgba(168, 85, 247, 0.2);
+    --color-emerald: #34d399;
+    --color-emerald-light: #34d399;
+    --color-emerald-bg: rgba(16, 185, 129, 0.2);
+    
+    /* Form elements */
+    --color-input: rgba(255, 255, 255, 0.05);
+    --color-input-border: rgba(255, 255, 255, 0.1);
+    --color-input-placeholder: rgba(255, 255, 255, 0.4);
+    
+    /* Theme toggle */
+    --color-toggle: #374151;
+    --color-toggle-hover: #4b5563;
+    --color-toggle-sun: #fbbf24;
+    --color-toggle-moon: #60a5fa;
+  }
 }
 
-/* Estilo base para el body */
+/* Base styles */
 body {
-    color: var(--foreground);
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: var(--gradient-dark);
-    background-image: radial-gradient(circle at top left, var(--gradient-blue-opacity) 0%, transparent 50%),
-        radial-gradient(circle at bottom right, var(--gradient-purple-opacity) 0%, transparent 50%);
-    background-attachment: fixed;
-    background-size: 100% 100%;
-    min-height: 100vh;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-geist-sans);
+  background-image: 
+    radial-gradient(circle at top left, var(--color-blue-bg) 0%, transparent 50%),
+    radial-gradient(circle at bottom right, var(--color-purple-bg) 0%, transparent 50%);
+  background-attachment: fixed;
+  background-size: 100% 100%;
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Opcionalmente, puedes agregar elementos decorativos fijos */
-.bg-glow {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: -1;
-}
-
-.bg-glow::before {
-    content: "";
-    position: absolute;
-    top: -10vh;
-    left: -10vw;
-    width: 70vw;
-    height: 70vh;
-    border-radius: 50%;
-    background: var(--gradient-blue-opacity);
-    filter: blur(80px);
-}
-
-.bg-glow::after {
-    content: "";
-    position: absolute;
-    bottom: -10vh;
-    right: -10vw;
-    width: 70vw;
-    height: 70vh;
-    border-radius: 50%;
-    background: var(--gradient-purple-opacity);
-    filter: blur(80px);
+/* Utility classes for backward compatibility */
+.toaster-container {
+  @apply z-[100];
 }
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
-    background-color: #1f2937 !important;
-    -webkit-text-fill-color: #ffffff !important;
-    transition: background-color 9999s ease-in-out 0s;
+  background-color: var(--color-card);
+  -webkit-text-fill-color: var(--color-foreground);
+  transition: background-color 9999s ease-in-out 0s;
 }

@@ -21,10 +21,10 @@ export default function SectionHeader({ title, link, subtitle, accentColor = "bl
     return (
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-start gap-4 mb-8">
             <div className="flex items-center">
-                <div className={`h-12 w-1 rounded-full bg-gradient-to-b ${selectedAccent.split(" ")[0]} mr-3`}></div>
+                <div className="h-12 w-1 rounded-full bg-[var(--color-blue)] mr-3"></div>
                 <div>
-                    <h2 className="text-2xl font-bold text-white">{title}</h2>
-                    {subtitle && <p className="text-white/60 mt-1 text-sm md:text-base max-w-2xl">{subtitle}</p>}
+                    <h2 className="text-2xl font-bold text-[var(--color-foreground)]">{title}</h2>
+                    {subtitle && <p className="text-[var(--color-muted)] mt-1 text-sm md:text-base max-w-2xl">{subtitle}</p>}
                 </div>
             </div>
 
