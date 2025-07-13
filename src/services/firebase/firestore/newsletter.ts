@@ -136,13 +136,39 @@ export async function getSubscriptionStatus(email: string): Promise<{ isSubscrib
         }
 
         const docData = querySnapshot.docs[0].data();
+        
+        // Explicitly handle the isActive field - ensure it's a boolean
+        const isActive = Boolean(docData.isActive);
+        
         return {
             isSubscribed: true,
-            isActive: docData.isActive || false
+            isActive: isActive
         };
     } catch (error) {
         console.error(`Error getting subscription status (${email}):`, error);
         // Return null as fallback
         return null;
+    }
+}
+
+// Función para alternar el estado de suscripción
+export async function toggleSubscriptionStatus(subscriberId: string, currentStatus: boolean): Promise<void> {
+    try {
+        if (!subscriberId || typeof subscriberId !== 'string') {
+            throw new Error("Subscriber ID is required and must be a string");
+        }
+        
+        const subscriberRef = doc(db, "newsletterSubscribers", subscriberId);
+        
+        await updateDoc(subscriberRef, {
+            isActive: !currentStatus,
+            updatedAt: serverTimestamp(),
+            ...(currentStatus ? { deactivatedAt: serverTimestamp() } : { reactivatedAt: serverTimestamp() })
+        });
+        
+        console.log(`Newsletter subscription status toggled for subscriber: ${subscriberId}`);
+    } catch (error) {
+        console.error(`Error toggling subscription status (${subscriberId}):`, error);
+        throw new Error(`Failed to toggle subscription status: ${error instanceof Error ? error.message : String(error)}`);
     }
 }

@@ -2,7 +2,8 @@
 
 import { PostType, PostLevel } from "@/types/Post";
 
-export const LEVEL_OPTIONS: { value: PostLevel; label: string }[] = [
+export const LEVEL_OPTIONS: { value: PostLevel | ""; label: string }[] = [
+    { value: "", label: "Sin nivel" },
     { value: "Principiante", label: "Principiante" },
     { value: "Intermedio", label: "Intermedio" },
     { value: "Avanzado", label: "Avanzado" },

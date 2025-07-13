@@ -10,6 +10,7 @@ import { FaSignOutAlt } from "react-icons/fa";
 import ProfileHeader from "@/components/profile/header/ProfileHeader";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import Modal from "@/components/ui/Modal";
+import NewsletterSubscription from "@/components/profile/NewsletterSubscription";
 
 export default function ProfilePage() {
     const { logout } = useAuthStore();
@@ -26,6 +27,9 @@ export default function ProfilePage() {
             <div className="container mx-auto max-w-4xl p-4 md:p-6 space-y-6">
                 {/* Header principal del perfil */}
                 <ProfileHeader />
+
+                {/* Newsletter Subscription */}
+                <NewsletterSubscription />
 
                 <div className="mt-6">
                     <button

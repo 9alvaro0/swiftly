@@ -98,7 +98,7 @@ export default function usePostForm({ selectedPost }: PostFormOptions) {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
 
-        if (name.includes(".")) {
+        if (name && name.includes(".")) {
             const [parent, child] = name.split(".");
             setPost((prev) => ({
                 ...prev,
@@ -108,7 +108,9 @@ export default function usePostForm({ selectedPost }: PostFormOptions) {
                 },
             }));
         } else {
-            setPost((prev) => ({ ...prev, [name]: value }));
+            // Convertir cadena vacía a undefined para el campo level
+            const processedValue = name === 'level' && value === '' ? undefined : value;
+            setPost((prev) => ({ ...prev, [name]: processedValue }));
         }
     };
 

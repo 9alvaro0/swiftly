@@ -2,6 +2,7 @@
 import React from "react";
 import { User } from "@/types/User";
 import { PencilIcon, MapPinIcon } from "lucide-react";
+import NewsletterStatus from "@/components/ui/NewsletterStatus";
 
 interface ProfileInfoProps {
     user: User | null;
@@ -64,6 +65,11 @@ export default function ProfileInfo({ user, onEdit }: ProfileInfoProps) {
                         </button>
                     </div>
                 )}
+
+                {/* Newsletter Status */}
+                <div className="mt-3">
+                    <NewsletterStatus compact />
+                </div>
             </div>
         </div>
     );
