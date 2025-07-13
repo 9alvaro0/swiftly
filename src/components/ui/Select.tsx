@@ -63,7 +63,7 @@ export default function Select({
         setSelectedOption(option);
         setIsOpen(false);
         onChange({
-            target: { value: option.value },
+            target: { name: id, value: option.value },
         } as React.ChangeEvent<HTMLSelectElement>);
     };
 

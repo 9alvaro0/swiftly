@@ -11,7 +11,9 @@ service firebase.storage {
     
     function isAdmin() {
       return isAuthenticated() && 
-             request.auth.token.admin == true;
+             (request.auth.token.admin == true ||
+              request.auth.token.role == 'admin' ||
+              request.auth.token.email == '9alvaro0@gmail.com');
     }
     
     function isOwner(userId) {
@@ -21,7 +23,10 @@ service firebase.storage {
     
     function hasContentRole() {
       return isAuthenticated() && 
-             request.auth.token.role in ['admin', 'editor', 'author'];
+             (request.auth.token.role == 'admin' ||
+              request.auth.token.role == 'editor' ||
+              request.auth.token.role == 'author' ||
+              request.auth.token.email == '9alvaro0@gmail.com');
     }
     
     function isValidImageType() {
