@@ -11,7 +11,7 @@ type TutorialCardProps = {
 };
 
 export default function TutorialCard({ tutorial, searchTerm = "" }: TutorialCardProps) {
-    const levelStyle = LEVEL_COLORS[tutorial.level];
+    const levelStyle = tutorial.level ? LEVEL_COLORS[tutorial.level] : null;
 
     return (
         <Link
@@ -37,11 +37,13 @@ export default function TutorialCard({ tutorial, searchTerm = "" }: TutorialCard
                         {tutorial.readTime} min
                     </span>
 
-                    <span
-                        className={`px-2 py-1 rounded-full capitalize text-white/70 ${levelStyle.badge || "bg-white/10"}`}
-                    >
-                        {tutorial.level}
-                    </span>
+                    {tutorial.level && levelStyle && (
+                        <span
+                            className={`px-2 py-1 rounded-full capitalize text-white/70 ${levelStyle.badge || "bg-white/10"}`}
+                        >
+                            {tutorial.level}
+                        </span>
+                    )}
                 </div>
             </div>
         </Link>
