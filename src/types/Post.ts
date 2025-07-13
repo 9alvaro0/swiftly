@@ -22,7 +22,7 @@ export interface Post {
 
     // Categorización
     tags: string[];
-    level: PostLevel;
+    level?: PostLevel;
     type: PostType;
 
     // Multimedia
