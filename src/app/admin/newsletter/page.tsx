@@ -6,22 +6,60 @@ import { useState } from "react";
 import { useAdminNewsletter } from "@/hooks/useAdminAPI";
 import Spinner from "@/components/ui/Spinner";
 import { MdEmail, MdPeople, MdCheckCircle, MdCancel } from "react-icons/md";
+import { auth } from "@/services/firebase/config";
+import { toast } from "sonner";
 
 export default function AdminNewsletterPage() {
     const [filter, setFilter] = useState<'all' | 'active' | 'inactive'>('all');
     const [searchTerm, setSearchTerm] = useState('');
+    const [updatingSubscribers, setUpdatingSubscribers] = useState<Set<string>>(new Set());
     
     const filterStatus = filter === 'active' ? 'active' : filter === 'inactive' ? 'inactive' : '';
     const { data: subscribers, isLoading: loading, error, refetch } = useAdminNewsletter(searchTerm, filterStatus);
 
     const toggleSubscriberStatus = async (subscriberId: string, currentStatus: boolean) => {
+        if (!auth.currentUser) {
+            toast.error('No estás autenticado');
+            return;
+        }
+
+        // Add to updating set to show loading state
+        setUpdatingSubscribers(prev => new Set([...prev, subscriberId]));
+
         try {
-            // TODO: Implement API endpoint for updating subscriber status
-            console.log('Toggle subscriber status:', subscriberId, currentStatus);
-            alert('Funcionalidad de actualización de estado pendiente de implementar');
+            const token = await auth.currentUser.getIdToken();
+            const response = await fetch('/api/admin/newsletter', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    subscriberId,
+                    currentStatus
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Error al actualizar el estado');
+            }
+
+            toast.success(data.message || 'Estado actualizado correctamente');
+            
+            // Refetch data to update the UI
+            await refetch();
         } catch (error) {
             console.error("Error updating subscriber status:", error);
-            alert("Error al actualizar el estado del suscriptor");
+            toast.error(error instanceof Error ? error.message : "Error al actualizar el estado del suscriptor");
+        } finally {
+            // Remove from updating set
+            setUpdatingSubscribers(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(subscriberId);
+                return newSet;
+            });
         }
     };
 
@@ -224,13 +262,21 @@ export default function AdminNewsletterPage() {
                                     <td className="px-6 py-4 text-right">
                                         <button
                                             onClick={() => toggleSubscriberStatus(subscriber.id || '', subscriber.isActive)}
-                                            className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
+                                            disabled={updatingSubscribers.has(subscriber.id || '')}
+                                            className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors relative ${
                                                 subscriber.isActive
                                                     ? 'bg-red-600/20 text-red-400 hover:bg-red-600/30'
                                                     : 'bg-green-600/20 text-green-400 hover:bg-green-600/30'
-                                            }`}
+                                            } ${updatingSubscribers.has(subscriber.id || '') ? 'opacity-50 cursor-not-allowed' : ''}`}
                                         >
-                                            {subscriber.isActive ? 'Desactivar' : 'Activar'}
+                                            {updatingSubscribers.has(subscriber.id || '') ? (
+                                                <span className="flex items-center gap-2">
+                                                    <span className="animate-spin h-3 w-3 border-2 border-current border-t-transparent rounded-full" />
+                                                    Actualizando...
+                                                </span>
+                                            ) : (
+                                                subscriber.isActive ? 'Desactivar' : 'Activar'
+                                            )}
                                         </button>
                                     </td>
                                 </tr>
