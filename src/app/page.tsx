@@ -8,6 +8,10 @@ import { Suspense } from "react";
 import FeaturedTutorialsSkeleton from "@/components/home/skeletons/FeaturedTutorialsSkeleton";
 import LatestPostsSkeleton from "@/components/home/skeletons/LatestPostsSkeleton";
 
+// Disable caching for this page
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function Home() {
     return (
         <main className="mb-16">
