@@ -110,41 +110,53 @@ master → aprende-swift-prod (https://aprendeswift.dev)
 ```
 
 ### Deployment Flow
+**IMPORTANT: ALL merges must be done via Pull Requests (MRs). Direct pushes to protected branches are not allowed.**
+
 **Feature Development**:
 ```bash
-git checkout develop
-git merge feature/feature-name
-git push origin develop
-# Auto-deploys to DEV via App Hosting
+# Create feature branch
+git checkout -b feature/feature-name
+# Make changes and commit
+git push -u origin feature/feature-name
+# Create PR to develop (assign to aguerfr)
+gh pr create --base develop --assignee aguerfr
+# After PR approval and merge → Auto-deploys to DEV via App Hosting
 ```
 
 **Promote to Pre-Production**:
 ```bash
-git checkout release
-git pull origin release
-git merge develop
-git push origin release
-# Auto-deploys to PRE via App Hosting
-# Optional: git tag v1.0.0-beta.1
+# Create PR from develop to release (assign to aguerfr)
+git checkout develop
+git pull origin develop
+gh pr create --base release --assignee aguerfr --title "promote: merge develop to release for PRE deployment"
+# After PR approval and merge → Auto-deploys to PRE via App Hosting
 ```
 
 **Deploy to Production**:
 ```bash
-git checkout master
-git pull origin master
-git merge release
-git tag v1.0.0  # REQUIRED for production
-git push origin master --tags
-# Auto-deploys to PROD via App Hosting
+# Create PR from release to master (assign to aguerfr)
+git checkout release
+git pull origin release
+gh pr create --base master --assignee aguerfr --title "release: deploy to production vX.X.X"
+# After PR approval and merge → Auto-deploys to PROD via App Hosting
+# Then create tag ONLY if changes warrant new version
 ```
 
 ### Version Tagging Strategy
 - **Production tags**: `v1.0.0` (major.minor.patch)
 - **Pre-release tags**: `v1.0.0-beta.1`, `v1.0.0-rc.1`
-- **Always tag production deployments**
+- **Only tag production deployments when changes warrant new version**
+- **Evaluate significance**: Don't create minor releases for small fixes
+- **Tag creation**: Only after successful merge to master
+
+### PR Assignment Rules
+- **ALWAYS assign all PRs to aguerfr**
+- **Never merge without PR review**
+- **Use descriptive PR titles following conventional commits**
 
 ### CI/CD Pipeline
 - GitHub Actions runs quality checks on all branches
 - Linting and type checking must pass before deploy
 - App Hosting handles automatic deployments
+- All branches are protected and require PR approval
 - No manual deploy actions needed
