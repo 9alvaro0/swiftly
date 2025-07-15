@@ -3,24 +3,38 @@
 "use client";
 
 import { useState } from "react";
-import { FaFilter, FaTimes, FaTag } from "react-icons/fa";
+import { FaFilter, FaTimes } from "react-icons/fa";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PostLevel } from "@/types/Post";
 import Button from "@/components/ui/Button";
 import Select from "@/components/ui/Select";
-import { useTags } from "@/hooks/useTags";
+import ViewToggle, { ViewMode } from "@/components/posts/ViewToggle";
+import SortOptions, { SortOption } from "@/components/posts/SortOptions";
 
-export default function PostsFiltersMobile() {
+interface PostsFiltersMobileProps {
+    viewMode: ViewMode;
+    sortBy: SortOption;
+    onViewChange: (mode: ViewMode) => void;
+    onSortChange: (sort: SortOption) => void;
+}
+
+export default function PostsFiltersMobile({
+    viewMode,
+    sortBy,
+    onViewChange,
+    onSortChange,
+}: PostsFiltersMobileProps) {
     const [isOpen, setIsOpen] = useState(false);
+    const [isClosing, setIsClosing] = useState(false);
+    const [isOpening, setIsOpening] = useState(false);
     const searchParams = useSearchParams();
     const pathName = usePathname();
     const { replace } = useRouter();
-    const { tags, isLoading: tagsLoading } = useTags();
 
     const levelFilter = searchParams.get("level") || "";
     const tagFilter = searchParams.get("tag") || "";
     const hasActiveFilters = !!(levelFilter || tagFilter);
-    const activeFiltersCount = [levelFilter, tagFilter].filter(Boolean).length;
+    const activeFiltersCount = [levelFilter].filter(Boolean).length;
 
     const handleLevelChange = (level: PostLevel | "") => {
         const params = new URLSearchParams(searchParams);
@@ -33,16 +47,6 @@ export default function PostsFiltersMobile() {
         replace(`${pathName}?${params.toString()}`);
     };
 
-    const handleTagChange = (tag: string) => {
-        const params = new URLSearchParams(searchParams);
-        if (tag) {
-            params.set("tag", tag);
-        } else {
-            params.delete("tag");
-        }
-        params.set("page", "1");
-        replace(`${pathName}?${params.toString()}`);
-    };
 
     const handleClearFilters = () => {
         const params = new URLSearchParams(searchParams);
@@ -52,20 +56,35 @@ export default function PostsFiltersMobile() {
         replace(`${pathName}?${params.toString()}`);
     };
 
+    const handleOpen = () => {
+        setIsOpen(true);
+        setIsOpening(true);
+        setTimeout(() => {
+            setIsOpening(false);
+        }, 50);
+    };
+
+    const handleClose = () => {
+        setIsClosing(true);
+        setTimeout(() => {
+            setIsOpen(false);
+            setIsClosing(false);
+        }, 300);
+    };
+
     return (
         <>
             {/* Botón de filtros móvil */}
-            <div className="lg:hidden flex items-center gap-2">
+            <div className="lg:hidden flex items-center gap-1">
                 <Button
                     variant="outline"
                     size="lg"
-                    onClick={() => setIsOpen(true)}
-                    className="flex items-center gap-2"
+                    onClick={handleOpen}
+                    className="relative px-3 h-10 shadow-none"
                 >
                     <FaFilter size={16} />
-                    Filtros
                     {hasActiveFilters && (
-                        <span className="bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                        <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                             {activeFiltersCount}
                         </span>
                     )}
@@ -74,9 +93,9 @@ export default function PostsFiltersMobile() {
                 {hasActiveFilters && (
                     <Button
                         variant="outline"
-                        size="sm"
+                        size="lg"
                         onClick={handleClearFilters}
-                        className="text-red-600 dark:text-red-400"
+                        className="text-red-600 dark:text-red-400 px-3 h-10 shadow-none"
                     >
                         <FaTimes size={14} />
                     </Button>
@@ -88,24 +107,26 @@ export default function PostsFiltersMobile() {
                 <div className="fixed inset-0 z-50 lg:hidden">
                     {/* Overlay */}
                     <div 
-                        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-                        onClick={() => setIsOpen(false)}
+                        className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
+                            isClosing ? 'opacity-0' : isOpening ? 'opacity-0' : 'opacity-100'
+                        }`}
+                        onClick={handleClose}
                     />
                     
                     {/* Drawer desde abajo */}
-                    <div className="absolute bottom-0 left-0 right-0 bg-white dark:bg-neutral-900 rounded-t-2xl p-6 max-h-[80vh] overflow-y-auto">
+                    <div className={`absolute bottom-0 left-0 right-0 bg-white dark:bg-neutral-900 rounded-t-2xl p-6 min-h-[60vh] max-h-[90vh] overflow-y-auto transition-transform duration-300 ease-out ${
+                        isClosing ? 'translate-y-full' : isOpening ? 'translate-y-full' : 'translate-y-0'
+                    }`}>
                         <div className="flex items-center justify-between mb-6">
                             <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">
                                 Filtros
                             </h3>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => setIsOpen(false)}
-                                className="text-neutral-500 dark:text-neutral-400"
+                            <button
+                                onClick={handleClose}
+                                className="p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                             >
-                                <FaTimes size={16} />
-                            </Button>
+                                <FaTimes size={16} className="text-neutral-500 dark:text-neutral-400" />
+                            </button>
                         </div>
 
                         <div className="space-y-6">
@@ -129,44 +150,27 @@ export default function PostsFiltersMobile() {
                                 />
                             </div>
 
-                            {/* Tags como chips */}
-                            {!tagsLoading && tags.length > 0 && (
-                                <div>
-                                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3">
-                                        <FaTag className="inline mr-2" size={14} />
-                                        Filtrar por tag
-                                    </label>
-                                    <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
-                                        {tags.slice(0, 15).map(tag => (
-                                            <button
-                                                key={tag.id}
-                                                onClick={() => handleTagChange(tagFilter === tag.name ? "" : tag.name)}
-                                                className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
-                                                    tagFilter === tag.name
-                                                        ? "bg-blue-500 text-white border-blue-500"
-                                                        : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-700"
-                                                }`}
-                                            >
-                                                #{tag.name}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
+                            {/* Ordenamiento */}
+                            <div>
+                                <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3">
+                                    Ordenar por
+                                </label>
+                                <SortOptions 
+                                    sortBy={sortBy} 
+                                    onSortChange={onSortChange}
+                                />
+                            </div>
 
-                            {tagsLoading && (
-                                <div>
-                                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3">
-                                        <FaTag className="inline mr-2" size={14} />
-                                        Filtrar por tag
-                                    </label>
-                                    <div className="flex flex-wrap gap-2">
-                                        {[...Array(6)].map((_, i) => (
-                                            <div key={i} className="h-7 w-16 bg-neutral-200 dark:bg-neutral-700 rounded-full animate-pulse"></div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
+                            {/* Vista */}
+                            <div>
+                                <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3">
+                                    Vista
+                                </label>
+                                <ViewToggle 
+                                    viewMode={viewMode} 
+                                    onViewChange={onViewChange}
+                                />
+                            </div>
 
                             {/* Botones de acción */}
                             <div className="flex gap-3 pt-4 border-t border-neutral-200 dark:border-neutral-700">
@@ -180,7 +184,7 @@ export default function PostsFiltersMobile() {
                                     </Button>
                                 )}
                                 <Button
-                                    onClick={() => setIsOpen(false)}
+                                    onClick={handleClose}
                                     className="flex-1"
                                 >
                                     Aplicar filtros

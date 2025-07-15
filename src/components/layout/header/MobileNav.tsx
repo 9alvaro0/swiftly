@@ -17,8 +17,35 @@ interface MobileNavProps {
 export default function MobileNav({ isOpen, onToggle, isAuthenticated, user, isLoading }: MobileNavProps) {
     return (
         <div className="md:hidden">
+            {/* Overlay para cerrar el menú */}
+            {isOpen && (
+                <div
+                    className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30"
+                    onClick={onToggle}
+                />
+            )}
+
+            {/* Menú desplegable con fondo sólido */}
+            <div
+                className={`absolute top-full left-0 right-0 bg-black/95 border-b border-white/10 shadow-2xl transform transition-all duration-300 ease-out ${
+                    isOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none"
+                }`}
+                style={{ zIndex: 35 }}
+            >
+                <nav className="container mx-auto px-4 py-8">
+                    <NavLinks
+                        isMobile={true}
+                        onItemClick={onToggle}
+                        isAuthenticated={isAuthenticated}
+                        user={user}
+                        isLoading={isLoading}
+                    />
+                </nav>
+            </div>
+
+            {/* Botón siempre visible encima del menú */}
             <button
-                className="p-1 text-primary transition-transform"
+                className="relative p-2 text-primary hover:bg-white/5 rounded-lg transition-all duration-300 z-50"
                 onClick={onToggle}
                 aria-expanded={isOpen}
                 aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
@@ -35,24 +62,6 @@ export default function MobileNav({ isOpen, onToggle, isAuthenticated, user, isL
                     />
                 )}
             </button>
-
-            {/* Menú desplegable con fondo sólido */}
-            <div
-                className={`absolute top-full left-0 right-0 bg-background shadow-apple-md transform transition-all duration-300 ${
-                    isOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none"
-                }`}
-                style={{ zIndex: 50 }}
-            >
-                <nav className="container mx-auto px-4 py-6">
-                    <NavLinks
-                        isMobile={true}
-                        onItemClick={onToggle}
-                        isAuthenticated={isAuthenticated}
-                        user={user}
-                        isLoading={isLoading}
-                    />
-                </nav>
-            </div>
         </div>
     );
 }

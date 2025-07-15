@@ -41,25 +41,26 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
         <div className="space-y-8">
             {/* Post destacado (el más reciente) */}
             <div className="rounded-lg overflow-hidden bg-white/5 border border-white/10">
-                <div className="md:flex">
+                <div className="flex flex-col md:flex-row">
                     <div>
                         {featuredPost.imageUrl ? (
-                            <div className="relative h-64 md:h-full">
+                            <div className="relative h-48 md:h-full md:w-80 flex-shrink-0">
                                 <Image
                                     src={featuredPost.imageUrl}
                                     alt={featuredPost.title}
-                                    width={250}
-                                    height={250}
+                                    fill
+                                    className="object-cover"
+                                    sizes="(max-width: 768px) 100vw, 320px"
                                 />
                             </div>
                         ) : (
-                            <div className="h-64 md:h-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
+                            <div className="h-48 md:h-full md:w-80 flex-shrink-0 bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
                                 <span className="text-gray-400">Sin imagen</span>
                             </div>
                         )}
                     </div>
 
-                    <div className="p-6 md:w-3/5 flex flex-col justify-between">
+                    <div className="p-4 sm:p-6 flex-1 flex flex-col justify-between">
                         <div>
                             <div className="flex items-center mb-2 text-sm text-blue-500">
                                 <span>
@@ -118,12 +119,13 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
                         className="flex border-b border-white/10 pb-6 last:border-0"
                     >
                         {post.coverImage && (
-                            <div className="w-1/4 mr-4 h-24 relative flex-shrink-0 rounded-md overflow-hidden">
+                            <div className="w-20 sm:w-24 mr-4 h-16 sm:h-20 relative flex-shrink-0 rounded-md overflow-hidden">
                                 <Image
                                     src={post.coverImage}
                                     alt={post.title}
                                     fill
                                     className="object-cover"
+                                    sizes="(max-width: 640px) 80px, 96px"
                                 />
                             </div>
                         )}

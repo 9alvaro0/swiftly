@@ -16,20 +16,20 @@ export default function PostCardList({ post, searchTerm = "" }: PostCardListProp
 
     return (
         <Link href={`/posts/${post.slug}`} className="group block">
-            <article className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden transition-all duration-300 group-hover:border-blue-400/30 group-hover:shadow-lg group-hover:shadow-blue-500/10">
-                <div className="flex">
+            <article className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden transition-all duration-300 group-hover:border-blue-400/30 group-hover:shadow-lg group-hover:shadow-blue-500/10 h-full">
+                <div className="flex flex-col sm:flex-row h-full">
                     {/* Imagen */}
-                    <div className="relative w-48 h-32 flex-shrink-0">
+                    <div className="relative w-full sm:w-48 h-48 sm:h-auto sm:min-h-full flex-shrink-0 overflow-hidden rounded-lg sm:rounded-l-xl sm:rounded-r-none">
                         {(post.imageUrl || post.coverImage) ? (
                             <Image
                                 src={post.imageUrl || post.coverImage || ""}
                                 alt={post.title || "Imagen del post"}
                                 fill
                                 className="object-cover transition-transform duration-500 group-hover:scale-105"
-                                sizes="(max-width: 768px) 100vw, 192px"
+                                sizes="(max-width: 640px) 100vw, 192px"
                             />
                         ) : (
-                            <div className="w-full h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
+                            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
                                 <span className="text-white/60 text-xs font-medium">
                                     Sin imagen
                                 </span>
@@ -46,7 +46,7 @@ export default function PostCardList({ post, searchTerm = "" }: PostCardListProp
                     </div>
 
                     {/* Contenido */}
-                    <div className="flex-1 p-6">
+                    <div className="flex-1 p-4 sm:p-6">
                         <div className="flex flex-col h-full">
                             {/* Título */}
                             {post.title && (
