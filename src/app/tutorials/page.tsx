@@ -36,7 +36,6 @@ export default async function TutorialsPage(props: {
                     levelLabel="Nivel de dificultad"
                     showViewToggle={true}
                     showSortOptions={true}
-                    showTags={true}
                     showMobileFilters={true}
                 />
             }
