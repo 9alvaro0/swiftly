@@ -5,7 +5,9 @@ import TutorialCard from "../tutorials/TutorialCard";
 
 export default async function FeaturedTutorials() {
     const tutorials = await getAllPublishedPosts({ type: "tutorial" });
-    const hasTutorials = tutorials && tutorials.length > 0;
+    // Additional filter to ensure only published tutorials are shown
+    const publishedTutorials = tutorials.filter(tutorial => tutorial.isPublished === true);
+    const hasTutorials = publishedTutorials && publishedTutorials.length > 0;
 
     return (
         <section className="relative py-4 overflow-hidden">
@@ -21,7 +23,7 @@ export default async function FeaturedTutorials() {
                 {hasTutorials ? (
                     <div className="grid gap-8 mt-10">
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                            {tutorials.map((tutorial) => (
+                            {publishedTutorials.map((tutorial) => (
                                 <TutorialCard
                                     key={tutorial.id}
                                     tutorial={tutorial}

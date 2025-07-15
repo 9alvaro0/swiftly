@@ -19,19 +19,25 @@ export default function TutorialCard({ tutorial, searchTerm = "" }: TutorialCard
             className="group block"
         >
             <div className="group rounded-2xl border border-white/10 bg-white/5 p-4 shadow-md transition hover:shadow-lg hover:-translate-y-1 hover:border-blue-400/30 hover:bg-white/10 flex flex-col justify-between h-full">
-                <div className="aspect-w-16 aspect-h-9 mb-4 overflow-hidden rounded-lg bg-white/10">
-                    <Image
-                        src={tutorial.coverImage || ""}
-                        alt={tutorial.title}
-                        width={316}
-                        height={316}
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
+                <div className="relative w-full h-48 mb-4 overflow-hidden rounded-lg bg-white/10">
+                    {tutorial.coverImage ? (
+                        <Image
+                            src={tutorial.coverImage}
+                            alt={tutorial.title}
+                            fill
+                            className="object-cover transition-transform duration-300 group-hover:scale-105"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
+                    ) : (
+                        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-900/40 to-blue-900/40">
+                            <span className="text-3xl text-white/70 font-bold">Tutorial</span>
+                        </div>
+                    )}
                 </div>
                 <h2 className="font-bold text-white text-lg leading-tight mb-2">
                     <HighlightText text={tutorial.title} searchTerm={searchTerm} />
                 </h2>
-                <div className="mt-4 flex items-center justify-between text-xs">
+                <div className="mt-auto pt-4 flex items-center justify-between text-xs">
                     <span className="flex items-center gap-1 px-2 py-1 bg-blue-400/20 rounded-full text-white/70 capitalize">
                         <FiClock size={14} className="text-blue-300" />
                         {tutorial.readTime} min

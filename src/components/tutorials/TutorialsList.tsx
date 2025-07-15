@@ -22,11 +22,14 @@ export default async function TutorialsList({
 }) {
     // Obtener datos en el servidor
     const tutorials = await getAllPublishedPosts({ searchTerm, level, tag, type: "tutorial" });
+    
+    // Additional filter to ensure only published tutorials are shown
+    const publishedTutorials = tutorials.filter(tutorial => tutorial.isPublished === true);
 
     // Pasar datos al componente cliente
     return (
         <TutorialsListClient
-            tutorials={tutorials}
+            tutorials={publishedTutorials}
             searchTerm={searchTerm}
             currentPage={currentPage}
             viewMode={viewMode}

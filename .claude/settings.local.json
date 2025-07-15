@@ -38,7 +38,8 @@
       "Bash(npm run knip:*)",
       "Bash(pkill:*)",
       "Bash(killall:*)",
-      "Bash(true)"
+      "Bash(true)",
+      "Bash(git config:*)"
     ],
     "deny": []
   }

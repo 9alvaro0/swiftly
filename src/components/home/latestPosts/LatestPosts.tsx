@@ -8,7 +8,9 @@ import { FiBookOpen, FiFileText } from "react-icons/fi";
 export default async function LatestPosts() {
     // Cambiar tutorial por post cuando hayan posts y limitar a 4
     const posts = await getAllPublishedPosts({ type: "article" });
-    const hasPosts = posts && posts.length > 0;
+    // Additional filter to ensure only published articles are shown
+    const publishedPosts = posts.filter(post => post.isPublished === true);
+    const hasPosts = publishedPosts && publishedPosts.length > 0;
 
     return (
         <section className="container mx-auto px-4 py-12">
@@ -21,7 +23,7 @@ export default async function LatestPosts() {
             />
 
             {hasPosts ? (
-                <PostList posts={posts} />
+                <PostList posts={publishedPosts} />
             ) : (
                 <div className="bg-white/5 p-8 rounded-lg border border-white/10 mx-auto">
                     <div className="flex items-center gap-6 mb-8">

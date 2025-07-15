@@ -3,11 +3,10 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { FaTimes, FaTag } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 import { PostLevel } from "@/types/Post";
 import Select from "@/components/ui/Select";
 import Button from "@/components/ui/Button";
-import { useTags } from "@/hooks/useTags";
 import PostsSearchBar from "@/components/posts/PostsSearchBar";
 import PostsFiltersMobile from "@/components/posts/PostsFiltersMobile";
 import ViewToggle, { ViewMode } from "@/components/posts/ViewToggle";
@@ -19,7 +18,6 @@ interface ContentFiltersProps {
     levelLabel?: string;
     showViewToggle?: boolean;
     showSortOptions?: boolean;
-    showTags?: boolean;
     showMobileFilters?: boolean;
 }
 
@@ -29,13 +27,11 @@ export default function ContentFilters({
     levelLabel = "Nivel",
     showViewToggle = true,
     showSortOptions = true,
-    showTags = true,
     showMobileFilters = true
 }: ContentFiltersProps) {
     const searchParams = useSearchParams();
     const pathName = usePathname();
     const { replace } = useRouter();
-    const { tags, isLoading: tagsLoading } = useTags();
 
     const levelFilter = searchParams.get("level") || "";
     const tagFilter = searchParams.get("tag") || "";
@@ -53,16 +49,6 @@ export default function ContentFilters({
         replace(`${pathName}?${params.toString()}`);
     };
 
-    const handleTagChange = (tag: string) => {
-        const params = new URLSearchParams(searchParams);
-        if (tag) {
-            params.set("tag", tag);
-        } else {
-            params.delete("tag");
-        }
-        params.set("page", "1");
-        replace(`${pathName}?${params.toString()}`);
-    };
 
     const handleClearFilters = () => {
         const params = new URLSearchParams(searchParams);
@@ -87,12 +73,25 @@ export default function ContentFilters({
     };
 
     return (
-        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
+        <div className="space-y-4">
             {/* Fila principal: Búsqueda + Controles + Botón móvil */}
-            <div className="flex flex-col lg:flex-row gap-4 lg:items-end lg:justify-between mb-6">
-                {/* Búsqueda */}
+            <div className="flex flex-col lg:flex-row gap-4 lg:items-end lg:justify-between">
+                {/* Búsqueda + Filtros móviles */}
                 <div className="flex-1 max-w-md">
-                    <PostsSearchBar />
+                    <div className="flex gap-2 items-end">
+                        <div className="flex-1">
+                            <PostsSearchBar />
+                        </div>
+                        {/* Filtros móviles integrados */}
+                        {showMobileFilters && (
+                            <PostsFiltersMobile 
+                                viewMode={viewMode}
+                                sortBy={sortBy}
+                                onViewChange={handleViewChange}
+                                onSortChange={handleSortChange}
+                            />
+                        )}
+                    </div>
                 </div>
 
                 {/* Filtros desktop */}
@@ -152,52 +151,8 @@ export default function ContentFilters({
                     )}
                 </div>
 
-                {/* Filtros móviles */}
-                {showMobileFilters && (
-                    <div className="lg:hidden flex justify-end">
-                        <PostsFiltersMobile />
-                    </div>
-                )}
             </div>
 
-            {/* Tags como chips - siempre visibles */}
-            {showTags && !tagsLoading && tags.length > 0 && (
-                <div>
-                    <label className="block text-sm font-medium text-white/80 mb-3">
-                        <FaTag className="inline mr-2" size={14} />
-                        Filtrar por tag
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                        {tags.slice(0, 15).map(tag => (
-                            <button
-                                key={tag.id}
-                                onClick={() => handleTagChange(tagFilter === tag.name ? "" : tag.name)}
-                                className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
-                                    tagFilter === tag.name
-                                        ? "bg-blue-500 text-white border-blue-500"
-                                        : "bg-white/10 text-white/80 border-white/20 hover:bg-white/20 hover:border-white/30"
-                                }`}
-                            >
-                                #{tag.name}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            )}
-
-            {showTags && tagsLoading && (
-                <div>
-                    <label className="block text-sm font-medium text-white/80 mb-3">
-                        <FaTag className="inline mr-2" size={14} />
-                        Filtrar por tag
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                        {[...Array(10)].map((_, i) => (
-                            <div key={i} className="h-7 w-16 bg-white/10 rounded-full animate-pulse"></div>
-                        ))}
-                    </div>
-                </div>
-            )}
         </div>
     );
 }
