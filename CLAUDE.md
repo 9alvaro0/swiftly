@@ -159,4 +159,7 @@ gh pr create --base master --assignee aguerfr --title "release: deploy to produc
 - Linting and type checking must pass before deploy
 - App Hosting handles automatic deployments
 - All branches are protected and require PR approval
+- **Automated PR creation**: GitHub Actions automatically creates PRs following GitFlow:
+  - When develop is pushed → Auto-creates PR to release
+  - When release is pushed → Auto-creates PR to master
 - No manual deploy actions needed
