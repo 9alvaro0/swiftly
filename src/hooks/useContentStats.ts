@@ -37,10 +37,14 @@ export function useContentStats(): ContentStats {
                     getAllPublishedPosts({ type: "article" }),
                     getAllPublishedPosts({ type: "tutorial" })
                 ]);
+                
+                // Additional filter to ensure only published content is counted
+                const publishedPosts = posts.filter(post => post.isPublished === true);
+                const publishedTutorials = tutorials.filter(tutorial => tutorial.isPublished === true);
 
                 // Calcular tiempo total de lectura en horas
-                const postsMinutes = posts.reduce((total, item) => total + (item.readTime || 0), 0);
-                const tutorialsMinutes = tutorials.reduce((total, item) => total + (item.readTime || 0), 0);
+                const postsMinutes = publishedPosts.reduce((total, item) => total + (item.readTime || 0), 0);
+                const tutorialsMinutes = publishedTutorials.reduce((total, item) => total + (item.readTime || 0), 0);
                 const totalMinutes = postsMinutes + tutorialsMinutes;
                 
                 const totalHours = Math.round(totalMinutes / 60);
@@ -48,8 +52,8 @@ export function useContentStats(): ContentStats {
                 const tutorialsHours = Math.round(tutorialsMinutes / 60);
 
                 setStats({
-                    totalPosts: posts.length,
-                    totalTutorials: tutorials.length,
+                    totalPosts: publishedPosts.length,
+                    totalTutorials: publishedTutorials.length,
                     totalCategories: tags.length,
                     totalReadingHours: totalHours,
                     postsReadingHours: postsHours,
