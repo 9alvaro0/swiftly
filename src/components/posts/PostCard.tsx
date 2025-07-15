@@ -28,11 +28,11 @@ export default function PostCard({ post, variant = "default", searchTerm = "" }:
                     rounded-xl overflow-hidden 
                     transition-all duration-300 
                     group-hover:translate-y-[-4px] group-hover:shadow-lg group-hover:shadow-blue-500/10 group-hover:border-blue-400/30
-                    h-full
+                    h-full flex flex-col
                 `}
             >
                 <div className="relative">
-                    <div className={`relative w-full ${isFeatured ? "h-96" : "h-56"}`}>
+                    <div className={`relative w-full ${isFeatured ? "h-96" : "h-48"}`}>
                         {post.imageUrl || post.coverImage ? (
                             <Image
                                 src={post.imageUrl}
@@ -53,7 +53,7 @@ export default function PostCard({ post, variant = "default", searchTerm = "" }:
                     </div>
                 </div>
 
-                <div className="p-6">
+                <div className="p-6 flex flex-col flex-1">
                     {post.title && (
                         <h3
                             className={`group-hover:underline font-bold mb-3 text-white ${
@@ -87,7 +87,7 @@ export default function PostCard({ post, variant = "default", searchTerm = "" }:
                     )}
 
                     {(post.views !== undefined || post.likedBy?.length !== undefined) && (
-                        <div className="flex gap-4 mt-4 text-sm text-white/60">
+                        <div className="flex gap-4 mt-auto pt-4 text-sm text-white/60">
                             {post.views !== undefined && (
                                 <span className="flex items-center">
                                     <Eye
