@@ -36,7 +36,6 @@ export default async function PostsPage(props: {
                     levelLabel="Nivel"
                     showViewToggle={true}
                     showSortOptions={true}
-                    showTags={true}
                     showMobileFilters={true}
                 />
             }
