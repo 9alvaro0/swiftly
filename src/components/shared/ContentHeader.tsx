@@ -30,28 +30,28 @@ export default function ContentHeader({
     };
 
     return (
-        <div className="py-6 md:py-8">
+        <div className="py-2 md:py-8">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 {/* Contenido principal */}
                 <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-3">
-                        {icon && (
-                            <div className="p-2 bg-white/10 rounded-lg">
-                                {icon}
-                            </div>
-                        )}
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
                         <div className="flex items-center gap-3">
+                            {icon && (
+                                <div className="p-2 bg-white/10 rounded-lg">
+                                    {icon}
+                                </div>
+                            )}
                             <h1 className="text-2xl md:text-3xl font-bold text-white">
                                 {title}
                             </h1>
-                            {badge && (
-                                <span className={`px-3 py-1 text-xs font-medium rounded-full border backdrop-blur-sm ${
-                                    badgeVariants[badge.variant || "primary"]
-                                }`}>
-                                    {badge.text}
-                                </span>
-                            )}
                         </div>
+                        {badge && (
+                            <span className={`px-3 py-1 text-xs font-medium rounded-full border backdrop-blur-sm self-start ${
+                                badgeVariants[badge.variant || "primary"]
+                            }`}>
+                                {badge.text}
+                            </span>
+                        )}
                     </div>
                     
                     <p className="text-white/70 text-lg leading-relaxed max-w-2xl">
