@@ -15,7 +15,7 @@ export default function NewsletterSubscription() {
 
   if (isLoading) {
     return (
-      <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
+      <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
         <div className="flex items-center gap-4">
           <div className="bg-blue-600/20 p-3 rounded-xl">
             <MdEmail className="h-6 w-6 text-blue-400" />
@@ -24,7 +24,7 @@ export default function NewsletterSubscription() {
             <h3 className="font-semibold text-white mb-2">Newsletter</h3>
             <div className="flex items-center gap-2">
               <Spinner />
-              <span className="text-white/70 text-sm">Cargando estado...</span>
+              <span className="text-gray-300 text-sm">Cargando estado...</span>
             </div>
           </div>
         </div>
@@ -35,7 +35,7 @@ export default function NewsletterSubscription() {
   const isSubscribed = subscriptionStatus?.isActive ?? false;
 
   return (
-    <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
+    <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
       <div className="flex items-center gap-4">
         <div className="bg-blue-600/20 p-3 rounded-xl">
           <MdEmail className="h-6 w-6 text-blue-400" />
@@ -74,8 +74,8 @@ export default function NewsletterSubscription() {
           </div>
         </div>
       </div>
-      <div className="mt-4 pt-4 border-t border-white/10">
-        <p className="text-white/60 text-sm">
+      <div className="mt-4 pt-4 border-t border-gray-700">
+        <p className="text-gray-400 text-sm">
           {isSubscribed 
             ? 'Recibirás notificaciones sobre nuevos tutoriales y contenido de Swift/SwiftUI.'
             : 'Suscríbete para recibir notificaciones sobre nuevos tutoriales y contenido.'

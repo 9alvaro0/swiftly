@@ -22,11 +22,11 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
     if (displayPosts.length === 0) {
         return (
             <div className="text-center bg-white/5 rounded-lg border border-white/10 p-8">
-                <AiFillTags className="mx-auto text-gray-400 dark:text-gray-500 text-5xl mb-4" />
-                <p className="text-gray-600 dark:text-gray-400 mb-2">No hay posts asociados a esta etiqueta.</p>
+                <AiFillTags className="mx-auto text-gray-500 text-5xl mb-4" />
+                <p className="text-gray-400 mb-2">No hay posts asociados a esta etiqueta.</p>
                 <Link
                     href="/tags"
-                    className="inline-block mt-4 text-blue-500 hover:text-blue-400 hover:underline"
+                    className="inline-block mt-4 text-blue-400 hover:text-blue-300 hover:underline"
                 >
                     Ver todas las etiquetas
                 </Link>
@@ -62,7 +62,7 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
 
                     <div className="p-4 sm:p-6 flex-1 flex flex-col justify-between">
                         <div>
-                            <div className="flex items-center mb-2 text-sm text-blue-500">
+                            <div className="flex items-center mb-2 text-sm text-blue-400">
                                 <span>
                                     {featuredPost.createdAt
                                         ? formatDate(featuredPost.createdAt)
@@ -89,12 +89,12 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
                             </div>
 
                             <Link href={`/posts/${featuredPost.slug}`}>
-                                <h2 className="text-2xl font-bold mb-3 hover:text-blue-500 transition-colors">
+                                <h2 className="text-2xl font-bold mb-3 text-white hover:text-blue-400 transition-colors">
                                     {featuredPost.title}
                                 </h2>
                             </Link>
 
-                            <p className="text-gray-600 dark:text-gray-300 line-clamp-3">
+                            <p className="text-gray-300 line-clamp-3">
                                 {featuredPost.description || featuredPost.content.substring(0, 160)}...
                             </p>
                         </div>
@@ -102,7 +102,7 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
                         <div className="mt-4">
                             <Link
                                 href={`/posts/${featuredPost.slug}`}
-                                className="text-blue-500 font-medium hover:underline"
+                                className="text-blue-400 font-medium hover:text-blue-300 hover:underline"
                             >
                                 Leer más →
                             </Link>
@@ -131,7 +131,7 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
                         )}
 
                         <div className="flex-1">
-                            <div className="flex items-center mb-1 text-xs text-blue-500">
+                            <div className="flex items-center mb-1 text-xs text-blue-400">
                                 <span>{post.publishedAt ? formatDate(post.publishedAt) : "Fecha no disponible"}</span>
                                 {post.tags && post.tags.length > 0 && (
                                     <>
@@ -149,12 +149,12 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
                             </div>
 
                             <Link href={`/posts/${post.slug}`}>
-                                <h3 className="text-lg font-semibold mb-1 hover:text-blue-500 transition-colors">
+                                <h3 className="text-lg font-semibold mb-1 text-white hover:text-blue-400 transition-colors">
                                     {post.title}
                                 </h3>
                             </Link>
 
-                            <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                            <p className="text-sm text-gray-400 line-clamp-2">
                                 {post.description || post.content.substring(0, 100)}...
                             </p>
                         </div>

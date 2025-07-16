@@ -5,6 +5,7 @@
 import React, { useState, useEffect } from "react";
 import { FaShare, FaTwitter, FaFacebook, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 import { FiTrendingUp, FiCalendar, FiLink } from "react-icons/fi";
+import { AdminCard, AdminCardBody } from "@/components/ui/AdminCard";
 
 interface ShareAnalytics {
     platform: string;
@@ -123,13 +124,14 @@ export default function StatsShareSection() {
 
     if (loading) {
         return (
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <div>
+                <h3 className="text-lg font-medium text-white mb-4">Estadísticas de Compartir</h3>
                 <div className="animate-pulse">
-                    <div className="h-6 bg-white/10 rounded w-1/3 mb-4"></div>
+                    <div className="h-6 bg-gray-700 rounded w-1/3 mb-4"></div>
                     <div className="space-y-3">
-                        <div className="h-4 bg-white/10 rounded w-1/2"></div>
-                        <div className="h-4 bg-white/10 rounded w-2/3"></div>
-                        <div className="h-4 bg-white/10 rounded w-1/4"></div>
+                        <div className="h-4 bg-gray-700 rounded w-1/2"></div>
+                        <div className="h-4 bg-gray-700 rounded w-2/3"></div>
+                        <div className="h-4 bg-gray-700 rounded w-1/4"></div>
                     </div>
                 </div>
             </div>
@@ -146,55 +148,52 @@ export default function StatsShareSection() {
     };
 
     return (
-        <div className="bg-gradient-to-br from-white/5 to-white/10 rounded-xl p-6 border border-white/20 backdrop-blur-sm">
-            {/* Header */}
-            <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-lg">
-                    <FaShare className="text-blue-400" size={20} />
-                </div>
-                <div>
-                    <h3 className="text-lg font-semibold text-white">Estadísticas de Compartir</h3>
-                    <p className="text-white/60 text-sm">Analytics de redes sociales</p>
-                </div>
-            </div>
-
+        <div>
+            <h3 className="text-lg font-medium text-white mb-4">Estadísticas de Compartir</h3>
+            
             {shareStats.totalShares === 0 ? (
                 <div className="text-center py-8">
-                    <FaShare className="mx-auto text-white/30 mb-3" size={32} />
-                    <p className="text-white/60">No hay datos de compartir aún</p>
-                    <p className="text-white/40 text-sm mt-1">
+                    <FaShare className="mx-auto text-gray-500 mb-3" size={32} />
+                    <p className="text-gray-400">No hay datos de compartir aún</p>
+                    <p className="text-gray-500 text-sm mt-1">
                         Las estadísticas aparecerán cuando los usuarios compartan contenido
                     </p>
                 </div>
             ) : (
                 <div className="space-y-6">
                     {/* Key metrics */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                            <div className="flex items-center gap-2 mb-2">
-                                <FaShare className="text-blue-400" size={16} />
-                                <span className="text-white/80 text-sm font-medium">Total</span>
-                            </div>
-                            <p className="text-2xl font-bold text-white">{shareStats.totalShares}</p>
-                        </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6">
+                        <AdminCard>
+                            <AdminCardBody className="text-center">
+                                <div className="flex items-center justify-center gap-2 mb-2">
+                                    <FaShare className="text-blue-400" size={16} />
+                                    <span className="text-gray-300 text-sm font-medium">Total</span>
+                                </div>
+                                <p className="text-2xl font-bold text-white">{shareStats.totalShares}</p>
+                            </AdminCardBody>
+                        </AdminCard>
 
-                        <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                            <div className="flex items-center gap-2 mb-2">
-                                <FiCalendar className="text-green-400" size={16} />
-                                <span className="text-white/80 text-sm font-medium">Esta semana</span>
-                            </div>
-                            <p className="text-2xl font-bold text-white">{shareStats.sharesThisWeek}</p>
-                        </div>
+                        <AdminCard>
+                            <AdminCardBody className="text-center">
+                                <div className="flex items-center justify-center gap-2 mb-2">
+                                    <FiCalendar className="text-green-400" size={16} />
+                                    <span className="text-gray-300 text-sm font-medium">Esta semana</span>
+                                </div>
+                                <p className="text-2xl font-bold text-white">{shareStats.sharesThisWeek}</p>
+                            </AdminCardBody>
+                        </AdminCard>
 
-                        <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                            <div className="flex items-center gap-2 mb-2">
-                                <FiTrendingUp className={`${shareStats.shareGrowth >= 0 ? 'text-green-400' : 'text-red-400'}`} size={16} />
-                                <span className="text-white/80 text-sm font-medium">Crecimiento</span>
-                            </div>
-                            <p className={`text-2xl font-bold ${shareStats.shareGrowth >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                                {shareStats.shareGrowth >= 0 ? '+' : ''}{shareStats.shareGrowth.toFixed(1)}%
-                            </p>
-                        </div>
+                        <AdminCard>
+                            <AdminCardBody className="text-center">
+                                <div className="flex items-center justify-center gap-2 mb-2">
+                                    <FiTrendingUp className={`${shareStats.shareGrowth >= 0 ? 'text-green-400' : 'text-red-400'}`} size={16} />
+                                    <span className="text-gray-300 text-sm font-medium">Crecimiento</span>
+                                </div>
+                                <p className={`text-2xl font-bold ${shareStats.shareGrowth >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                                    {shareStats.shareGrowth >= 0 ? '+' : ''}{shareStats.shareGrowth.toFixed(1)}%
+                                </p>
+                            </AdminCardBody>
+                        </AdminCard>
                     </div>
 
                     {/* Top platforms */}
@@ -205,14 +204,14 @@ export default function StatsShareSection() {
                         </h4>
                         <div className="space-y-2">
                             {shareStats.topPlatforms.map((platform) => (
-                                <div key={platform.platform} className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10">
+                                <div key={platform.platform} className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg border border-gray-700">
                                     <div className="flex items-center gap-3">
                                         <platform.icon className="text-blue-400" size={16} />
                                         <span className="text-white text-sm">{platform.platform}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <span className="text-white font-medium">{platform.count}</span>
-                                        <div className="w-16 bg-white/10 rounded-full h-2">
+                                        <div className="w-16 bg-gray-700 rounded-full h-2">
                                             <div 
                                                 className="bg-blue-400 h-2 rounded-full transition-all duration-300"
                                                 style={{ 
@@ -234,9 +233,9 @@ export default function StatsShareSection() {
                         </h4>
                         <div className="space-y-2">
                             {shareStats.recentShares.map((share, index) => (
-                                <div key={index} className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10">
+                                <div key={index} className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg border border-gray-700">
                                     <div className="flex items-center gap-3 flex-1 min-w-0">
-                                        <div className="p-1.5 bg-white/10 rounded">
+                                        <div className="p-1.5 bg-gray-700 rounded">
                                             {React.createElement(platformIcons[share.platform] || FaShare, {
                                                 size: 12,
                                                 className: "text-blue-400"
@@ -244,10 +243,10 @@ export default function StatsShareSection() {
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <p className="text-white text-sm truncate">{share.title}</p>
-                                            <p className="text-white/50 text-xs">{share.platform}</p>
+                                            <p className="text-gray-400 text-xs">{share.platform}</p>
                                         </div>
                                     </div>
-                                    <span className="text-white/60 text-xs whitespace-nowrap ml-2">
+                                    <span className="text-gray-400 text-xs whitespace-nowrap ml-2">
                                         {formatDate(share.timestamp)}
                                     </span>
                                 </div>

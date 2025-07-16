@@ -78,39 +78,6 @@ export const CardBody = ({ children, className = "", ...props }: BaseCardProps) 
 };
 
 
-// Additional card components with appropriate HTML elements
-
-interface CardTitleProps extends HTMLAttributes<HTMLHeadingElement> {
-    children: ReactNode;
-    className?: string;
-    as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
-}
-
-export const CardTitle = ({ children, className = "", as: Component = "h3", ...props }: CardTitleProps) => {
-    return (
-        <Component
-            className={`
-        font-bold 
-        text-lg 
-        mb-3
-        text-primary 
-        dark:text-white 
-        group-hover:text-blue-400
-        transition-colors
-        line-clamp-2
-        ${className}
-      `}
-            {...props}
-        >
-            {children}
-        </Component>
-    );
-};
-
-
-
-
-
 
 
 export default Card;

@@ -18,7 +18,7 @@ export default function ContentPageLayout({
     suspenseKey
 }: ContentPageLayoutProps) {
     return (
-        <div className="py-12 px-4 md:px-6 max-w-7xl mx-auto">
+        <div className="py-2 md:py-12 px-4 md:px-6 max-w-7xl mx-auto">
             {/* Header */}
             <div className="mb-8">
                 {header}

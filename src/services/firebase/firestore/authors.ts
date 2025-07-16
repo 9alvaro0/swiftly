@@ -5,7 +5,6 @@ import {
     doc,
     getDoc,
     setDoc,
-    updateDoc,
 } from "firebase/firestore";
 import { db } from "../config";
 import { Author } from "@/types/Post";
@@ -75,25 +74,3 @@ export const getAuthor = async (authorId: string): Promise<Author | null> => {
     }
 };
 
-// Actualizar perfil de autor
-export const updateAuthorProfile = async (authorId: string, updates: Partial<Author>): Promise<void> => {
-    try {
-        if (!authorId || typeof authorId !== 'string') {
-            throw new Error("Valid author ID is required");
-        }
-        
-        if (!updates || Object.keys(updates).length === 0) {
-            throw new Error("Update data is required");
-        }
-        
-        // Asegurar que no se cambie el ID
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { id, ...updateData } = updates;
-        
-        await updateDoc(doc(authorsCollection, authorId), updateData);
-        console.log(`Author profile updated successfully: ${authorId}`);
-    } catch (error) {
-        console.error(`Error updating author profile (${authorId}):`, error);
-        throw new Error(`Failed to update author profile: ${error instanceof Error ? error.message : String(error)}`);
-    }
-};

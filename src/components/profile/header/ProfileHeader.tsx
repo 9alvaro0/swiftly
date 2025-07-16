@@ -24,26 +24,36 @@ export default function ProfileHeader() {
     } = useProfileEditor();
 
     return (
-        <div className="relative shadow-xl overflow-hidden transition-all">
-            <div className="flex items-center justify-evenly">
-                <div className="flex items-start relative space-x-6">
+        <div className="space-y-8">
+            {/* Header principal - Avatar, Info y Stats sin tarjeta */}
+            <div className="flex flex-col items-center text-center space-y-6 sm:text-left">
+                {/* Avatar e info */}
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 w-full">
                     <ProfileAvatar
                         user={user}
                         onEditClick={() => handleOpenModal("photo")}
                     />
-
-                    <ProfileInfo
-                        user={user}
-                        onEdit={handleOpenModal}
-                    />
+                    <div className="flex-1 w-full">
+                        <ProfileInfo
+                            user={user}
+                            onEdit={handleOpenModal}
+                        />
+                    </div>
                 </div>
-                <ProfileStats user={user} />
+                
+                {/* Stats integradas pero con separación visual */}
+                <div className="w-full pt-6 border-t border-gray-700/50">
+                    <ProfileStats user={user} />
+                </div>
             </div>
 
-            <ProfileBio
-                bio={user?.bio}
-                onEditClick={() => handleOpenModal("bio")}
-            />
+            {/* Bio sin tarjeta, más integrada */}
+            <div className="px-2">
+                <ProfileBio
+                    bio={user?.bio}
+                    onEditClick={() => handleOpenModal("bio")}
+                />
+            </div>
 
             <ProfileActionModals
                 isEditingField={isEditingField}
