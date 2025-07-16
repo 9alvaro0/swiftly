@@ -93,8 +93,8 @@ export default function TermsPage() {
                                 <ul className="list-disc list-inside space-y-2 ml-4">
                                     <li>Publishing offensive, discriminatory, or illegal content</li>
                                     <li>Spamming or sending unsolicited messages</li>
-                                    <li>Attempting to access other users' accounts</li>
-                                    <li>Disrupting the service's operation</li>
+                                    <li>Attempting to access other users&apos; accounts</li>
+                                    <li>Disrupting the service&apos;s operation</li>
                                     <li>Collecting information from other users without consent</li>
                                     <li>Using the service for commercial activities without authorization</li>
                                 </ul>
@@ -112,7 +112,7 @@ export default function TermsPage() {
                             <section>
                                 <h2 className="text-2xl font-semibold text-white mb-4">Limitation of Liability</h2>
                                 <p className="mb-4">
-                                    aprendeSwift is provided "as is". We do not guarantee that the service 
+                                    aprendeSwift is provided &quot;as is&quot;. We do not guarantee that the service 
                                     will be error-free or uninterrupted. We are not responsible for damages 
                                     arising from the use of the service.
                                 </p>

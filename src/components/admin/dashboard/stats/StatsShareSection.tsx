@@ -5,7 +5,7 @@
 import React, { useState, useEffect } from "react";
 import { FaShare, FaTwitter, FaFacebook, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 import { FiTrendingUp, FiCalendar, FiLink } from "react-icons/fi";
-import { AdminCard, AdminCardBody, AdminCardHeader } from "@/components/ui/AdminCard";
+import { AdminCard, AdminCardBody } from "@/components/ui/AdminCard";
 
 interface ShareAnalytics {
     platform: string;

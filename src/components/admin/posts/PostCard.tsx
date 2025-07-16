@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { Post } from "@/types/Post";
 import {
@@ -22,7 +21,6 @@ type Props = {
 };
 
 export default function PostCard({ post, onPostDeleted }: Props) {
-    const [isHovering, setIsHovering] = useState(false);
 
     const {
         isPublished,
@@ -48,8 +46,6 @@ export default function PostCard({ post, onPostDeleted }: Props) {
             <AdminCard
                 hover
                 className="relative"
-                onMouseEnter={() => setIsHovering(true)}
-                onMouseLeave={() => setIsHovering(false)}
             >
                 <AdminCardHeader>
                     <div className="flex justify-between items-start gap-3">

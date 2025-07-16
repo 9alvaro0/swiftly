@@ -2,7 +2,7 @@
 
 import { Metadata } from "next";
 import Link from "next/link";
-import { Map, FileText, Tag, Home, BookOpen, Mail } from "lucide-react";
+import { Map, FileText, Tag, Home, BookOpen } from "lucide-react";
 
 export const metadata: Metadata = {
     title: "Sitemap - aprendeSwift",
