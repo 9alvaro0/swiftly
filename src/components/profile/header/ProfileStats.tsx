@@ -15,14 +15,14 @@ export default function ProfileStats({ user }: ProfileStatsProps) {
     ];
 
     return (
-        <div className="flex items-center gap-6">
+        <div className="grid grid-cols-2 gap-8 w-full max-w-sm mx-auto">
             {stats.map((stat) => (
                 <div
                     key={stat.label}
                     className="text-center"
                 >
-                    <p className="text-xl font-bold text-gray-900 dark:text-white">{stat.value.toLocaleString()}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{stat.label}</p>
+                    <p className="text-3xl font-bold text-white">{stat.value.toLocaleString()}</p>
+                    <p className="text-sm text-gray-400 mt-1">{stat.label}</p>
                 </div>
             ))}
         </div>

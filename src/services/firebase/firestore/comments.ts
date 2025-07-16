@@ -317,29 +317,3 @@ const organizeComments = (comments: Comment[]): Comment[] => {
     return rootComments;
 };
 
-/**
- * Obtener estadísticas de comentarios para admin
- */
-export const getCommentsStats = async (): Promise<{
-    total: number;
-    pending: number;
-    approved: number;
-    deleted: number;
-}> => {
-    try {
-        const snapshot = await getDocs(commentsCollection);
-        const comments = snapshot.docs.map(doc => doc.data());
-
-        const stats = {
-            total: comments.length,
-            pending: comments.filter(c => !c.isApproved && !c.isDeleted).length,
-            approved: comments.filter(c => c.isApproved && !c.isDeleted).length,
-            deleted: comments.filter(c => c.isDeleted).length,
-        };
-
-        return stats;
-    } catch (error) {
-        console.error("Error getting comments stats:", error);
-        return { total: 0, pending: 0, approved: 0, deleted: 0 };
-    }
-};

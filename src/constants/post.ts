@@ -103,13 +103,3 @@ Escribe tu contenido aquí. Puedes usar **negrita**, *cursiva* y \`código inlin
     },
 ];
 
-export const TAGS_SUGGESTIONS = [
-    "Swift",
-    "SwiftUI",
-    "iOS",
-    "Desarrollo",
-    "Programación",
-    "Tutorial",
-    "Código",
-    "Framework",
-];

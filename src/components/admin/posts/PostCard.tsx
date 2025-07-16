@@ -14,6 +14,7 @@ import {
 } from "react-icons/fi";
 import { usePost } from "@/hooks/usePost";
 import Modal from "@/components/ui/Modal";
+import { AdminCard, AdminCardBody, AdminCardFooter, AdminCardHeader } from "@/components/ui/AdminCard";
 
 type Props = {
     post: Post;
@@ -44,21 +45,22 @@ export default function PostCard({ post, onPostDeleted }: Props) {
 
     return (
         <>
-            <div
-                className="border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px] relative"
+            <AdminCard
+                hover
+                className="relative"
                 onMouseEnter={() => setIsHovering(true)}
                 onMouseLeave={() => setIsHovering(false)}
             >
-                <div className="p-5">
-                    <div className="flex justify-between items-start mb-3">
-                        <h3 className="font-bold text-lg line-clamp-2 group-hover:text-primary transition-colors">
+                <AdminCardHeader>
+                    <div className="flex justify-between items-start gap-3">
+                        <h3 className="font-bold text-lg line-clamp-2 text-white">
                             {truncateText(post.title, 60)}
                         </h3>
                         <span
-                            className={`px-2.5 py-1 rounded-full text-xs font-medium flex items-center ${
+                            className={`px-2.5 py-1 rounded-full text-xs font-medium flex items-center shrink-0 ${
                                 isPublished
-                                    ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-                                    : "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400"
+                                    ? "bg-green-900/30 text-green-400"
+                                    : "bg-orange-900/30 text-orange-400"
                             }`}
                         >
                             {isPublished ? (
@@ -74,20 +76,19 @@ export default function PostCard({ post, onPostDeleted }: Props) {
                             )}
                         </span>
                     </div>
+                </AdminCardHeader>
 
+                <AdminCardBody>
                     {post.description && (
-                        <p className="text-neutral-600 dark:text-neutral-400 text-sm mb-4 line-clamp-2">
+                        <p className="text-gray-400 text-sm mb-4 line-clamp-2">
                             {truncateText(post.description, 120)}
                         </p>
                     )}
 
-                    <div className="space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
+                    <div className="space-y-2 text-sm text-gray-400">
                         {post.createdAt && (
                             <div className="flex items-center space-x-2">
-                                <Calendar
-                                    size={14}
-                                    className="text-neutral-500"
-                                />
+                                <Calendar size={14} className="text-gray-500" />
                                 <span>
                                     {new Date(post.createdAt).toLocaleDateString("es-ES", {
                                         year: "numeric",
@@ -100,21 +101,20 @@ export default function PostCard({ post, onPostDeleted }: Props) {
 
                         {post.readTime && (
                             <div className="flex items-center space-x-2">
-                                <Clock
-                                    size={14}
-                                    className="text-neutral-500"
-                                />
+                                <Clock size={14} className="text-gray-500" />
                                 <span>{post.readTime} min lectura</span>
                             </div>
                         )}
                     </div>
+                </AdminCardBody>
 
-                    <div className="mt-5 pt-4 border-t border-neutral-100 dark:border-neutral-700 flex justify-between items-center">
+                <AdminCardFooter>
+                    <div className="flex justify-between items-center">
                         <div className="flex space-x-1">
                             <Link
                                 href={`/admin/posts/edit/${post.slug}`}
-                                className="text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 p-2 rounded-lg transition-colors duration-200 tooltip"
-                                data-tooltip="Editar"
+                                className="text-gray-300 hover:text-white hover:bg-gray-700 p-2 rounded-lg transition-colors duration-200"
+                                title="Editar"
                             >
                                 <Edit size={16} />
                             </Link>
@@ -122,12 +122,12 @@ export default function PostCard({ post, onPostDeleted }: Props) {
                             <button
                                 onClick={togglePublishStatus}
                                 disabled={isLoading}
-                                className={`p-2 rounded-lg transition-colors duration-200 tooltip ${
+                                className={`p-2 rounded-lg transition-colors duration-200 ${
                                     isPublished
-                                        ? "text-orange-600 hover:bg-orange-100 dark:hover:bg-orange-900/20"
-                                        : "text-green-600 hover:bg-green-100 dark:hover:bg-green-900/20"
+                                        ? "text-orange-400 hover:bg-orange-900/20"
+                                        : "text-green-400 hover:bg-green-900/20"
                                 } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
-                                data-tooltip={isPublished ? "Despublicar" : "Publicar"}
+                                title={isPublished ? "Despublicar" : "Publicar"}
                             >
                                 {isPublished ? <EyeOff size={16} /> : <Globe size={16} />}
                             </button>
@@ -135,10 +135,10 @@ export default function PostCard({ post, onPostDeleted }: Props) {
                             <button
                                 onClick={confirmDeletePost}
                                 disabled={isLoading}
-                                className={`text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20 p-2 rounded-lg transition-colors duration-200 tooltip ${
+                                className={`text-red-400 hover:bg-red-900/20 p-2 rounded-lg transition-colors duration-200 ${
                                     isLoading ? "opacity-50 cursor-not-allowed" : ""
                                 }`}
-                                data-tooltip="Eliminar"
+                                title="Eliminar"
                             >
                                 <Trash2 size={16} />
                             </button>
@@ -147,28 +147,21 @@ export default function PostCard({ post, onPostDeleted }: Props) {
                         <Link
                             href={`/posts/${post.slug}`}
                             target="_blank"
-                            className="text-primary hover:underline text-sm flex items-center gap-1 p-1 pl-2 rounded-lg hover:bg-primary/5 transition-colors duration-200"
+                            className="text-blue-400 hover:text-blue-300 hover:underline text-sm flex items-center gap-1 p-1 pl-2 rounded-lg hover:bg-blue-900/10 transition-colors duration-200"
                         >
                             <span>Ver</span>
                             <ExternalLink size={12} />
                         </Link>
                     </div>
-                </div>
-
-                {/* Hover overlay effect */}
-                <div
-                    className={`absolute inset-0 bg-primary/5 rounded-xl pointer-events-none transition-opacity duration-300 ${
-                        isHovering ? "opacity-100" : "opacity-0"
-                    }`}
-                ></div>
+                </AdminCardFooter>
 
                 {/* Loading overlay */}
                 {isLoading && (
-                    <div className="absolute inset-0 bg-white/50 dark:bg-black/50 rounded-xl flex items-center justify-center z-10">
-                        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                    <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center z-10">
+                        <div className="w-6 h-6 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
                     </div>
                 )}
-            </div>
+            </AdminCard>
 
             {/* Modal de confirmación para eliminar */}
             <Modal
@@ -179,7 +172,7 @@ export default function PostCard({ post, onPostDeleted }: Props) {
                     <>
                         <button
                             onClick={cancelDeletePost}
-                            className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors dark:text-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600"
+                            className="px-4 py-2 text-gray-300 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
                         >
                             Cancelar
                         </button>
@@ -192,10 +185,10 @@ export default function PostCard({ post, onPostDeleted }: Props) {
                     </>
                 }
             >
-                <div className="text-gray-600 dark:text-gray-300">
+                <div className="text-gray-300">
                     <p>¿Estás seguro de que quieres eliminar este post?</p>
                     <p className="mt-2 font-medium">{post.title}</p>
-                    <p className="mt-4 text-sm text-red-600 dark:text-red-400">Esta acción no se puede deshacer.</p>
+                    <p className="mt-4 text-sm text-red-400">Esta acción no se puede deshacer.</p>
                 </div>
             </Modal>
         </>

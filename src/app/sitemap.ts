@@ -49,19 +49,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
         sitemapEntries.push(...staticPages);
 
-        // Get published posts
-        const postsQuery = query(
-            collection(db, 'posts'),
-            where('isPublished', '==', true),
-            where('status', '==', 'published'),
-            orderBy('publishedAt', 'desc')
-        );
+        // Get published posts with error handling
+        let posts: Post[] = [];
+        try {
+            const postsQuery = query(
+                collection(db, 'posts'),
+                where('isPublished', '==', true),
+                where('status', '==', 'published'),
+                orderBy('publishedAt', 'desc')
+            );
 
-        const postsSnapshot = await getDocs(postsQuery);
-        const posts = postsSnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        } as Post));
+            const postsSnapshot = await getDocs(postsQuery);
+            posts = postsSnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            } as Post));
+        } catch (postsError) {
+            console.error('Error fetching posts for sitemap:', postsError);
+            // Continue with empty posts array
+        }
 
         // Add posts to sitemap
         for (const post of posts) {
@@ -85,13 +91,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             }
         }
 
-        // Get all tags - simplified approach since Tag interface is basic
-        const tagsQuery = query(collection(db, 'tags'));
-        const tagsSnapshot = await getDocs(tagsQuery);
-        const tags = tagsSnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        } as Tag & { slug?: string; updatedAt?: Date }));
+        // Get all tags with error handling
+        let tags: (Tag & { slug?: string; updatedAt?: Date })[] = [];
+        try {
+            const tagsQuery = query(collection(db, 'tags'));
+            const tagsSnapshot = await getDocs(tagsQuery);
+            tags = tagsSnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            } as Tag & { slug?: string; updatedAt?: Date }));
+        } catch (tagsError) {
+            console.error('Error fetching tags for sitemap:', tagsError);
+            // Continue with empty tags array
+        }
 
         // Add tags to sitemap
         for (const tag of tags) {

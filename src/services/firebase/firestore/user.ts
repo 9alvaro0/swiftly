@@ -7,10 +7,7 @@ import {
     getDocs,
     setDoc,
     updateDoc,
-    deleteDoc,
     query,
-    where,
-    limit,
     orderBy,
     Timestamp,
     arrayUnion,
@@ -19,7 +16,6 @@ import {
 import { db } from "../config";
 import { User } from "@/types/User";
 import { convertDatesToTimestamps, serializeFirestoreData } from "@/services/firebase/utils/utils";
-import { UserProfile } from "firebase/auth";
 import { createOrUpdateAuthorProfile } from "./authors";
 
 // Colección de Firestore
@@ -173,55 +169,7 @@ export const updateLastLogin = async (uid: string): Promise<void> => {
     }
 };
 
-// Verificar si un email ya está registrado
-export const emailExists = async (email: string): Promise<boolean> => {
-    try {
-        if (!email || typeof email !== 'string') {
-            throw new Error("Valid email is required");
-        }
-        
-        const normalizedEmail = email.toLowerCase().trim();
-        const q = query(usersCollection, where("email", "==", normalizedEmail), limit(1));
-        const querySnapshot = await getDocs(q);
-        const exists = !querySnapshot.empty;
-        
-        console.log(`Email existence check for ${normalizedEmail}: ${exists}`);
-        return exists;
-    } catch (error) {
-        console.error(`Error checking email existence (${email}):`, error);
-        if (error instanceof Error && error.message.includes("Valid email is required")) {
-            throw error;
-        }
-        // Return false as fallback to allow proceeding with registration
-        console.warn("Returning false as fallback for email existence check");
-        return false;
-    }
-};
 
-// Verificar si un username ya está registrado
-export const usernameExists = async (username: string): Promise<boolean> => {
-    try {
-        if (!username || typeof username !== 'string') {
-            throw new Error("Valid username is required");
-        }
-        
-        const normalizedUsername = username.toLowerCase().trim();
-        const q = query(usersCollection, where("username", "==", normalizedUsername), limit(1));
-        const querySnapshot = await getDocs(q);
-        const exists = !querySnapshot.empty;
-        
-        console.log(`Username existence check for ${normalizedUsername}: ${exists}`);
-        return exists;
-    } catch (error) {
-        console.error(`Error checking username existence (${username}):`, error);
-        if (error instanceof Error && error.message.includes("Valid username is required")) {
-            throw error;
-        }
-        // Return false as fallback to allow proceeding with registration
-        console.warn("Returning false as fallback for username existence check");
-        return false;
-    }
-};
 
 // Actualizar campos específicos de un perfil de usuario
 export const updateUser = async (uid: string, updatedFields: Partial<User>): Promise<void> => {
@@ -268,30 +216,6 @@ export const updateUser = async (uid: string, updatedFields: Partial<User>): Pro
     }
 };
 
-// Actualizar links sociales
-export const updateSocialLinks = async (
-    uid: string,
-    socialLinks: Partial<UserProfile["socialLinks"]>
-): Promise<void> => {
-    try {
-        if (!uid || typeof uid !== 'string') {
-            throw new Error("Valid user UID is required");
-        }
-        
-        if (!socialLinks) {
-            throw new Error("Social links data is required");
-        }
-        
-        await updateDoc(doc(usersCollection, uid), {
-            socialLinks: socialLinks,
-            updatedAt: Timestamp.fromDate(new Date()),
-        });
-        console.log(`Social links updated for user: ${uid}`);
-    } catch (error) {
-        console.error(`Error updating social links (${uid}):`, error);
-        throw new Error(`Failed to update social links: ${error instanceof Error ? error.message : String(error)}`);
-    }
-};
 
 // Incrementar una estadística específica del usuario
 export const incrementUserStat = async (uid: string, stat: keyof User["stats"], value: string): Promise<void> => {
@@ -320,84 +244,8 @@ export const incrementUserStat = async (uid: string, stat: keyof User["stats"], 
     }
 };
 
-// Eliminar un perfil de usuario
-export const deleteUserProfile = async (uid: string): Promise<void> => {
-    try {
-        if (!uid || typeof uid !== 'string') {
-            throw new Error("Valid user UID is required");
-        }
-        
-        await deleteDoc(doc(usersCollection, uid));
-        console.log(`User profile deleted successfully: ${uid}`);
-    } catch (error) {
-        console.error(`Error deleting user profile (${uid}):`, error);
-        throw new Error(`Failed to delete user profile: ${error instanceof Error ? error.message : String(error)}`);
-    }
-};
 
-// Obtener usuarios recientes
-export const getRecentUsers = async (limitCount: number = 10): Promise<User[]> => {
-    try {
-        if (limitCount <= 0 || limitCount > 100) {
-            throw new Error("Limit count must be between 1 and 100");
-        }
-        
-        const q = query(usersCollection, orderBy("createdAt", "desc"), limit(limitCount));
-        const querySnapshot = await getDocs(q);
 
-        const users = querySnapshot.docs.map((doc) => {
-            try {
-                const userData = serializeFirestoreData(doc.data());
-                return userData as User;
-            } catch (error) {
-                console.warn(`Error processing user document ${doc.id}:`, error);
-                return null;
-            }
-        }).filter((user): user is User => user !== null);
-        
-        console.log(`Retrieved ${users.length} recent users`);
-        return users;
-    } catch (error) {
-        console.error("Error getting recent users:", error);
-        if (error instanceof Error && error.message.includes("Limit count must be")) {
-            throw error;
-        }
-        // Return empty array as fallback
-        return [];
-    }
-};
-
-// Obtener usuarios más activos (por último login)
-export const getActiveUsers = async (limitCount: number = 10): Promise<User[]> => {
-    try {
-        if (limitCount <= 0 || limitCount > 100) {
-            throw new Error("Limit count must be between 1 and 100");
-        }
-        
-        const q = query(usersCollection, orderBy("lastLogin", "desc"), limit(limitCount));
-        const querySnapshot = await getDocs(q);
-
-        const users = querySnapshot.docs.map((doc) => {
-            try {
-                const userData = serializeFirestoreData(doc.data());
-                return userData as User;
-            } catch (error) {
-                console.warn(`Error processing user document ${doc.id}:`, error);
-                return null;
-            }
-        }).filter((user): user is User => user !== null);
-        
-        console.log(`Retrieved ${users.length} active users`);
-        return users;
-    } catch (error) {
-        console.error("Error getting active users:", error);
-        if (error instanceof Error && error.message.includes("Limit count must be")) {
-            throw error;
-        }
-        // Return empty array as fallback
-        return [];
-    }
-};
 
 // Obtener todos los usuarios
 export const getAllUsers = async (searchTerm: string = "", role: string = "", status: string = ""): Promise<User[]> => {

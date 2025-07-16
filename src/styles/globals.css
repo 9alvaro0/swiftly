@@ -91,3 +91,70 @@ input:-webkit-autofill:focus {
     -webkit-text-fill-color: #ffffff !important;
     transition: background-color 9999s ease-in-out 0s;
 }
+
+/* Mobile filter drawer styles */
+.mobile-filter-drawer {
+    background-color: #ffffff;
+}
+
+.mobile-filter-drawer h3 {
+    color: #171717;
+}
+
+.mobile-filter-drawer label {
+    color: #404040;
+}
+
+@media (prefers-color-scheme: dark) {
+    .mobile-filter-drawer {
+        background-color: #171717;
+    }
+    
+    .mobile-filter-drawer h3 {
+        color: #ffffff;
+    }
+    
+    .mobile-filter-drawer label {
+        color: #d4d4d4;
+    }
+    
+    .mobile-filter-drawer .hover\:bg-neutral-100:hover {
+        background-color: #262626;
+    }
+    
+    .mobile-filter-drawer .border-neutral-200 {
+        border-color: #404040;
+    }
+    
+    .mobile-filter-drawer .text-neutral-500 {
+        color: #a3a3a3;
+    }
+    
+    .mobile-filter-drawer .text-red-600 {
+        color: #f87171;
+    }
+    
+    .mobile-filter-drawer .border-red-600 {
+        border-color: #f87171;
+    }
+    
+    /* Also apply to the main filter button area */
+    .text-red-600 {
+        color: #dc2626;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .text-red-600 {
+        color: #f87171;
+    }
+}
+
+/* Scrollbar utilities */
+.scrollbar-hide {
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    -webkit-scrollbar: none;
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
