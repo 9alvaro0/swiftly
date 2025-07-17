@@ -69,7 +69,6 @@ export function CodeBlock({ language, children }: CodeBlockProps) {
             </div>
             <SyntaxHighlighter
                 language={language}
-                // @ts-expect-error: TypeScript does not recognize the style property for SyntaxHighlighter
                 style={vscDarkPlus}
                 PreTag="div"
                 customStyle={{
