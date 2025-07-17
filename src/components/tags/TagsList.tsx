@@ -3,6 +3,7 @@
 import { getAllTags } from "@/services/firebase/firestore/tags";
 import { BsEmojiFrown } from "react-icons/bs";
 import Link from "next/link";
+import { tagToSlug } from "@/utils/tagUtils";
 
 export default async function TagsList({ searchTerm }: { searchTerm: string }) {
     const tags = await getAllTags(searchTerm);
@@ -23,7 +24,7 @@ export default async function TagsList({ searchTerm }: { searchTerm: string }) {
                         {filteredTags.map((tag) => (
                             <Link
                                 key={tag.id}
-                                href={`/tags/${tag.name}`}
+                                href={`/tags/${tagToSlug(tag.name)}`}
                                 className="group"
                             >
                                 <div className="bg-gradient-to-br from-indigo-100 to-blue-50 dark:from-blue-900/10 dark:to-indigo-900/10 border border-blue-200/50 dark:border-blue-700 rounded-xl p-4 h-full hover:shadow-md hover:-translate-y-1 transition-all flex items-center justify-center text-center">

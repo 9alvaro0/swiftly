@@ -36,6 +36,9 @@ export const loginWithGithub = async (): Promise<UserCredential> => {
             const githubUsername = user.email?.split("@")[0] || "";
             const githubUrl = `https://github.com/${githubUsername}`;
 
+            // Esperar un poco para asegurar que el token de autenticación esté disponible
+            await new Promise(resolve => setTimeout(resolve, 200));
+
             // Crear el perfil de usuario en Firestore
             await createUserProfile(user.uid, {
                 email: user.email || "",
@@ -79,6 +82,9 @@ export const loginWithGoogle = async (): Promise<UserCredential> => {
         const userProfile = await getUser(user.uid);
 
         if (!userProfile) {
+            // Esperar un poco para asegurar que el token de autenticación esté disponible
+            await new Promise(resolve => setTimeout(resolve, 200));
+
             // Crear el perfil de usuario en Firestore
             await createUserProfile(user.uid, {
                 email: user.email || "",
@@ -121,6 +127,9 @@ export const registerWithEmailAndPassword = async (
 ): Promise<UserCredential> => {
     const result = await createUserWithEmailAndPassword(auth, email, password);
     const user = result.user;
+
+    // Esperar un poco para asegurar que el token de autenticación esté disponible
+    await new Promise(resolve => setTimeout(resolve, 200));
 
     await createUserProfile(user.uid, {
         email,
