@@ -17,7 +17,7 @@ export default function AdminDashboardPage() {
     }
 
     return (
-        <div className="space-y-8 p-6">
+        <div className="space-y-6 md:space-y-8">
             {/* Sección de estadísticas generales */}
             <StatsGeneralSection stats={stats} />
 

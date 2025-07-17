@@ -9,12 +9,12 @@ interface ProfileBioProps {
 
 export default function ProfileBio({ bio, onEditClick }: ProfileBioProps) {
     return (
-        <div className="mt-6">
-            <div className="flex items-start justify-between">
-                <h2 className="text-lg font-semiboldmb-2">Biografía</h2>
+        <div>
+            <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-white">Biografía</h2>
                 <button
                     onClick={onEditClick}
-                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                    className="text-gray-400 hover:text-gray-300 p-2 hover:bg-gray-700/50 rounded-lg transition-colors"
                     title="Editar biografía"
                 >
                     <PencilIcon className="h-4 w-4" />
@@ -22,11 +22,19 @@ export default function ProfileBio({ bio, onEditClick }: ProfileBioProps) {
             </div>
 
             {bio ? (
-                <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{bio}</p>
+                <p className="text-gray-300 whitespace-pre-wrap leading-relaxed text-lg">{bio}</p>
             ) : (
-                <p className="text-gray-500 dark:text-gray-400 italic">
-                    No hay biografía disponible. Haz clic en el ícono de edición para añadir una.
-                </p>
+                <div className="text-center py-12">
+                    <p className="text-gray-400 italic mb-4">
+                        No hay biografía disponible.
+                    </p>
+                    <button
+                        onClick={onEditClick}
+                        className="text-blue-400 hover:text-blue-300 text-sm hover:underline"
+                    >
+                        Añadir biografía
+                    </button>
+                </div>
             )}
         </div>
     );

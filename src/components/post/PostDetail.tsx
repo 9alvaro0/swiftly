@@ -32,7 +32,7 @@ export default function PostDetail({ post, branch }: PostDetailProps) {
 
     return (
         <>
-            <div className="py-12 px-4 md:px-6 max-w-4xl mx-auto">
+            <div className="py-2 md:py-12 px-4 md:px-6 max-w-4xl mx-auto">
                 <PostBreadcrumbs branch={branch} />
                 <PostHeader post={postWithUpdatedViews} />
                 <PostFeaturedImage

@@ -285,19 +285,6 @@ export const incrementPostViews = async (postId: string): Promise<{ views: numbe
 
 // === FUNCTIONS WITH POPULATED AUTHOR DATA ===
 
-// Obtener un post por ID con datos del autor
-export const getPostByIdWithAuthor = async (id: string): Promise<PostWithAuthor | undefined> => {
-    try {
-        const post = await getPostById(id);
-        if (!post) return undefined;
-        
-        const postWithAuthor = await populatePostAuthor(post);
-        return postWithAuthor || undefined;
-    } catch (error) {
-        console.error("Error getting post by ID with author:", error);
-        return undefined;
-    }
-};
 
 // Obtener un post por slug con datos del autor
 export const getPostBySlugWithAuthor = async (slug: string): Promise<PostWithAuthor | undefined> => {
@@ -313,24 +300,6 @@ export const getPostBySlugWithAuthor = async (slug: string): Promise<PostWithAut
     }
 };
 
-// Obtener posts por tags con datos del autor
-export const getPostsByTagWithAuthor = async (tag: string): Promise<PostWithAuthor[]> => {
-    try {
-        const posts = await getPostsByTag(tag);
-        
-        const postsWithAuthor = await Promise.all(
-            posts.map(async (post) => {
-                const postWithAuthor = await populatePostAuthor(post);
-                return postWithAuthor;
-            })
-        );
-        
-        return postsWithAuthor.filter((post): post is PostWithAuthor => post !== null);
-    } catch (error) {
-        console.error("Error getting posts by tag with author:", error);
-        return [];
-    }
-};
 
 // Obtener todos los posts con datos del autor
 export const getAllPostsWithAuthor = async (): Promise<PostWithAuthor[]> => {

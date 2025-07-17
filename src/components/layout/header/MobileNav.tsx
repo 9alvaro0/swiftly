@@ -45,7 +45,7 @@ export default function MobileNav({ isOpen, onToggle, isAuthenticated, user, isL
 
             {/* Botón siempre visible encima del menú */}
             <button
-                className="relative p-2 text-primary hover:bg-white/5 rounded-lg transition-all duration-300 z-50"
+                className="relative p-2 text-white hover:bg-white/5 rounded-lg transition-all duration-300 z-50"
                 onClick={onToggle}
                 aria-expanded={isOpen}
                 aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
