@@ -113,7 +113,10 @@ service cloud.firestore {
                        request.resource.data.keys().hasAll(['uid', 'email', 'createdAt']) &&
                        request.resource.data.uid == userId &&
                        isValidEmail(request.resource.data.email) &&
-                       (request.resource.data.role == null || hasValidRole(request.resource.data.role));
+                       // Allow role to be set during registration (defaults to 'user')
+                       (request.resource.data.role == null || 
+                        request.resource.data.role == 'user' || 
+                        hasValidRole(request.resource.data.role));
       
       // Update rules: Users can update their own profile, admins can update any
       allow update: if isOwner(userId) ||
