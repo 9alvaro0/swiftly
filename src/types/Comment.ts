@@ -53,13 +53,3 @@ export interface CreateCommentData {
     parentId?: string;
 }
 
-/**
- * Filtros para obtener comentarios
- */
-export interface CommentFilters {
-    postId?: string;
-    authorId?: string;
-    isApproved?: boolean;
-    includeReplies?: boolean;
-    limit?: number;
-}

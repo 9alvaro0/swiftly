@@ -95,7 +95,7 @@ export default function PostsFiltersMobile({
                         variant="outline"
                         size="lg"
                         onClick={handleClearFilters}
-                        className="text-red-600 dark:text-red-400 px-3 h-10 shadow-none"
+                        className="text-red-600 px-3 h-10 shadow-none"
                     >
                         <FaTimes size={14} />
                     </Button>
@@ -114,25 +114,25 @@ export default function PostsFiltersMobile({
                     />
                     
                     {/* Drawer desde abajo */}
-                    <div className={`absolute bottom-0 left-0 right-0 bg-white dark:bg-neutral-900 rounded-t-2xl p-6 min-h-[60vh] max-h-[90vh] overflow-y-auto transition-transform duration-300 ease-out ${
+                    <div className={`mobile-filter-drawer absolute bottom-0 left-0 right-0 rounded-t-2xl p-6 min-h-[60vh] max-h-[90vh] overflow-y-auto transition-transform duration-300 ease-out ${
                         isClosing ? 'translate-y-full' : isOpening ? 'translate-y-full' : 'translate-y-0'
                     }`}>
                         <div className="flex items-center justify-between mb-6">
-                            <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">
+                            <h3 className="text-lg font-semibold">
                                 Filtros
                             </h3>
                             <button
                                 onClick={handleClose}
-                                className="p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                className="p-2 rounded-full hover:bg-neutral-100 transition-colors"
                             >
-                                <FaTimes size={16} className="text-neutral-500 dark:text-neutral-400" />
+                                <FaTimes size={16} className="text-neutral-500" />
                             </button>
                         </div>
 
                         <div className="space-y-6">
                             {/* Filtro de Nivel */}
                             <div>
-                                <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3">
+                                <label className="block text-sm font-medium mb-3">
                                     Nivel de dificultad
                                 </label>
                                 <Select
@@ -152,7 +152,7 @@ export default function PostsFiltersMobile({
 
                             {/* Ordenamiento */}
                             <div>
-                                <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3">
+                                <label className="block text-sm font-medium mb-3">
                                     Ordenar por
                                 </label>
                                 <SortOptions 
@@ -163,7 +163,7 @@ export default function PostsFiltersMobile({
 
                             {/* Vista */}
                             <div>
-                                <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3">
+                                <label className="block text-sm font-medium mb-3">
                                     Vista
                                 </label>
                                 <ViewToggle 
@@ -173,12 +173,12 @@ export default function PostsFiltersMobile({
                             </div>
 
                             {/* Botones de acción */}
-                            <div className="flex gap-3 pt-4 border-t border-neutral-200 dark:border-neutral-700">
+                            <div className="flex gap-3 pt-4 border-t border-neutral-200">
                                 {hasActiveFilters && (
                                     <Button
                                         variant="outline"
                                         onClick={handleClearFilters}
-                                        className="flex-1 text-red-600 dark:text-red-400 border-red-600 dark:border-red-400"
+                                        className="flex-1 text-red-600 border-red-600"
                                     >
                                         Limpiar filtros
                                     </Button>

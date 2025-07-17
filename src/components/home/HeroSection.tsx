@@ -3,7 +3,7 @@ import LinkButton from "@/components/ui/LinkButton";
 
 export default function HeroSection() {
     return (
-        <section className="py-10 relative overflow-hidden">
+        <section className="py-4 md:py-10 relative overflow-hidden">
             <div className="container mx-auto px-4 text-center relative z-10">
                 {/* Eyebrow text */}
                 <div className="inline-block rounded-full bg-blue-500/20 border border-blue-500/30 px-4 py-1.5 mb-6 text-sm font-medium text-blue-400">

@@ -1,6 +1,6 @@
-import Card, { CardBody, CardTitle } from "@/components/ui/Card";
 import { Award, Tag, Users } from "lucide-react";
 import { PostStats } from "@/types/PostStats";
+import { AdminCard, AdminCardBody } from "@/components/ui/AdminCard";
 
 interface StatsCategoriesSectionProps {
     stats: PostStats;
@@ -21,7 +21,7 @@ export default function StatsCategoriesSection({ stats }: StatsCategoriesSection
                             count > 0 && (
                                 <span
                                     key={level}
-                                    className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300"
+                                    className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-purple-900/30 text-purple-400"
                                 >
                                     {level}: {count}
                                 </span>
@@ -41,7 +41,7 @@ export default function StatsCategoriesSection({ stats }: StatsCategoriesSection
                         stats.topTags.slice(0, 5).map(({ tag, count }) => (
                             <span
                                 key={tag}
-                                className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300"
+                                className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-rose-900/30 text-rose-400"
                             >
                                 {tag}: {count}
                             </span>
@@ -58,49 +58,49 @@ export default function StatsCategoriesSection({ stats }: StatsCategoriesSection
                 <div className="mt-3">
                     <div className="flex items-center">
                         <div className="flex-shrink-0">
-                            <div className="h-8 w-8 rounded-full bg-cyan-100 dark:bg-cyan-900/30 flex items-center justify-center text-cyan-700 dark:text-cyan-300 font-medium text-sm">
+                            <div className="h-8 w-8 rounded-full bg-cyan-900/30 flex items-center justify-center text-cyan-400 font-medium text-sm">
                                 {stats.topAuthor.name.charAt(0)}
                             </div>
                         </div>
                         <div className="ml-3">
-                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                            <p className="text-sm font-medium text-white">
                                 {stats.topAuthor.name}
                             </p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                            <p className="text-sm text-gray-400">
                                 {stats.topAuthor.postCount} posts
                             </p>
                         </div>
                     </div>
                 </div>
             ) : (
-                <div className="mt-3 text-sm text-gray-500 dark:text-gray-400">No hay suficientes datos</div>
+                <div className="mt-3 text-sm text-gray-400">No hay suficientes datos</div>
             ),
         },
     ];
 
     return (
         <div>
-            <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-4">Categorización</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <h3 className="text-lg font-medium text-white mb-4">Categorización</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                 {categorizationCards.map((card) => (
-                    <Card
+                    <AdminCard
                         key={card.id}
-                        className="overflow-hidden"
+                        hover
                     >
-                        <CardBody>
-                            <div className="flex items-center">
+                        <AdminCardBody>
+                            <div className="flex items-center mb-3">
                                 <div
-                                    className={`p-2 rounded-lg bg-${card.color}-100 dark:bg-${card.color}-900/30 mr-3`}
+                                    className={`p-2 rounded-lg bg-${card.color}-900/30 mr-3`}
                                 >
                                     {card.icon}
                                 </div>
-                                <CardTitle className="text-base font-medium text-gray-800 dark:text-gray-200">
+                                <h4 className="text-base font-medium text-white">
                                     {card.title}
-                                </CardTitle>
+                                </h4>
                             </div>
                             {card.content}
-                        </CardBody>
-                    </Card>
+                        </AdminCardBody>
+                    </AdminCard>
                 ))}
             </div>
         </div>

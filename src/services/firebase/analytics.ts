@@ -77,17 +77,3 @@ export const logAuthEvent = (eventType: "sign_in" | "sign_out" | "auth_error", p
         timestamp: params.timestamp || new Date().toISOString(),
     });
 };
-/**
- * Registra errores de la aplicación
- * @param error - Objeto Error o mensaje de error
- * @param context - Contexto donde ocurrió el error
- */
-export const logError = (error: unknown, context: string = "unknown"): void => {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-
-    logAnalyticsEvent("app_error", {
-        error: errorMessage,
-        context,
-        timestamp: new Date().toISOString(),
-    });
-};

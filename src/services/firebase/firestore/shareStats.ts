@@ -1,6 +1,6 @@
 // src/services/firebase/firestore/shareStats.ts
 
-import { doc, runTransaction, serverTimestamp, Timestamp, getDoc } from "firebase/firestore";
+import { doc, runTransaction, serverTimestamp, Timestamp } from "firebase/firestore";
 import { db } from "../config";
 import { ShareStats } from "@/types/Post";
 
@@ -98,70 +98,4 @@ export const incrementPostShareStat = async (
     }
 };
 
-/**
- * Obtener estadísticas de compartir de un post
- */
-export const getPostShareStats = async (postId: string): Promise<ShareStats | null> => {
-    try {
-        if (!postId) {
-            throw new Error("PostId is required");
-        }
 
-        const postRef = doc(db, "posts", postId);
-        const postDoc = await getDoc(postRef);
-        
-        if (!postDoc.exists()) {
-            return null;
-        }
-
-        const postData = postDoc.data();
-        return postData.shareStats || null;
-    } catch (error) {
-        console.error("Error getting post share stats:", error);
-        return null;
-    }
-};
-
-/**
- * Obtener estadísticas globales de compartir
- */
-export const getGlobalShareStats = async (): Promise<{
-    totalShares: number;
-    topPosts: Array<{ postId: string; title: string; shares: number }>;
-    platformDistribution: ShareStats['platforms'];
-}> => {
-    try {
-        // This would require a more complex implementation in production
-        // For now, we'll return empty stats
-        return {
-            totalShares: 0,
-            topPosts: [],
-            platformDistribution: {
-                twitter: 0,
-                facebook: 0,
-                linkedin: 0,
-                whatsapp: 0,
-                telegram: 0,
-                reddit: 0,
-                clipboard: 0,
-                native: 0
-            }
-        };
-    } catch (error) {
-        console.error("Error getting global share stats:", error);
-        return {
-            totalShares: 0,
-            topPosts: [],
-            platformDistribution: {
-                twitter: 0,
-                facebook: 0,
-                linkedin: 0,
-                whatsapp: 0,
-                telegram: 0,
-                reddit: 0,
-                clipboard: 0,
-                native: 0
-            }
-        };
-    }
-};
