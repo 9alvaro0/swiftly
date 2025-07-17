@@ -4,6 +4,7 @@ import { AiFillTags } from "react-icons/ai";
 import { Post } from "@/types/Post";
 import Image from "next/image";
 import { formatDate } from "@/utils/dateUtils";
+import { tagToSlug } from "@/utils/tagUtils";
 
 interface PostListProps {
     tag?: string;
@@ -77,7 +78,7 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
                                                 .map((tag) => (
                                                     <Link
                                                         key={tag}
-                                                        href={`/tags/${tag}`}
+                                                        href={`/tags/${tagToSlug(tag)}`}
                                                         className="hover:underline"
                                                     >
                                                         #{tag}
@@ -138,7 +139,7 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
                                         <span className="mx-2">•</span>
                                         <span>
                                             <Link
-                                                href={`/tags/${post.tags[0]}`}
+                                                href={`/tags/${tagToSlug(post.tags[0])}`}
                                                 className="hover:underline"
                                             >
                                                 #{post.tags[0]}

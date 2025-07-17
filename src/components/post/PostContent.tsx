@@ -4,10 +4,9 @@
 
 import { useEffect, memo, useRef } from "react";
 import ReactMarkdown from "react-markdown";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import remarkGfm from "remark-gfm";
 import Image from "next/image";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { CodeBlock } from "@/components/ui/CodeBlock";
 
 type PostContentProps = {
     content: string;
@@ -235,24 +234,9 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                         const match = /language-(\w+)/.exec(className || "");
 
                         return !inline && match ? (
-                            <div className="rounded-md overflow-hidden my-6">
-                                <div className="bg-gray-800 text-gray-300 text-xs px-3 py-1 border-b border-gray-700">
-                                    {match[1].toUpperCase()}
-                                </div>
-                                <SyntaxHighlighter
-                                    language={match[1]}
-                                    // @ts-expect-error: TypeScript does not recognize the style property for SyntaxHighlighter
-                                    style={vscDarkPlus}
-                                    PreTag="div"
-                                    customStyle={{
-                                        margin: 0,
-                                        borderRadius: "0 0 0.375rem 0.375rem",
-                                    }}
-                                    {...props}
-                                >
-                                    {String(children).replace(/\n$/, "")}
-                                </SyntaxHighlighter>
-                            </div>
+                            <CodeBlock language={match[1]} {...props}>
+                                {String(children).replace(/\n$/, "")}
+                            </CodeBlock>
                         ) : (
                             <code
                                 className="bg-gray-800 px-1.5 py-0.5 rounded text-sm text-blue-300"
