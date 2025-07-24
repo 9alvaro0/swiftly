@@ -36,22 +36,49 @@ export const loginWithGithub = async (): Promise<UserCredential> => {
             const githubUsername = user.email?.split("@")[0] || "";
             const githubUrl = `https://github.com/${githubUsername}`;
 
-            // Esperar un poco para asegurar que el token de autenticación esté disponible
-            await new Promise(resolve => setTimeout(resolve, 200));
+            // Esperar un poco más para asegurar que el token de autenticación esté disponible
+            await new Promise(resolve => setTimeout(resolve, 500));
 
-            // Crear el perfil de usuario en Firestore
-            await createUserProfile(user.uid, {
-                email: user.email || "",
-                name: user.displayName || "",
-                username: githubUsername,
-                photoURL: user.photoURL || "",
-                emailVerified: user.emailVerified,
-                phone: user.phoneNumber || undefined,
-                provider: "github",
-                socialLinks: {
-                    github: githubUrl,
-                },
-            });
+            // Forzar la actualización del token
+            try {
+                await user.getIdToken(true);
+            } catch (error) {
+                console.warn('Error refreshing token:', error);
+            }
+
+            // Intentar crear el perfil con reintentos
+            let retries = 3;
+            let lastError;
+            
+            while (retries > 0) {
+                try {
+                    await createUserProfile(user.uid, {
+                        email: user.email || "",
+                        name: user.displayName || "",
+                        username: githubUsername,
+                        photoURL: user.photoURL || "",
+                        emailVerified: user.emailVerified,
+                        phone: user.phoneNumber || undefined,
+                        provider: "github",
+                        socialLinks: {
+                            github: githubUrl,
+                        },
+                    });
+                    break;
+                } catch (error) {
+                    lastError = error;
+                    retries--;
+                    if (retries > 0) {
+                        console.warn(`Failed to create GitHub user profile, retrying... (${retries} attempts left)`);
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                    }
+                }
+            }
+
+            if (retries === 0 && lastError) {
+                console.error('Failed to create GitHub user profile after all retries:', lastError);
+                throw lastError;
+            }
         } else {
             await updateLastLogin(user.uid);
         }
@@ -82,19 +109,46 @@ export const loginWithGoogle = async (): Promise<UserCredential> => {
         const userProfile = await getUser(user.uid);
 
         if (!userProfile) {
-            // Esperar un poco para asegurar que el token de autenticación esté disponible
-            await new Promise(resolve => setTimeout(resolve, 200));
+            // Esperar un poco más para asegurar que el token de autenticación esté disponible
+            await new Promise(resolve => setTimeout(resolve, 500));
 
-            // Crear el perfil de usuario en Firestore
-            await createUserProfile(user.uid, {
-                email: user.email || "",
-                name: user.displayName || "",
-                username: user.email?.split("@")[0] || "",
-                photoURL: user.photoURL || "",
-                emailVerified: user.emailVerified,
-                phone: user.phoneNumber || undefined,
-                provider: "google",
-            });
+            // Forzar la actualización del token
+            try {
+                await user.getIdToken(true);
+            } catch (error) {
+                console.warn('Error refreshing token:', error);
+            }
+
+            // Intentar crear el perfil con reintentos
+            let retries = 3;
+            let lastError;
+            
+            while (retries > 0) {
+                try {
+                    await createUserProfile(user.uid, {
+                        email: user.email || "",
+                        name: user.displayName || "",
+                        username: user.email?.split("@")[0] || "",
+                        photoURL: user.photoURL || "",
+                        emailVerified: user.emailVerified,
+                        phone: user.phoneNumber || undefined,
+                        provider: "google",
+                    });
+                    break;
+                } catch (error) {
+                    lastError = error;
+                    retries--;
+                    if (retries > 0) {
+                        console.warn(`Failed to create Google user profile, retrying... (${retries} attempts left)`);
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                    }
+                }
+            }
+
+            if (retries === 0 && lastError) {
+                console.error('Failed to create Google user profile after all retries:', lastError);
+                throw lastError;
+            }
         } else {
             await updateLastLogin(user.uid);
         }
@@ -128,17 +182,45 @@ export const registerWithEmailAndPassword = async (
     const result = await createUserWithEmailAndPassword(auth, email, password);
     const user = result.user;
 
-    // Esperar un poco para asegurar que el token de autenticación esté disponible
-    await new Promise(resolve => setTimeout(resolve, 200));
+    // Esperar un poco más para asegurar que el token de autenticación esté disponible
+    await new Promise(resolve => setTimeout(resolve, 500));
 
-    await createUserProfile(user.uid, {
-        email,
-        name,
-        username,
-        provider: "email",
-        emailVerified: false,
-        phone: undefined,
-    });
+    // Forzar la actualización del token para asegurar que esté disponible
+    try {
+        await user.getIdToken(true);
+    } catch (error) {
+        console.warn('Error refreshing token:', error);
+    }
+
+    // Intentar crear el perfil con reintentos
+    let retries = 3;
+    let lastError;
+    
+    while (retries > 0) {
+        try {
+            await createUserProfile(user.uid, {
+                email,
+                name,
+                username,
+                provider: "email",
+                emailVerified: false,
+                phone: undefined,
+            });
+            break; // Success, exit loop
+        } catch (error) {
+            lastError = error;
+            retries--;
+            if (retries > 0) {
+                console.warn(`Failed to create user profile, retrying... (${retries} attempts left)`);
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+        }
+    }
+
+    if (retries === 0 && lastError) {
+        console.error('Failed to create user profile after all retries:', lastError);
+        throw lastError;
+    }
 
     return result;
 };
