@@ -4,6 +4,7 @@ import { useAuthStore } from '@/store/authStore';
 import { auth } from '@/services/firebase/config';
 import { onAuthStateChanged } from 'firebase/auth';
 import { toast } from 'sonner';
+import { getSubscriptionStatus, subscribe as subscribeToNewsletter, unsubscribe as unsubscribeFromNewsletter } from '@/services/firebase/firestore/newsletter';
 
 interface SubscriptionStatus {
   isSubscribed: boolean;
@@ -40,22 +41,8 @@ export function useUserNewsletter() {
     setError(null);
 
     try {
-      const token = await auth.currentUser.getIdToken();
-
-      const response = await fetch(`/api/user/newsletter?email=${encodeURIComponent(user.email)}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Error al obtener el estado de suscripción');
-      }
-
-      setSubscriptionStatus(data.subscriptionStatus);
+      const status = await getSubscriptionStatus(user.email);
+      setSubscriptionStatus(status || { isSubscribed: false, isActive: false });
     } catch (err) {
       console.error('Error fetching newsletter status:', err);
       setError(err instanceof Error ? err.message : 'Error desconocido');
@@ -74,32 +61,14 @@ export function useUserNewsletter() {
     setIsUpdating(true);
 
     try {
-      const token = await auth.currentUser.getIdToken();
-
-      const response = await fetch('/api/user/newsletter', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ 
-          action: 'subscribe',
-          email: user.email
-        })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Error al suscribirse');
-      }
-
+      await subscribeToNewsletter(user.email, { source: 'profile' });
+      
       setSubscriptionStatus({
         isSubscribed: true,
         isActive: true
       });
 
-      toast.success(data.message || 'Te has suscrito correctamente');
+      toast.success('Te has suscrito al newsletter correctamente');
     } catch (err) {
       console.error('Error subscribing to newsletter:', err);
       const errorMessage = err instanceof Error ? err.message : 'Error al suscribirse';
@@ -119,32 +88,14 @@ export function useUserNewsletter() {
     setIsUpdating(true);
 
     try {
-      const token = await auth.currentUser.getIdToken();
-
-      const response = await fetch('/api/user/newsletter', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ 
-          action: 'unsubscribe',
-          email: user.email
-        })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Error al desuscribirse');
-      }
-
+      await unsubscribeFromNewsletter(user.email);
+      
       setSubscriptionStatus({
         isSubscribed: true,
         isActive: false
       });
 
-      toast.success(data.message || 'Te has desuscrito correctamente');
+      toast.success('Te has desuscrito del newsletter correctamente');
     } catch (err) {
       console.error('Error unsubscribing from newsletter:', err);
       const errorMessage = err instanceof Error ? err.message : 'Error al desuscribirse';

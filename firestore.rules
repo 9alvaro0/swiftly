@@ -284,15 +284,15 @@ service cloud.firestore {
                data.isActive is bool;
       }
       
-      // Lectura: admins pueden leer todo
-      allow read: if isAdmin();
-      
-      // Lista: admins pueden listar todos, usuarios autenticados pueden hacer queries por su email
-      allow list: if isAdmin() || 
+      // Lectura: admins pueden leer todo, usuarios pueden leer su propia suscripción
+      allow read: if isAdmin() ||
                      (isAuthenticated() && 
                       request.auth.token.email != null &&
-                      resource != null && 
                       resource.data.email == request.auth.token.email.lower());
+      
+      // Lista: admins pueden listar todos, usuarios autenticados pueden hacer queries
+      // Nota: Firebase requiere allow list para que funcionen las queries
+      allow list: if isAdmin() || isAuthenticated();
       
       // Creación: público con validación
       allow create: if isValidSubscriptionCreate();
