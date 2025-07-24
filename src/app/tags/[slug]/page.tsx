@@ -23,8 +23,8 @@ export default async function TagPage(props: TagPageProps) {
         <div className="container mx-auto px-4 py-8">
             <TagBreadcrumbs tagName={originalTag} />
 
-            <h1 className="text-3xl font-extrabold text-gray-800 dark:text-white mb-8">
-                Posts etiquetados con <span className="text-blue-600 dark:text-blue-400">#{originalTag}</span>
+            <h1 className="text-3xl font-extrabold text-white mb-8">
+                Posts etiquetados con <span className="text-blue-400">#{originalTag}</span>
             </h1>
 
             <Suspense

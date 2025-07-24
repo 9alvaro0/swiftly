@@ -133,7 +133,7 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
     return (
         <div
             ref={contentRef}
-            className="prose prose-lg dark:prose-invert max-w-none mb-12 prose-headings:text-white prose-p:text-white/80 prose-a:text-blue-400 prose-blockquote:border-blue-500 prose-blockquote:text-white/70 prose-strong:text-white"
+            className="prose prose-lg prose-invert max-w-none mb-12 prose-headings:text-white prose-p:text-white/80 prose-a:text-blue-400 prose-blockquote:border-blue-500 prose-blockquote:text-white/70 prose-strong:text-white prose-li:text-white/80 prose-td:text-white/80 prose-th:text-white"
         >
             <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
@@ -143,7 +143,7 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                         return (
                             <h1
                                 id={id}
-                                className="text-3xl font-bold mt-12 mb-6 pb-2 border-b border-white/10 scroll-mt-20"
+                                className="text-3xl font-bold mt-12 mb-6 pb-2 border-b border-white/10 scroll-mt-20 text-white"
                                 {...props}
                             >
                                 {children}
@@ -155,7 +155,7 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                         return (
                             <h2
                                 id={id}
-                                className="text-2xl font-bold mt-10 mb-4 pb-1 border-b border-white/10 scroll-mt-20"
+                                className="text-2xl font-bold mt-10 mb-4 pb-1 border-b border-white/10 scroll-mt-20 text-white"
                                 {...props}
                             >
                                 {children}
@@ -167,7 +167,7 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                         return (
                             <h3
                                 id={id}
-                                className="text-xl font-bold mt-8 mb-3 scroll-mt-16"
+                                className="text-xl font-bold mt-8 mb-3 scroll-mt-16 text-white"
                                 {...props}
                             >
                                 {children}
@@ -179,7 +179,7 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                         return (
                             <h4
                                 id={id}
-                                className="text-lg font-bold mt-6 mb-2 scroll-mt-16"
+                                className="text-lg font-bold mt-6 mb-2 scroll-mt-16 text-white"
                                 {...props}
                             >
                                 {children}
@@ -188,7 +188,7 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                     },
                     p: (props) => (
                         <p
-                            className="my-4 leading-relaxed"
+                            className="my-4 leading-relaxed text-white/80"
                             {...props}
                         />
                     ),
@@ -206,7 +206,7 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                     ),
                     li: (props) => (
                         <li
-                            className="mb-2"
+                            className="mb-2 text-white/80"
                             {...props}
                         />
                     ),
@@ -221,7 +221,7 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                     ),
                     blockquote: (props) => (
                         <blockquote
-                            className="border-l-4 border-blue-500/70 bg-blue-500/5 pl-4 py-1 italic my-6 rounded-r"
+                            className="border-l-4 border-blue-500/70 bg-blue-500/5 pl-4 py-1 italic my-6 rounded-r text-white/70"
                             {...props}
                         />
                     ),
@@ -248,6 +248,9 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                     },
                     img: ({ src, alt }) => {
                         if (!src) return null;
+                        
+                        // Check if the image is a GIF
+                        const isGif = src.toLowerCase().endsWith('.gif');
                     
                         return (
                             <div className="relative my-8 mx-auto w-full max-w-md rounded-lg overflow-hidden shadow-md">
@@ -257,6 +260,7 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                                     className="w-auto h-auto max-h-[600px] mx-auto rounded-lg object-contain"
                                     width={600}
                                     height={800}
+                                    unoptimized={isGif}
                                 />
                                 {alt && <div className="text-center mt-2 text-sm text-gray-400 italic">{alt}</div>}
                             </div>

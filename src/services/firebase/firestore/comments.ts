@@ -6,13 +6,17 @@ import {
     getDoc,
     getDocs,
     setDoc,
+    deleteDoc,
     query,
     where,
+    orderBy,
+    limit as firestoreLimit,
     arrayUnion,
     arrayRemove,
     increment,
     runTransaction,
     serverTimestamp,
+    writeBatch,
 } from "firebase/firestore";
 import { Comment, CreateCommentData, CommentAuthor } from "@/types/Comment";
 import { db } from "../config";
@@ -57,11 +61,11 @@ export const createComment = async (commentData: CreateCommentData, author: Comm
             parentId: commentData.parentId,
             content: commentData.content.trim(),
             author: cleanAuthor,
+            authorId: author.id, // Agregar campo authorId para queries más eficientes
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
             isEdited: false,
             isApproved: true, // Auto-aprobar por ahora
-            isDeleted: false,
             likes: 0,
             likedBy: [],
             replyCount: 0,
@@ -106,8 +110,8 @@ export const getPostComments = async (postId: string, includeReplies: boolean = 
                 return comment;
             })
             .filter((comment) => {
-                // Filtrar comentarios borrados y no aprobados
-                const isValid = !comment.isDeleted && comment.isApproved;
+                // Filtrar solo comentarios no aprobados (ya no necesitamos filtrar isDeleted)
+                const isValid = comment.isApproved !== false; // Solo excluir si explícitamente es false
                 if (!includeReplies) {
                     // Si no incluimos respuestas, solo comentarios principales
                     return isValid && !comment.parentId;
@@ -192,7 +196,7 @@ export const updateComment = async (commentId: string, content: string, userId: 
 };
 
 /**
- * Eliminar un comentario (soft delete)
+ * Eliminar un comentario (hard delete - elimina físicamente el documento)
  */
 export const deleteComment = async (commentId: string, userId: string): Promise<void> => {
     try {
@@ -209,11 +213,9 @@ export const deleteComment = async (commentId: string, userId: string): Promise<
             throw new Error("No tienes permisos para eliminar este comentario");
         }
 
+        // Eliminar físicamente el documento
         const commentRef = doc(commentsCollection, commentId);
-        await setDoc(commentRef, {
-            isDeleted: true,
-            updatedAt: serverTimestamp(),
-        }, { merge: true });
+        await deleteDoc(commentRef);
 
         // Si tenía comentario padre, decrementar contador
         if (comment.parentId) {
@@ -223,6 +225,69 @@ export const deleteComment = async (commentId: string, userId: string): Promise<
     } catch (error) {
         console.error("Error deleting comment:", error);
         throw error;
+    }
+};
+
+/**
+ * Eliminar todos los comentarios de un post
+ * Útil cuando se elimina un post
+ */
+export const deletePostComments = async (postId: string): Promise<void> => {
+    try {
+        if (!postId) {
+            throw new Error("ID del post requerido");
+        }
+
+        const q = query(commentsCollection, where("postId", "==", postId));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+            return;
+        }
+
+        // Usar batch para eliminar múltiples documentos eficientemente
+        const batch = writeBatch(db);
+        
+        snapshot.docs.forEach((doc) => {
+            batch.delete(doc.ref);
+        });
+
+        await batch.commit();
+        
+        console.log(`Eliminados ${snapshot.size} comentarios del post ${postId}`);
+    } catch (error) {
+        console.error("Error deleting post comments:", error);
+        throw error;
+    }
+};
+
+/**
+ * Obtener comentarios de un usuario
+ */
+export const getUserComments = async (userId: string, limit: number = 50): Promise<Comment[]> => {
+    try {
+        if (!userId) {
+            throw new Error("ID del usuario requerido");
+        }
+
+        const q = query(
+            commentsCollection,
+            where("authorId", "==", userId),
+            orderBy("createdAt", "desc"),
+            firestoreLimit(limit)
+        );
+
+        const snapshot = await getDocs(q);
+        
+        const comments = snapshot.docs.map((doc) => {
+            const commentData = serializeFirestoreData(doc.data());
+            return { id: doc.id, ...commentData } as Comment;
+        });
+
+        return comments;
+    } catch (error) {
+        console.error("Error getting user comments:", error);
+        return [];
     }
 };
 
@@ -316,4 +381,3 @@ const organizeComments = (comments: Comment[]): Comment[] => {
 
     return rootComments;
 };
-
