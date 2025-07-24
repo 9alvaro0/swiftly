@@ -1,7 +1,55 @@
 // src/app/api/user/newsletter/route.ts
 import { NextRequest } from 'next/server';
 import { headers } from 'next/headers';
-import { subscribe, unsubscribe, getSubscriptionStatus } from '@/services/firebase/firestore/newsletter';
+import { subscribe, unsubscribe } from '@/services/firebase/firestore/newsletter';
+import { getFirestore } from 'firebase-admin/firestore';
+import { getApps, initializeApp, cert } from 'firebase-admin/app';
+
+// Initialize Firebase Admin if not already initialized
+if (!getApps().length) {
+  initializeApp({
+    credential: cert({
+      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    }),
+  });
+}
+
+// Admin function to get subscription status
+async function getSubscriptionStatusAdmin(email: string): Promise<{ isSubscribed: boolean; isActive: boolean } | null> {
+  try {
+    if (!email || typeof email !== 'string') {
+      throw new Error('Email is required and must be a string');
+    }
+    
+    const normalizedEmail = email.toLowerCase().trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    if (!emailRegex.test(normalizedEmail)) {
+      throw new Error('Invalid email format');
+    }
+    
+    const db = getFirestore();
+    const subscribersRef = db.collection('newsletterSubscribers');
+    const querySnapshot = await subscribersRef.where('email', '==', normalizedEmail).get();
+
+    if (querySnapshot.empty) {
+      return { isSubscribed: false, isActive: false };
+    }
+
+    const docData = querySnapshot.docs[0].data();
+    const isActive = Boolean(docData.isActive);
+    
+    return {
+      isSubscribed: true,
+      isActive: isActive
+    };
+  } catch (error) {
+    console.error(`Error getting subscription status (${email}):`, error);
+    return null;
+  }
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -30,7 +78,7 @@ export async function GET(request: NextRequest) {
     console.log(`User API: Getting newsletter status for user: ${email}`);
 
     try {
-      const status = await getSubscriptionStatus(email);
+      const status = await getSubscriptionStatusAdmin(email);
       
       return Response.json({ 
         subscriptionStatus: status || { isSubscribed: false, isActive: false }
