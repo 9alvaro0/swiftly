@@ -54,8 +54,8 @@ export async function GET(request: NextRequest) {
               id: doc.id,
               email: data.email || '',
               isActive: data.isActive !== false, // Default to true if not specified
-              createdAt: data.createdAt?.toDate?.() || new Date(),
-              lastEmailSent: data.lastEmailSent?.toDate?.(),
+              createdAt: (data.createdAt as { toDate?: () => Date })?.toDate?.() || new Date(),
+              lastEmailSent: (data.lastEmailSent as { toDate?: () => Date })?.toDate?.(),
               metadata: data.metadata,
             } as NewsletterSubscriber;
           } catch (parseError) {
