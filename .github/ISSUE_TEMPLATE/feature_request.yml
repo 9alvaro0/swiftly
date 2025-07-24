@@ -1,0 +1,98 @@
+name: ✨ Feature Request
+description: Suggest a new feature for aprendeSwift
+title: "✨ [Feature]: "
+labels: ["✨ feature", "💡 idea"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ¡Gracias por sugerir una nueva funcionalidad para aprendeSwift! Tu input es muy valioso para mejorar la plataforma.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: 🎯 Área
+      description: ¿En qué área de la aplicación sería esta funcionalidad?
+      options:
+        - Frontend (UI/UX)
+        - Backend (API/Database)
+        - Admin Panel
+        - Content System
+        - Newsletter
+        - SEO
+        - Mobile/Responsive
+        - Performance
+        - Security
+        - Infrastructure
+        - Otra
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 🤔 Problema o Necesidad
+      description: ¿Qué problema resolvería esta funcionalidad?
+      placeholder: |
+        Ejemplo: Los usuarios no pueden buscar posts por tags específicos, lo que hace difícil encontrar contenido relevante sobre Swift UI.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 💡 Solución Propuesta
+      description: Describe detalladamente la funcionalidad que propones
+      placeholder: |
+        Ejemplo: Agregar un filtro de búsqueda por tags en la página de posts, con autocompletado y la posibilidad de seleccionar múltiples tags.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 🔄 Alternativas Consideradas
+      description: ¿Has considerado otras formas de solucionar esto?
+      placeholder: También se podría implementar como una sidebar con tags populares...
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: ⚡ Prioridad Sugerida
+      description: ¿Qué tan importante consideras esta funcionalidad?
+      options:
+        - Alta - Funcionalidad esencial
+        - Media - Mejoraría significativamente la experiencia
+        - Baja - Nice to have
+    validations:
+      required: true
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: 🛠️ Complejidad Estimada
+      description: ¿Qué tan compleja crees que sería implementar esto?
+      options:
+        - Simple (1-2 días)
+        - Moderada (1 semana)
+        - Compleja (2+ semanas)
+        - No estoy seguro
+    validations:
+      required: false
+
+  - type: textarea
+    id: mockups
+    attributes:
+      label: 🎨 Mockups/Referencias
+      description: Si tienes mockups, wireframes o referencias visuales, compártelos aquí
+      placeholder: Puedes arrastrar y soltar imágenes aquí
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 📝 Información Adicional
+      description: Cualquier otro detalle relevante
+      placeholder: Consideraciones técnicas, integraciones necesarias, etc.
