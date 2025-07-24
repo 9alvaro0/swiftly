@@ -6,6 +6,7 @@ import { registerWithEmailAndPassword } from "@/services/firebase/auth/auth";
 import { handleFirebaseError } from "@/services/firebase/errors";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/authStore";
 import Spinner from "@/components/ui/Spinner";
 import Input from "../ui/Input";
 import { FiEye, FiEyeOff, FiMail } from "react-icons/fi";
@@ -66,6 +67,10 @@ export default function RegisterForm() {
 
         try {
             await registerWithEmailAndPassword(formData.email, formData.password, formData.name);
+            
+            // Esperar un poco para que el AuthInitializer detecte al usuario
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
             router.push("/");
         } catch (error) {
             handleFirebaseError(error, "Email Login");
