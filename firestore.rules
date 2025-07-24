@@ -3,206 +3,338 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Helper functions for authentication and authorization
+    // ========================================
+    // HELPER FUNCTIONS - Mejores prácticas 2024
+    // ========================================
+    
+    // Authentication helpers
     function isAuthenticated() {
       return request.auth != null;
     }
     
-    function isAdmin() {
-      return isAuthenticated() && 
-             (request.auth.token.admin == true ||
-              request.auth.token.role == 'admin' ||
-              request.auth.token.email == '9alvaro0@gmail.com' ||
-              request.auth.token.email_verified == true && 
-              request.auth.token.email == '9alvaro0@gmail.com');
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
     }
     
-    function isOwner(userId) {
+    function isAnonymous() {
       return isAuthenticated() && 
-             request.auth.uid == userId;
+             request.auth.token.firebase.sign_in_provider == 'anonymous';
+    }
+    
+    // Role-based access control (RBAC)
+    function getUserRole() {
+      return isAuthenticated() ? 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role : null;
+    }
+    
+    function hasRole(role) {
+      return getUserRole() == role;
+    }
+    
+    function hasAnyRole(roles) {
+      return getUserRole() in roles;
+    }
+    
+    function isAdmin() {
+      return hasRole('admin') || 
+             (isAuthenticated() && request.auth.token.email == '9alvaro0@gmail.com');
+    }
+    
+    function isEditor() {
+      return hasAnyRole(['admin', 'editor']);
+    }
+    
+    function isAuthor() {
+      return hasAnyRole(['admin', 'editor', 'author']);
+    }
+    
+    // Data validation helpers
+    function isValidEmail(email) {
+      return email is string && 
+             email.matches('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$') &&
+             email.size() > 5 &&
+             email.size() < 255;
+    }
+    
+    function isValidString(field, minSize, maxSize) {
+      return field is string && 
+             field.size() >= minSize && 
+             field.size() <= maxSize;
     }
     
     function hasValidRole(role) {
-      return role in ['admin', 'editor', 'author', 'user', 'guest'];
+      return role in ['admin', 'editor', 'author', 'user'];
     }
     
-    function isValidEmail(email) {
-      return email is string && 
-             email.matches('.*@.*\\..*');
+    // Request data helpers
+    function incomingData() {
+      return request.resource.data;
     }
     
-    // Posts collection rules
-    match /posts/{postId} {
-      // Read rules: Published posts are public, drafts only for admins/authors
-      // Public access to published posts
-      allow read: if resource.data.isPublished == true;
+    function existingData() {
+      return resource.data;
+    }
+    
+    function hasFields(fields) {
+      return incomingData().keys().hasAll(fields);
+    }
+    
+    // Time-based helpers
+    function isWithinMinutes(timeValue, minutes) {
+      return request.time < timeValue + duration.value(minutes, 'm');
+    }
+    
+    // ========================================
+    // USERS COLLECTION - Base para RBAC
+    // ========================================
+    match /users/{userId} {
+      // Lectura: propietario o admin
+      allow read: if isOwner(userId) || isAdmin();
       
-      // Admins can read all posts
-      allow read: if isAdmin();
+      // Lista: solo admins
+      allow list: if isAdmin();
       
-      // Authors can read their own posts
-      allow read: if isAuthenticated() && request.auth.uid == resource.data.authorId;
+      // Creación: durante registro con validación estricta
+      allow create: if isOwner(userId) &&
+                       hasFields(['uid', 'email', 'createdAt', 'role', 'isActive']) &&
+                       incomingData().uid == userId &&
+                       isValidEmail(incomingData().email) &&
+                       incomingData().role == 'user' && // Nuevos usuarios siempre empiezan como 'user'
+                       incomingData().isActive == true &&
+                       incomingData().isBanned == false;
       
-      // Allow list operation for published posts (public)
+      // Actualización: propietario (campos limitados) o admin
+      allow update: if isAdmin() ||
+                       (isOwner(userId) &&
+                        // Los usuarios no pueden cambiar estos campos críticos
+                        incomingData().uid == existingData().uid &&
+                        incomingData().email == existingData().email &&
+                        incomingData().role == existingData().role &&
+                        incomingData().isActive == existingData().isActive &&
+                        incomingData().isBanned == existingData().isBanned);
+      
+      // Eliminación: solo admins
+      allow delete: if isAdmin();
+    }
+    
+    // ========================================
+    // AUTHORS COLLECTION - Perfiles públicos
+    // ========================================
+    match /authors/{authorId} {
+      // Lectura: público para mostrar en posts
+      allow read: if true;
       allow list: if true;
       
-      // Allow list operation for admins to see all posts in admin panel
-      allow list: if isAdmin();
-      
-      // Create rules: Only admins and editors can create posts
-      allow create: if isAdmin() || 
-                       (isAuthenticated() && 
-                        request.auth.token.role in ['admin', 'editor', 'author'] &&
-                        request.auth.uid == request.resource.data.authorId &&
-                        // Validate required fields
-                        request.resource.data.keys().hasAll(['title', 'content', 'authorId', 'createdAt']) &&
-                        request.resource.data.title is string &&
-                        request.resource.data.title.size() > 0 &&
-                        request.resource.data.content is string &&
-                        request.resource.data.content.size() > 0);
-      
-      // Update rules: Admins can update any, authors can update their own
-      allow update: if isAdmin() ||
-                       (isAuthenticated() && 
-                        request.auth.uid == resource.data.authorId &&
-                        // Ensure author can't change ownership
-                        request.resource.data.authorId == resource.data.authorId);
-      
-      // Delete rules: Only admins can delete posts
+      // Escritura: propietario o admin
+      allow create, update: if isOwner(authorId) || isAdmin();
       allow delete: if isAdmin();
     }
     
-    // Comments collection rules
-    match /comments/{commentId} {
-      // Read rules: All comments are public
-      allow read: if true;
+    // ========================================
+    // POSTS COLLECTION - Contenido principal
+    // ========================================
+    match /posts/{postId} {
+      // Funciones específicas para posts
+      function isPostAuthor() {
+        return isAuthenticated() && 
+               request.auth.uid == existingData().authorId;
+      }
       
-      // Create rules: Authenticated users can create comments
-      allow create: if isAuthenticated() &&
-                       request.auth.uid == request.resource.data.authorId &&
-                       // Validate required fields
-                       request.resource.data.keys().hasAll(['content', 'authorId', 'postId', 'createdAt']) &&
-                       request.resource.data.content is string &&
-                       request.resource.data.content.size() > 0 &&
-                       request.resource.data.content.size() <= 1000 &&
-                       // Rate limiting: max 5 comments per minute per user
-                       request.time > resource.data.createdAt + duration.value(1, 'm') ||
-                       !exists(/databases/$(database)/documents/comments/$(commentId));
+      function isValidPost() {
+        let data = incomingData();
+        return hasFields(['title', 'content', 'authorId', 'tags', 'isPublished']) &&
+               isValidString(data.title, 3, 200) &&
+               isValidString(data.content, 10, 100000) &&
+               data.tags is list &&
+               data.tags.size() <= 10 &&
+               data.isPublished is bool;
+      }
       
-      // Update rules: Users can edit their own comments, admins can edit any
-      allow update: if isOwner(resource.data.authorId) ||
-                       isAdmin();
+      function canPublish() {
+        return isAuthor() || isEditor() || isAdmin();
+      }
       
-      // Delete rules: Users can delete their own comments, admins can delete any
-      allow delete: if isOwner(resource.data.authorId) ||
-                       isAdmin();
-    }
-    
-    // Users collection rules
-    match /users/{userId} {
-      // Read rules: Users can read their own profile, admins can read any
-      allow read: if isOwner(userId) ||
+      // Lectura: posts publicados son públicos
+      allow read: if existingData().isPublished == true || 
+                     isPostAuthor() || 
                      isAdmin();
       
-      // Allow list operation for admins to see all users in admin panel
-      allow list: if isAdmin();
+      // Lista: filtrada según permisos
+      allow list: if resource == null || // Permite queries
+                     resource.data.isPublished == true ||
+                     (isAuthenticated() && request.auth.uid == resource.data.authorId) ||
+                     isAdmin();
       
-      // Create rules: Users can create their own profile during registration
-      allow create: if isOwner(userId) &&
-                       // Validate required fields
-                       request.resource.data.keys().hasAll(['uid', 'email', 'createdAt']) &&
-                       request.resource.data.uid == userId &&
-                       isValidEmail(request.resource.data.email) &&
-                       // Allow role to be set during registration (defaults to 'user')
-                       (request.resource.data.role == null || 
-                        request.resource.data.role == 'user' || 
-                        hasValidRole(request.resource.data.role));
+      // Creación: autores pueden crear con validación
+      allow create: if isAuthor() &&
+                       request.auth.uid == incomingData().authorId &&
+                       isValidPost() &&
+                       (incomingData().isPublished == false || canPublish());
       
-      // Update rules: Users can update their own profile, admins can update any
-      allow update: if isOwner(userId) ||
-                       isAdmin();
+      // Actualización: autor del post o admin
+      allow update: if (isPostAuthor() || isAdmin()) &&
+                       incomingData().authorId == existingData().authorId && // No cambiar autor
+                       isValidPost() &&
+                       (incomingData().isPublished == existingData().isPublished || canPublish());
       
-      // Delete rules: Only admins can delete user accounts
-      allow delete: if isAdmin();
+      // Eliminación: solo admin o autor (si es borrador)
+      allow delete: if isAdmin() || 
+                       (isPostAuthor() && existingData().isPublished == false);
     }
     
-    // Authors collection rules (public profile data for posts)
-    match /authors/{authorId} {
-      // Read rules: Authors data is public for displaying in posts
+    // ========================================
+    // COMMENTS COLLECTION - Interacción usuarios
+    // ========================================
+    match /comments/{commentId} {
+      function isValidComment() {
+        let data = incomingData();
+        return hasFields(['content', 'authorId', 'postId', 'createdAt']) &&
+               isValidString(data.content, 1, 1000) &&
+               data.authorId == request.auth.uid &&
+               exists(/databases/$(database)/documents/posts/$(data.postId));
+      }
+      
+      function isCommentAuthor() {
+        return isAuthenticated() && 
+               request.auth.uid == existingData().authorId;
+      }
+      
+      // Rate limiting: 1 comentario por minuto
+      function notRateLimited() {
+        return !exists(/databases/$(database)/documents/comments/$(request.auth.uid + '_' + incomingData().postId + '_recent')) ||
+               !isWithinMinutes(get(/databases/$(database)/documents/comments/$(request.auth.uid + '_' + incomingData().postId + '_recent')).data.createdAt, 1);
+      }
+      
+      // Lectura: público
       allow read: if true;
+      allow list: if true;
       
-      // Create/Update rules: Users can manage their own author profile, admins can manage any
-      allow create, update: if isOwner(authorId) ||
-                               isAdmin();
+      // Creación: usuarios autenticados con validación y rate limiting
+      allow create: if isAuthenticated() && 
+                       !isAnonymous() && // No comentarios anónimos
+                       isValidComment() &&
+                       notRateLimited();
       
-      // Delete rules: Only admins can delete author profiles
-      allow delete: if isAdmin();
+      // Actualización: autor del comentario (primeros 10 minutos) o admin
+      allow update: if isAdmin() ||
+                       (isCommentAuthor() && 
+                        isWithinMinutes(existingData().createdAt, 10) &&
+                        incomingData().authorId == existingData().authorId &&
+                        incomingData().postId == existingData().postId);
+      
+      // Eliminación: autor o admin
+      allow delete: if isCommentAuthor() || isAdmin();
     }
     
-    
-    // Tags collection rules
+    // ========================================
+    // TAGS COLLECTION - Taxonomía
+    // ========================================
     match /tags/{tagId} {
-      // Read rules: Tags are public
-      allow read: if true;
+      function isValidTag() {
+        let data = incomingData();
+        return hasFields(['name', 'slug']) &&
+               isValidString(data.name, 2, 50) &&
+               isValidString(data.slug, 2, 50) &&
+               data.slug.matches('^[a-z0-9-]+$');
+      }
       
-      // Create/Update/Delete rules: Only admins and editors can manage tags
-      allow write: if isAdmin() || 
-                      (isAuthenticated() && 
-                       request.auth.token.role in ['admin', 'editor']);
+      // Lectura: público
+      allow read: if true;
+      allow list: if true;
+      
+      // Escritura: solo editores y admins con validación
+      allow create, update: if isEditor() && isValidTag();
+      allow delete: if isAdmin(); // Solo admin puede eliminar
     }
     
-    // Newsletter collection rules
+    // ========================================
+    // NEWSLETTER COLLECTION - Suscripciones
+    // ========================================
     match /newsletter/{subscriberId} {
-      // Read rules: Only admins can read newsletter subscriptions
-      allow read: if isAdmin();
+      function isValidSubscription() {
+        let data = incomingData();
+        return hasFields(['email', 'createdAt']) &&
+               isValidEmail(data.email) &&
+               data.createdAt == request.time;
+      }
       
-      // Allow list operation for admins to see all newsletter subscriptions
-      allow list: if isAdmin();
+      // Lectura: solo admins
+      allow read, list: if isAdmin();
       
-      // Create rules: Anyone can subscribe to newsletter
-      allow create: if request.resource.data.keys().hasAll(['email', 'createdAt']) &&
-                       isValidEmail(request.resource.data.email);
+      // Creación: público con validación (una por email)
+      allow create: if isValidSubscription() &&
+                       !exists(/databases/$(database)/documents/newsletter/$(incomingData().email.lower()));
       
-      // Update/Delete rules: Only admins can manage subscriptions
+      // Actualización/Eliminación: solo admins
       allow update, delete: if isAdmin();
     }
     
-    // Newsletter subscribers collection rules (used by the service)
+    // Legacy collection - migrar a newsletter
     match /newsletterSubscribers/{subscriberId} {
-      // Allow all operations for newsletter subscription to work properly
-      // Allow list operation for admins to see all newsletter subscriptions
-      allow read, write: if true;
-      allow list: if isAdmin() || true;
-    }
-    
-    // Analytics and stats collections (read-only for users, write for system)
-    match /analytics/{document} {
+      function isValidSubscription() {
+        let data = incomingData();
+        return hasFields(['email', 'subscribedAt']) &&
+               isValidEmail(data.email);
+      }
+      
+      // Lectura: admins y sistema
       allow read: if isAdmin();
-      allow write: if false; // Only server-side functions should write analytics
+      allow list: if isAdmin();
+      
+      // Creación: público con validación
+      allow create: if isValidSubscription();
+      
+      // Actualización/Eliminación: solo admins
+      allow update, delete: if isAdmin();
     }
     
-    // System configuration (admin only)
+    // ========================================
+    // CONTACTS COLLECTION - Formulario contacto
+    // ========================================
+    match /contacts/{contactId} {
+      function isValidContact() {
+        let data = incomingData();
+        return hasFields(['name', 'email', 'message', 'createdAt']) &&
+               isValidString(data.name, 2, 100) &&
+               isValidEmail(data.email) &&
+               isValidString(data.message, 10, 2000) &&
+               data.createdAt == request.time;
+      }
+      
+      // Rate limiting: 1 mensaje cada 5 minutos por IP/email
+      function notSpamming() {
+        return true; // Implementar rate limiting por IP si es necesario
+      }
+      
+      // Lectura: solo admins
+      allow read, list: if isAdmin();
+      
+      // Creación: público con validación
+      allow create: if isValidContact() && notSpamming();
+      
+      // Actualización/Eliminación: solo admins
+      allow update, delete: if isAdmin();
+    }
+    
+    // ========================================
+    // ANALYTICS COLLECTION - Solo lectura admin
+    // ========================================
+    match /analytics/{document=**} {
+      allow read: if isAdmin();
+      allow write: if false; // Solo Cloud Functions
+    }
+    
+    // ========================================
+    // CONFIG COLLECTION - Configuración sistema
+    // ========================================
     match /config/{configId} {
       allow read: if isAdmin();
       allow write: if isAdmin();
     }
     
-    // Contact form submissions
-    match /contacts/{contactId} {
-      // Create rules: Anyone can submit contact form
-      allow create: if request.resource.data.keys().hasAll(['name', 'email', 'message', 'createdAt']) &&
-                       request.resource.data.name is string &&
-                       request.resource.data.name.size() > 0 &&
-                       isValidEmail(request.resource.data.email) &&
-                       request.resource.data.message is string &&
-                       request.resource.data.message.size() > 0 &&
-                       request.resource.data.message.size() <= 2000;
-      
-      // Read/Update/Delete rules: Only admins can manage contact submissions
-      allow read, update, delete: if isAdmin();
-    }
-    
-    // Deny all other collections by default
+    // ========================================
+    // REGLA DEFAULT - Denegar todo lo demás
+    // ========================================
     match /{document=**} {
       allow read, write: if false;
     }

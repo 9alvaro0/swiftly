@@ -7,11 +7,11 @@ import { AiFillTags } from "react-icons/ai";
 
 export default function TagBreadcrumbs({ tagName }: { tagName: string | undefined }) {
     return (
-        <nav className="flex items-center text-sm mb-8 text-gray-600 dark:text-white/80 font-medium">
+        <nav className="flex items-center text-sm mb-8 text-white/80 font-medium">
             <div className="flex items-center space-x-2">
                 <Link
                     href="/"
-                    className="flex items-center hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                    className="flex items-center hover:text-blue-400 transition-colors"
                 >
                     <FaHome
                         size={16}
@@ -22,12 +22,12 @@ export default function TagBreadcrumbs({ tagName }: { tagName: string | undefine
 
                 <FaChevronRight
                     size={14}
-                    className="text-gray-400 dark:text-white/60"
+                    className="text-white/60"
                 />
 
                 <Link
                     href="/tags"
-                    className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center"
+                    className="hover:text-blue-400 transition-colors flex items-center"
                 >
                     <AiFillTags
                         size={16}
@@ -38,10 +38,10 @@ export default function TagBreadcrumbs({ tagName }: { tagName: string | undefine
 
                 <FaChevronRight
                     size={14}
-                    className="text-gray-400 dark:text-white/60"
+                    className="text-white/60"
                 />
                 <span
-                    className="text-gray-900 dark:text-white font-semibold truncate max-w-[200px]"
+                    className="text-white font-semibold truncate max-w-[200px]"
                     title={tagName}
                 >
                     #{tagName}
@@ -51,7 +51,7 @@ export default function TagBreadcrumbs({ tagName }: { tagName: string | undefine
             <div className="ml-auto">
                 <Link
                     href="/tags"
-                    className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 transition-colors group"
+                    className="flex items-center text-blue-400 hover:text-blue-300 transition-colors group"
                 >
                     <FaChevronLeft
                         size={16}

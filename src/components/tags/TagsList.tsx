@@ -15,7 +15,7 @@ export default async function TagsList({ searchTerm }: { searchTerm: string }) {
             {filteredTags.length > 0 ? (
                 <>
                     <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+                        <h2 className="text-xl font-semibold text-white">
                             {filteredTags.length} tag{filteredTags.length !== 1 ? "s" : ""} encontrados
                         </h2>
                     </div>
@@ -27,8 +27,8 @@ export default async function TagsList({ searchTerm }: { searchTerm: string }) {
                                 href={`/tags/${tagToSlug(tag.name)}`}
                                 className="group"
                             >
-                                <div className="bg-gradient-to-br from-indigo-100 to-blue-50 dark:from-blue-900/10 dark:to-indigo-900/10 border border-blue-200/50 dark:border-blue-700 rounded-xl p-4 h-full hover:shadow-md hover:-translate-y-1 transition-all flex items-center justify-center text-center">
-                                    <h3 className="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                                <div className="bg-gradient-to-br from-blue-900/10 to-indigo-900/10 border border-blue-700 rounded-xl p-4 h-full hover:shadow-md hover:-translate-y-1 transition-all flex items-center justify-center text-center">
+                                    <h3 className="font-medium text-white group-hover:text-blue-400 transition-colors">
                                         #{tag.name}
                                     </h3>
                                 </div>
@@ -38,9 +38,9 @@ export default async function TagsList({ searchTerm }: { searchTerm: string }) {
                 </>
             ) : (
                 <div className="text-center py-16 flex flex-col items-center space-y-4">
-                    <BsEmojiFrown className="w-14 h-14 text-gray-400 dark:text-gray-600" />
-                    <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300">No se encontraron tags</h3>
-                    <p className="text-gray-500 dark:text-gray-400 max-w-sm">
+                    <BsEmojiFrown className="w-14 h-14 text-gray-600" />
+                    <h3 className="text-xl font-semibold text-gray-300">No se encontraron tags</h3>
+                    <p className="text-gray-400 max-w-sm">
                         No hay tags que coincidan con tu búsqueda.
                     </p>
                 </div>
