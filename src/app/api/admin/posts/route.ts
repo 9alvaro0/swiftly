@@ -10,7 +10,9 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status') || '';
     const type = searchParams.get('type') || '';
 
-    // Use the regular Firebase service instead of Admin SDK
+    console.log(`Admin API: Fetching posts with filters - search: "${searchTerm}", status: "${status}", type: "${type}"`);
+
+    // Use client SDK since posts are now public access
     const allPosts = await getAllPosts();
 
     const posts: Post[] = allPosts
@@ -25,12 +27,15 @@ export async function GET(request: NextRequest) {
            post.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))) : true;
 
         return matchesStatus && matchesType && matchesSearch;
-      })
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      });
 
+    console.log(`Admin API: Returning ${posts.length} filtered posts`);
     return Response.json({ posts });
   } catch (error) {
     console.error('Error getting posts:', error);
-    return Response.json({ error: 'Internal server error' }, { status: 500 });
+    return Response.json({ 
+      error: 'Internal server error',
+      message: 'Failed to fetch posts. Please try again later.'
+    }, { status: 500 });
   }
 }

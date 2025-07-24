@@ -66,6 +66,10 @@ export default function RegisterForm() {
 
         try {
             await registerWithEmailAndPassword(formData.email, formData.password, formData.name);
+            
+            // Esperar un poco para que el AuthInitializer detecte al usuario
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
             router.push("/");
         } catch (error) {
             handleFirebaseError(error, "Email Login");
