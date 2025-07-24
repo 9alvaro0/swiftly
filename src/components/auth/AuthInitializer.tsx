@@ -15,14 +15,22 @@ export default function AuthInitializer({ children }: { children: React.ReactNod
         const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
             if (firebaseUser) {
                 try {
-                    // Usuario está autenticado, obtener perfil
-                    const userProfile = await getUser(firebaseUser.uid);
+                    // Usuario está autenticado, obtener perfil con reintentos
+                    let userProfile = await getUser(firebaseUser.uid);
+                    let retries = 3;
+                    
+                    // Si no encuentra el perfil, reintentar (para usuarios recién registrados)
+                    while (!userProfile && retries > 0) {
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        userProfile = await getUser(firebaseUser.uid);
+                        retries--;
+                    }
 
                     if (userProfile) {
                         setUser(userProfile);
                         setAuthenticated(true);
                     } else {
-                        // Si no hay perfil, cerrar sesión
+                        // Si no hay perfil después de reintentos, cerrar sesión
                         setUser(null);
                         setAuthenticated(false);
                         auth.signOut();

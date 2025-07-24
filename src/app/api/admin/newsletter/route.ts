@@ -1,11 +1,8 @@
 // src/app/api/admin/newsletter/route.ts
 import { NextRequest } from 'next/server';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
-import { db } from '@/services/firebase/config';
+import { adminDb } from '@/lib/firebase-admin';
 import NewsletterSubscriber from '@/types/NewsletterSubscriber';
-import { serializeFirestoreData } from '@/services/firebase/utils/utils';
 import { headers } from 'next/headers';
-import { toggleSubscriptionStatus } from '@/services/firebase/firestore/newsletter';
 
 export async function GET(request: NextRequest) {
   try {
@@ -31,24 +28,34 @@ export async function GET(request: NextRequest) {
 
     console.log(`Admin API: Fetching newsletter subscribers with filters - search: "${searchTerm}", status: "${status}"`);
 
+    // Check if Admin SDK is available
+    if (!adminDb) {
+      console.error('Firebase Admin SDK not initialized');
+      return Response.json({ 
+        error: 'Service unavailable', 
+        message: 'Admin services not configured' 
+      }, { status: 503 });
+    }
+
     try {
-      // Get all newsletter subscribers from Firestore
-      const subscribersRef = collection(db, 'newsletterSubscribers');
-      const q = query(subscribersRef, orderBy('createdAt', 'desc'));
-      const subscribersSnapshot = await getDocs(q);
+      // Get all newsletter subscribers from Firestore using Admin SDK
+      const subscribersSnapshot = await adminDb
+        .collection('newsletterSubscribers')
+        .orderBy('createdAt', 'desc')
+        .get();
 
       console.log(`Admin API: Found ${subscribersSnapshot.docs.length} newsletter documents`);
 
       const subscribers: NewsletterSubscriber[] = subscribersSnapshot.docs
         .map(doc => {
           try {
-            const data = serializeFirestoreData(doc.data()) as Record<string, unknown>;
+            const data = doc.data() as Record<string, unknown>;
             return {
               id: doc.id,
               email: data.email || '',
               isActive: data.isActive !== false, // Default to true if not specified
-              createdAt: data.createdAt || new Date(),
-              lastEmailSent: data.lastEmailSent,
+              createdAt: (data.createdAt as { toDate?: () => Date })?.toDate?.() || new Date(),
+              lastEmailSent: (data.lastEmailSent as { toDate?: () => Date })?.toDate?.(),
               metadata: data.metadata,
             } as NewsletterSubscriber;
           } catch (parseError) {
@@ -133,9 +140,25 @@ export async function PUT(request: NextRequest) {
 
     console.log(`Admin API: Toggling newsletter status for subscriber ${subscriberId} from ${currentStatus} to ${!currentStatus}`);
 
+    // Check if Admin SDK is available
+    if (!adminDb) {
+      console.error('Firebase Admin SDK not initialized');
+      return Response.json({ 
+        error: 'Service unavailable', 
+        message: 'Admin services not configured' 
+      }, { status: 503 });
+    }
+
     try {
-      // Toggle the subscription status
-      await toggleSubscriptionStatus(subscriberId, currentStatus);
+      // Toggle the subscription status using Admin SDK
+      await adminDb
+        .collection('newsletterSubscribers')
+        .doc(subscriberId)
+        .update({
+          isActive: !currentStatus,
+          updatedAt: new Date(),
+          ...(currentStatus ? { deactivatedAt: new Date() } : { reactivatedAt: new Date() })
+        });
 
       console.log(`Admin API: Successfully toggled newsletter status for subscriber ${subscriberId}`);
       
