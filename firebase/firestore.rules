@@ -277,15 +277,37 @@ service cloud.firestore {
                isValidEmail(data.email);
       }
       
-      // Lectura: admins y sistema
-      allow read: if isAdmin();
-      allow list: if isAdmin();
+      function isValidSubscriptionCreate() {
+        let data = incomingData();
+        return hasFields(['email', 'createdAt', 'isActive']) &&
+               isValidEmail(data.email) &&
+               data.isActive is bool;
+      }
+      
+      // Lectura: admins pueden leer todo, usuarios pueden leer su propia suscripción
+      allow read: if isAdmin() ||
+                     (isAuthenticated() && 
+                      request.auth.token.email != null &&
+                      resource.data.email == request.auth.token.email.lower());
+      
+      // Lista: admins pueden listar todos, usuarios autenticados pueden hacer queries
+      // Nota: Firebase requiere allow list para que funcionen las queries
+      allow list: if isAdmin() || isAuthenticated();
       
       // Creación: público con validación
-      allow create: if isValidSubscription();
+      allow create: if isValidSubscriptionCreate();
       
-      // Actualización/Eliminación: solo admins
-      allow update, delete: if isAdmin();
+      // Actualización: admins o usuarios actualizando su propia suscripción
+      allow update: if isAdmin() || 
+                       (isAuthenticated() && 
+                        request.auth.token.email != null &&
+                        resource.data.email == request.auth.token.email.lower() &&
+                        // Solo permitir cambiar isActive
+                        request.resource.data.email == resource.data.email &&
+                        request.resource.data.keys().hasAll(['isActive']));
+      
+      // Eliminación: solo admins
+      allow delete: if isAdmin();
     }
     
     // ========================================

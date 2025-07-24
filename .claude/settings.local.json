@@ -39,7 +39,9 @@
       "Bash(pkill:*)",
       "Bash(killall:*)",
       "Bash(true)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "WebFetch(domain:medium.com)",
+      "Bash(mkdir:*)"
     ],
     "deny": []
   }
