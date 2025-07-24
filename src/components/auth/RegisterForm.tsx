@@ -6,7 +6,6 @@ import { registerWithEmailAndPassword } from "@/services/firebase/auth/auth";
 import { handleFirebaseError } from "@/services/firebase/errors";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/authStore";
 import Spinner from "@/components/ui/Spinner";
 import Input from "../ui/Input";
 import { FiEye, FiEyeOff, FiMail } from "react-icons/fi";
