@@ -76,6 +76,7 @@ export const createUserProfile = async (
         
         const userWithTimestamps = convertDatesToTimestamps(newUser);
         
+        
         // Crear el perfil de usuario en Firestore
         await setDoc(doc(usersCollection, uid), userWithTimestamps);
         

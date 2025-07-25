@@ -94,9 +94,8 @@ service cloud.firestore {
       // Lista: solo admins
       allow list: if isAdmin();
       
-      // Creación: durante registro con validación estricta
+      // Creación: durante registro con validación corregida
       allow create: if isOwner(userId) &&
-                       hasFields(['uid', 'email', 'createdAt', 'role', 'isActive']) &&
                        incomingData().uid == userId &&
                        isValidEmail(incomingData().email) &&
                        incomingData().role == 'user' && // Nuevos usuarios siempre empiezan como 'user'
@@ -154,32 +153,30 @@ service cloud.firestore {
         return isAuthor() || isEditor() || isAdmin();
       }
       
-      // Lectura: posts publicados son públicos
-      allow read: if existingData().isPublished == true || 
-                     isPostAuthor() || 
-                     isAdmin();
+      // Lectura: acceso público para lectura de posts
+      allow read: if true;
       
-      // Lista: filtrada según permisos
-      allow list: if resource == null || // Permite queries
-                     resource.data.isPublished == true ||
-                     (isAuthenticated() && request.auth.uid == resource.data.authorId) ||
-                     isAdmin();
+      // Lista: acceso público para queries y listas
+      allow list: if true;
       
-      // Creación: autores pueden crear con validación
-      allow create: if isAuthor() &&
+      // Creación: usuarios autenticados pueden crear con validación básica
+      allow create: if isAuthenticated() &&
                        request.auth.uid == incomingData().authorId &&
-                       isValidPost() &&
-                       (incomingData().isPublished == false || canPublish());
+                       incomingData().authorId is string &&
+                       incomingData().title is string &&
+                       incomingData().content is string &&
+                       incomingData().isPublished is bool;
       
       // Actualización: autor del post o admin
-      allow update: if (isPostAuthor() || isAdmin()) &&
-                       incomingData().authorId == existingData().authorId && // No cambiar autor
-                       isValidPost() &&
-                       (incomingData().isPublished == existingData().isPublished || canPublish());
+      allow update: if isAuthenticated() &&
+                       (request.auth.uid == resource.data.authorId || 
+                        request.auth.token.email == '9alvaro0@gmail.com') &&
+                       incomingData().authorId == resource.data.authorId; // No cambiar autor
       
-      // Eliminación: solo admin o autor (si es borrador)
-      allow delete: if isAdmin() || 
-                       (isPostAuthor() && existingData().isPublished == false);
+      // Eliminación: admin o autor del post
+      allow delete: if isAuthenticated() &&
+                       (request.auth.uid == resource.data.authorId || 
+                        request.auth.token.email == '9alvaro0@gmail.com');
     }
     
     // ========================================
