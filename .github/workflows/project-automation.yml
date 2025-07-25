@@ -1,0 +1,51 @@
+name: 🤖 Project Automation
+
+on:
+  issues:
+    types: [opened, closed, reopened, labeled]
+  pull_request:
+    types: [opened, closed, merged, labeled]
+  project_card:
+    types: [created, moved]
+
+jobs:
+  auto-assign-project:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues' && github.event.action == 'opened'
+    steps:
+      - name: Add issue to project
+        uses: actions/add-to-project@v1.0.2
+        with:
+          project-url: https://github.com/users/9alvaro0/projects/3
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  auto-move-cards:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Move linked issues to In Progress
+        if: github.event.action == 'opened'
+        uses: alex-page/github-project-automation-plus@v0.9.0
+        with:
+          project: https://github.com/users/9alvaro0/projects/3
+          column: "In Progress"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Move to Done when PR merged
+        if: github.event.action == 'closed' && github.event.pull_request.merged == true
+        uses: alex-page/github-project-automation-plus@v0.9.0
+        with:
+          project: https://github.com/users/9alvaro0/projects/3
+          column: "Done"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+  label-automation:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues' && github.event.action == 'opened'
+    steps:
+      - name: Auto-label based on title
+        uses: github/issue-labeler@v3.4
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/labeler.yml
+          enable-versioned-regex: 0
