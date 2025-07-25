@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 💬 Discussion Forum
+    url: https://github.com/9alvaro0/swiftly/discussions
+    about: For questions, ideas, and general discussion about aprendeSwift
+  - name: 📧 Direct Contact
+    url: mailto:contact@aprendeswift.dev
+    about: For private matters or business inquiries
+  - name: 🐦 Twitter/X
+    url: https://x.com/aprendeswift
+    about: Follow us for updates and quick questions

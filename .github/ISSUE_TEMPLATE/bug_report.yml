@@ -1,0 +1,85 @@
+name: 🐛 Bug Report
+description: Report a bug or issue with aprendeSwift
+title: "🐛 [Bug]: "
+labels: ["🐛 bug"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por reportar un bug en aprendeSwift. Por favor, completa la siguiente información para ayudarnos a resolverlo rápidamente.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 📝 Descripción del Bug
+      description: Describe claramente qué está pasando y qué esperabas que pasara
+      placeholder: |
+        Ejemplo: Cuando intento publicar un nuevo post desde el admin panel, el formulario no se envía y aparece un error de validación.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 🔄 Pasos para Reproducir
+      description: Pasos específicos para reproducir el comportamiento
+      placeholder: |
+        1. Ve a '/admin/posts/new'
+        2. Completa el formulario con...
+        3. Haz clic en 'Publicar'
+        4. Ve el error...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: ✅ Comportamiento Esperado
+      description: ¿Qué esperabas que pasara?
+      placeholder: El post debería publicarse correctamente y redirigir a la lista de posts
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 📸 Screenshots/Videos
+      description: Si aplica, agrega screenshots o videos del problema
+      placeholder: Puedes arrastrar y soltar imágenes aquí
+
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: 🌐 Navegador
+      description: ¿En qué navegador ocurre el problema?
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Mobile Safari
+        - Mobile Chrome
+        - Otro (especificar en descripción)
+    validations:
+      required: false
+
+  - type: dropdown
+    id: device
+    attributes:
+      label: 📱 Dispositivo
+      description: ¿En qué tipo de dispositivo?
+      options:
+        - Desktop
+        - Mobile
+        - Tablet
+        - Todos
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 📋 Información Adicional
+      description: Cualquier otro detalle que pueda ser útil
+      placeholder: Logs de consola, configuración especial, etc.

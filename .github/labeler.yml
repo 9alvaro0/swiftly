@@ -1,0 +1,81 @@
+# Auto-labeling configuration for aprendeSwift
+
+# Bug related
+🐛 bug:
+  - '\b(bug|error|issue|broken|fix|crash|fail)\b'
+  - '\b(not working|doesn''t work|broken)\b'
+
+# Feature related  
+✨ feature:
+  - '\b(feature|add|implement|create|new)\b'
+  - '\b(functionality|capability)\b'
+
+# Enhancement
+⚡ enhancement:
+  - '\b(improve|enhance|optimize|better|upgrade)\b'
+  - '\b(performance|speed|faster)\b'
+
+# UI/UX
+🎨 ui/ux:
+  - '\b(ui|ux|design|style|layout|visual|interface)\b'
+  - '\b(responsive|mobile|desktop)\b'
+
+# Backend/API
+🔥 firebase:
+  - '\b(firebase|firestore|auth|database|api)\b'
+  - '\b(backend|server|endpoint)\b'
+
+# Frontend
+⚛️ frontend:
+  - '\b(react|next|component|page|route)\b'
+  - '\b(frontend|client|browser)\b'
+
+# Admin
+🔖 admin:
+  - '\b(admin|dashboard|management|panel)\b'
+  - '\b(user management|content management)\b'
+
+# Newsletter
+📬 newsletter:
+  - '\b(newsletter|email|mail|subscription|sendgrid)\b'
+  - '\b(mailing|campaign)\b'
+
+# Content
+📝 content:
+  - '\b(post|tutorial|blog|article|content)\b'
+  - '\b(markdown|mdx|cms)\b'
+
+# Testing
+🧪 testing:
+  - '\b(test|testing|spec|jest|cypress)\b'
+  - '\b(unit test|integration test|e2e)\b'
+
+# Documentation
+📖 docs:
+  - '\b(doc|docs|documentation|readme|guide)\b'
+  - '\b(manual|tutorial|help)\b'
+
+# Security
+🛡️ security:
+  - '\b(security|auth|permission|vulnerability|ssl|https)\b'
+  - '\b(token|jwt|oauth|encryption)\b'
+
+# Performance
+⚡ performance:
+  - '\b(performance|speed|optimize|fast|slow|memory)\b'
+  - '\b(bundle|loading|cache)\b'
+
+# Dependencies
+📦 dependencies:
+  - '\b(dependency|dependencies|package|npm|yarn)\b'
+  - '\b(update|upgrade|version)\b'
+
+# Critical Priority
+🚨 critical:
+  - '\b(critical|urgent|hotfix|production|down)\b'
+  - '\b(emergency|immediate|asap)\b'
+
+# Breaking Changes
+🔒 breaking-change:
+  - '\b(breaking|break|backwards|compatibility)\b'
+  - '\b(major version|api change)\b'

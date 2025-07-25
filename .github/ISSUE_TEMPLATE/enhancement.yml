@@ -1,0 +1,102 @@
+name: ⚡ Enhancement
+description: Suggest an improvement to existing functionality
+title: "⚡ [Enhancement]: "
+labels: ["⚡ enhancement"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ¿Hay algo en aprendeSwift que funciona pero podría funcionar mejor? ¡Cuéntanos cómo mejorarlo!
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: 🎯 Componente/Área
+      description: ¿Qué parte de la aplicación quieres mejorar?
+      options:
+        - Homepage
+        - Posts/Tutorials
+        - Admin Panel
+        - Newsletter
+        - User Authentication
+        - Search Functionality
+        - Mobile Experience
+        - Performance
+        - SEO
+        - Content Editor
+        - Navigation
+        - Another
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: 📍 Comportamiento Actual
+      description: ¿Cómo funciona actualmente esta funcionalidad?
+      placeholder: |
+        Ejemplo: El editor de posts actual solo permite texto plano y markdown básico.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed
+    attributes:
+      label: 🚀 Mejora Propuesta
+      description: ¿Cómo mejorarías esta funcionalidad?
+      placeholder: |
+        Ejemplo: Agregar un editor WYSIWYG con syntax highlighting para código Swift, soporte para embeds de YouTube, y preview en tiempo real.
+    validations:
+      required: true
+
+  - type: textarea
+    id: benefits
+    attributes:
+      label: 💪 Beneficios
+      description: ¿Qué beneficios traería esta mejora?
+      placeholder: |
+        - Mejor experiencia de escritura para autores
+        - Posts más ricos visualmente
+        - Menos errores de formato
+        - Mayor engagement de usuarios
+    validations:
+      required: true
+
+  - type: dropdown
+    id: impact
+    attributes:
+      label: 📊 Impacto Esperado
+      description: ¿Qué tan significativo sería el impacto de esta mejora?
+      options:
+        - Alto - Mejora dramática en la experiencia
+        - Medio - Mejora notable
+        - Bajo - Mejora pequeña pero valiosa
+    validations:
+      required: true
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: 🌟 Ejemplos/Referencias
+      description: ¿Conoces ejemplos de esta funcionalidad implementada en otros lugares?
+      placeholder: |
+        Ejemplo: Como el editor de Notion, Medium, o GitHub Issues
+        
+  - type: textarea
+    id: technical
+    attributes:
+      label: 🔧 Consideraciones Técnicas
+      description: ¿Hay alguna consideración técnica importante?
+      placeholder: Compatibilidad, performance, dependencias, etc.
+
+  - type: checkboxes
+    id: breaking
+    attributes:
+      label: ⚠️ Cambios Significativos
+      description: ¿Esta mejora podría requerir cambios significativos?
+      options:
+        - label: Esta mejora podría requerir cambios en la base de datos
+        - label: Esta mejora podría afectar la API existente
+        - label: Esta mejora podría requerir migración de datos
+        - label: Esta mejora es completamente compatible con lo existente
