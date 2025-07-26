@@ -55,176 +55,182 @@
   - Documentación completa
 
 ### 🔄 En Progreso
-- 🔄 Sincronización completa de ramas (GitFlow)
 - 🔄 Actualización de documentación
 
 ---
 
-## 🚀 Roadmap Futuro
+## 🚀 Roadmap Futuro - Enfoque en Blog Técnico
 
-### 📅 Q3 2025 - Fase 1: UX/UI Essentials
-**Objetivo**: Mejorar la experiencia de usuario base
+### 📅 Q3 2025 - Fase 1: Experiencia de Autor y Lector
+**Objetivo**: Mejorar las herramientas para crear y consumir contenido técnico
 
-- [ ] **🌓 Dark/Light Mode**
-  - Toggle en navbar
-  - Persistencia en localStorage
-  - Respeto a preferencias del sistema
+- [ ] **📝 Editor Avanzado**
+  - Vista previa en tiempo real con sintaxis highlighting
+  - Autoguardado de borradores cada 30 segundos
+  - Toolbar mejorada para markdown
+  - Inserción rápida de código con selector de lenguaje
   - *Prioridad: ALTA*
 
-- [ ] **📝 Editor Mejorado**
-  - Vista previa en tiempo real
-  - Autoguardado de borradores
-  - Toolbar de formato mejorada
+- [ ] **🔍 Búsqueda Técnica Inteligente**
+  - Autocompletado con sugerencias basadas en contenido
+  - Filtros avanzados: tags + nivel + fecha + tipo
+  - Búsqueda en código dentro de artículos
+  - Resultados con relevancia por contexto técnico
   - *Prioridad: ALTA*
 
-- [ ] **🔍 Búsqueda Avanzada**
-  - Autocompletado con sugerencias
-  - Filtros combinados (tags + nivel + fecha)
-  - Búsqueda en tiempo real
+- [ ] **💬 Comentarios Técnicos**
+  - Soporte completo de markdown en comentarios
+  - Syntax highlighting en bloques de código
+  - Referencias a líneas específicas de código
   - *Prioridad: MEDIA*
 
-- [ ] **📱 PWA Básica**
-  - Manifest.json
-  - Service Worker básico
-  - Instalable en móviles
+### 📅 Q4 2025 - Fase 2: Performance y Accesibilidad
+**Objetivo**: Optimizar la experiencia de lectura y navegación
+
+- [ ] **⚡ Optimización de Performance**
+  - Lazy loading inteligente de artículos
+  - Compresión y optimización automática de imágenes
+  - Preload de artículos relacionados
+  - Cache inteligente con Service Workers
+  - *Prioridad: ALTA*
+
+- [ ] **📱 PWA Técnica**
+  - Lectura offline de artículos guardados
+  - Instalable como app nativa
+  - Notificaciones de nuevos artículos (opcional)
+  - Sincronización cuando vuelve online
   - *Prioridad: MEDIA*
 
-### 📅 Q4 2025 - Fase 2: Engagement Avanzado
-**Objetivo**: Aumentar la retención y participación
+- [ ] **📊 Analytics para Autores**
+  - Dashboard simple con métricas de artículos
+  - Tiempo de lectura promedio por artículo
+  - Artículos más populares y engagement
+  - Exportación básica de estadísticas
+  - *Prioridad: MEDIA*
 
-- [ ] **🔔 Sistema de Notificaciones**
-  - Notificaciones push web
-  - Email digest semanal
-  - Notificaciones in-app
-  - Preferencias personalizables
+### 📅 Q1 2026 - Fase 3: Herramientas Avanzadas de Contenido
+**Objetivo**: Funcionalidades profesionales para creadores de contenido
 
-- [ ] **📊 Analytics Dashboard para Autores**
-  - Vistas por post con gráficos
-  - Engagement metrics
-  - Mejor contenido performante
-  - Exportación de datos
+- [ ] **📅 Gestión Editorial**
+  - Programación de publicaciones
+  - Sistema de revisión por pares (para multi-autor)
+  - Borradores colaborativos
+  - Pipeline de contenido editorial
+  - *Prioridad: MEDIA*
 
-- [ ] **💬 Comentarios 2.0**
-  - Markdown en comentarios
-  - Menciones (@usuario)
-  - Reacciones con emojis
-  - Moderación avanzada
+- [ ] **🔗 Integraciones Técnicas**
+  - Embeds mejorados (CodePen, JSFiddle, GitHub Gists)
+  - Importación desde markdown/MDX externos
+  - Integración con repositorios de GitHub
+  - Generación automática de TOC
+  - *Prioridad: BAJA*
 
-- [ ] **🏆 Sistema de Gamificación**
-  - Badges por logros
-  - Puntos de reputación
-  - Leaderboard mensual
-  - Niveles de usuario
+- [ ] **📚 Organización de Contenido**
+  - Series de artículos enlazadas
+  - Categorías jerárquicas (iOS > SwiftUI > Animation)
+  - Rutas de aprendizaje sugeridas
+  - Bookmarks/favoritos para lectores
+  - *Prioridad: BAJA*
 
-### 📅 Q1 2026 - Fase 3: Content Management Pro
-**Objetivo**: Herramientas profesionales para creadores
+### 📅 Q2 2026 - Fase 4: Comunidad Técnica
+**Objetivo**: Fortalecer la comunidad de desarrolladores
 
-- [ ] **📅 Programación de Publicaciones**
-  - Calendario visual
-  - Publicación automática
-  - Buffer de contenido
-  - Vista de pipeline
+- [ ] **🔔 Notificaciones Inteligentes**
+  - Newsletter semanal con mejores artículos
+  - Notificaciones de nuevos artículos por tags favoritos
+  - Digest mensual para suscriptores
+  - *Prioridad: MEDIA*
 
-- [ ] **📝 Versionado de Contenido**
-  - Historial de cambios
-  - Comparación de versiones
-  - Restaurar versiones anteriores
-  - Colaboración en borradores
-
-- [ ] **🤖 IA Asistente de Contenido**
-  - Sugerencias de títulos
-  - Optimización SEO automática
-  - Generación de resúmenes
-  - Tags sugeridos
-
-- [ ] **📊 A/B Testing**
-  - Títulos alternativos
-  - Imágenes destacadas variantes
-  - Métricas de conversión
-
-### 📅 Q2 2026 - Fase 4: Plataforma Social
-**Objetivo**: Crear comunidad activa
-
-- [ ] **👥 Perfiles Sociales**
-  - Follow/unfollow usuarios
-  - Feed personalizado
-  - Mensajes directos
-  - Actividad timeline
-
-- [ ] **💰 Monetización**
-  - Posts premium
-  - Suscripciones mensuales
-  - Tips/donaciones
-  - Programa de afiliados
-
-- [ ] **🎥 Contenido Multimedia**
-  - Videos embebidos optimizados
-  - Galerías de imágenes
-  - Podcasts integrados
-  - Live coding sessions
-
-- [ ] **🌍 Internacionalización**
-  - Soporte multi-idioma
-  - Contenido por región
-  - Traducciones automáticas
-  - URL localizadas
+- [ ] **🌍 Accesibilidad y Alcance**
+  - Mejoras de accesibilidad web
+  - Versión AMP para artículos
+  - Exportación de artículos a PDF
+  - *Prioridad: BAJA*
 
 ---
 
 ## 🎯 Prioridades Inmediatas (Próximas 2-4 semanas)
 
-### 🔴 Críticas
-1. **Dark Mode** - Experiencia de usuario fundamental
-2. **Vista previa de editor** - Mejora significativa para autores
-3. **Autoguardado de borradores** - Prevenir pérdida de contenido
+### 🔴 Críticas (Implementar Ya)
+1. **Editor con vista previa** - Fundamental para autores técnicos
+2. **Autoguardado** - Prevenir pérdida de contenido
+3. **Búsqueda en código** - Encontrar snippets específicos
 
-### 🟡 Importantes
-1. **Búsqueda mejorada** - Autocompletado y filtros
-2. **PWA básica** - Instalable en móviles
-3. **Notificaciones básicas** - Al menos email
+### 🟡 Importantes (Próximo Sprint)
+1. **Comentarios con markdown** - Discusión técnica rica
+2. **Performance básica** - Lazy loading y optimizaciones
+3. **Analytics simples** - Métricas básicas para autores
 
-### 🟢 Nice to Have
-1. **Export de datos** - Para autores
-2. **Mejoras de comentarios** - Markdown support
-3. **Performance optimizations** - Lazy loading avanzado
+### 🟢 Nice to Have (Cuando haya tiempo)
+1. **PWA básica** - Lectura offline
+2. **Embeds mejorados** - CodePen, Gists
+3. **Newsletter mejorado** - Contenido curado
+
+---
+
+## ❌ Features Descartadas
+
+**Por no aportar valor a un blog técnico:**
+- Gamificación/badges
+- Sistema de follow/followers  
+- Mensajes directos
+- Live streaming
+- Monetización/tips
+- A/B testing de contenido
+- Reacciones con emojis
+- Sistema de votación complejo
 
 ---
 
 ## 📈 Métricas de Éxito
 
 ### Para v2.0 (Q4 2025)
-- 📊 +50% retención de usuarios
-- 💬 +100% engagement en comentarios
-- 📱 30% usuarios usando PWA
-- ⚡ <2s tiempo de carga promedio
+- ⚡ <1.5s tiempo de carga promedio
+- 📖 +30% tiempo de lectura por sesión
+- 🔍 50% de usuarios usan búsqueda avanzada
+- 💬 +40% engagement en comentarios técnicos
 
 ### Para v3.0 (Q2 2026)
-- 👥 10K usuarios activos mensuales
-- 📝 1K posts publicados
-- 💰 Primeros ingresos por monetización
-- 🌍 Soporte para 3 idiomas
+- 📚 1K+ artículos técnicos publicados
+- 👥 5K+ desarrolladores activos mensuales
+- 📱 25% usuarios usando PWA
+- 📊 Tiempo promedio >3min por artículo
 
 ---
 
-## 🛠️ Stack Técnico Futuro
+## 🛠️ Stack Técnico Considerado
 
-### Consideraciones
-- **React Query/SWR** - Para cache management
-- **Algolia** - Para búsqueda avanzada
-- **Pusher/Ably** - Para real-time features
-- **Stripe** - Para monetización
-- **Cloudinary** - Para optimización de imágenes
-- **Sentry** - Para error tracking en producción
+### Próximas Integraciones
+- **Algolia/ElasticSearch** - Para búsqueda avanzada
+- **Cloudinary** - Optimización automática de imágenes
+- **React Query/SWR** - Cache management inteligente
+- **Workbox** - Service Workers para PWA
 
----
-
-## 📝 Notas
-
-- Las fechas son tentativas y sujetas a cambios según feedback de usuarios
-- Prioridades pueden ajustarse basadas en métricas de uso
-- Cada fase incluirá testing exhaustivo antes de producción
-- La documentación se actualizará con cada release mayor
+### Herramientas de Desarrollo
+- **Storybook** - Documentación de componentes (si crece el equipo)
+- **Playwright** - Testing E2E (cuando sea crítico)
+- **Lighthouse CI** - Monitoreo automático de performance
 
 ---
 
-*Última actualización: Julio 2025 - v1.5.0*
+## 📝 Principios de Desarrollo
+
+1. **Content First** - Todo gira en torno al contenido técnico
+2. **Performance Matters** - Desarrolladores valoran la velocidad
+3. **Developer UX** - Herramientas intuitivas para autores técnicos
+4. **Keep It Simple** - No sobrecomplicar con features innecesarias
+5. **Community Driven** - Escuchar feedback de la comunidad Swift
+
+---
+
+## 🔄 Proceso de Evaluación
+
+Cada feature propuesta debe responder:
+- ¿Mejora la creación o consumo de contenido técnico?
+- ¿Los desarrolladores realmente lo usarían?
+- ¿El ROI justifica el tiempo de desarrollo?
+- ¿Aumenta la retención o engagement genuino?
+
+---
+
+*Última actualización: Julio 2025 - v1.5.0 (Roadmap refocused)*

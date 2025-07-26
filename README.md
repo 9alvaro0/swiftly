@@ -225,11 +225,11 @@ Asegúrate de configurar todas las variables de entorno en tu servicio de hostin
 ## 📊 Roadmap
 
 ### 🎯 Próximas Características (v2.0)
-- [ ] 🌓 Dark/Light mode toggle
-- [ ] 📝 Editor mejorado con vista previa
-- [ ] 🔔 Sistema de notificaciones
-- [ ] 📱 PWA completa
-- [ ] 🏆 Sistema de gamificación
+- [ ] 📝 Editor avanzado con vista previa en tiempo real
+- [ ] 🔍 Búsqueda técnica inteligente en contenido y código
+- [ ] 💬 Comentarios con markdown y syntax highlighting
+- [ ] ⚡ Optimizaciones de performance y lazy loading
+- [ ] 📱 PWA para lectura offline
 
 Ver el [ROADMAP completo](docs/ROADMAP.md) para más detalles.
 
