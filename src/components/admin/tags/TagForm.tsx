@@ -2,9 +2,8 @@
 
 import { useState, useEffect, FormEvent } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { v4 as uuidv4 } from "uuid";
 import { Tag } from "@/types/Tag";
-import { createTag, updateTag, getTagById } from "@/services/firebase/firestore/tags";
+import { createTagViaAPI, updateTag, getTagById } from "@/services/firebase/firestore/tags";
 import Input from "@/components/ui/Input";
 import { revalidateTagsPath } from "@/actions/revalidateTagsPath";
 
@@ -47,22 +46,36 @@ export default function TagForm() {
     // Manejar envío del formulario
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        if (!tagId) {
-            const newTag: Tag = {
-                id: uuidv4(),
-                name: formData.name.trim(),
-            };
+        try {
+            if (!tagId) {
+                // Crear nuevo tag usando la API
+                const slug = formData.name.trim().toLowerCase()
+                    .replace(/[^a-z0-9\s-]/g, '') // Remover caracteres especiales
+                    .replace(/\s+/g, '-') // Reemplazar espacios con guiones
+                    .replace(/-+/g, '-') // Remover guiones duplicados
+                    .replace(/^-|-$/g, ''); // Remover guiones al inicio/final
 
-            await createTag(newTag);
-        } else {
-            const updatedFields: Partial<Tag> = {
-                name: formData.name.trim(),
-            };
+                await createTagViaAPI({
+                    name: formData.name.trim(),
+                    slug: slug,
+                    description: ''
+                });
 
-            await updateTag(tagId, updatedFields);
+                // Limpiar formulario después de crear
+                setFormData({ id: "", name: "" });
+            } else {
+                const updatedFields: Partial<Tag> = {
+                    name: formData.name.trim(),
+                };
+
+                await updateTag(tagId, updatedFields);
+            }
+
+            await revalidateTagsPath();
+        } catch (error) {
+            console.error('Error submitting tag form:', error);
+            alert(error instanceof Error ? error.message : 'Error al guardar el tag');
         }
-
-        await revalidateTagsPath();
     };
 
     return (
