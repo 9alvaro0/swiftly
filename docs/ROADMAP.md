@@ -1,68 +1,230 @@
-  Swiftly es una plataforma de blog muy sólida y bien estructurada con:
+# 🗺️ aprendeSwift - Roadmap
 
-  ✅ Fortalezas:
-  - Arquitectura moderna con Next.js 15 y TypeScript estricto
-  - Sistema completo de autenticación y roles
-  - Panel de administración funcional y completo
-  - Sistema de comentarios y engagement (likes, shares)
-  - SEO optimizado con IA
-  - Manejo robusto de errores y seguridad
-  - GitFlow bien estructurado con 3 ambientes
+## 📊 Estado Actual (v1.5.0) - Julio 2025
 
-  🎯 Funcionalidades Implementadas:
-  - CRUD completo de posts/tutoriales
-  - Sistema de usuarios y autores
-  - Newsletter con SendGrid
-  - Analytics de compartido social
-  - Búsqueda y filtrado
-  - RSS/Atom feeds
+### ✅ Funcionalidades Implementadas
+
+#### 🎯 Core Features
+- ✅ **Sistema de Contenido Completo**
+  - Posts y tutoriales con CRUD completo
+  - Editor con markdown y syntax highlighting
+  - Gestión de borradores y publicación
+  - Imágenes destacadas y múltiples imágenes
+  - Niveles de dificultad (Beginner, Intermediate, Advanced)
+  - Tiempo de lectura y contador de palabras
+
+- ✅ **Sistema de Usuarios y Autenticación**
+  - Registro/login con email y contraseña
+  - Autenticación social (Google, GitHub)
+  - Roles y permisos (admin, editor, author, user, guest)
+  - Perfiles editables con estadísticas
+  - Recuperación de contraseña
+
+- ✅ **Panel de Administración**
+  - Dashboard con estadísticas completas
+  - Gestión de posts/tutoriales
+  - Gestión de usuarios con roles
+  - Gestión de newsletter y suscriptores
   - Gestión de tags y categorías
+  - Generación de SEO con IA (OpenAI)
 
-  🗺️ Roadmap de Mejoras Propuesto
+- ✅ **Engagement y Social**
+  - Sistema de comentarios anidados
+  - Likes en posts y comentarios
+  - Social sharing con analytics
+  - Tracking de vistas únicas
+  - Posts relacionados
 
-  🚀 Fase 1: Mejoras de UX/UI (Prioritarias)
+- ✅ **Newsletter y Email**
+  - Integración con SendGrid
+  - Email de bienvenida automático
+  - Gestión de suscriptores
+  - Estado activo/inactivo
 
-  1. Modo oscuro/claro - Toggle para preferencias de usuario
-  2. Preferencias de usuario - Configuración personalizable
-  3. Mejoras en el editor - Vista previa en tiempo real para drafts
-  4. Notificaciones push - Para nuevos posts y comentarios
-  5. Búsqueda avanzada - Filtros más granulares y autocompletado
+- ✅ **SEO y Feeds**
+  - Meta tags dinámicos y OpenGraph
+  - Sitemap automático
+  - RSS, Atom y JSON feeds
+  - Structured data
 
-  🔧 Fase 2: Funcionalidades de Contenido
+- ✅ **Developer Experience**
+  - TypeScript strict mode
+  - GitHub Project Management profesional
+  - CI/CD con GitHub Actions
+  - Templates para issues y PRs
+  - Documentación completa
 
-  1. Sistema de borradores - Guardar y previsualizar antes de publicar
-  2. Programación de posts - Publicación automática en fechas específicas
-  3. Versionado de contenido - Historial de cambios en posts
-  4. Contenido relacionado IA - Sugerencias más inteligentes
-  5. Sistema de categorías jerárquicas - Subcategorías anidadas
+### 🔄 En Progreso
+- 🔄 Sincronización completa de ramas (GitFlow)
+- 🔄 Actualización de documentación
 
-  📈 Fase 3: Analytics y Engagement
+---
 
-  1. Dashboard de analytics avanzado - Métricas de tiempo, gráficos interactivos
-  2. Sistema de suscripciones por categoría - Newsletter segmentada
-  3. Gamificación - Badges, logros para usuarios activos
-  4. Sistema de votación - Ratings para posts más allá de likes
-  5. Comentarios con hilos - Mejoras en la estructura de discusiones
+## 🚀 Roadmap Futuro
 
-  ⚡ Fase 4: Performance y Técnicas
+### 📅 Q3 2025 - Fase 1: UX/UI Essentials
+**Objetivo**: Mejorar la experiencia de usuario base
 
-  1. PWA completa - Offline support, app installable
-  2. Cache inteligente - Implementar SWR o React Query
-  3. Optimización de imágenes - WebP, lazy loading avanzado
-  4. Internacionalización - Soporte multi-idioma
-  5. API rate limiting - Protección contra abuse
+- [ ] **🌓 Dark/Light Mode**
+  - Toggle en navbar
+  - Persistencia en localStorage
+  - Respeto a preferencias del sistema
+  - *Prioridad: ALTA*
 
-  🛡️ Fase 5: Admin y Moderación
+- [ ] **📝 Editor Mejorado**
+  - Vista previa en tiempo real
+  - Autoguardado de borradores
+  - Toolbar de formato mejorada
+  - *Prioridad: ALTA*
 
-  1. Sistema de moderación - Cola de aprobación para comentarios
-  2. Backup automático - Exportación de contenido
-  3. Logs de actividad - Audit trail completo
-  4. Bulk operations - Operaciones masivas en admin
-  5. Sistema de reportes - Contenido inapropiado
+- [ ] **🔍 Búsqueda Avanzada**
+  - Autocompletado con sugerencias
+  - Filtros combinados (tags + nivel + fecha)
+  - Búsqueda en tiempo real
+  - *Prioridad: MEDIA*
 
-  🎯 Recomendaciones Inmediatas (Próximas 2 semanas)
+- [ ] **📱 PWA Básica**
+  - Manifest.json
+  - Service Worker básico
+  - Instalable en móviles
+  - *Prioridad: MEDIA*
 
-  1. Implementar toggle de newsletter (ya existe TODO en código)
-  2. Modo oscuro/claro - Mejora UX significativa
-  3. Vista previa de drafts - Fundamental para editores
-  4. Mejoras en búsqueda - Autocompletado y filtros avanzados
+### 📅 Q4 2025 - Fase 2: Engagement Avanzado
+**Objetivo**: Aumentar la retención y participación
+
+- [ ] **🔔 Sistema de Notificaciones**
+  - Notificaciones push web
+  - Email digest semanal
+  - Notificaciones in-app
+  - Preferencias personalizables
+
+- [ ] **📊 Analytics Dashboard para Autores**
+  - Vistas por post con gráficos
+  - Engagement metrics
+  - Mejor contenido performante
+  - Exportación de datos
+
+- [ ] **💬 Comentarios 2.0**
+  - Markdown en comentarios
+  - Menciones (@usuario)
+  - Reacciones con emojis
+  - Moderación avanzada
+
+- [ ] **🏆 Sistema de Gamificación**
+  - Badges por logros
+  - Puntos de reputación
+  - Leaderboard mensual
+  - Niveles de usuario
+
+### 📅 Q1 2026 - Fase 3: Content Management Pro
+**Objetivo**: Herramientas profesionales para creadores
+
+- [ ] **📅 Programación de Publicaciones**
+  - Calendario visual
+  - Publicación automática
+  - Buffer de contenido
+  - Vista de pipeline
+
+- [ ] **📝 Versionado de Contenido**
+  - Historial de cambios
+  - Comparación de versiones
+  - Restaurar versiones anteriores
+  - Colaboración en borradores
+
+- [ ] **🤖 IA Asistente de Contenido**
+  - Sugerencias de títulos
+  - Optimización SEO automática
+  - Generación de resúmenes
+  - Tags sugeridos
+
+- [ ] **📊 A/B Testing**
+  - Títulos alternativos
+  - Imágenes destacadas variantes
+  - Métricas de conversión
+
+### 📅 Q2 2026 - Fase 4: Plataforma Social
+**Objetivo**: Crear comunidad activa
+
+- [ ] **👥 Perfiles Sociales**
+  - Follow/unfollow usuarios
+  - Feed personalizado
+  - Mensajes directos
+  - Actividad timeline
+
+- [ ] **💰 Monetización**
+  - Posts premium
+  - Suscripciones mensuales
+  - Tips/donaciones
+  - Programa de afiliados
+
+- [ ] **🎥 Contenido Multimedia**
+  - Videos embebidos optimizados
+  - Galerías de imágenes
+  - Podcasts integrados
+  - Live coding sessions
+
+- [ ] **🌍 Internacionalización**
+  - Soporte multi-idioma
+  - Contenido por región
+  - Traducciones automáticas
+  - URL localizadas
+
+---
+
+## 🎯 Prioridades Inmediatas (Próximas 2-4 semanas)
+
+### 🔴 Críticas
+1. **Dark Mode** - Experiencia de usuario fundamental
+2. **Vista previa de editor** - Mejora significativa para autores
+3. **Autoguardado de borradores** - Prevenir pérdida de contenido
+
+### 🟡 Importantes
+1. **Búsqueda mejorada** - Autocompletado y filtros
+2. **PWA básica** - Instalable en móviles
+3. **Notificaciones básicas** - Al menos email
+
+### 🟢 Nice to Have
+1. **Export de datos** - Para autores
+2. **Mejoras de comentarios** - Markdown support
+3. **Performance optimizations** - Lazy loading avanzado
+
+---
+
+## 📈 Métricas de Éxito
+
+### Para v2.0 (Q4 2025)
+- 📊 +50% retención de usuarios
+- 💬 +100% engagement en comentarios
+- 📱 30% usuarios usando PWA
+- ⚡ <2s tiempo de carga promedio
+
+### Para v3.0 (Q2 2026)
+- 👥 10K usuarios activos mensuales
+- 📝 1K posts publicados
+- 💰 Primeros ingresos por monetización
+- 🌍 Soporte para 3 idiomas
+
+---
+
+## 🛠️ Stack Técnico Futuro
+
+### Consideraciones
+- **React Query/SWR** - Para cache management
+- **Algolia** - Para búsqueda avanzada
+- **Pusher/Ably** - Para real-time features
+- **Stripe** - Para monetización
+- **Cloudinary** - Para optimización de imágenes
+- **Sentry** - Para error tracking en producción
+
+---
+
+## 📝 Notas
+
+- Las fechas son tentativas y sujetas a cambios según feedback de usuarios
+- Prioridades pueden ajustarse basadas en métricas de uso
+- Cada fase incluirá testing exhaustivo antes de producción
+- La documentación se actualizará con cada release mayor
+
+---
+
+*Última actualización: Julio 2025 - v1.5.0*

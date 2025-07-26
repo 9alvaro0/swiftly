@@ -5,6 +5,78 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2025-07-26
+
+### 🚀 Added - Professional Project Management
+
+#### 🤖 **GitHub Project Management System**
+- Automated issue assignment to project boards
+- Smart auto-labeling with 15+ content-based rules
+- Professional issue templates (bug reports, feature requests, enhancements)
+- Comprehensive pull request template with checklists
+- GitHub Actions workflow for project automation
+- Strategic milestones: v1.0 MVP → v2.0 Community
+- Custom project fields: Area, Type, Priority, Size
+
+#### 🏷️ **Enhanced Labels**
+- New professional labels: epic, critical, dependencies, breaking-change, idea
+- Complete label system with 24+ organized categories
+- Auto-labeling configuration for consistent categorization
+
+#### 📞 **Community Engagement**
+- Contact links for discussions, email, and social media
+- Structured templates to improve contribution quality
+- Clear guidelines for different types of contributions
+
+### 🔧 Fixed
+
+#### 🐛 **User Registration & Firebase Permissions**
+- Fixed Firebase security rules for user creation (added missing isBanned field)
+- Added retry logic in AuthInitializer for newly registered users
+- Improved authentication state management timing
+- Added proper user profile creation flow with error handling
+
+#### 🔥 **Firebase Admin SDK Integration**
+- Migrated admin APIs to use Firebase Admin SDK instead of client SDK
+- Fixed newsletter subscribers API permissions
+- Added proper Admin SDK initialization with debugging
+- Resolved 503 errors in admin console
+
+#### 🔒 **Firebase Security Rules**
+- Simplified posts collection rules for public read access
+- Fixed permissions issues with posts navigation and slugs
+- Maintained security for user creation and author profiles
+- Removed complex rule functions that caused authentication timing issues
+
+#### 📝 **TypeScript Improvements**
+- Fixed type assertions for Firebase Timestamp objects
+- Improved type safety in newsletter API route
+- Removed unused imports causing CI failures
+
+### 🔄 Changed
+
+#### 🚀 **Deployment Process**
+- Removed automatic PR promotion to PRE/PRO environments
+- Manual control preferred for production deployments
+- Better deployment control and review process
+
+### 📝 Documentation Updates
+- Updated ROADMAP.md with current features and future plans
+- Enhanced PROJECT_STRUCTURE.md with complete architecture details
+- Updated CHANGELOG.md with recent changes
+- Added GitFlow test documentation
+
+---
+
+## [1.4.1] - 2025-07-25
+
+### 🔧 Fixed
+- Production deployment conflicts resolution
+- Newsletter permissions using client-side Firebase calls
+- User registration flow improvements
+
+---
+
 ## [1.0.0] - 2025-01-08
 
 ### 🚀 Major Release - Production Ready
