@@ -6,7 +6,6 @@ import { useEffect } from "react";
 import { useParams } from "next/navigation";
 import { usePost } from "@/hooks/usePost";
 import PostForm from "@/components/admin/posts/PostForm";
-import Spinner from "@/components/ui/Spinner";
 
 export default function EditTutorialPage() {
     const routeParams = useParams();
@@ -20,11 +19,7 @@ export default function EditTutorialPage() {
     }, [error]);
 
     if (isLoading) {
-        return (
-            <div className="p-8">
-                <Spinner />
-            </div>
-        );
+        return null;
     }
 
     return (

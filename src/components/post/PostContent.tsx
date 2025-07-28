@@ -5,6 +5,8 @@
 import { useEffect, memo, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkUnwrapImages from "remark-unwrap-images";
+import rehypeRaw from "rehype-raw";
 import Image from "next/image";
 import { CodeBlock } from "@/components/ui/CodeBlock";
 
@@ -136,7 +138,8 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
             className="prose prose-lg prose-invert max-w-none mb-12 prose-headings:text-white prose-p:text-white/80 prose-a:text-blue-400 prose-blockquote:border-blue-500 prose-blockquote:text-white/70 prose-strong:text-white prose-li:text-white/80 prose-td:text-white/80 prose-th:text-white"
         >
             <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
+                remarkPlugins={[remarkGfm, remarkUnwrapImages]}
+                rehypePlugins={[rehypeRaw]}
                 components={{
                     h1: ({ children, ...props }) => {
                         const id = slugify(children?.toString() || "");

@@ -3,7 +3,6 @@
 "use client";
 
 import { useAuthStore } from "@/store/authStore";
-import { toast } from "sonner";
 import { useState } from "react";
 import { FaSignOutAlt } from "react-icons/fa";
 
@@ -19,7 +18,6 @@ export default function ProfilePage() {
     const handleLogoutConfirm = () => {
         logout();
         setShowLogoutModal(false);
-        toast.info("Sesión cerrada correctamente");
     };
 
     return (
