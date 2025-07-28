@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 // Removed unused imports
-import Spinner from "@/components/ui/Spinner";
 
 interface ProtectedRouteProps {
     children: React.ReactNode;
@@ -55,16 +54,9 @@ export default function ProtectedRoute({
         }
     }, [isAuthenticated, isLoading, router, user, adminOnly, editorOnly, requiresContentRole, fallbackPath]);
 
-    // Show loading spinner while checking authentication
+    // Show minimal loading while checking authentication
     if (isLoading || !authChecked) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="text-center">
-                    <Spinner />
-                    <p className="mt-4 text-white/60">Verificando permisos...</p>
-                </div>
-            </div>
-        );
+        return null;
     }
 
     // Check authentication
