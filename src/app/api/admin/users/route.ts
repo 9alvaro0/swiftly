@@ -1,7 +1,7 @@
 // src/app/api/admin/users/route.ts
 import { NextRequest } from 'next/server';
 import { headers } from 'next/headers';
-import { adminDb } from '@/lib/firebase-admin';
+import { getAdminDb } from '@/lib/firebase-admin';
 import { User } from '@/types/User';
 import { serializeFirestoreData } from '@/services/firebase/utils/utils';
 
@@ -30,6 +30,9 @@ export async function GET(request: NextRequest) {
     console.log(`Admin API: Fetching users with filters - search: "${searchTerm}", role: "${role}", status: "${status}"`);
 
     try {
+      // Get Admin DB instance
+      const adminDb = await getAdminDb();
+      
       // Check if Firebase Admin is available
       if (!adminDb) {
         console.warn('Firebase Admin SDK not available, falling back to client SDK');

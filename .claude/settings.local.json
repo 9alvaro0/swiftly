@@ -42,7 +42,8 @@
       "Bash(git config:*)",
       "WebFetch(domain:medium.com)",
       "Bash(mkdir:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(curl:*)"
     ],
     "deny": []
   }

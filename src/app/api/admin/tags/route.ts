@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { adminDb } from '@/lib/firebase-admin';
+import { getAdminDb } from '@/lib/firebase-admin';
 import { headers } from 'next/headers';
 
 export async function POST(request: NextRequest) {
@@ -30,6 +30,13 @@ export async function POST(request: NextRequest) {
     // Validate slug format
     if (!/^[a-z0-9-]+$/.test(slug)) {
       return NextResponse.json({ error: 'Invalid slug format' }, { status: 400 });
+    }
+
+    // Get admin database
+    const adminDb = await getAdminDb();
+    if (!adminDb) {
+      console.error('Admin database not initialized');
+      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
     }
 
     // Check if tag already exists
@@ -65,6 +72,13 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
+    // Get admin database
+    const adminDb = await getAdminDb();
+    if (!adminDb) {
+      console.error('Admin database not initialized');
+      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
+    }
+
     const tagsSnapshot = await adminDb.collection('tags').orderBy('name').get();
     const tags = tagsSnapshot.docs.map(doc => ({
       id: doc.id,

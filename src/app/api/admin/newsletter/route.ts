@@ -1,6 +1,6 @@
 // src/app/api/admin/newsletter/route.ts
 import { NextRequest } from 'next/server';
-import { adminDb } from '@/lib/firebase-admin';
+import { getAdminDb } from '@/lib/firebase-admin';
 import NewsletterSubscriber from '@/types/NewsletterSubscriber';
 import { headers } from 'next/headers';
 
@@ -28,16 +28,19 @@ export async function GET(request: NextRequest) {
 
     console.log(`Admin API: Fetching newsletter subscribers with filters - search: "${searchTerm}", status: "${status}"`);
 
-    // Check if Admin SDK is available
-    if (!adminDb) {
-      console.error('Firebase Admin SDK not initialized');
-      return Response.json({ 
-        error: 'Service unavailable', 
-        message: 'Admin services not configured' 
-      }, { status: 503 });
-    }
-
     try {
+      // Get Admin DB instance
+      const adminDb = await getAdminDb();
+      
+      // Check if Admin SDK is available
+      if (!adminDb) {
+        console.error('Firebase Admin SDK not initialized');
+        return Response.json({ 
+          error: 'Service unavailable', 
+          message: 'Admin services not configured' 
+        }, { status: 503 });
+      }
+
       // Get all newsletter subscribers from Firestore using Admin SDK
       const subscribersSnapshot = await adminDb
         .collection('newsletterSubscribers')
@@ -140,16 +143,19 @@ export async function PUT(request: NextRequest) {
 
     console.log(`Admin API: Toggling newsletter status for subscriber ${subscriberId} from ${currentStatus} to ${!currentStatus}`);
 
-    // Check if Admin SDK is available
-    if (!adminDb) {
-      console.error('Firebase Admin SDK not initialized');
-      return Response.json({ 
-        error: 'Service unavailable', 
-        message: 'Admin services not configured' 
-      }, { status: 503 });
-    }
-
     try {
+      // Get Admin DB instance
+      const adminDb = await getAdminDb();
+      
+      // Check if Admin SDK is available
+      if (!adminDb) {
+        console.error('Firebase Admin SDK not initialized');
+        return Response.json({ 
+          error: 'Service unavailable', 
+          message: 'Admin services not configured' 
+        }, { status: 503 });
+      }
+
       // Toggle the subscription status using Admin SDK
       await adminDb
         .collection('newsletterSubscribers')

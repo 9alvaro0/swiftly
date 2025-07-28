@@ -3,6 +3,36 @@ import { db } from "../config";
 import { Tag } from "@/types/Tag"; // Importar el objeto Tag
 import { auth } from "../config";
 
+// Helper function to serialize Firestore data for client components
+function serializeTag(data: Record<string, unknown>, docId: string): Tag {
+    const tag: Tag = {
+        id: docId,
+        name: data.name as string,
+        description: (data.description as string) || '',
+    };
+
+    // Add optional fields if they exist
+    if (data.createdAt) {
+        const createdAt = data.createdAt as { toDate?: () => Date };
+        tag.createdAt = createdAt.toDate?.() || (createdAt as Date);
+    }
+    
+    if (data.updatedAt) {
+        const updatedAt = data.updatedAt as { toDate?: () => Date };
+        tag.updatedAt = updatedAt.toDate?.() || (updatedAt as Date);
+    }
+    
+    if (data.slug) {
+        tag.slug = data.slug as string;
+    }
+    
+    if (data.postCount !== undefined) {
+        tag.postCount = data.postCount as number;
+    }
+
+    return tag;
+}
+
 // Colección de Firestore
 const tagsCollection = collection(db, "tags");
 
@@ -64,9 +94,9 @@ export const getTagById = async (tagId: string): Promise<Tag | null> => {
         const snapshot = await getDoc(docRef);
         
         if (snapshot.exists()) {
-            const tagData = snapshot.data() as Tag;
+            const tagData = snapshot.data();
             console.log(`Tag retrieved successfully: ${tagId}`);
-            return tagData;
+            return serializeTag(tagData, tagId);
         }
         
         console.log(`Tag not found: ${tagId}`);
@@ -102,8 +132,8 @@ export const getAllTags = async (
                 }
             })
             .map((doc) => {
-                const tagData = doc.data() as Tag;
-                return tagData;
+                const tagData = doc.data();
+                return serializeTag(tagData, doc.id);
             });
             
         console.log(`Retrieved ${tags.length} tags${searchTerm ? ` matching "${searchTerm}"` : ''}`);
