@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { getAllTags, getTagById, createTag, updateTag, deleteTag } from "@/services/firebase/firestore/tags";
+import { getAllTags, getTagById, createTagViaAPI, updateTag, deleteTag } from "@/services/firebase/firestore/tags";
 import { Tag } from "@/types/Tag";
 
 interface TagsFilters {
@@ -91,7 +91,11 @@ export function useTags(options: UseTagsOptions = {}): UseTagsReturn {
     // Función para crear un nuevo tag
     const createNewTag = async (tag: Tag): Promise<void> => {
         try {
-            await createTag(tag);
+            await createTagViaAPI({
+                name: tag.name,
+                slug: tag.id,
+                description: tag.description
+            });
             await fetchTags(); // Refrescar la lista después de crear
         } catch (err) {
             setError(err instanceof Error ? err : new Error("Error al crear el tag"));

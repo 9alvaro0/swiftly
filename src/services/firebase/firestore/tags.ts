@@ -1,9 +1,73 @@
 import { collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../config";
 import { Tag } from "@/types/Tag"; // Importar el objeto Tag
+import { auth } from "../config";
+
+// Helper function to serialize Firestore data for client components
+function serializeTag(data: Record<string, unknown>, docId: string): Tag {
+    const tag: Tag = {
+        id: docId,
+        name: data.name as string,
+        description: (data.description as string) || '',
+    };
+
+    // Add optional fields if they exist
+    if (data.createdAt) {
+        const createdAt = data.createdAt as { toDate?: () => Date };
+        tag.createdAt = createdAt.toDate?.() || (createdAt as Date);
+    }
+    
+    if (data.updatedAt) {
+        const updatedAt = data.updatedAt as { toDate?: () => Date };
+        tag.updatedAt = updatedAt.toDate?.() || (updatedAt as Date);
+    }
+    
+    if (data.slug) {
+        tag.slug = data.slug as string;
+    }
+    
+    if (data.postCount !== undefined) {
+        tag.postCount = data.postCount as number;
+    }
+
+    return tag;
+}
 
 // Colección de Firestore
 const tagsCollection = collection(db, "tags");
+
+// Crear un tag usando la API admin (evita problemas de permisos)
+export const createTagViaAPI = async (tagData: { name: string; slug: string; description?: string }): Promise<Tag> => {
+    try {
+        const user = auth.currentUser;
+        if (!user) {
+            throw new Error("User not authenticated");
+        }
+
+        const token = await user.getIdToken();
+        
+        const response = await fetch('/api/admin/tags', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(tagData)
+        });
+
+        const result = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(result.error || 'Failed to create tag');
+        }
+
+        console.log(`Tag created successfully via API: ${result.tag.id}`);
+        return result.tag;
+    } catch (error) {
+        console.error("Error creating tag via API:", error);
+        throw new Error(`Failed to create tag: ${error instanceof Error ? error.message : String(error)}`);
+    }
+};
 
 // Crear un tag
 export const createTag = async (tag: Tag): Promise<void> => {
@@ -30,9 +94,9 @@ export const getTagById = async (tagId: string): Promise<Tag | null> => {
         const snapshot = await getDoc(docRef);
         
         if (snapshot.exists()) {
-            const tagData = snapshot.data() as Tag;
+            const tagData = snapshot.data();
             console.log(`Tag retrieved successfully: ${tagId}`);
-            return tagData;
+            return serializeTag(tagData, tagId);
         }
         
         console.log(`Tag not found: ${tagId}`);
@@ -68,8 +132,8 @@ export const getAllTags = async (
                 }
             })
             .map((doc) => {
-                const tagData = doc.data() as Tag;
-                return tagData;
+                const tagData = doc.data();
+                return serializeTag(tagData, doc.id);
             });
             
         console.log(`Retrieved ${tags.length} tags${searchTerm ? ` matching "${searchTerm}"` : ''}`);
