@@ -56,9 +56,21 @@ export const createComment = async (commentData: CreateCommentData, author: Comm
             cleanAuthor.avatar = author.avatar;
         }
         
-        const newComment = {
+        const newComment: {
+            postId: string;
+            parentId?: string;
+            content: string;
+            author: typeof cleanAuthor;
+            authorId: string;
+            createdAt: ReturnType<typeof serverTimestamp>;
+            updatedAt: ReturnType<typeof serverTimestamp>;
+            isEdited: boolean;
+            isApproved: boolean;
+            likes: number;
+            likedBy: string[];
+            replyCount: number;
+        } = {
             postId: commentData.postId,
-            parentId: commentData.parentId,
             content: commentData.content.trim(),
             author: cleanAuthor,
             authorId: author.id, // Agregar campo authorId para queries más eficientes
@@ -70,6 +82,11 @@ export const createComment = async (commentData: CreateCommentData, author: Comm
             likedBy: [],
             replyCount: 0,
         };
+
+        // Solo agregar parentId si está definido
+        if (commentData.parentId) {
+            newComment.parentId = commentData.parentId;
+        }
 
         await setDoc(doc(commentsCollection, commentId), newComment);
 
