@@ -167,11 +167,29 @@ service cloud.firestore {
                        incomingData().content is string &&
                        incomingData().isPublished is bool;
       
-      // Actualización: autor del post o admin
-      allow update: if isAuthenticated() &&
-                       (request.auth.uid == resource.data.authorId || 
-                        request.auth.token.email == '9alvaro0@gmail.com') &&
-                       incomingData().authorId == resource.data.authorId; // No cambiar autor
+      // Actualización: autor del post, admin, o actualizaciones de like/views
+      allow update: if (
+                         // Autor del post o admin pueden actualizar todo (requiere autenticación)
+                         isAuthenticated() &&
+                         (request.auth.uid == resource.data.authorId || 
+                          request.auth.token.email == '9alvaro0@gmail.com') &&
+                         incomingData().authorId == resource.data.authorId
+                       ) ||
+                       (
+                         // Usuarios autenticados pueden actualizar likes y views
+                         isAuthenticated() &&
+                         request.resource.data.diff(resource.data).affectedKeys()
+                          .hasOnly(['likedBy', 'views']) &&
+                         incomingData().authorId == resource.data.authorId
+                       ) ||
+                       (
+                         // Usuarios NO autenticados solo pueden incrementar views
+                         !isAuthenticated() &&
+                         request.resource.data.diff(resource.data).affectedKeys()
+                          .hasOnly(['views']) &&
+                         incomingData().authorId == resource.data.authorId &&
+                         incomingData().views == resource.data.views + 1 // Solo incremento de 1
+                       );
       
       // Eliminación: admin o autor del post
       allow delete: if isAuthenticated() &&
