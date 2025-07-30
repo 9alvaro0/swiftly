@@ -338,3 +338,71 @@ export const getAllPublishedPostsWithAuthor = async (filters: PostFilters): Prom
         return [];
     }
 };
+
+// Obtener posts por IDs con datos del autor
+export const getPostsByIds = async (postIds: string[]): Promise<PostWithAuthor[]> => {
+    try {
+        if (!postIds.length) return [];
+        
+        // Get posts in parallel
+        const posts = await Promise.all(
+            postIds.map(async (id) => {
+                try {
+                    return await getPostById(id);
+                } catch (error) {
+                    console.warn(`Error getting post with ID ${id}:`, error);
+                    return undefined;
+                }
+            })
+        );
+        
+        // Filter out undefined posts and populate authors
+        const validPosts = posts.filter((post): post is Post => post !== undefined);
+        
+        const postsWithAuthor = await Promise.all(
+            validPosts.map(async (post) => {
+                const postWithAuthor = await populatePostAuthor(post);
+                return postWithAuthor;
+            })
+        );
+        
+        return postsWithAuthor.filter((post): post is PostWithAuthor => post !== null);
+    } catch (error) {
+        console.error("Error getting posts by IDs:", error);
+        return [];
+    }
+};
+
+// Obtener posts que el usuario ha dado like
+export const getUserLikedPosts = async (userStats: { likes: string[] } | undefined): Promise<PostWithAuthor[]> => {
+    try {
+        if (!userStats?.likes?.length) return [];
+        
+        // Get posts by liked post IDs, most recent first
+        const likedPostIds = [...userStats.likes].reverse(); // Most recent likes first
+        const posts = await getPostsByIds(likedPostIds);
+        
+        // Filter only published posts
+        return posts.filter(post => post.isPublished);
+    } catch (error) {
+        console.error("Error getting user liked posts:", error);
+        return [];
+    }
+};
+
+// Obtener posts que el usuario ha visto recientemente
+export const getUserViewedPosts = async (userStats: { views: string[] } | undefined): Promise<PostWithAuthor[]> => {
+    try {
+        if (!userStats?.views?.length) return [];
+        
+        // Get posts by viewed post IDs, most recent first (last 20 views)
+        const recentViewedIds = [...userStats.views].reverse().slice(0, 20); // Last 20 views
+        const posts = await getPostsByIds(recentViewedIds);
+        
+        // Filter only published posts
+        return posts.filter(post => post.isPublished);
+    } catch (error) {
+        console.error("Error getting user viewed posts:", error);
+        return [];
+    }
+};

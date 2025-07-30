@@ -24,10 +24,13 @@ export function useProfileEditor() {
     };
 
     const handleCloseModal = (): void => {
+        // Resetear todos los estados de forma sincronizada
         setIsEditingField(null);
+        setEditingValue("");
         setImagePreview(null);
         setUploadProgress(0);
         setUploadError(null);
+        setIsUploading(false);
     };
 
     const handleSaveField = async (): Promise<void> => {
@@ -36,7 +39,7 @@ export function useProfileEditor() {
                 // Only update if value actually changed
                 const currentValue = user[isEditingField as keyof User];
                 if (currentValue === editingValue) {
-                    setIsEditingField(null);
+                    handleCloseModal();
                     return;
                 }
                 
@@ -48,7 +51,8 @@ export function useProfileEditor() {
                 await updateUser(user.uid, { [isEditingField]: editingValue });
                 
                 toast.success(`${isEditingField === 'bio' ? 'Biografía' : 'Campo'} actualizado correctamente`);
-                setIsEditingField(null);
+                // Usar handleCloseModal para cerrar de forma consistente
+                handleCloseModal();
             } catch (error) {
                 console.error('Error updating user field:', error);
                 toast.error('Error al actualizar el perfil');
@@ -64,8 +68,7 @@ export function useProfileEditor() {
                 if (isEditingField === "photo") {
                     // Only update if photo URL actually changed
                     if (user.photoURL === imagePreview) {
-                        setIsEditingField(null);
-                        setImagePreview(null);
+                        handleCloseModal();
                         return;
                     }
                     
@@ -78,8 +81,7 @@ export function useProfileEditor() {
                     
                     toast.success('Foto de perfil actualizada correctamente');
                 }
-                setIsEditingField(null);
-                setImagePreview(null);
+                handleCloseModal();
             } catch (error) {
                 console.error('Error updating profile photo:', error);
                 toast.error('Error al actualizar la foto de perfil');

@@ -43,7 +43,8 @@
       "WebFetch(domain:medium.com)",
       "Bash(mkdir:*)",
       "Bash(ls:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(npm run typecheck:*)"
     ],
     "deny": []
   }
