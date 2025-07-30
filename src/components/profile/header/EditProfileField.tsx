@@ -70,11 +70,16 @@ export default function EditProfileField({
         }
     };
 
+    // Evitar renderizar si no hay fieldName válido
+    if (!fieldName || !fieldLabels[fieldName]) {
+        return null;
+    }
+
     return (
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            title={`Editar ${fieldLabels[fieldName || ""]}`}
+            title={`Editar ${fieldLabels[fieldName]}`}
             footer={footer}
         >
             <div className="w-full py-4">
@@ -83,7 +88,7 @@ export default function EditProfileField({
                         htmlFor={`edit-${fieldName}`}
                         className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                        {fieldLabels[fieldName || ""]}
+                        {fieldLabels[fieldName]}
                     </label>
                     {fieldName === "bio" && (
                         <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
