@@ -11,6 +11,8 @@ import Input from "../ui/Input";
 import { FiEye, FiEyeOff, FiMail } from "react-icons/fi";
 import Checkbox from "../ui/Checkbox";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function LoginForm() {
     const router = useRouter();
     const [email, setEmail] = useState("");
@@ -18,25 +20,57 @@ export default function LoginForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
+
+    const validate = (): boolean => {
+        const errors: { email?: string; password?: string } = {};
+
+        if (!email.trim()) {
+            errors.email = "El email es obligatorio.";
+        } else if (!EMAIL_REGEX.test(email)) {
+            errors.email = "Introduce un email válido.";
+        }
+
+        if (!password) {
+            errors.password = "La contraseña es obligatoria.";
+        } else if (password.length < 6) {
+            errors.password = "La contraseña debe tener al menos 6 caracteres.";
+        }
+
+        setFieldErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError(null);
+
+        if (!validate()) return;
+
         setIsLoading(true);
 
         try {
             await loginWithEmailAndPassword(email, password);
             router.push("/");
-        } catch (error) {
-            handleFirebaseError(error, "Email Login");
+        } catch (err) {
+            const msg = handleFirebaseError(err, "Email Login");
+            setError(msg);
         } finally {
             setIsLoading(false);
         }
+    };
+
+    const clearFieldError = (field: "email" | "password") => {
+        setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
+        setError(null);
     };
 
     return (
         <form
             onSubmit={handleSubmit}
             className="space-y-6"
+            noValidate
         >
             <div>
                 <Input
@@ -49,23 +83,37 @@ export default function LoginForm() {
                     autoComplete="email"
                     required
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                        setEmail(e.target.value);
+                        clearFieldError("email");
+                    }}
                 />
+                {fieldErrors.email && (
+                    <p className="text-red-400 text-sm mt-1">{fieldErrors.email}</p>
+                )}
             </div>
 
-            <Input
-                id="password"
-                label="Contraseña"
-                placeholder="••••••••"
-                icon={showPassword ? <FiEyeOff /> : <FiEye />}
-                name="password"
-                type={showPassword ? "text" : "password"}
-                autoComplete="current-password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onIconClick={() => setShowPassword(!showPassword)}
-            />
+            <div>
+                <Input
+                    id="password"
+                    label="Contraseña"
+                    placeholder="••••••••"
+                    icon={showPassword ? <FiEyeOff /> : <FiEye />}
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
+                    required
+                    value={password}
+                    onChange={(e) => {
+                        setPassword(e.target.value);
+                        clearFieldError("password");
+                    }}
+                    onIconClick={() => setShowPassword(!showPassword)}
+                />
+                {fieldErrors.password && (
+                    <p className="text-red-400 text-sm mt-1">{fieldErrors.password}</p>
+                )}
+            </div>
 
             <div className="flex items-center">
                 <Checkbox
@@ -76,6 +124,12 @@ export default function LoginForm() {
                     onChange={(e) => setRememberMe(e.target.checked)}
                 />
             </div>
+
+            {error && (
+                <div className="bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3 text-red-400 text-sm">
+                    {error}
+                </div>
+            )}
 
             <button
                 type="submit"

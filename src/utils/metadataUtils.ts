@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: GenerateMetadataProps): Promi
         };
     }
 
-    const url = `${siteUrl}/${post.type === "article" ? "posts" : "tutorial"}/${slug}`;
+    const url = `${siteUrl}/${post.type === "article" ? "posts" : "tutorials"}/${slug}`;
 
     return {
         title: post.title,

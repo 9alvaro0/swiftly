@@ -1,21 +1,61 @@
 // src/components/auth/RecoverForm.tsx
 
+"use client";
+
 import { useState } from "react";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "@/services/firebase/config";
+import { handleFirebaseError } from "@/services/firebase/errors";
 import Input from "@/components/ui/Input";
 import Spinner from "@/components/ui/Spinner";
 import { FiMail } from "react-icons/fi";
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function RecoverForm() {
     const [email, setEmail] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [emailError, setEmailError] = useState<string | null>(null);
+
+    const validate = (): boolean => {
+        if (!email.trim()) {
+            setEmailError("El email es obligatorio.");
+            return false;
+        }
+        if (!EMAIL_REGEX.test(email)) {
+            setEmailError("Introduce un email válido.");
+            return false;
+        }
+        setEmailError(null);
+        return true;
+    };
 
     const handleSubmitRecover = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError(null);
+
+        if (!validate()) return;
+
         setIsLoading(true);
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        setIsSubmitted(true);
-        setIsLoading(false);
+
+        try {
+            await sendPasswordResetEmail(auth, email);
+            setIsSubmitted(true);
+        } catch (err) {
+            // Show generic success message even on user-not-found to avoid email enumeration.
+            // Only show errors for actual failures (network, rate limit, etc.)
+            const firebaseErr = err as { code?: string };
+            if (firebaseErr.code === "auth/user-not-found") {
+                setIsSubmitted(true);
+            } else {
+                const msg = handleFirebaseError(err, "Password Recovery");
+                setError(msg);
+            }
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -24,19 +64,35 @@ export default function RecoverForm() {
                 <form
                     onSubmit={handleSubmitRecover}
                     className="space-y-6"
+                    noValidate
                 >
-                    <Input
-                        id="email"
-                        label="Email"
-                        placeholder="tu@email.com"
-                        icon={<FiMail className="h-5 w-5 text-gray-400" />}
-                        name="email"
-                        type="email"
-                        autoComplete="email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
+                    <div>
+                        <Input
+                            id="email"
+                            label="Email"
+                            placeholder="tu@email.com"
+                            icon={<FiMail className="h-5 w-5 text-gray-400" />}
+                            name="email"
+                            type="email"
+                            autoComplete="email"
+                            required
+                            value={email}
+                            onChange={(e) => {
+                                setEmail(e.target.value);
+                                setEmailError(null);
+                                setError(null);
+                            }}
+                        />
+                        {emailError && (
+                            <p className="text-red-400 text-sm mt-1">{emailError}</p>
+                        )}
+                    </div>
+
+                    {error && (
+                        <div className="bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3 text-red-400 text-sm">
+                            {error}
+                        </div>
+                    )}
 
                     <button
                         type="submit"
@@ -64,7 +120,10 @@ export default function RecoverForm() {
                         tu contraseña.
                     </p>
                     <button
-                        onClick={() => setIsSubmitted(false)}
+                        onClick={() => {
+                            setIsSubmitted(false);
+                            setError(null);
+                        }}
                         className="text-blue-400 hover:text-blue-300 transition-colors"
                     >
                         Probar con otro correo

@@ -1,9 +1,9 @@
 // src/app/tutorials/[slug]/page.tsx
 
 import PostDetail from "@/components/post/PostDetail";
-import DetailError from "@/components/tutorials/DetailError";
 import { getPostBySlugWithAuthor } from "@/services/firebase/firestore/post";
 import { generateMetadata as generatePostMetadata } from "@/utils/metadataUtils";
+import { notFound } from "next/navigation";
 
 export const generateMetadata = generatePostMetadata;
 
@@ -20,7 +20,7 @@ export default async function TutorialDetailPage(props: PageProps) {
     const tutorial = await getPostBySlugWithAuthor(slug);
 
     if (!tutorial) {
-        return <DetailError />;
+        notFound();
     }
 
     return (
