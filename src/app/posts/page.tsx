@@ -1,6 +1,12 @@
 // src/app/posts/page.tsx
 
+import type { Metadata } from "next";
 import PostsHeader from "@/components/posts/PostsHeader";
+
+export const metadata: Metadata = {
+    title: "Artículos - aprendeSwift",
+    description: "Artículos sobre Swift, SwiftUI, y desarrollo iOS.",
+};
 import PostsList from "@/components/posts/PostsList";
 import PostsListSkeleton from "@/components/posts/skeletons/PostsListSkeleton";
 import ContentPageLayout from "@/components/shared/ContentPageLayout";

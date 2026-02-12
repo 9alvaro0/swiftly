@@ -1,6 +1,12 @@
 // src/app/page.tsx
 
+import type { Metadata } from "next";
 import HeroSection from "@/components/home/HeroSection";
+
+export const metadata: Metadata = {
+    title: "aprendeSwift - Tutoriales de Swift y SwiftUI",
+    description: "Publicaciones, guías y tutoriales para aprender Swift y SwiftUI de manera efectiva.",
+};
 import FeaturedTutorials from "@/components/home/FeaturedTutorials";
 import LatestPosts from "@/components/home/latestPosts/LatestPosts";
 import NewsletterSignup from "@/components/home/NewsletterSignup";
@@ -8,9 +14,8 @@ import { Suspense } from "react";
 import FeaturedTutorialsSkeleton from "@/components/home/skeletons/FeaturedTutorialsSkeleton";
 import LatestPostsSkeleton from "@/components/home/skeletons/LatestPostsSkeleton";
 
-// Disable caching for this page
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// ISR: revalidate every 60 seconds
+export const revalidate = 60;
 
 export default async function Home() {
     return (

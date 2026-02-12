@@ -1,6 +1,12 @@
 // src/app/tutorials/page.tsx
 
+import type { Metadata } from "next";
 import TutorialsHeader from "@/components/tutorials/TutorialsHeader";
+
+export const metadata: Metadata = {
+    title: "Tutoriales - aprendeSwift",
+    description: "Tutoriales paso a paso de Swift y SwiftUI para todos los niveles.",
+};
 import TutorialsList from "@/components/tutorials/TutorialsList";
 import TutorialListSkeleton from "@/components/tutorials/skeletons/TutorialListSkeleton";
 import ContentPageLayout from "@/components/shared/ContentPageLayout";

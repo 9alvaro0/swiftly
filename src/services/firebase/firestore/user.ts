@@ -9,6 +9,7 @@ import {
     updateDoc,
     query,
     orderBy,
+    limit,
     Timestamp,
     arrayUnion,
     FieldValue,
@@ -256,7 +257,7 @@ export const incrementUserStat = async (uid: string, stat: keyof User["stats"], 
 // Obtener todos los usuarios
 export const getAllUsers = async (searchTerm: string = "", role: string = "", status: string = ""): Promise<User[]> => {
     try {
-        const q = query(usersCollection, orderBy("createdAt", "desc"));
+        const q = query(usersCollection, orderBy("createdAt", "desc"), limit(500));
         const querySnapshot = await getDocs(q);
 
         const users = querySnapshot.docs

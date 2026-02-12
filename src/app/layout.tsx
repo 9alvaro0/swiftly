@@ -32,26 +32,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html lang="es">
             <head>
-                {/* Feed discovery links */}
-                <link
-                    rel="alternate"
-                    type="application/rss+xml"
-                    title="aprendeSwift Blog RSS Feed"
-                    href="/feed.xml"
-                />
-                <link
-                    rel="alternate"
-                    type="application/atom+xml"
-                    title="aprendeSwift Blog Atom Feed"
-                    href="/atom.xml"
-                />
-                <link
-                    rel="alternate"
-                    type="application/feed+json"
-                    title="aprendeSwift Blog JSON Feed"
-                    href="/feed.json"
-                />
-                
                 {/* Preconnect to external domains for performance */}
                 <link rel="preconnect" href="https://firebasestorage.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.googleapis.com" />

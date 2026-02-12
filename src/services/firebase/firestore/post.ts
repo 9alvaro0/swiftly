@@ -109,7 +109,7 @@ export const getPostsByTag = async (tag: string): Promise<Post[]> => {
 // Obtener todos los posts
 export const getAllPosts = async (): Promise<Post[]> => {
     try {
-        const q = query(postsCollection, orderBy("createdAt", "desc"));
+        const q = query(postsCollection, orderBy("createdAt", "desc"), limit(200));
         const snapshot = await getDocs(q);
         return snapshot.docs.map((doc) => {
             return serializePost(doc.data() as Post);
@@ -135,7 +135,8 @@ export const getAllPublishedPosts = async (filters: PostFilters): Promise<Post[]
         // Use simple query that doesn't require composite indexes
         const q = query(
             postsCollection,
-            where("isPublished", "==", true)
+            where("isPublished", "==", true),
+            limit(200)
         );
         
         const snapshot = await getDocs(q);
@@ -285,6 +286,38 @@ export const incrementPostViews = async (postId: string): Promise<{ views: numbe
 
 // === FUNCTIONS WITH POPULATED AUTHOR DATA ===
 
+// Batch populate authors to avoid N+1 queries
+const batchPopulateAuthors = async (posts: Post[]): Promise<PostWithAuthor[]> => {
+    if (posts.length === 0) return [];
+
+    // Get unique author IDs
+    const uniqueAuthorIds = [...new Set(posts.map(p => p.authorId))];
+
+    // Fetch all unique authors in parallel
+    const authorEntries = await Promise.all(
+        uniqueAuthorIds.map(async (authorId) => {
+            try {
+                const author = await getAuthor(authorId);
+                return [authorId, author] as const;
+            } catch (error) {
+                console.error(`Error fetching author ${authorId}:`, error);
+                return [authorId, null] as const;
+            }
+        })
+    );
+
+    const authorMap = new Map(authorEntries);
+
+    // Map posts to PostWithAuthor using the author map
+    const results: PostWithAuthor[] = [];
+    for (const post of posts) {
+        const author = authorMap.get(post.authorId);
+        if (!author) continue;
+        const { authorId: _, ...rest } = post;
+        results.push({ ...rest, author });
+    }
+    return results;
+};
 
 // Obtener un post por slug con datos del autor
 export const getPostBySlugWithAuthor = async (slug: string): Promise<PostWithAuthor | undefined> => {
@@ -305,15 +338,7 @@ export const getPostBySlugWithAuthor = async (slug: string): Promise<PostWithAut
 export const getAllPostsWithAuthor = async (): Promise<PostWithAuthor[]> => {
     try {
         const posts = await getAllPosts();
-        
-        const postsWithAuthor = await Promise.all(
-            posts.map(async (post) => {
-                const postWithAuthor = await populatePostAuthor(post);
-                return postWithAuthor;
-            })
-        );
-        
-        return postsWithAuthor.filter((post): post is PostWithAuthor => post !== null);
+        return batchPopulateAuthors(posts);
     } catch (error) {
         console.error("Error getting all posts with author:", error);
         return [];
@@ -324,15 +349,7 @@ export const getAllPostsWithAuthor = async (): Promise<PostWithAuthor[]> => {
 export const getAllPublishedPostsWithAuthor = async (filters: PostFilters): Promise<PostWithAuthor[]> => {
     try {
         const posts = await getAllPublishedPosts(filters);
-        
-        const postsWithAuthor = await Promise.all(
-            posts.map(async (post) => {
-                const postWithAuthor = await populatePostAuthor(post);
-                return postWithAuthor;
-            })
-        );
-        
-        return postsWithAuthor.filter((post): post is PostWithAuthor => post !== null);
+        return batchPopulateAuthors(posts);
     } catch (error) {
         console.error("Error getting published posts with author:", error);
         return [];
@@ -343,7 +360,7 @@ export const getAllPublishedPostsWithAuthor = async (filters: PostFilters): Prom
 export const getPostsByIds = async (postIds: string[]): Promise<PostWithAuthor[]> => {
     try {
         if (!postIds.length) return [];
-        
+
         // Get posts in parallel
         const posts = await Promise.all(
             postIds.map(async (id) => {
@@ -355,18 +372,10 @@ export const getPostsByIds = async (postIds: string[]): Promise<PostWithAuthor[]
                 }
             })
         );
-        
-        // Filter out undefined posts and populate authors
+
+        // Filter out undefined posts and batch populate authors
         const validPosts = posts.filter((post): post is Post => post !== undefined);
-        
-        const postsWithAuthor = await Promise.all(
-            validPosts.map(async (post) => {
-                const postWithAuthor = await populatePostAuthor(post);
-                return postWithAuthor;
-            })
-        );
-        
-        return postsWithAuthor.filter((post): post is PostWithAuthor => post !== null);
+        return batchPopulateAuthors(validPosts);
     } catch (error) {
         console.error("Error getting posts by IDs:", error);
         return [];

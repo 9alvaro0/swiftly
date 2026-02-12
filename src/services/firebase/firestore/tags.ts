@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, query, limit } from "firebase/firestore";
 import { db } from "../config";
 import { Tag } from "@/types/Tag"; // Importar el objeto Tag
 import { auth } from "../config";
@@ -115,7 +115,8 @@ export const getAllTags = async (
     searchTerm: string = "",
 ): Promise<Tag[]> => {
     try {
-        const snapshot = await getDocs(tagsCollection);
+        const q = query(tagsCollection, limit(200));
+        const snapshot = await getDocs(q);
         
         const tags = snapshot.docs
             .filter((doc) => {

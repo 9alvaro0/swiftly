@@ -11,10 +11,10 @@
 
 | Severidad | Total | Resueltos | Pendientes |
 |-----------|-------|-----------|------------|
-| CRITICO   | 20    | 7         | 13         |
-| MEDIO     | 45    | 0         | 45         |
+| CRITICO   | 20    | 17        | 3          |
+| MEDIO     | 45    | 11        | 34         |
 | LEVE      | 23    | 1         | 22         |
-| **TOTAL** | **88**| **8**     | **80**     |
+| **TOTAL** | **88**| **29**    | **59**     |
 
 ### Cosas bien hechas
 
@@ -47,7 +47,7 @@
 | C-03 | ~~Admin Tags GET sin autenticacion~~ - Agregado `verifyAdminToken()` al GET | `api/admin/tags/route.ts` | RESUELTO |
 | C-04 | ~~SEO API sin auth, sin validacion~~ - Agregado `verifyAdminToken()` + validacion Zod + auth header en cliente | `api/generate-seo/route.ts`, `seoClient.ts` | RESUELTO |
 | C-05 | ~~Newsletter Welcome como relay de spam~~ - Verifica suscripcion activa en Firestore + recencia <5min + rate limit | `api/newsletter/welcome/route.ts`, `middleware.ts` | RESUELTO |
-| C-06 | XSS almacenado via `rehype-raw` ~~sin sanitizacion~~ + CSP tiene `unsafe-inline` y `unsafe-eval` | `PostContent.tsx`, `middleware.ts` | PARCIAL (rehype-sanitize agregado, CSP pendiente) |
+| C-06 | ~~XSS almacenado via `rehype-raw` sin sanitizacion + CSP `unsafe-inline`~~ - rehype-sanitize + CSP nonce-based (script-src) | `PostContent.tsx`, `middleware.ts` | RESUELTO |
 | C-07 | Rate limiting en memoria NO funciona en produccion - Cloud Run multi-instancia, cada instancia tiene Map vacio | `middleware.ts` | PENDIENTE |
 | C-08 | ~~`"use server"` incorrecto en API route~~ - Eliminado de generate-seo/route.ts | `api/generate-seo/route.ts` | RESUELTO |
 
@@ -55,27 +55,27 @@
 
 | ID | Issue | Archivo(s) | Estado |
 |----|-------|-----------|--------|
-| C-09 | API keys Firebase hardcodeadas en source code en vez de env vars | `firebaseConfig.ts` | PENDIENTE |
+| C-09 | ~~API keys Firebase hardcodeadas en source code~~ - Movido a NEXT_PUBLIC_* env vars | `firebaseConfig.ts` | RESUELTO |
 | C-10 | ~~Credenciales Google App Password en `.env` en texto plano~~ - Eliminadas de .env | `.env` | RESUELTO |
-| C-11 | Email admin hardcodeado en security rules - Single point of failure | `firestore.rules`, `storage.rules` | PENDIENTE |
+| C-11 | ~~Email admin hardcodeado en security rules~~ - Eliminado, ahora usa hasRole('admin') / RBAC | `firestore.rules`, `storage.rules` | RESUELTO |
 
 ### Next.js / Arquitectura
 
 | ID | Issue | Archivo(s) | Estado |
 |----|-------|-----------|--------|
-| C-12 | CERO archivos `error.tsx` en todo el proyecto - Cualquier error crashea la pagina | Todas las rutas | PENDIENTE |
-| C-13 | CERO archivos `not-found.tsx` - Paginas inexistentes devuelven HTTP 200 en vez de 404 | `posts/[slug]`, `tutorials/[slug]` | PENDIENTE |
+| C-12 | ~~CERO archivos `error.tsx`~~ - Creado root + posts/[slug] + tutorials/[slug] error boundaries | Todas las rutas | RESUELTO |
+| C-13 | ~~CERO archivos `not-found.tsx`~~ - Creado root not-found + notFound() en slug pages (HTTP 404) | `posts/[slug]`, `tutorials/[slug]` | RESUELTO |
 
 ### UI / Accesibilidad
 
 | ID | Issue | Archivo(s) | Estado |
 |----|-------|-----------|--------|
-| C-14 | Modal sin focus trap, sin Escape key, sin aria-labelledby | `Modal.tsx` | PENDIENTE |
-| C-15 | Select custom sin ARIA roles, sin navegacion por teclado | `Select.tsx` | PENDIENTE |
+| C-14 | ~~Modal sin focus trap, sin Escape key, sin aria-labelledby~~ - Agregado focus trap, Escape, aria-labelledby, focus restore | `Modal.tsx` | RESUELTO |
+| C-15 | ~~Select custom sin ARIA roles, sin navegacion por teclado~~ - Agregado combobox/listbox roles, keyboard nav completa | `Select.tsx` | RESUELTO |
 | C-16 | Mobile nav sin gestion de foco | `MobileNav.tsx` | PENDIENTE |
-| C-17 | LoginForm SIN feedback de error visible al usuario | `LoginForm.tsx` | PENDIENTE |
-| C-18 | RecoverForm es FAKE - Usa setTimeout, nunca llama a Firebase reset | `RecoverForm.tsx` | PENDIENTE |
-| C-19 | LoginForm sin validacion client-side (ni email ni password) | `LoginForm.tsx` | PENDIENTE |
+| C-17 | ~~LoginForm SIN feedback de error visible~~ - Error banner + inline field errors | `LoginForm.tsx` | RESUELTO |
+| C-18 | ~~RecoverForm es FAKE~~ - Implementado sendPasswordResetEmail real + error handling | `RecoverForm.tsx` | RESUELTO |
+| C-19 | ~~LoginForm sin validacion client-side~~ - Email regex + password min 6 chars | `LoginForm.tsx` | RESUELTO |
 | C-20 | PostsFiltersMobile drawer sin accesibilidad (sin role, sin focus trap, sin Escape) | `PostsFiltersMobile.tsx` | PENDIENTE |
 
 ---
@@ -87,41 +87,41 @@
 | ID | Issue | Archivo | Estado |
 |----|-------|---------|--------|
 | M-01 | Email HTML injection en plantillas de contacto y newsletter | `emailService.ts` | PENDIENTE |
-| M-02 | CSP debilitado por `unsafe-inline` + `unsafe-eval` | `middleware.ts` | PENDIENTE |
-| M-03 | Falta header HSTS (Strict-Transport-Security) | `middleware.ts` | PENDIENTE |
+| M-02 | ~~CSP debilitado por `unsafe-inline`~~ - script-src usa nonce-based, style-src mantiene unsafe-inline (Tailwind v4) | `middleware.ts` | RESUELTO |
+| M-03 | ~~Falta header HSTS~~ - Agregado max-age=31536000; includeSubDomains | `middleware.ts` | RESUELTO |
 | M-04 | OpenAI API key potencialmente en Firestore | `ai/config.ts` | PENDIENTE |
 | M-05 | `@types/uuid` en dependencies en vez de devDependencies | `package.json` | PENDIENTE |
-| M-06 | Falta header `Permissions-Policy` | `middleware.ts` | PENDIENTE |
-| M-07 | Email admin hardcodeado en rules (no escalable) | `firestore.rules` | PENDIENTE |
+| M-06 | ~~Falta header `Permissions-Policy`~~ - Agregado geolocation=(), microphone=(), camera=(), payment=(), usb=() | `middleware.ts` | RESUELTO |
+| M-07 | ~~Email admin hardcodeado en rules~~ - Eliminado, ahora usa RBAC | `firestore.rules` | RESUELTO |
 
 ### Firebase / Data
 
 | ID | Issue | Archivo | Estado |
 |----|-------|---------|--------|
 | M-08 | View increment sin auth, sin rate limit (abusable) | `firestore.rules`, `post.ts` | PENDIENTE |
-| M-09 | `getAllPosts/Users/Tags` sin limit ni paginacion - Costo crece sin control | `post.ts`, `tags.ts`, `user.ts` | PENDIENTE |
-| M-10 | Filtrado client-side en vez de queries indexados | `post.ts`, `user.ts` | PENDIENTE |
-| M-11 | Archivo `firestore.indexes.json` VACIO - Sin composite indexes | `firestore.indexes.json` | PENDIENTE |
+| M-09 | ~~`getAllPosts/Users/Tags` sin limit~~ - Agregado limit(200/500) como safety cap | `post.ts`, `tags.ts`, `user.ts` | RESUELTO |
+| M-10 | Filtrado client-side en vez de queries indexados (dataset pequeño, limites agregados) | `post.ts`, `user.ts` | PARCIAL |
+| M-11 | ~~`firestore.indexes.json` VACIO~~ - Agregado composite index posts (isPublished + publishedAt) | `firestore.indexes.json` | RESUELTO |
 | M-12 | User PII completo persistido en localStorage | `authStore.ts` | PENDIENTE |
 | M-13 | Logout limpia state ANTES de Firebase signOut (race condition) | `authStore.ts` | PENDIENTE |
 | M-14 | `saveUser()` usa setDoc (sobreescribe todo el doc) + tipo incorrecto en stats.views | `user.ts`, `useLikes.ts` | PENDIENTE |
 | M-15 | Newsletter subscribe sin auth, sin CAPTCHA, sin rate limit | `newsletter.ts` | PENDIENTE |
 | M-16 | Transaction redundante alrededor de `increment()` | `post.ts` | PENDIENTE |
-| M-17 | N+1 queries al popular autores de posts | `post.ts` | PENDIENTE |
+| M-17 | ~~N+1 queries al popular autores de posts~~ - Batch fetch por unique authorId | `post.ts` | RESUELTO |
 | M-18 | Collection name mismatch: `newsletter` vs `newsletterSubscribers` | `firestore.rules` vs `newsletter.ts` | PENDIENTE |
 
 ### Next.js / Arquitectura
 
 | ID | Issue | Archivo | Estado |
 |----|-------|---------|--------|
-| M-19 | CERO archivos `loading.tsx` - Sin feedback de navegacion | Todas las rutas | PENDIENTE |
+| M-19 | ~~CERO archivos `loading.tsx`~~ - Creados para posts, tutorials, tags, y slug pages | Rutas principales | RESUELTO |
 | M-20 | Admin Dashboard fetcha TODO client-side (waterfall) | `admin/page.tsx` | PENDIENTE |
 | M-21 | Admin Layout entero es `"use client"` - No permite metadata | `admin/layout.tsx` | PENDIENTE |
 | M-22 | Edit Post page usa client-side fetch + muestra `null` mientras carga | `admin/posts/edit/[slug]/page.tsx` | PENDIENTE |
-| M-23 | 7+ paginas publicas sin metadata SEO | `posts/`, `tutorials/`, `tags/`, `contact/`, `auth/`, `profile/` | PENDIENTE |
-| M-24 | Contact page es `"use client"` innecesariamente - Bloquea metadata | `contact/page.tsx` | PENDIENTE |
-| M-25 | Homepage con `force-dynamic` + `revalidate = 0` (NUNCA cachea) | `page.tsx` | PENDIENTE |
-| M-26 | URL canonica incorrecta: `"tutorial"` en vez de `"tutorials"` (singular vs plural) | `metadataUtils.ts` | PENDIENTE |
+| M-23 | ~~7+ paginas publicas sin metadata SEO~~ - Metadata en posts, tutorials, tags, contact, auth, profile, home | Paginas publicas | RESUELTO |
+| M-24 | ~~Contact page es `"use client"` innecesariamente~~ - Refactored a server component + ContactPageClient | `contact/page.tsx` | RESUELTO |
+| M-25 | ~~Homepage con `force-dynamic` + `revalidate = 0`~~ - Cambiado a ISR revalidate=60 | `page.tsx` | RESUELTO |
+| M-26 | ~~URL canonica incorrecta: `"tutorial"` en vez de `"tutorials"`~~ - Corregido a plural | `metadataUtils.ts` | RESUELTO |
 | M-27 | `useSearchParams()` fuera de Suspense boundary | `admin/users/page.tsx` | PENDIENTE |
 | M-28 | AuthInitializer wrappea toda la app en client boundary | `layout.tsx` | PENDIENTE |
 
@@ -155,7 +155,7 @@
 |----|-------|---------|--------|
 | L-01 | Feeds RSS/Atom/JSON con `force-static` (nunca se actualizan post-deploy) | `feed.xml/route.ts`, etc. | PENDIENTE |
 | L-02 | Doble filtrado redundante de posts publicados | `FeaturedTutorials.tsx`, `LatestPosts.tsx` | PENDIENTE |
-| L-03 | `<link>` tags duplicados (metadata export + JSX manual) | `layout.tsx` | PENDIENTE |
+| L-03 | ~~`<link>` tags duplicados (metadata export + JSX manual)~~ - Eliminados JSX duplicados, metadata export genera los links | `layout.tsx` | RESUELTO |
 | L-04 | Meta tags de verificacion vacios (msvalidate, google-site-verification) | `layout.tsx` | PENDIENTE |
 | L-05 | `AdminPostsPage` es `"use client"` sin necesidad (Suspense funciona en server) | `admin/posts/page.tsx` | PENDIENTE |
 | L-06 | Nombre/heading mismatch: `NewTutorialPage` en ruta `/posts/new` | `admin/posts/new/page.tsx` | PENDIENTE |
@@ -194,14 +194,14 @@
 > Error handling, 404s, y fixes criticos de UX
 
 - [x] C-08: Quitar `"use server"` de api/generate-seo/route.ts
-- [ ] C-09: Mover Firebase config a NEXT_PUBLIC_* env vars
-- [ ] C-12: Crear `error.tsx` root + en rutas con data fetching
-- [ ] C-13: Crear `not-found.tsx` root + llamar `notFound()` en [slug] pages
-- [ ] C-14: Modal: focus trap, Escape key, aria-labelledby
-- [ ] C-15: Select: ARIA roles, keyboard navigation
-- [ ] C-17, C-19: LoginForm: error feedback + validacion client-side
-- [ ] C-18: RecoverForm: implementar Firebase `sendPasswordResetEmail()`
-- [ ] M-26: Fix URL canonica "tutorial" -> "tutorials"
+- [x] C-09: Mover Firebase config a NEXT_PUBLIC_* env vars
+- [x] C-12: Crear `error.tsx` root + en rutas con data fetching
+- [x] C-13: Crear `not-found.tsx` root + llamar `notFound()` en [slug] pages
+- [x] C-14: Modal: focus trap, Escape key, aria-labelledby
+- [x] C-15: Select: ARIA roles, keyboard navigation
+- [x] C-17, C-19: LoginForm: error feedback + validacion client-side
+- [x] C-18: RecoverForm: implementar Firebase `sendPasswordResetEmail()`
+- [x] M-26: Fix URL canonica "tutorial" -> "tutorials"
 
 ### Fase 3 - Este Sprint
 > SEO, performance, y mejoras arquitectonicas
@@ -241,6 +241,7 @@
 |-------|-------------|-----------------|
 | 2026-02-12 | Auditoria inicial completa | - |
 | 2026-02-12 | Fase 1 - Remediacion de emergencia: auth real en admin routes, SEO protegido con Zod, newsletter anti-spam, XSS sanitization, cleanup .env | C-01, C-02, C-03, C-04, C-05, C-06 (parcial), C-08, C-10, L-09 |
+| 2026-02-12 | Fase 2 - Error handling, 404s, accesibilidad, UX: Firebase env vars, error boundaries, not-found pages, Modal/Select a11y, LoginForm validation, RecoverForm real, canonical URL fix | C-09, C-12, C-13, C-14, C-15, C-17, C-18, C-19, M-26 |
 
 ---
 

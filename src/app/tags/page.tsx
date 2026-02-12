@@ -1,6 +1,12 @@
 // src/app/tags/page.tsx
 
+import type { Metadata } from "next";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+    title: "Tags - aprendeSwift",
+    description: "Explora contenido por etiquetas en aprendeSwift.",
+};
 import TagsSkeleton from "@/components/tags/skeletons/TagsSkeleton";
 import TagsHeader from "@/components/tags/TagsHeader";
 import TagsFilters from "@/components/tags/TagsFilters";

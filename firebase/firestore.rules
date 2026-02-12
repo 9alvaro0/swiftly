@@ -36,8 +36,7 @@ service cloud.firestore {
     }
     
     function isAdmin() {
-      return hasRole('admin') || 
-             (isAuthenticated() && request.auth.token.email == '9alvaro0@gmail.com');
+      return hasRole('admin');
     }
     
     function isEditor() {
@@ -171,8 +170,7 @@ service cloud.firestore {
       allow update: if (
                          // Autor del post o admin pueden actualizar todo (requiere autenticación)
                          isAuthenticated() &&
-                         (request.auth.uid == resource.data.authorId || 
-                          request.auth.token.email == '9alvaro0@gmail.com') &&
+                         (request.auth.uid == resource.data.authorId || isAdmin()) &&
                          incomingData().authorId == resource.data.authorId
                        ) ||
                        (
@@ -193,8 +191,7 @@ service cloud.firestore {
       
       // Eliminación: admin o autor del post
       allow delete: if isAuthenticated() &&
-                       (request.auth.uid == resource.data.authorId || 
-                        request.auth.token.email == '9alvaro0@gmail.com');
+                       (request.auth.uid == resource.data.authorId || isAdmin());
     }
     
     // ========================================
