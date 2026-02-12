@@ -2,9 +2,12 @@
 import { NextRequest } from 'next/server';
 import { getAllPosts } from '@/services/firebase/firestore/post';
 import { Post } from '@/types/Post';
+import { verifyAdminToken, AuthError } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
   try {
+    await verifyAdminToken();
+
     const { searchParams } = new URL(request.url);
     const searchTerm = searchParams.get('search') || '';
     const status = searchParams.get('status') || '';
@@ -18,10 +21,10 @@ export async function GET(request: NextRequest) {
     const posts: Post[] = allPosts
       .filter(post => {
         // Apply filters
-        const matchesStatus = status ? 
+        const matchesStatus = status ?
           (status === 'published' ? post.isPublished : !post.isPublished) : true;
         const matchesType = type ? post.type === type : true;
-        const matchesSearch = searchTerm ? 
+        const matchesSearch = searchTerm ?
           (post.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
            post.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
            post.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))) : true;
@@ -32,8 +35,11 @@ export async function GET(request: NextRequest) {
     console.log(`Admin API: Returning ${posts.length} filtered posts`);
     return Response.json({ posts });
   } catch (error) {
+    if (error instanceof AuthError) {
+      return Response.json({ error: error.message }, { status: error.statusCode });
+    }
     console.error('Error getting posts:', error);
-    return Response.json({ 
+    return Response.json({
       error: 'Internal server error',
       message: 'Failed to fetch posts. Please try again later.'
     }, { status: 500 });

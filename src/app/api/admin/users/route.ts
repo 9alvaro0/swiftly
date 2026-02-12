@@ -1,26 +1,13 @@
 // src/app/api/admin/users/route.ts
 import { NextRequest } from 'next/server';
-import { headers } from 'next/headers';
 import { getAdminDb } from '@/lib/firebase-admin';
 import { User } from '@/types/User';
 import { serializeFirestoreData } from '@/services/firebase/utils/utils';
+import { verifyAdminToken, AuthError } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
   try {
-    // Get auth header
-    const headersList = await headers();
-    const authHeader = headersList.get('authorization');
-    
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      console.log('Missing or invalid authorization header');
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const token = authHeader.substring(7);
-    if (!token || token.length < 100) {
-      console.log('Invalid token format');
-      return Response.json({ error: 'Invalid token' }, { status: 401 });
-    }
+    await verifyAdminToken();
 
     const { searchParams } = new URL(request.url);
     const searchTerm = searchParams.get('search') || '';
@@ -32,11 +19,11 @@ export async function GET(request: NextRequest) {
     try {
       // Get Admin DB instance
       const adminDb = await getAdminDb();
-      
+
       // Check if Firebase Admin is available
       if (!adminDb) {
         console.warn('Firebase Admin SDK not available, falling back to client SDK');
-        
+
         // Import getAllUsers dynamically and call it
         const { getAllUsers } = await import('@/services/firebase/firestore/user');
         const users = await getAllUsers(searchTerm, role, status);
@@ -46,12 +33,12 @@ export async function GET(request: NextRequest) {
 
       // Use Firebase Admin SDK to bypass security rules
       console.log('Using Firebase Admin SDK to fetch users');
-      
+
       const query = adminDb.collection('users').orderBy('createdAt', 'desc');
       const snapshot = await query.get();
-      
+
       console.log(`Admin API: Found ${snapshot.docs.length} user documents`);
-      
+
       const users = snapshot.docs
         .map(doc => {
           try {
@@ -66,7 +53,7 @@ export async function GET(request: NextRequest) {
         })
         .filter((user): user is User => {
           if (!user) return false;
-          
+
           // Apply filters
           const matchesRole = role ? user.role === role : true;
           const matchesStatus = status ? user.isActive === (status === 'active') : true;
@@ -83,32 +70,28 @@ export async function GET(request: NextRequest) {
       return Response.json({ users });
     } catch (dbError) {
       console.error('Database error in users query:', dbError);
-      
+
       // Check if it's a permission error
       if (dbError instanceof Error && dbError.message.includes('permission-denied')) {
-        return Response.json({ 
-          error: 'Permission denied', 
-          message: 'Insufficient permissions to access user data. Make sure you are logged in as an admin.' 
+        return Response.json({
+          error: 'Permission denied',
+          message: 'Insufficient permissions to access user data. Make sure you are logged in as an admin.'
         }, { status: 403 });
       }
-      
+
       // Other database errors
-      return Response.json({ 
-        error: 'Service temporarily unavailable', 
-        message: 'Unable to connect to database. Please try again later.' 
+      return Response.json({
+        error: 'Service temporarily unavailable',
+        message: 'Unable to connect to database. Please try again later.'
       }, { status: 503 });
     }
   } catch (error) {
-    console.error('Error in /api/admin/users:', error);
-    
-    // Log full error details
-    if (error instanceof Error) {
-      console.error('Error name:', error.name);
-      console.error('Error message:', error.message);
-      console.error('Error stack:', error.stack);
+    if (error instanceof AuthError) {
+      return Response.json({ error: error.message }, { status: error.statusCode });
     }
-    
-    return Response.json({ 
+    console.error('Error in /api/admin/users:', error);
+
+    return Response.json({
       error: 'Internal server error',
       message: 'An unexpected error occurred'
     }, { status: 500 });

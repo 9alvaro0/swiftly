@@ -12,6 +12,7 @@ const RATE_LIMITS = {
   comments: { requests: 10, windowMs: 60 * 1000 }, // 10 comments per minute
   contact: { requests: 3, windowMs: 60 * 1000 }, // 3 contact submissions per minute
   auth: { requests: 5, windowMs: 15 * 60 * 1000 }, // 5 auth attempts per 15 minutes
+  newsletter: { requests: 3, windowMs: 60 * 1000 }, // 3 newsletter requests per minute
 };
 
 function getRateLimitKey(request: NextRequest, type: string): string {
@@ -82,7 +83,10 @@ export function middleware(request: NextRequest) {
     let limit = RATE_LIMITS.api;
 
     // Specific rate limits for different endpoints
-    if (pathname.includes('/comments')) {
+    if (pathname.includes('/newsletter')) {
+      limitType = 'newsletter';
+      limit = RATE_LIMITS.newsletter;
+    } else if (pathname.includes('/comments')) {
       limitType = 'comments';
       limit = RATE_LIMITS.comments;
     } else if (pathname.includes('/contact')) {

@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { emailService } from '@/services/email/emailService';
+import { getAdminDb } from '@/lib/firebase-admin';
 
 export async function POST(request: NextRequest) {
     try {
@@ -23,9 +24,48 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        const normalizedEmail = email.trim().toLowerCase();
+
+        // Verify subscription exists in Firestore and is recent
+        const adminDb = await getAdminDb();
+        if (!adminDb) {
+            console.error('Admin database not initialized');
+            return NextResponse.json(
+                { error: 'Servicio no disponible' },
+                { status: 503 }
+            );
+        }
+
+        const subscribersSnapshot = await adminDb
+            .collection('newsletterSubscribers')
+            .where('email', '==', normalizedEmail)
+            .where('isActive', '==', true)
+            .limit(1)
+            .get();
+
+        if (subscribersSnapshot.empty) {
+            return NextResponse.json(
+                { error: 'Suscripción no encontrada o inactiva' },
+                { status: 403 }
+            );
+        }
+
+        const subscriberData = subscribersSnapshot.docs[0].data();
+        const createdAt = subscriberData.createdAt?.toDate?.() || subscriberData.createdAt;
+
+        if (createdAt) {
+            const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+            if (new Date(createdAt) < fiveMinutesAgo) {
+                return NextResponse.json(
+                    { error: 'Suscripción no es reciente' },
+                    { status: 403 }
+                );
+            }
+        }
+
         // Send welcome email
         const result = await emailService.sendNewsletterWelcome({
-            email: email.trim().toLowerCase(),
+            email: normalizedEmail,
             name: name || undefined
         });
 

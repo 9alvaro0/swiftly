@@ -7,6 +7,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkUnwrapImages from "remark-unwrap-images";
 import rehypeRaw from "rehype-raw";
+import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import Image from "next/image";
 import { CodeBlock } from "@/components/ui/CodeBlock";
 
@@ -26,6 +27,30 @@ const slugify = (text: string): string => {
         .replace(/[^\w\s-]/g, "") // Eliminar caracteres especiales
         .replace(/[\s_-]+/g, "-") // Reemplazar espacios con guiones
         .replace(/^-+|-+$/g, ""); // Eliminar guiones iniciales y finales
+};
+
+// Custom sanitization schema: allow iframes (YouTube/Vimeo), images, CSS classes; block scripts/event handlers
+const sanitizeSchema: typeof defaultSchema = {
+    ...defaultSchema,
+    tagNames: [
+        ...(defaultSchema.tagNames || []),
+        'iframe', 'div', 'span',
+    ],
+    attributes: {
+        ...defaultSchema.attributes,
+        iframe: ['src', 'width', 'height', 'frameBorder', 'allow', 'allowFullScreen', 'title', 'loading'],
+        div: [...(defaultSchema.attributes?.div || []), 'className', 'class'],
+        span: [...(defaultSchema.attributes?.span || []), 'className', 'class'],
+        code: [...(defaultSchema.attributes?.code || []), 'className', 'class'],
+        pre: [...(defaultSchema.attributes?.pre || []), 'className', 'class'],
+        img: ['src', 'alt', 'width', 'height', 'loading', 'className', 'class'],
+        a: ['href', 'title', 'target', 'rel', 'className', 'class'],
+    },
+    protocols: {
+        ...defaultSchema.protocols,
+        src: ['https'],
+    },
+    strip: ['script'],
 };
 
 // Componente principal
@@ -139,7 +164,7 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
         >
             <ReactMarkdown
                 remarkPlugins={[remarkGfm, remarkUnwrapImages]}
-                rehypePlugins={[rehypeRaw]}
+                rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
                 components={{
                     h1: ({ children, ...props }) => {
                         const id = slugify(children?.toString() || "");
