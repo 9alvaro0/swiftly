@@ -16,6 +16,7 @@ import {
     where,
     orderBy,
     limit,
+    QueryConstraint,
 } from "firebase/firestore";
 import { Post, PostWithAuthor } from "@/types/Post";
 import { db } from "../config";
@@ -127,55 +128,54 @@ interface PostFilters {
     level?: string;
     tag?: string;
     type?: string;
+    limitCount?: number;
 }
 
 export const getAllPublishedPosts = async (filters: PostFilters): Promise<Post[]> => {
     try {
-        const { searchTerm = "", level = "", tag = "", type = "" } = filters;
-        
-        // Use simple query that doesn't require composite indexes
-        const q = query(
-            postsCollection,
+        const { searchTerm = "", level = "", tag = "", type = "", limitCount = 200 } = filters;
+
+        // Build query with server-side filters (requires composite indexes)
+        const constraints: QueryConstraint[] = [
             where("isPublished", "==", true),
-            limit(200)
-        );
-        
+        ];
+
+        // Use server-side type filter when composite index is available
+        if (type) {
+            constraints.push(where("type", "==", type));
+        }
+
+        // Use server-side level filter when composite index is available
+        if (level) {
+            constraints.push(where("level", "==", level));
+        }
+
+        constraints.push(orderBy("publishedAt", "desc"));
+        constraints.push(limit(limitCount));
+
+        const q = query(postsCollection, ...constraints);
+
         const snapshot = await getDocs(q);
         let posts = snapshot.docs.map((doc) => {
             return serializePost(doc.data() as Post);
         });
-        
-        // Apply all filtering client-side to avoid index requirements
-        if (level) {
-            posts = posts.filter((post) => post.level === level);
-        }
-        
+
+        // Tag and search filters remain client-side (array-contains can't combine with other inequality)
         if (tag) {
-            posts = posts.filter((post) => 
-                post.tags && post.tags.some(postTag => 
+            posts = posts.filter((post) =>
+                post.tags && post.tags.some(postTag =>
                     postTag.toLowerCase() === tag.toLowerCase()
                 )
             );
         }
-        
-        if (type) {
-            posts = posts.filter((post) => post.type === type);
-        }
-        
+
         if (searchTerm) {
             posts = posts.filter((post) =>
                 post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 post.description.toLowerCase().includes(searchTerm.toLowerCase())
             );
         }
-        
-        // Sort by publishedAt descending
-        posts.sort((a, b) => {
-            const dateA = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
-            const dateB = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
-            return dateB - dateA;
-        });
-        
+
         return posts;
     } catch (error) {
         console.error("Error getting published posts:", error);

@@ -7,6 +7,7 @@ import { generateArticleJsonLd } from "@/utils/jsonLdUtils";
 import { notFound } from "next/navigation";
 
 export const generateMetadata = generatePostMetadata;
+export const revalidate = 300; // 5 minutes
 
 interface PageProps {
     params: Promise<{

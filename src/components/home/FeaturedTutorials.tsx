@@ -4,7 +4,7 @@ import { FiBookOpen } from "react-icons/fi";
 import TutorialCard from "../tutorials/TutorialCard";
 
 export default async function FeaturedTutorials() {
-    const publishedTutorials = await getAllPublishedPosts({ type: "tutorial" });
+    const publishedTutorials = await getAllPublishedPosts({ type: "tutorial", limitCount: 8 });
     const hasTutorials = publishedTutorials && publishedTutorials.length > 0;
 
     return (
