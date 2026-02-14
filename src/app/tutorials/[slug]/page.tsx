@@ -1,13 +1,18 @@
 // src/app/tutorials/[slug]/page.tsx
 
 import PostDetail from "@/components/post/PostDetail";
-import { getPostBySlugWithAuthorServer } from "@/services/firebase/firestore/post-server";
+import { getPostBySlugWithAuthorServer, getAllPublishedPostsServer } from "@/services/firebase/firestore/post-server";
 import { generateMetadata as generatePostMetadata } from "@/utils/metadataUtils";
 import { generateArticleJsonLd } from "@/utils/jsonLdUtils";
 import { notFound } from "next/navigation";
 
 export const generateMetadata = generatePostMetadata;
 export const revalidate = 300; // 5 minutes
+
+export async function generateStaticParams() {
+    const tutorials = await getAllPublishedPostsServer({ type: "tutorial" });
+    return tutorials.map((t) => ({ slug: t.slug }));
+}
 
 interface PageProps {
     params: Promise<{

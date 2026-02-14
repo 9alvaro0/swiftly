@@ -5,8 +5,16 @@ import type { Metadata } from "next";
 import TagBreadcrumbs from "@/components/tags/TagBreadcrumbs";
 import PostGrid from "@/components/home/latestPosts/PostList";
 import PostGridSkeleton from "@/components/posts/skeletons/PostGridSkeleton";
-import { slugToTag } from "@/utils/tagUtils";
+import { slugToTag, tagToSlug } from "@/utils/tagUtils";
+import { getAllPublishedPostsServer } from "@/services/firebase/firestore/post-server";
 import { SITE_URL } from "@/lib/constants";
+
+export async function generateStaticParams() {
+    const posts = await getAllPublishedPostsServer({});
+    const tags = new Set<string>();
+    posts.forEach((p) => p.tags?.forEach((t) => tags.add(t)));
+    return [...tags].map((tag) => ({ slug: tagToSlug(tag) }));
+}
 
 interface TagPageProps {
     params: Promise<{
