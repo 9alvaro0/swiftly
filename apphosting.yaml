@@ -79,8 +79,10 @@ env:
   - variable: FIREBASE_PRIVATE_KEY
     secret: FIREBASE_PRIVATE_KEY
 
-  - variable: SENDGRID_API_KEY
-    secret: SENDGRID_API_KEY
-
-  - variable: OPENAI_API_KEY
-    secret: OPENAI_API_KEY
+  # Uncomment when secrets are created:
+  # firebase apphosting:secrets:set SENDGRID_API_KEY
+  # firebase apphosting:secrets:set OPENAI_API_KEY
+  # - variable: SENDGRID_API_KEY
+  #   secret: SENDGRID_API_KEY
+  # - variable: OPENAI_API_KEY
+  #   secret: OPENAI_API_KEY
