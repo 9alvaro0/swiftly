@@ -39,6 +39,7 @@ function PostCard({ post, variant = "default", searchTerm = "" }: PostCardProps)
                                 src={post.imageUrl || post.coverImage || ""}
                                 alt={post.title || "Imagen del post"}
                                 fill
+                                priority={isFeatured}
                                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                                 sizes={
                                     isFeatured

@@ -260,28 +260,8 @@ service cloud.firestore {
     }
     
     // ========================================
-    // NEWSLETTER COLLECTION - Suscripciones
+    // NEWSLETTER SUBSCRIBERS COLLECTION
     // ========================================
-    match /newsletter/{subscriberId} {
-      function isValidSubscription() {
-        let data = incomingData();
-        return hasFields(['email', 'createdAt']) &&
-               isValidEmail(data.email) &&
-               data.createdAt == request.time;
-      }
-      
-      // Lectura: solo admins
-      allow read, list: if isAdmin();
-      
-      // Creación: público con validación (una por email)
-      allow create: if isValidSubscription() &&
-                       !exists(/databases/$(database)/documents/newsletter/$(incomingData().email.lower()));
-      
-      // Actualización/Eliminación: solo admins
-      allow update, delete: if isAdmin();
-    }
-    
-    // Active newsletter collection (used by subscribe flow)
     match /newsletterSubscribers/{subscriberId} {
       function isValidNewsletterCreate() {
         let data = incomingData();
