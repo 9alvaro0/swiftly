@@ -139,3 +139,32 @@ export async function getAllPublishedPostsWithAuthorServer(filters: PostFilters 
     const posts = await getAllPublishedPostsServer(filters);
     return batchPopulateAuthors(db, posts);
 }
+
+/** Server-side: get ALL posts (including unpublished) for admin dashboard */
+export async function getAllPostsServer(limitCount = 200): Promise<Post[]> {
+    const db = await requireDb();
+    const snap = await db.collection('posts')
+        .orderBy('createdAt', 'desc')
+        .limit(limitCount)
+        .get();
+    return snap.docs.map(d => serializeDoc<Post>(d.data()));
+}
+
+/** Server-side: get all tags */
+export async function getAllTagsServer(searchTerm = ''): Promise<{ id: string; name: string; slug?: string; description?: string; updatedAt?: Date }[]> {
+    const db = await requireDb();
+    const snap = await db.collection('tags').limit(200).get();
+    const tags = snap.docs.map(d => {
+        const data = serializeDoc<Record<string, unknown>>(d.data());
+        return {
+            id: d.id,
+            name: (data.name as string) || '',
+            slug: data.slug as string | undefined,
+            description: data.description as string | undefined,
+            updatedAt: data.updatedAt as Date | undefined,
+        };
+    });
+    if (!searchTerm) return tags;
+    const term = searchTerm.toLowerCase();
+    return tags.filter(t => t.name.toLowerCase().includes(term));
+}

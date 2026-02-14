@@ -1,10 +1,10 @@
 import SectionHeader from "../ui/SectionHeader";
-import { getAllPublishedPosts } from "@/services/firebase/firestore/post";
+import { getAllPublishedPostsServer } from "@/services/firebase/firestore/post-server";
 import { BookOpen } from "lucide-react";
 import TutorialCard from "../tutorials/TutorialCard";
 
 export default async function FeaturedTutorials() {
-    const publishedTutorials = await getAllPublishedPosts({ type: "tutorial", limitCount: 8 });
+    const publishedTutorials = await getAllPublishedPostsServer({ type: "tutorial", limitCount: 8 });
     const hasTutorials = publishedTutorials && publishedTutorials.length > 0;
 
     return (

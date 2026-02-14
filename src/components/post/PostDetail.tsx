@@ -8,8 +8,12 @@ import PostTags from "@/components/post/PostTags";
 import CommentsSection from "@/components/post/CommentsSection";
 import FloatingSocialShare from "@/components/post/FloatingSocialShare";
 import PostViewTracker from "@/components/post/PostViewTracker";
-import PostContent from "@/components/post/PostContent";
+import dynamic from "next/dynamic";
 import { SITE_URL } from "@/lib/constants";
+
+const PostContent = dynamic(() => import("@/components/post/PostContent"), {
+    loading: () => <div className="animate-pulse bg-white/5 rounded-lg h-96 w-full" />,
+});
 
 interface PostDetailProps {
     post: PostWithAuthor;

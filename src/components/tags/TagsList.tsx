@@ -1,12 +1,12 @@
 // src/components/tags/TagsList.tsx
 
-import { getAllTags } from "@/services/firebase/firestore/tags";
+import { getAllTagsServer } from "@/services/firebase/firestore/post-server";
 import { Frown } from "lucide-react";
 import Link from "next/link";
 import { tagToSlug } from "@/utils/tagUtils";
 
 export default async function TagsList({ searchTerm }: { searchTerm: string }) {
-    const tags = await getAllTags(searchTerm);
+    const tags = await getAllTagsServer(searchTerm);
 
     const filteredTags = tags.filter((tag) => tag.name.toLowerCase().includes(searchTerm.toLowerCase()));
 

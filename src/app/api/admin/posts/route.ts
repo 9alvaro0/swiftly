@@ -1,6 +1,6 @@
 // src/app/api/admin/posts/route.ts
 import { NextRequest } from 'next/server';
-import { getAllPosts } from '@/services/firebase/firestore/post';
+import { getAllPostsServer } from '@/services/firebase/firestore/post-server';
 import { Post } from '@/types/Post';
 import { verifyAdminToken, AuthError } from '@/lib/auth';
 
@@ -13,8 +13,7 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status') || '';
     const type = searchParams.get('type') || '';
 
-    // Use client SDK since posts are now public access
-    const allPosts = await getAllPosts();
+    const allPosts = await getAllPostsServer();
 
     const posts: Post[] = allPosts
       .filter(post => {

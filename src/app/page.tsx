@@ -18,8 +18,8 @@ import { Suspense } from "react";
 import FeaturedTutorialsSkeleton from "@/components/home/skeletons/FeaturedTutorialsSkeleton";
 import LatestPostsSkeleton from "@/components/home/skeletons/LatestPostsSkeleton";
 
-// ISR: revalidate every 60 seconds
-export const revalidate = 60;
+// ISR: revalidate every 5 minutes
+export const revalidate = 300;
 
 const jsonLd = {
     '@context': 'https://schema.org',

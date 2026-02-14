@@ -2,12 +2,12 @@
 
 import PostList from "@/components/home/latestPosts/PostList";
 import SectionHeader from "../../ui/SectionHeader";
-import { getAllPublishedPosts } from "@/services/firebase/firestore/post";
+import { getAllPublishedPostsServer } from "@/services/firebase/firestore/post-server";
 import { BookOpen, FileText } from "lucide-react";
 
 export default async function LatestPosts() {
     // Cambiar tutorial por post cuando hayan posts y limitar a 4
-    const publishedPosts = await getAllPublishedPosts({ type: "article", limitCount: 8 });
+    const publishedPosts = await getAllPublishedPostsServer({ type: "article", limitCount: 8 });
     const hasPosts = publishedPosts && publishedPosts.length > 0;
 
     return (
