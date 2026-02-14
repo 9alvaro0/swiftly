@@ -246,52 +246,6 @@ class EmailService {
     return this.sendEmail(emailData);
   }
 
-  /**
-   * Send notification about new post to subscribers (for future use)
-   */
-  async sendNewPostNotification(
-    subscribers: string[], 
-    postTitle: string, 
-    postUrl: string, 
-    postExcerpt: string
-  ): Promise<{ success: boolean; error?: string }> {
-    try {
-      const emails = subscribers.map(email => ({
-        to: email,
-        from: {
-          email: this.fromEmail,
-          name: this.fromName
-        },
-        subject: `Nuevo artículo: ${postTitle}`,
-        html: `
-          <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
-            <h2 style="color: #007AFF;">Nuevo artículo en aprendeSwift</h2>
-            <h3>${escapeHtml(postTitle)}</h3>
-            <p>${escapeHtml(postExcerpt)}</p>
-            <div style="text-align: center; margin: 30px 0;">
-              <a href="${postUrl}" 
-                 style="display: inline-block; background: #007AFF; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px;">
-                Leer Artículo
-              </a>
-            </div>
-            <p style="color: #666; font-size: 12px;">
-              Has recibido este email porque estás suscrito a la newsletter de aprendeSwift.
-            </p>
-          </div>
-        `
-      }));
-
-      await sgMail.send(emails);
-      return { success: true };
-      
-    } catch (error) {
-      console.error('Error sending newsletter:', error);
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Unknown error' 
-      };
-    }
-  }
 }
 
 export const emailService = new EmailService();

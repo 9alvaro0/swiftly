@@ -58,6 +58,3 @@ export async function getAdminAuth() {
   return adminAuth;
 }
 
-// Export admin services (can be null if not initialized)
-// These are for backward compatibility, but prefer using the helpers above
-export { adminDb, adminAuth };

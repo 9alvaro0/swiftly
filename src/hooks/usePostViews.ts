@@ -70,8 +70,8 @@ export function usePostViews(postId: string, initialViews: number = 0) {
                 setLoading(true);
                 setError(null);
 
-                const result = await incrementPostViews(postId);
-                setViews(result.views);
+                await incrementPostViews(postId);
+                setViews(prev => prev + 1);
 
                 // Add visualization to user stats (with proper error handling)
                 if (user) {

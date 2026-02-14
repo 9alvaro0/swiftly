@@ -236,25 +236,10 @@ export const togglePostLike = async (postId: string, userId: string, likeStatus:
     }
 };
 
-// Obtener si un usuario ha dado like a un post específico
-export const hasUserLikedPost = async (postId: string, userId: string): Promise<boolean> => {
-    const postRef = doc(postsCollection, postId);
-    const postDoc = await getDoc(postRef);
-
-    if (!postDoc.exists()) {
-        return false;
-    }
-
-    const postData = postDoc.data();
-    return Array.isArray(postData.likedBy) && postData.likedBy.includes(userId);
-};
-
-// Incrementa el contador de vistas de un post
-export const incrementPostViews = async (postId: string): Promise<{ views: number }> => {
+// Incrementa el contador de vistas de un post (single write, no re-read)
+export const incrementPostViews = async (postId: string): Promise<void> => {
     const postRef = doc(postsCollection, postId);
     await updateDoc(postRef, { views: increment(1) });
-    const updated = await getDoc(postRef);
-    return { views: updated.data()?.views || 1 };
 };
 
 // === FUNCTIONS WITH POPULATED AUTHOR DATA ===
