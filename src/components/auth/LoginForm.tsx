@@ -72,48 +72,40 @@ export default function LoginForm() {
             className="space-y-6"
             noValidate
         >
-            <div>
-                <Input
-                    id="email"
-                    label="Email"
-                    placeholder="tu@email.com"
-                    icon={<Mail />}
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    value={email}
-                    onChange={(e) => {
-                        setEmail(e.target.value);
-                        clearFieldError("email");
-                    }}
-                />
-                {fieldErrors.email && (
-                    <p className="text-red-400 text-sm mt-1">{fieldErrors.email}</p>
-                )}
-            </div>
+            <Input
+                id="email"
+                label="Email"
+                placeholder="tu@email.com"
+                icon={<Mail />}
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                value={email}
+                error={fieldErrors.email}
+                onChange={(e) => {
+                    setEmail(e.target.value);
+                    clearFieldError("email");
+                }}
+            />
 
-            <div>
-                <Input
-                    id="password"
-                    label="Contraseña"
-                    placeholder="••••••••"
-                    icon={showPassword ? <EyeOff /> : <Eye />}
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    autoComplete="current-password"
-                    required
-                    value={password}
-                    onChange={(e) => {
-                        setPassword(e.target.value);
-                        clearFieldError("password");
-                    }}
-                    onIconClick={() => setShowPassword(!showPassword)}
-                />
-                {fieldErrors.password && (
-                    <p className="text-red-400 text-sm mt-1">{fieldErrors.password}</p>
-                )}
-            </div>
+            <Input
+                id="password"
+                label="Contraseña"
+                placeholder="••••••••"
+                icon={showPassword ? <EyeOff /> : <Eye />}
+                name="password"
+                type={showPassword ? "text" : "password"}
+                autoComplete="current-password"
+                required
+                value={password}
+                error={fieldErrors.password}
+                onChange={(e) => {
+                    setPassword(e.target.value);
+                    clearFieldError("password");
+                }}
+                onIconClick={() => setShowPassword(!showPassword)}
+            />
 
             <div className="flex items-center">
                 <Checkbox
@@ -126,7 +118,7 @@ export default function LoginForm() {
             </div>
 
             {error && (
-                <div className="bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3 text-red-400 text-sm">
+                <div role="alert" className="bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3 text-red-400 text-sm">
                     {error}
                 </div>
             )}

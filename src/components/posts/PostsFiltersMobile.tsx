@@ -84,6 +84,28 @@ export default function PostsFiltersMobile({
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === "Escape") {
                 handleClose();
+                return;
+            }
+
+            // Focus trap
+            if (e.key === "Tab" && drawerRef.current) {
+                const focusable = drawerRef.current.querySelectorAll<HTMLElement>(
+                    'a[href], button:not([disabled]), select:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+                );
+                if (focusable.length === 0) return;
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+                if (e.shiftKey) {
+                    if (document.activeElement === first) {
+                        e.preventDefault();
+                        last.focus();
+                    }
+                } else {
+                    if (document.activeElement === last) {
+                        e.preventDefault();
+                        first.focus();
+                    }
+                }
             }
         };
 
@@ -134,6 +156,7 @@ export default function PostsFiltersMobile({
                             isClosing ? 'opacity-0' : isOpening ? 'opacity-0' : 'opacity-100'
                         }`}
                         onClick={handleClose}
+                        aria-hidden="true"
                     />
 
                     {/* Drawer desde abajo */}

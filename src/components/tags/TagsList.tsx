@@ -11,7 +11,7 @@ export default async function TagsList({ searchTerm }: { searchTerm: string }) {
     const filteredTags = tags.filter((tag) => tag.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
     return (
-        <div className="rounded-2xl shadow-lg transition-all">
+        <div className="rounded-2xl shadow-lg transition-all" aria-live="polite">
             {filteredTags.length > 0 ? (
                 <>
                     <div className="flex justify-between items-center mb-6">

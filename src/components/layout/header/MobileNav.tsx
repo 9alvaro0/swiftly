@@ -26,6 +26,28 @@ export default function MobileNav({ isOpen, onToggle, isAuthenticated, user, isL
             if (e.key === "Escape") {
                 onToggle();
                 toggleRef.current?.focus();
+                return;
+            }
+
+            // Focus trap
+            if (e.key === "Tab" && drawerRef.current) {
+                const focusable = drawerRef.current.querySelectorAll<HTMLElement>(
+                    'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+                );
+                if (focusable.length === 0) return;
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+                if (e.shiftKey) {
+                    if (document.activeElement === first) {
+                        e.preventDefault();
+                        last.focus();
+                    }
+                } else {
+                    if (document.activeElement === last) {
+                        e.preventDefault();
+                        first.focus();
+                    }
+                }
             }
         };
 
@@ -48,6 +70,7 @@ export default function MobileNav({ isOpen, onToggle, isAuthenticated, user, isL
                 <div
                     className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30"
                     onClick={onToggle}
+                    aria-hidden="true"
                 />
             )}
 

@@ -66,30 +66,26 @@ export default function RecoverForm() {
                     className="space-y-6"
                     noValidate
                 >
-                    <div>
-                        <Input
-                            id="email"
-                            label="Email"
-                            placeholder="tu@email.com"
-                            icon={<Mail className="h-5 w-5 text-gray-400" />}
-                            name="email"
-                            type="email"
-                            autoComplete="email"
-                            required
-                            value={email}
-                            onChange={(e) => {
-                                setEmail(e.target.value);
-                                setEmailError(null);
-                                setError(null);
-                            }}
-                        />
-                        {emailError && (
-                            <p className="text-red-400 text-sm mt-1">{emailError}</p>
-                        )}
-                    </div>
+                    <Input
+                        id="email"
+                        label="Email"
+                        placeholder="tu@email.com"
+                        icon={<Mail className="h-5 w-5 text-gray-400" />}
+                        name="email"
+                        type="email"
+                        autoComplete="email"
+                        required
+                        value={email}
+                        error={emailError || undefined}
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                            setEmailError(null);
+                            setError(null);
+                        }}
+                    />
 
                     {error && (
-                        <div className="bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3 text-red-400 text-sm">
+                        <div role="alert" className="bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3 text-red-400 text-sm">
                             {error}
                         </div>
                     )}

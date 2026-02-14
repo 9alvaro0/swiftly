@@ -83,70 +83,62 @@ export default function RegisterForm() {
             onSubmit={handleSubmit}
             className="space-y-6"
         >
-            <div>
-                <Input
-                    id="name"
-                    label="Nombre completo"
-                    placeholder="Tu nombre"
-                    name="name"
-                    type="text"
-                    autoComplete="name"
-                    required
-                    value={formData.name}
-                    onChange={handleChange}
-                />
-                {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
-            </div>
+            <Input
+                id="name"
+                label="Nombre completo"
+                placeholder="Tu nombre"
+                name="name"
+                type="text"
+                autoComplete="name"
+                required
+                value={formData.name}
+                error={errors.name}
+                onChange={handleChange}
+            />
 
-            <div>
-                <Input
-                    id="email"
-                    label="Email"
-                    placeholder="tu@email.com"
-                    icon={<Mail />}
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    value={formData.email}
-                    onChange={handleChange}
-                />
-                {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
-            </div>
+            <Input
+                id="email"
+                label="Email"
+                placeholder="tu@email.com"
+                icon={<Mail />}
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                value={formData.email}
+                error={errors.email}
+                onChange={handleChange}
+            />
 
-            <div>
-                <Input
-                    id="password"
-                    label="Contraseña"
-                    placeholder="••••••••"
-                    icon={showPassword ? <EyeOff /> : <Eye />}
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    autoComplete="new-password"
-                    required
-                    value={formData.password}
-                    onChange={handleChange}
-                    onIconClick={() => setShowPassword(!showPassword)}
-                />
-                {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password}</p>}
-            </div>
+            <Input
+                id="password"
+                label="Contraseña"
+                placeholder="••••••••"
+                icon={showPassword ? <EyeOff /> : <Eye />}
+                name="password"
+                type={showPassword ? "text" : "password"}
+                autoComplete="new-password"
+                required
+                value={formData.password}
+                error={errors.password}
+                onChange={handleChange}
+                onIconClick={() => setShowPassword(!showPassword)}
+            />
 
-            <div>
-                <Input
-                    id="confirmPassword"
-                    label="Confirmar contraseña"
-                    placeholder="••••••••"
-                    icon={showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                    name="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
-                    autoComplete="new-password"
-                    required
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    onIconClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                />
-                {errors.confirmPassword && <p className="mt-1 text-sm text-red-500">{errors.confirmPassword}</p>}
-            </div>
+            <Input
+                id="confirmPassword"
+                label="Confirmar contraseña"
+                placeholder="••••••••"
+                icon={showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                name="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                autoComplete="new-password"
+                required
+                value={formData.confirmPassword}
+                error={errors.confirmPassword}
+                onChange={handleChange}
+                onIconClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            />
 
             <div className="pt-2">
                 <button

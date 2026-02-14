@@ -108,6 +108,7 @@ export default function Modal({ isOpen, onClose, title, children, footer }: Moda
                     isAnimating ? "backdrop-blur-sm" : "backdrop-blur-none"
                 }`}
                 onClick={onClose}
+                aria-hidden="true"
             ></div>
 
             {/* Contenido del modal */}

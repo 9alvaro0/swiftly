@@ -48,7 +48,7 @@ export default function TutorialsListClient({
 
     if (currentTutorials.length === 0) {
         return (
-            <div className="text-center py-16">
+            <div className="text-center py-16" aria-live="polite">
                 <p className="text-text-secondary text-lg mb-4">No se encontraron tutoriales</p>
             </div>
         );
@@ -56,7 +56,7 @@ export default function TutorialsListClient({
 
     return (
         <>
-            <div className="mb-4 text-text-secondary">
+            <div className="mb-4 text-text-secondary" aria-live="polite">
                 Mostrando {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, sortedTutorials.length)} de {sortedTutorials.length} tutoriales
             </div>
             
