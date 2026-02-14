@@ -1,7 +1,7 @@
 // src/app/tutorials/[slug]/page.tsx
 
 import PostDetail from "@/components/post/PostDetail";
-import { getPostBySlugWithAuthor } from "@/services/firebase/firestore/post";
+import { getPostBySlugWithAuthorServer } from "@/services/firebase/firestore/post-server";
 import { generateMetadata as generatePostMetadata } from "@/utils/metadataUtils";
 import { generateArticleJsonLd } from "@/utils/jsonLdUtils";
 import { notFound } from "next/navigation";
@@ -19,7 +19,7 @@ export default async function TutorialDetailPage(props: PageProps) {
     const resolvedParams = await props.params;
     const { slug } = resolvedParams;
 
-    const tutorial = await getPostBySlugWithAuthor(slug);
+    const tutorial = await getPostBySlugWithAuthorServer(slug);
 
     if (!tutorial) {
         notFound();

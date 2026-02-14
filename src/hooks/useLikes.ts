@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import { hasUserLikedPost, togglePostLike } from "@/services/firebase/firestore/post";
 import { PostWithAuthor } from "@/types/Post";
 import { User } from "@/types/User";
-import { saveUser } from "@/services/firebase/firestore/user";
+import { incrementUserStat, removeUserStat } from "@/services/firebase/firestore/user";
 
 interface UseLikesResult {
     isLiked: boolean;
@@ -73,19 +73,12 @@ export function useLikes(post: PostWithAuthor, currentUser: User | null): UseLik
             // Actualizar en Firestore el estado del post
             await togglePostLike(post.id, currentUser.uid, newLikedState);
 
-            // Actualizar en Firestore el usuario con la referencia del post
-            const updatedLikedPosts = newLikedState
-                ? [...(currentUser.stats?.likes || []), post.id]
-                : (currentUser.stats?.likes || []).filter((likedPostId) => likedPostId !== post.id);
-
-            await saveUser({
-                ...currentUser,
-                stats: {
-                    ...currentUser.stats,
-                    likes: updatedLikedPosts,
-                    views: currentUser.stats?.views ?? [],
-                },
-            });
+            // Actualizar atomicamente la estadística de likes del usuario
+            if (newLikedState) {
+                await incrementUserStat(currentUser.uid, 'likes', post.id);
+            } else {
+                await removeUserStat(currentUser.uid, 'likes', post.id);
+            }
         } catch {
             setIsLiked(previousLikedState);
             setLikesCount(previousLikesCount);

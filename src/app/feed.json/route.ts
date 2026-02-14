@@ -1,7 +1,7 @@
 // src/app/feed.json/route.ts
 
 import { NextResponse } from 'next/server';
-import { getAllPublishedPostsWithAuthor } from '@/services/firebase/firestore/post';
+import { getAllPublishedPostsWithAuthorServer } from '@/services/firebase/firestore/post-server';
 import { PostWithAuthor } from '@/types/Post';
 import { createExcerpt } from '@/utils/dateUtils';
 
@@ -15,7 +15,7 @@ export const revalidate = 3600;
 export async function GET(): Promise<NextResponse> {
     try {
         // Get latest published posts with author data
-        const allPosts = await getAllPublishedPostsWithAuthor({});
+        const allPosts = await getAllPublishedPostsWithAuthorServer({});
         const posts = allPosts.slice(0, 20); // Limit to 20 posts
 
         // Generate JSON Feed items

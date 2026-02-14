@@ -18,14 +18,11 @@ export async function GET(request: NextRequest) {
       // Get Admin DB instance
       const adminDb = await getAdminDb();
 
-      // Check if Firebase Admin is available
       if (!adminDb) {
-        console.warn('Firebase Admin SDK not available, falling back to client SDK');
-
-        // Import getAllUsers dynamically and call it
-        const { getAllUsers } = await import('@/services/firebase/firestore/user');
-        const users = await getAllUsers(searchTerm, role, status);
-        return Response.json({ users });
+        return Response.json({
+          error: 'Service unavailable',
+          message: 'Firebase Admin SDK not available. Check server configuration.'
+        }, { status: 503 });
       }
 
       // Use Firebase Admin SDK to bypass security rules

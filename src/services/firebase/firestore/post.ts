@@ -183,28 +183,20 @@ export const getAllPublishedPosts = async (filters: PostFilters): Promise<Post[]
     }
 };
 
-// Crea o actualiza un post
+// Crea o actualiza un post (atomic: uses transaction to avoid TOCTOU race)
 export const createOrUpdatePost = async (id: string, updatedFields: Partial<Post>): Promise<void> => {
-    const existingPost = await getPostById(id);
+    const postRef = doc(postsCollection, id);
 
-    let post;
-    if (existingPost) {
-        post = {
-            ...existingPost,
-            ...updatedFields,
-            updatedAt: new Date(),
-        };
-    } else {
-        post = {
-            id,
-            createdAt: new Date(),
-            ...updatedFields,
-            updatedAt: new Date(),
-        };
-    }
+    await runTransaction(db, async (transaction) => {
+        const postDoc = await transaction.get(postRef);
 
-    const processedData = convertDatesToTimestamps(post);
-    await setDoc(doc(postsCollection, id), processedData);
+        const data = postDoc.exists()
+            ? { ...updatedFields, updatedAt: new Date() }
+            : { id, createdAt: new Date(), ...updatedFields, updatedAt: new Date() };
+
+        const processedData = convertDatesToTimestamps(data);
+        transaction.set(postRef, processedData, { merge: true });
+    });
 };
 
 // Eliminar un post

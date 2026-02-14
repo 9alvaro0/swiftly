@@ -12,6 +12,7 @@ import {
     limit,
     Timestamp,
     arrayUnion,
+    arrayRemove,
     FieldValue,
 } from "firebase/firestore";
 import { db } from "../config";
@@ -244,7 +245,31 @@ export const incrementUserStat = async (uid: string, stat: keyof User["stats"], 
     }
 };
 
+// Eliminar un valor de una estadística del usuario (arrayRemove atómico)
+export const removeUserStat = async (uid: string, stat: keyof User["stats"], value: string): Promise<void> => {
+    try {
+        if (!uid || typeof uid !== 'string') {
+            throw new Error("Valid user UID is required");
+        }
 
+        if (!stat || !value) {
+            throw new Error("Stat type and value are required");
+        }
+
+        const validStats = ['views', 'likes'];
+        if (!validStats.includes(stat)) {
+            throw new Error(`Invalid stat type: ${stat}. Must be one of: ${validStats.join(', ')}`);
+        }
+
+        await updateDoc(doc(usersCollection, uid), {
+            [`stats.${stat}`]: arrayRemove(value),
+            updatedAt: Timestamp.fromDate(new Date()),
+        });
+    } catch (error) {
+        console.error(`Error removing user stat (${uid}, ${stat}):`, error);
+        throw new Error(`Failed to remove user stat: ${error instanceof Error ? error.message : String(error)}`);
+    }
+};
 
 
 // Obtener todos los usuarios
