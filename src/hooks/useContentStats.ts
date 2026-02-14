@@ -32,15 +32,10 @@ export function useContentStats(): ContentStats {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                // Obtener todos los posts y tutoriales
-                const [posts, tutorials] = await Promise.all([
-                    getAllPublishedPosts({ type: "article" }),
-                    getAllPublishedPosts({ type: "tutorial" })
-                ]);
-                
-                // Additional filter to ensure only published content is counted
-                const publishedPosts = posts.filter(post => post.isPublished === true);
-                const publishedTutorials = tutorials.filter(tutorial => tutorial.isPublished === true);
+                // Single query for all published content, split client-side
+                const allContent = await getAllPublishedPosts({});
+                const publishedPosts = allContent.filter(item => item.type === "article");
+                const publishedTutorials = allContent.filter(item => item.type === "tutorial");
 
                 // Calcular tiempo total de lectura en horas
                 const postsMinutes = publishedPosts.reduce((total, item) => total + (item.readTime || 0), 0);

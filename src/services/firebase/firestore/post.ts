@@ -17,6 +17,7 @@ import {
     orderBy,
     limit,
     QueryConstraint,
+    documentId,
 } from "firebase/firestore";
 import { Post, PostWithAuthor } from "@/types/Post";
 import { db } from "../config";
@@ -314,26 +315,28 @@ export const getAllPublishedPostsWithAuthor = async (filters: PostFilters): Prom
     }
 };
 
-// Obtener posts por IDs con datos del autor
+// Obtener posts por IDs con datos del autor (batched queries, max 30 per batch)
 export const getPostsByIds = async (postIds: string[]): Promise<PostWithAuthor[]> => {
     try {
         if (!postIds.length) return [];
 
-        // Get posts in parallel
-        const posts = await Promise.all(
-            postIds.map(async (id) => {
-                try {
-                    return await getPostById(id);
-                } catch (error) {
-                    console.warn(`Error getting post with ID ${id}:`, error);
-                    return undefined;
-                }
-            })
-        );
+        // Deduplicate IDs
+        const uniqueIds = [...new Set(postIds)];
 
-        // Filter out undefined posts and batch populate authors
-        const validPosts = posts.filter((post): post is Post => post !== undefined);
-        return batchPopulateAuthors(validPosts);
+        // Firestore 'in' operator supports max 30 items per query
+        const BATCH_SIZE = 30;
+        const allPosts: Post[] = [];
+
+        for (let i = 0; i < uniqueIds.length; i += BATCH_SIZE) {
+            const batch = uniqueIds.slice(i, i + BATCH_SIZE);
+            const q = query(postsCollection, where(documentId(), "in", batch));
+            const snapshot = await getDocs(q);
+            snapshot.docs.forEach((doc) => {
+                allPosts.push(serializePost(doc.data() as Post));
+            });
+        }
+
+        return batchPopulateAuthors(allPosts);
     } catch (error) {
         console.error("Error getting posts by IDs:", error);
         return [];
