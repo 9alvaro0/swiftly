@@ -61,7 +61,6 @@ export const createTagViaAPI = async (tagData: { name: string; slug: string; des
             throw new Error(result.error || 'Failed to create tag');
         }
 
-        console.log(`Tag created successfully via API: ${result.tag.id}`);
         return result.tag;
     } catch (error) {
         console.error("Error creating tag via API:", error);
@@ -76,7 +75,6 @@ export const createTag = async (tag: Tag): Promise<void> => {
             throw new Error("Tag data or tag ID is required");
         }
         await setDoc(doc(tagsCollection, tag.id), tag);
-        console.log(`Tag created successfully with ID: ${tag.id}`);
     } catch (error) {
         console.error("Error creating tag:", error);
         throw new Error(`Failed to create tag: ${error instanceof Error ? error.message : String(error)}`);
@@ -95,11 +93,9 @@ export const getTagById = async (tagId: string): Promise<Tag | null> => {
         
         if (snapshot.exists()) {
             const tagData = snapshot.data();
-            console.log(`Tag retrieved successfully: ${tagId}`);
             return serializeTag(tagData, tagId);
         }
-        
-        console.log(`Tag not found: ${tagId}`);
+
         return null;
     } catch (error) {
         console.error(`Error getting tag by ID (${tagId}):`, error);
@@ -137,7 +133,6 @@ export const getAllTags = async (
                 return serializeTag(tagData, doc.id);
             });
             
-        console.log(`Retrieved ${tags.length} tags${searchTerm ? ` matching "${searchTerm}"` : ''}`);
         return tags;
     } catch (error) {
         console.error("Error getting all tags:", error);
@@ -158,7 +153,6 @@ export const updateTag = async (tagId: string, updatedFields: Partial<Tag>): Pro
         }
         
         await updateDoc(doc(tagsCollection, tagId), updatedFields);
-        console.log(`Tag updated successfully: ${tagId}`);
     } catch (error) {
         console.error(`Error updating tag (${tagId}):`, error);
         throw new Error(`Failed to update tag: ${error instanceof Error ? error.message : String(error)}`);
@@ -173,7 +167,6 @@ export const deleteTag = async (tagId: string): Promise<void> => {
         }
         
         await deleteDoc(doc(tagsCollection, tagId));
-        console.log(`Tag deleted successfully: ${tagId}`);
     } catch (error) {
         console.error(`Error deleting tag (${tagId}):`, error);
         throw new Error(`Failed to delete tag: ${error instanceof Error ? error.message : String(error)}`);

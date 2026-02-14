@@ -14,8 +14,6 @@ export async function GET(request: NextRequest) {
     const role = searchParams.get('role') || '';
     const status = searchParams.get('status') || '';
 
-    console.log(`Admin API: Fetching users with filters - search: "${searchTerm}", role: "${role}", status: "${status}"`);
-
     try {
       // Get Admin DB instance
       const adminDb = await getAdminDb();
@@ -27,17 +25,12 @@ export async function GET(request: NextRequest) {
         // Import getAllUsers dynamically and call it
         const { getAllUsers } = await import('@/services/firebase/firestore/user');
         const users = await getAllUsers(searchTerm, role, status);
-        console.log(`Admin API: Successfully fetched ${users.length} users via client SDK`);
         return Response.json({ users });
       }
 
       // Use Firebase Admin SDK to bypass security rules
-      console.log('Using Firebase Admin SDK to fetch users');
-
       const query = adminDb.collection('users').orderBy('createdAt', 'desc');
       const snapshot = await query.get();
-
-      console.log(`Admin API: Found ${snapshot.docs.length} user documents`);
 
       const users = snapshot.docs
         .map(doc => {
@@ -66,7 +59,6 @@ export async function GET(request: NextRequest) {
           return matchesRole && matchesStatus && matchesSearch;
         });
 
-      console.log(`Admin API: Successfully fetched ${users.length} filtered users`);
       return Response.json({ users });
     } catch (dbError) {
       console.error('Database error in users query:', dbError);

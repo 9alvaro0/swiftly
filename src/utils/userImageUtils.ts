@@ -22,7 +22,6 @@ export const generateUserImagePath = (userId: string, fileName: string): string 
         .replace(/\s+/g, "-")
         .replace(/[^\w\-.]/g, "");
 
-    console.log("Path generado:", `users/${userId}/${timestamp}-${safeFileName}`);
     return `users/${userId}/${timestamp}-${safeFileName}`;
 };
 

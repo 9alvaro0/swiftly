@@ -120,7 +120,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             sitemapEntries.push(tagEntry);
         }
 
-        console.log(`Generated sitemap with ${sitemapEntries.length} entries`);
         return sitemapEntries;
 
     } catch (error) {

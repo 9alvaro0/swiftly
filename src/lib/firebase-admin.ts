@@ -14,20 +14,12 @@ async function initializeFirebaseAdmin() {
     // If already initialized, get the existing instances
     adminDb = getFirestore();
     adminAuth = getAuth();
-    console.log('Firebase Admin SDK already initialized, using existing instance');
     return;
   }
 
   try {
-    console.log('Initializing Firebase Admin SDK...');
-    
     // Get credentials from Secret Manager or environment variables
     const credentials = await getFirebaseCredentials();
-    
-    console.log('Firebase Admin SDK initialization check:');
-    console.log('- Project ID:', credentials.projectId);
-    console.log('- Client Email:', credentials.clientEmail ? 'Present' : 'Missing');
-    console.log('- Private Key:', credentials.privateKey ? 'Present' : 'Missing');
     
     initializeApp({
       credential: cert({
@@ -40,7 +32,6 @@ async function initializeFirebaseAdmin() {
     
     adminDb = getFirestore();
     adminAuth = getAuth();
-    console.log('Firebase Admin SDK initialized successfully');
   } catch (error) {
     console.error('Failed to initialize Firebase Admin SDK:', error);
     // Keep adminDb and adminAuth as null so the app knows admin features are disabled

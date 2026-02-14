@@ -110,9 +110,8 @@ export default function SocialShareButtons({
         trackAnalytics: true,
         trackInFirebase,
         postId,
-        onShare: (analytics) => {
+        onShare: () => {
             // Custom analytics handling can be added here
-            console.log('Share analytics:', analytics);
         }
     });
 

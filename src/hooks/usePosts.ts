@@ -23,10 +23,14 @@ export function usePosts(initialFilters: PostFilters = {}) {
         setIsLoading(true);
         setError(null);
 
-        const fetchedPosts = await getAllPostsWithAuthor();
-        setPosts(fetchedPosts);
-
-        setIsLoading(false);
+        try {
+            const fetchedPosts = await getAllPostsWithAuthor();
+            setPosts(fetchedPosts);
+        } catch (err) {
+            setError(err instanceof Error ? err : new Error("Error loading posts"));
+        } finally {
+            setIsLoading(false);
+        }
     }, []);
 
     useEffect(() => {

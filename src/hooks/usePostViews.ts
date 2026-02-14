@@ -91,7 +91,7 @@ export function usePostViews(postId: string, initialViews: number = 0) {
         };
 
         registerView();
-    }, [postId, user]);
+    }, [postId, user?.uid]);
 
     return { views, loading, error };
 }

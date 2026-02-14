@@ -271,7 +271,6 @@ export const deletePostComments = async (postId: string): Promise<void> => {
 
         await batch.commit();
         
-        console.log(`Eliminados ${snapshot.size} comentarios del post ${postId}`);
     } catch (error) {
         console.error("Error deleting post comments:", error);
         throw error;

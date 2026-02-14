@@ -10,7 +10,7 @@ const siteTitle = 'aprendeSwift Blog';
 const siteDescription = 'Artículos y tutoriales sobre desarrollo web, programación y tecnología moderna';
 const authorName = 'aprendeSwift Team';
 
-export const dynamic = 'force-static';
+export const revalidate = 3600;
 
 export async function GET(): Promise<NextResponse> {
     try {
@@ -64,8 +64,6 @@ export async function GET(): Promise<NextResponse> {
             ],
             items: jsonItems,
         };
-
-        console.log(`Generated JSON feed with ${posts.length} posts`);
 
         // Return JSON Feed with proper headers
         return new NextResponse(JSON.stringify(jsonFeed, null, 2), {

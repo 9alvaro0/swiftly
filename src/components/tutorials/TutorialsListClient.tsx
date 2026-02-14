@@ -2,6 +2,7 @@
 
 "use client";
 
+import { useMemo } from "react";
 import TutorialCard from "@/components/tutorials/TutorialCard";
 import TutorialCardList from "@/components/tutorials/TutorialCardList";
 import Pagination from "@/components/ui/Pagination";
@@ -27,19 +28,18 @@ export default function TutorialsListClient({
     const TUTORIALS_PER_PAGE = 9;
 
     // Aplicar ordenamiento en el cliente
-    let sortedTutorials = [...tutorials];
-    switch (sortBy) {
-        case "popular":
-            sortedTutorials = sortedTutorials.sort((a, b) => (b.views || 0) - (a.views || 0));
-            break;
-        case "alphabetical":
-            sortedTutorials = sortedTutorials.sort((a, b) => a.title.localeCompare(b.title));
-            break;
-        case "recent":
-        default:
-            // Ya viene ordenado por fecha desde el servicio
-            break;
-    }
+    const sortedTutorials = useMemo(() => {
+        const sorted = [...tutorials];
+        switch (sortBy) {
+            case "popular":
+                return sorted.sort((a, b) => (b.views || 0) - (a.views || 0));
+            case "alphabetical":
+                return sorted.sort((a, b) => a.title.localeCompare(b.title));
+            case "recent":
+            default:
+                return sorted;
+        }
+    }, [tutorials, sortBy]);
 
     const indexOfLastItem = currentPage * TUTORIALS_PER_PAGE;
     const indexOfFirstItem = indexOfLastItem - TUTORIALS_PER_PAGE;

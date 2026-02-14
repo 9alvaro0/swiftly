@@ -1,3 +1,4 @@
+import { memo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Post } from "@/types/Post";
@@ -10,7 +11,7 @@ type TutorialCardProps = {
     searchTerm?: string;
 };
 
-export default function TutorialCard({ tutorial, searchTerm = "" }: TutorialCardProps) {
+function TutorialCard({ tutorial, searchTerm = "" }: TutorialCardProps) {
     const levelStyle = tutorial.level ? LEVEL_COLORS[tutorial.level] : null;
 
     return (
@@ -55,3 +56,5 @@ export default function TutorialCard({ tutorial, searchTerm = "" }: TutorialCard
         </Link>
     );
 }
+
+export default memo(TutorialCard);

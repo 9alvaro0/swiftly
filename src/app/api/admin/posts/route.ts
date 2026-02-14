@@ -13,8 +13,6 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status') || '';
     const type = searchParams.get('type') || '';
 
-    console.log(`Admin API: Fetching posts with filters - search: "${searchTerm}", status: "${status}", type: "${type}"`);
-
     // Use client SDK since posts are now public access
     const allPosts = await getAllPosts();
 
@@ -32,7 +30,6 @@ export async function GET(request: NextRequest) {
         return matchesStatus && matchesType && matchesSearch;
       });
 
-    console.log(`Admin API: Returning ${posts.length} filtered posts`);
     return Response.json({ posts });
   } catch (error) {
     if (error instanceof AuthError) {

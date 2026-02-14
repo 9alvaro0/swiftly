@@ -53,7 +53,15 @@ export const useAuthStore = create<AuthState>()(
             name: "auth-storage",
             partialize: (state) => ({
                 isAuthenticated: state.isAuthenticated,
-                user: state.user,
+                user: state.user
+                    ? {
+                          uid: state.user.uid,
+                          name: state.user.name,
+                          photoURL: state.user.photoURL,
+                          role: state.user.role,
+                          username: state.user.username,
+                      }
+                    : null,
             }),
         }
     )

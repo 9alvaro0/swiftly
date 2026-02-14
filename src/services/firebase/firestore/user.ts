@@ -92,7 +92,6 @@ export const createUserProfile = async (
             // No fallar la creación del usuario si falla la creación del autor
         }
         
-        console.log(`User profile created successfully: ${uid}`);
     } catch (error) {
         console.error(`Error creating user profile (${uid}):`, error);
         throw new Error(`Failed to create user profile: ${error instanceof Error ? error.message : String(error)}`);
@@ -111,7 +110,7 @@ export const saveUser = async (user: User): Promise<void> => {
             updatedAt: new Date(),
         });
 
-        await setDoc(doc(usersCollection, user.uid), userWithTimestamps);
+        await setDoc(doc(usersCollection, user.uid), userWithTimestamps, { merge: true });
         
         // También actualizar el perfil de autor público
         try {
@@ -124,7 +123,6 @@ export const saveUser = async (user: User): Promise<void> => {
             // No fallar la actualización del usuario si falla la actualización del autor
         }
         
-        console.log(`User saved successfully: ${user.uid}`);
     } catch (error) {
         console.error(`Error saving user (${user?.uid || 'unknown'}):`, error);
         throw new Error(`Failed to save user: ${error instanceof Error ? error.message : String(error)}`);
@@ -142,11 +140,9 @@ export const getUser = async (uid: string): Promise<User | null> => {
 
         if (userDoc.exists()) {
             const userData = serializeFirestoreData(userDoc.data());
-            console.log(`User retrieved successfully: ${uid}`);
             return userData as User;
         }
 
-        console.log(`User not found: ${uid}`);
         return null;
     } catch (error) {
         console.error(`Error getting user (${uid}):`, error);
@@ -169,7 +165,6 @@ export const updateLastLogin = async (uid: string): Promise<void> => {
             lastLogin: Timestamp.fromDate(now),
             updatedAt: Timestamp.fromDate(now),
         });
-        console.log(`Last login updated for user: ${uid}`);
     } catch (error) {
         console.error(`Error updating last login (${uid}):`, error);
         throw new Error(`Failed to update last login: ${error instanceof Error ? error.message : String(error)}`);
@@ -216,7 +211,6 @@ export const updateUser = async (uid: string, updatedFields: Partial<User>): Pro
             }
         }
         
-        console.log(`User updated successfully: ${uid}`);
     } catch (error) {
         console.error(`Error updating user (${uid}):`, error);
         throw new Error(`Failed to update user: ${error instanceof Error ? error.message : String(error)}`);
@@ -244,7 +238,6 @@ export const incrementUserStat = async (uid: string, stat: keyof User["stats"], 
             [`stats.${stat}`]: arrayUnion(value),
             updatedAt: Timestamp.fromDate(new Date()),
         });
-        console.log(`User stat incremented: ${uid} - ${stat}`);
     } catch (error) {
         console.error(`Error incrementing user stat (${uid}, ${stat}):`, error);
         throw new Error(`Failed to increment user stat: ${error instanceof Error ? error.message : String(error)}`);
@@ -288,7 +281,6 @@ export const getAllUsers = async (searchTerm: string = "", role: string = "", st
                 }
             });
             
-        console.log(`Retrieved ${users.length} users with filters - search: "${searchTerm}", role: "${role}", status: "${status}"`);
         return users;
     } catch (error) {
         console.error("Error getting all users:", error);

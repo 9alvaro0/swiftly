@@ -1,5 +1,5 @@
 // src/hooks/useLikes.ts
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { hasUserLikedPost, togglePostLike } from "@/services/firebase/firestore/post";
 import { PostWithAuthor } from "@/types/Post";
 import { User } from "@/types/User";
@@ -21,8 +21,6 @@ export function useLikes(post: PostWithAuthor, currentUser: User | null): UseLik
     const [likesCount, setLikesCount] = useState(Array.isArray(post.likedBy) ? post.likedBy.length : 0);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const previousPostId = useRef(post.id);
-
     // Verificar si el usuario ha dado like al post
     const checkLikeStatus = useCallback(async () => {
         if (!currentUser) return;
@@ -45,21 +43,14 @@ export function useLikes(post: PostWithAuthor, currentUser: User | null): UseLik
         } finally {
             setIsLoading(false);
         }
-    }, [currentUser, post]);
+    }, [currentUser?.uid, post.id, post.likedBy]);
 
     // Comprobar estado inicial de like
     useEffect(() => {
         if (currentUser && post) {
             checkLikeStatus();
         }
-    }, [checkLikeStatus, currentUser, post]);
-
-    useEffect(() => {
-        if (currentUser && post.id !== previousPostId.current) {
-            previousPostId.current = post.id;
-            checkLikeStatus();
-        }
-    }, [checkLikeStatus, currentUser, post]);
+    }, [checkLikeStatus, currentUser?.uid, post.id]);
 
     // Función para dar/quitar like
     const toggleLike = async () => {

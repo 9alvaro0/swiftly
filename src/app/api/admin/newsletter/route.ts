@@ -12,8 +12,6 @@ export async function GET(request: NextRequest) {
     const searchTerm = searchParams.get('search') || '';
     const status = searchParams.get('status') || '';
 
-    console.log(`Admin API: Fetching newsletter subscribers with filters - search: "${searchTerm}", status: "${status}"`);
-
     try {
       // Get Admin DB instance
       const adminDb = await getAdminDb();
@@ -32,8 +30,6 @@ export async function GET(request: NextRequest) {
         .collection('newsletterSubscribers')
         .orderBy('createdAt', 'desc')
         .get();
-
-      console.log(`Admin API: Found ${subscribersSnapshot.docs.length} newsletter documents`);
 
       const subscribers: NewsletterSubscriber[] = subscribersSnapshot.docs
         .map(doc => {
@@ -63,7 +59,6 @@ export async function GET(request: NextRequest) {
           return matchesStatus && matchesSearch;
         });
 
-      console.log(`Admin API: Returning ${subscribers.length} filtered subscribers`);
       return Response.json({ subscribers });
     } catch (dbError) {
       console.error('Database error in newsletter query:', dbError);
@@ -108,8 +103,6 @@ export async function PUT(request: NextRequest) {
       }, { status: 400 });
     }
 
-    console.log(`Admin API: Toggling newsletter status for subscriber ${subscriberId} from ${currentStatus} to ${!currentStatus}`);
-
     try {
       // Get Admin DB instance
       const adminDb = await getAdminDb();
@@ -132,8 +125,6 @@ export async function PUT(request: NextRequest) {
           updatedAt: new Date(),
           ...(currentStatus ? { deactivatedAt: new Date() } : { reactivatedAt: new Date() })
         });
-
-      console.log(`Admin API: Successfully toggled newsletter status for subscriber ${subscriberId}`);
 
       return Response.json({
         success: true,

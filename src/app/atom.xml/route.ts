@@ -11,7 +11,7 @@ const siteDescription = 'Artículos y tutoriales sobre desarrollo web, programac
 const authorName = 'aprendeSwift Team';
 const authorEmail = '9alvaro0@gmail.com';
 
-export const dynamic = 'force-static';
+export const revalidate = 3600;
 
 export async function GET(): Promise<NextResponse> {
     try {
@@ -70,8 +70,6 @@ ${categories}
 
 ${atomEntries}
 </feed>`;
-
-        console.log(`Generated Atom feed with ${posts.length} posts`);
 
         // Return Atom XML with proper headers
         return new NextResponse(atomXml, {

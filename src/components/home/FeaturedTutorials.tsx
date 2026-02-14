@@ -4,9 +4,7 @@ import { FiBookOpen } from "react-icons/fi";
 import TutorialCard from "../tutorials/TutorialCard";
 
 export default async function FeaturedTutorials() {
-    const tutorials = await getAllPublishedPosts({ type: "tutorial" });
-    // Additional filter to ensure only published tutorials are shown
-    const publishedTutorials = tutorials.filter(tutorial => tutorial.isPublished === true);
+    const publishedTutorials = await getAllPublishedPosts({ type: "tutorial" });
     const hasTutorials = publishedTutorials && publishedTutorials.length > 0;
 
     return (

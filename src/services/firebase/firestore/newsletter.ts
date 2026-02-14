@@ -43,11 +43,9 @@ export async function subscribe(email: string, metadata = {}): Promise<void> {
                         reactivated: true,
                     },
                 });
-                console.log(`Newsletter subscription reactivated for: ${normalizedEmail}`);
                 return;
             }
             
-            console.log(`Email already subscribed: ${normalizedEmail}`);
             throw new Error("Este correo ya está suscrito.");
         }
 
@@ -62,7 +60,6 @@ export async function subscribe(email: string, metadata = {}): Promise<void> {
             },
         });
         
-        console.log(`Newsletter subscription created for: ${normalizedEmail}`);
     } catch (error) {
         console.error(`Error subscribing to newsletter (${email}):`, error);
         
@@ -107,7 +104,6 @@ export async function unsubscribe(email: string): Promise<void> {
             unsubscribedAt: serverTimestamp(),
         });
         
-        console.log(`Newsletter unsubscription processed for: ${normalizedEmail}`);
     } catch (error) {
         console.error(`Error unsubscribing from newsletter (${email}):`, error);
         throw new Error(`Failed to unsubscribe from newsletter: ${error instanceof Error ? error.message : String(error)}`);
@@ -166,7 +162,6 @@ export async function toggleSubscriptionStatus(subscriberId: string, currentStat
             ...(currentStatus ? { deactivatedAt: serverTimestamp() } : { reactivatedAt: serverTimestamp() })
         });
         
-        console.log(`Newsletter subscription status toggled for subscriber: ${subscriberId}`);
     } catch (error) {
         console.error(`Error toggling subscription status (${subscriberId}):`, error);
         throw new Error(`Failed to toggle subscription status: ${error instanceof Error ? error.message : String(error)}`);

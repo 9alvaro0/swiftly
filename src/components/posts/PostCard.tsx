@@ -1,5 +1,6 @@
 // src/components/posts/PostCard.tsx
 
+import { memo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Eye, Heart } from "lucide-react";
@@ -12,7 +13,7 @@ interface PostCardProps {
     searchTerm?: string;
 }
 
-export default function PostCard({ post, variant = "default", searchTerm = "" }: PostCardProps) {
+function PostCard({ post, variant = "default", searchTerm = "" }: PostCardProps) {
     if (!post) return null;
 
     const isFeatured = variant === "featured";
@@ -114,3 +115,5 @@ export default function PostCard({ post, variant = "default", searchTerm = "" }:
         </Link>
     );
 }
+
+export default memo(PostCard);

@@ -128,7 +128,6 @@ export function useSocialShare(options: UseSocialShareOptions = {}) {
                     onShare(analytics);
                 }
                 
-                console.log(`Shared to ${platform.name}:`, analytics);
             }
 
             // Optional: Check if window was closed (user completed share)

@@ -11,7 +11,7 @@ const siteDescription = 'Artículos y tutoriales sobre desarrollo web, programac
 const siteLanguage = 'es-ES';
 const authorEmail = '9alvaro0@gmail.com';
 
-export const dynamic = 'force-static';
+export const revalidate = 3600;
 
 export async function GET(): Promise<NextResponse> {
     try {
@@ -69,8 +69,6 @@ ${categories}
 ${rssItems}
     </channel>
 </rss>`;
-
-        console.log(`Generated RSS feed with ${posts.length} posts`);
 
         // Return RSS XML with proper headers
         return new NextResponse(rssXml, {
