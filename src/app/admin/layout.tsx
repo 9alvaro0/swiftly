@@ -5,9 +5,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import type React from "react";
-import { MdDashboard, MdEmail } from "react-icons/md";
-import { FaBook, FaUsers } from "react-icons/fa";
-import { AiFillTags } from "react-icons/ai";
+import { LayoutDashboard, Mail, BookOpen, Users, Tags } from "lucide-react";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 interface AdminLayoutProps {
@@ -26,34 +24,34 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             name: "Dashboard",
             shortName: "Home",
             href: "/admin",
-            icon: MdDashboard,
+            icon: LayoutDashboard,
             exact: true,
         },
         {
             name: "Publicaciones",
             shortName: "Posts",
             href: "/admin/posts",
-            icon: FaBook,
+            icon: BookOpen,
         },
         {
             name: "Tags",
             shortName: "Tags",
             href: "/admin/tags",
-            icon: AiFillTags,
+            icon: Tags,
             disabled: false,
         },
         {
             name: "Usuarios",
             shortName: "Users",
             href: "/admin/users",
-            icon: FaUsers,
+            icon: Users,
             disabled: false,
         },
         {
             name: "Newsletter",
             shortName: "News",
             href: "/admin/newsletter",
-            icon: MdEmail,
+            icon: Mail,
             disabled: false,
         },
     ];

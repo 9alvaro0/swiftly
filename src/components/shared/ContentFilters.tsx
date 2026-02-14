@@ -3,7 +3,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { FaTimes } from "react-icons/fa";
+import { X } from "lucide-react";
 import { PostLevel } from "@/types/Post";
 import Select from "@/components/ui/Select";
 import Button from "@/components/ui/Button";
@@ -145,7 +145,7 @@ export default function ContentFilters({
                             onClick={handleClearFilters}
                             className="text-red-400 border-red-400 hover:bg-red-400/10"
                         >
-                            <FaTimes size={14} className="mr-2" />
+                            <X size={14} className="mr-2" />
                             Limpiar
                         </Button>
                     )}

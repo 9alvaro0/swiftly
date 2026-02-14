@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Spinner from "@/components/ui/Spinner";
 import Input from "../ui/Input";
-import { FiEye, FiEyeOff, FiMail } from "react-icons/fi";
+import { Eye, EyeOff, Mail } from "lucide-react";
 
 export default function RegisterForm() {
     const router = useRouter();
@@ -103,7 +103,7 @@ export default function RegisterForm() {
                     id="email"
                     label="Email"
                     placeholder="tu@email.com"
-                    icon={<FiMail />}
+                    icon={<Mail />}
                     name="email"
                     type="email"
                     autoComplete="email"
@@ -119,7 +119,7 @@ export default function RegisterForm() {
                     id="password"
                     label="Contraseña"
                     placeholder="••••••••"
-                    icon={showPassword ? <FiEyeOff /> : <FiEye />}
+                    icon={showPassword ? <EyeOff /> : <Eye />}
                     name="password"
                     type={showPassword ? "text" : "password"}
                     autoComplete="new-password"
@@ -136,7 +136,7 @@ export default function RegisterForm() {
                     id="confirmPassword"
                     label="Confirmar contraseña"
                     placeholder="••••••••"
-                    icon={showConfirmPassword ? <FiEyeOff className="h-5 w-5" /> : <FiEye className="h-5 w-5" />}
+                    icon={showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                     name="confirmPassword"
                     type={showConfirmPassword ? "text" : "password"}
                     autoComplete="new-password"

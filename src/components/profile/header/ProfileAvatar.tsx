@@ -1,7 +1,7 @@
 // src/components/profile/ProfileAvatar.tsx
 import React from "react";
 import { User } from "@/types/User";
-import { FaCamera } from "react-icons/fa";
+import { Camera } from "lucide-react";
 import Image from "next/image";
 
 interface ProfileAvatarProps {
@@ -33,7 +33,7 @@ export default function ProfileAvatar({ user, onEditClick }: ProfileAvatarProps)
                 className="absolute bottom-0 right-0 bg-gray-700 hover:bg-gray-600 rounded-full p-2 shadow-md transition-all border-2 border-gray-800"
                 aria-label="Editar foto de perfil"
             >
-                <FaCamera className="h-3 w-3 sm:h-4 sm:w-4 text-gray-300" />
+                <Camera className="h-3 w-3 sm:h-4 sm:w-4 text-gray-300" />
             </button>
         </div>
     );

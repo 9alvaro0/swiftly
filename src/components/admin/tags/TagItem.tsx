@@ -4,7 +4,7 @@
 
 import { Tag } from "@/types/Tag";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { BiEditAlt, BiTrash } from "react-icons/bi";
+import { Pencil, Trash2 } from "lucide-react";
 import DeleteTagDialog from "./DeleteTagDialog";
 import { useState } from "react";
 import { deleteTag } from "@/services/firebase/firestore/tags";
@@ -54,13 +54,13 @@ export default function TagItem({ tag }: TagItemProps) {
                             onClick={handleEdit}
                             className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 flex items-center"
                         >
-                            <BiEditAlt className="mr-1" /> Editar
+                            <Pencil className="mr-1" /> Editar
                         </button>
                         <button
                             onClick={handleDelete}
                             className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 flex items-center"
                         >
-                            <BiTrash className="mr-1" /> Eliminar
+                            <Trash2 className="mr-1" /> Eliminar
                         </button>
                     </div>
                 </td>

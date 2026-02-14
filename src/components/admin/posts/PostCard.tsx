@@ -3,14 +3,14 @@
 import Link from "next/link";
 import { Post } from "@/types/Post";
 import {
-    FiTrash2 as Trash2,
-    FiEdit2 as Edit,
-    FiGlobe as Globe,
-    FiEyeOff as EyeOff,
-    FiCalendar as Calendar,
-    FiClock as Clock,
-    FiExternalLink as ExternalLink,
-} from "react-icons/fi";
+    Trash2,
+    Pencil as Edit,
+    Globe,
+    EyeOff,
+    Calendar,
+    Clock,
+    ExternalLink,
+} from "lucide-react";
 import { usePost } from "@/hooks/usePost";
 import Modal from "@/components/ui/Modal";
 import { AdminCard, AdminCardBody, AdminCardFooter, AdminCardHeader } from "@/components/ui/AdminCard";

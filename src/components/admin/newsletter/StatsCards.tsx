@@ -1,4 +1,4 @@
-import { MdPeople, MdCheckCircle, MdCancel } from "react-icons/md";
+import { Users, CheckCircle, XCircle } from "lucide-react";
 
 interface StatsCardsProps {
     stats: {
@@ -14,7 +14,7 @@ export default function StatsCards({ stats }: StatsCardsProps) {
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
                 <div className="flex items-center gap-4">
                     <div className="bg-blue-600/20 p-3 rounded-xl">
-                        <MdPeople className="h-6 w-6 text-blue-400" />
+                        <Users className="h-6 w-6 text-blue-400" />
                     </div>
                     <div>
                         <p className="text-white/70 text-sm">Total Suscriptores</p>
@@ -26,7 +26,7 @@ export default function StatsCards({ stats }: StatsCardsProps) {
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
                 <div className="flex items-center gap-4">
                     <div className="bg-green-600/20 p-3 rounded-xl">
-                        <MdCheckCircle className="h-6 w-6 text-green-400" />
+                        <CheckCircle className="h-6 w-6 text-green-400" />
                     </div>
                     <div>
                         <p className="text-white/70 text-sm">Activos</p>
@@ -38,7 +38,7 @@ export default function StatsCards({ stats }: StatsCardsProps) {
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
                 <div className="flex items-center gap-4">
                     <div className="bg-red-600/20 p-3 rounded-xl">
-                        <MdCancel className="h-6 w-6 text-red-400" />
+                        <XCircle className="h-6 w-6 text-red-400" />
                     </div>
                     <div>
                         <p className="text-white/70 text-sm">Inactivos</p>

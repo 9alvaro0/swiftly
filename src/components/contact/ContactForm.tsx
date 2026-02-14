@@ -1,4 +1,4 @@
-import { FiArrowRight } from "react-icons/fi";
+import { ArrowRight } from "lucide-react";
 import Input from "@/components/ui/Input";
 import Spinner from "@/components/ui/Spinner";
 import Button from "@/components/ui/Button";
@@ -74,7 +74,7 @@ export default function ContactForm({
                         </span>
                     ) : (
                         <span className="flex items-center justify-center">
-                            Enviar mensaje <FiArrowRight className="ml-2 h-4 w-4" />
+                            Enviar mensaje <ArrowRight className="ml-2 h-4 w-4" />
                         </span>
                     )}
                 </Button>

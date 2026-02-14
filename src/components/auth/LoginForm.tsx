@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Spinner from "@/components/ui/Spinner";
 import Input from "../ui/Input";
-import { FiEye, FiEyeOff, FiMail } from "react-icons/fi";
+import { Eye, EyeOff, Mail } from "lucide-react";
 import Checkbox from "../ui/Checkbox";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -77,7 +77,7 @@ export default function LoginForm() {
                     id="email"
                     label="Email"
                     placeholder="tu@email.com"
-                    icon={<FiMail />}
+                    icon={<Mail />}
                     name="email"
                     type="email"
                     autoComplete="email"
@@ -98,7 +98,7 @@ export default function LoginForm() {
                     id="password"
                     label="Contraseña"
                     placeholder="••••••••"
-                    icon={showPassword ? <FiEyeOff /> : <FiEye />}
+                    icon={showPassword ? <EyeOff /> : <Eye />}
                     name="password"
                     type={showPassword ? "text" : "password"}
                     autoComplete="current-password"

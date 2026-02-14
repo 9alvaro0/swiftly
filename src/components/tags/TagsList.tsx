@@ -1,7 +1,7 @@
 // src/components/tags/TagsList.tsx
 
 import { getAllTags } from "@/services/firebase/firestore/tags";
-import { BsEmojiFrown } from "react-icons/bs";
+import { Frown } from "lucide-react";
 import Link from "next/link";
 import { tagToSlug } from "@/utils/tagUtils";
 
@@ -38,7 +38,7 @@ export default async function TagsList({ searchTerm }: { searchTerm: string }) {
                 </>
             ) : (
                 <div className="text-center py-16 flex flex-col items-center space-y-4">
-                    <BsEmojiFrown className="w-14 h-14 text-gray-600" />
+                    <Frown className="w-14 h-14 text-gray-600" />
                     <h3 className="text-xl font-semibold text-gray-300">No se encontraron tags</h3>
                     <p className="text-gray-400 max-w-sm">
                         No hay tags que coincidan con tu búsqueda.

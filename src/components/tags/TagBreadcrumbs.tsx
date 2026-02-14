@@ -2,8 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { FaHome, FaChevronRight, FaChevronLeft } from "react-icons/fa";
-import { AiFillTags } from "react-icons/ai";
+import { Home, ChevronRight, ChevronLeft, Tags } from "lucide-react";
 
 export default function TagBreadcrumbs({ tagName }: { tagName: string | undefined }) {
     const jsonLd = {
@@ -46,14 +45,14 @@ export default function TagBreadcrumbs({ tagName }: { tagName: string | undefine
                         href="/"
                         className="flex items-center hover:text-blue-400 transition-colors"
                     >
-                        <FaHome
+                        <Home
                             size={16}
                             className="mr-1"
                         />
                         <span className="hidden sm:inline">Inicio</span>
                     </Link>
 
-                    <FaChevronRight
+                    <ChevronRight
                         size={14}
                         className="text-white/60"
                         aria-hidden="true"
@@ -63,14 +62,14 @@ export default function TagBreadcrumbs({ tagName }: { tagName: string | undefine
                         href="/tags"
                         className="hover:text-blue-400 transition-colors flex items-center"
                     >
-                        <AiFillTags
+                        <Tags
                             size={16}
                             className="mr-1"
                         />
                         <span>Tags</span>
                     </Link>
 
-                    <FaChevronRight
+                    <ChevronRight
                         size={14}
                         className="text-white/60"
                         aria-hidden="true"
@@ -88,7 +87,7 @@ export default function TagBreadcrumbs({ tagName }: { tagName: string | undefine
                         href="/tags"
                         className="flex items-center text-blue-400 hover:text-blue-300 transition-colors group"
                     >
-                        <FaChevronLeft
+                        <ChevronLeft
                             size={16}
                             className="mr-1 group-hover:-translate-x-1 transition-transform"
                         />

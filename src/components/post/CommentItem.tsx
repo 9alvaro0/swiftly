@@ -7,7 +7,7 @@ import { Comment } from "@/types/Comment";
 import { useAuthStore } from "@/store/authStore";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
-import { FiHeart, FiMessageCircle, FiEdit2, FiTrash2, FiMoreHorizontal } from "react-icons/fi";
+import { Heart, MessageCircle, Pencil, Trash2, MoreHorizontal } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Textarea from "@/components/ui/Textarea";
 import Image from "next/image";
@@ -200,7 +200,7 @@ export default function CommentItem({
                                     aria-label="Opciones del comentario"
                                     className="p-2 hover:bg-white/10 rounded-xl text-white/30 hover:text-white/70 transition-all duration-200 opacity-0 group-hover:opacity-100 focus:opacity-100 hover:scale-105"
                                 >
-                                    <FiMoreHorizontal size={14} />
+                                    <MoreHorizontal size={14} />
                                 </button>
 
                                 {showMenu && (
@@ -213,7 +213,7 @@ export default function CommentItem({
                                             }}
                                             className="flex items-center gap-3 px-4 py-2.5 text-sm text-white hover:bg-white/10 w-full text-left transition-colors rounded-lg mx-1"
                                         >
-                                            <FiEdit2 size={14} className="text-blue-400" />
+                                            <Pencil size={14} className="text-blue-400" />
                                             Editar
                                         </button>
                                         <button
@@ -224,7 +224,7 @@ export default function CommentItem({
                                             }}
                                             className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 w-full text-left transition-colors rounded-lg mx-1"
                                         >
-                                            <FiTrash2 size={14} />
+                                            <Trash2 size={14} />
                                             Eliminar
                                         </button>
                                     </div>
@@ -285,7 +285,7 @@ export default function CommentItem({
                                         : "text-white/60 hover:text-red-400 hover:bg-red-500/10 border border-white/10 hover:border-red-500/30"
                                 } ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
-                                <FiHeart size={16} className={isLiked ? "fill-current" : ""} />
+                                <Heart size={16} className={isLiked ? "fill-current" : ""} />
                                 <span>{comment.likes || 0}</span>
                             </button>
 
@@ -296,7 +296,7 @@ export default function CommentItem({
                                     disabled={!isAuthenticated}
                                     className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 text-white/60 hover:text-blue-400 hover:bg-blue-500/10 border border-white/10 hover:border-blue-500/30 ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 >
-                                    <FiMessageCircle size={16} />
+                                    <MessageCircle size={16} />
                                     <span>Responder</span>
                                 </button>
                             )}
@@ -308,7 +308,7 @@ export default function CommentItem({
                         <div className={`mt-4 p-4 bg-gradient-to-br from-white/5 to-white/10 rounded-xl backdrop-blur-sm border border-white/20 shadow-xl`}>
                             <div className="space-y-4">
                                 <div className="flex items-center gap-2 mb-3">
-                                    <FiMessageCircle size={16} className="text-blue-400" />
+                                    <MessageCircle size={16} className="text-blue-400" />
                                     <span className="text-sm text-white/70">
                                         Respondiendo a <span className="text-blue-400 font-medium">{comment.author.name}</span>
                                     </span>

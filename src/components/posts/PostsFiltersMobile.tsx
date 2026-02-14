@@ -3,7 +3,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { FaFilter, FaTimes } from "react-icons/fa";
+import { Filter, X } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PostLevel } from "@/types/Post";
 import Button from "@/components/ui/Button";
@@ -104,7 +104,7 @@ export default function PostsFiltersMobile({
                     aria-label="Abrir filtros"
                     aria-expanded={isOpen}
                 >
-                    <FaFilter size={16} />
+                    <Filter size={16} />
                     {hasActiveFilters && (
                         <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                             {activeFiltersCount}
@@ -120,7 +120,7 @@ export default function PostsFiltersMobile({
                         className="text-red-600 px-3 h-10 shadow-none"
                         aria-label="Limpiar filtros"
                     >
-                        <FaTimes size={14} />
+                        <X size={14} />
                     </Button>
                 )}
             </div>
@@ -156,7 +156,7 @@ export default function PostsFiltersMobile({
                                 className="p-2 rounded-full hover:bg-neutral-100 transition-colors"
                                 aria-label="Cerrar filtros"
                             >
-                                <FaTimes size={16} className="text-neutral-500" />
+                                <X size={16} className="text-neutral-500" />
                             </button>
                         </div>
 

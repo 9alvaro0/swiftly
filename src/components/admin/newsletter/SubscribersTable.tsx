@@ -1,4 +1,4 @@
-import { MdEmail, MdCheckCircle, MdCancel } from "react-icons/md";
+import { Mail, CheckCircle, XCircle } from "lucide-react";
 
 interface Subscriber {
     id?: string;
@@ -54,7 +54,7 @@ export default function SubscribersTable({
                             >
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-3">
-                                        <MdEmail className="h-4 w-4 text-white/40" />
+                                        <Mail className="h-4 w-4 text-white/40" />
                                         <span className="text-white">{subscriber.email}</span>
                                     </div>
                                 </td>
@@ -67,9 +67,9 @@ export default function SubscribersTable({
                                         }`}
                                     >
                                         {subscriber.isActive ? (
-                                            <MdCheckCircle className="h-3 w-3" />
+                                            <CheckCircle className="h-3 w-3" />
                                         ) : (
-                                            <MdCancel className="h-3 w-3" />
+                                            <XCircle className="h-3 w-3" />
                                         )}
                                         {subscriber.isActive ? 'Activo' : 'Inactivo'}
                                     </span>
@@ -115,7 +115,7 @@ export default function SubscribersTable({
 
             {subscribers.length === 0 && (
                 <div className="text-center py-12">
-                    <MdEmail className="h-12 w-12 text-white/40 mx-auto mb-4" />
+                    <Mail className="h-12 w-12 text-white/40 mx-auto mb-4" />
                     <p className="text-white/70">
                         {searchTerm ? 'No se encontraron suscriptores que coincidan con la búsqueda' : 'No hay suscriptores'}
                     </p>
