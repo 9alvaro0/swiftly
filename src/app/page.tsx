@@ -6,6 +6,9 @@ import HeroSection from "@/components/home/HeroSection";
 export const metadata: Metadata = {
     title: "aprendeSwift - Tutoriales de Swift y SwiftUI",
     description: "Publicaciones, guías y tutoriales para aprender Swift y SwiftUI de manera efectiva.",
+    alternates: {
+        canonical: "https://aprendeswift.dev",
+    },
 };
 import FeaturedTutorials from "@/components/home/FeaturedTutorials";
 import LatestPosts from "@/components/home/latestPosts/LatestPosts";

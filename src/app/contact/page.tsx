@@ -7,6 +7,9 @@ import ContactPageClient from "@/components/contact/ContactPageClient";
 export const metadata: Metadata = {
     title: "Contacto - aprendeSwift",
     description: "Ponte en contacto con el equipo de aprendeSwift.",
+    alternates: {
+        canonical: "https://aprendeswift.dev/contact",
+    },
 };
 
 export default function ContactPage() {

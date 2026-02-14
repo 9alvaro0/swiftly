@@ -43,10 +43,11 @@ export async function POST(request: NextRequest) {
             .limit(1)
             .get();
 
+        // Unified error response to prevent email enumeration
         if (subscribersSnapshot.empty) {
             return NextResponse.json(
-                { error: 'Suscripción no encontrada o inactiva' },
-                { status: 403 }
+                { message: 'Procesado' },
+                { status: 200 }
             );
         }
 
@@ -56,9 +57,10 @@ export async function POST(request: NextRequest) {
         if (createdAt) {
             const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
             if (new Date(createdAt) < fiveMinutesAgo) {
+                // Same response to prevent timing enumeration
                 return NextResponse.json(
-                    { error: 'Suscripción no es reciente' },
-                    { status: 403 }
+                    { message: 'Procesado' },
+                    { status: 200 }
                 );
             }
         }

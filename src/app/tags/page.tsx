@@ -6,6 +6,9 @@ import { Suspense } from "react";
 export const metadata: Metadata = {
     title: "Tags - aprendeSwift",
     description: "Explora contenido por etiquetas en aprendeSwift.",
+    alternates: {
+        canonical: "https://aprendeswift.dev/tags",
+    },
 };
 import TagsSkeleton from "@/components/tags/skeletons/TagsSkeleton";
 import TagsHeader from "@/components/tags/TagsHeader";

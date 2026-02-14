@@ -6,6 +6,9 @@ import PostsHeader from "@/components/posts/PostsHeader";
 export const metadata: Metadata = {
     title: "Artículos - aprendeSwift",
     description: "Artículos sobre Swift, SwiftUI, y desarrollo iOS.",
+    alternates: {
+        canonical: "https://aprendeswift.dev/posts",
+    },
 };
 import PostsList from "@/components/posts/PostsList";
 import PostsListSkeleton from "@/components/posts/skeletons/PostsListSkeleton";

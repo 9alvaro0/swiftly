@@ -1,6 +1,7 @@
 // src/app/tags/[slug]/page.tsx
 
 import React, { Suspense } from "react";
+import type { Metadata } from "next";
 import TagBreadcrumbs from "@/components/tags/TagBreadcrumbs";
 import PostGrid from "@/components/home/latestPosts/PostList";
 import PostGridSkeleton from "@/components/posts/skeletons/PostGridSkeleton";
@@ -10,6 +11,23 @@ interface TagPageProps {
     params: Promise<{
         slug: string;
     }>;
+}
+
+export async function generateMetadata({ params }: TagPageProps): Promise<Metadata> {
+    const { slug } = await params;
+    const tagName = slugToTag(slug);
+
+    return {
+        title: `${tagName} - aprendeSwift`,
+        description: `Artículos y tutoriales sobre ${tagName} en aprendeSwift.`,
+        alternates: {
+            canonical: `https://aprendeswift.dev/tags/${slug}`,
+        },
+        robots: {
+            index: true,
+            follow: true,
+        },
+    };
 }
 
 export default async function TagPage(props: TagPageProps) {

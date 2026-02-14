@@ -158,8 +158,8 @@ service cloud.firestore {
       // Lista: acceso público para queries y listas
       allow list: if true;
       
-      // Creación: usuarios autenticados pueden crear con validación básica
-      allow create: if isAuthenticated() &&
+      // Creación: solo autores, editores y admins pueden crear posts
+      allow create: if isAuthor() &&
                        request.auth.uid == incomingData().authorId &&
                        incomingData().authorId is string &&
                        incomingData().title is string &&
@@ -302,9 +302,8 @@ service cloud.firestore {
                       request.auth.token.email != null &&
                       resource.data.email == request.auth.token.email.lower());
       
-      // Lista: admins pueden listar todos, usuarios autenticados pueden hacer queries
-      // Nota: Firebase requiere allow list para que funcionen las queries
-      allow list: if isAdmin() || isAuthenticated();
+      // Lista: solo admins pueden listar suscriptores
+      allow list: if isAdmin();
       
       // Creación: público con validación
       allow create: if isValidSubscriptionCreate();

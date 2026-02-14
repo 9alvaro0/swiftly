@@ -6,6 +6,9 @@ import TutorialsHeader from "@/components/tutorials/TutorialsHeader";
 export const metadata: Metadata = {
     title: "Tutoriales - aprendeSwift",
     description: "Tutoriales paso a paso de Swift y SwiftUI para todos los niveles.",
+    alternates: {
+        canonical: "https://aprendeswift.dev/tutorials",
+    },
 };
 import TutorialsList from "@/components/tutorials/TutorialsList";
 import TutorialListSkeleton from "@/components/tutorials/skeletons/TutorialListSkeleton";
