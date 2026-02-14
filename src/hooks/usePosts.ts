@@ -2,9 +2,10 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { PostWithAuthor, PostLevel, PostType } from "@/types/Post";
+import { Post, PostLevel, PostType } from "@/types/Post";
 import { PostStats } from "@/types/PostStats";
-import { getAllPostsWithAuthor } from "@/services/firebase/firestore/post";
+import { getAllPosts } from "@/services/firebase/firestore/post";
+import { getAuthor } from "@/services/firebase/firestore/authors";
 
 interface PostFilters {
     level?: string;
@@ -14,17 +15,18 @@ interface PostFilters {
 }
 
 export function usePosts(initialFilters: PostFilters = {}) {
-    const [posts, setPosts] = useState<PostWithAuthor[]>([]);
+    const [posts, setPosts] = useState<Post[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
     const [filters, setFilters] = useState<PostFilters>(initialFilters);
+    const [topAuthorName, setTopAuthorName] = useState<string | undefined>();
 
     const loadAllPosts = useCallback(async () => {
         setIsLoading(true);
         setError(null);
 
         try {
-            const fetchedPosts = await getAllPostsWithAuthor();
+            const fetchedPosts = await getAllPosts();
             setPosts(fetchedPosts);
         } catch (err) {
             setError(err instanceof Error ? err : new Error("Error loading posts"));
@@ -108,8 +110,8 @@ export function usePosts(initialFilters: PostFilters = {}) {
             });
 
             // Contabilizar por autor
-            if (post.author?.id) {
-                postsByAuthor[post.author.id] = (postsByAuthor[post.author.id] || 0) + 1;
+            if (post.authorId) {
+                postsByAuthor[post.authorId] = (postsByAuthor[post.authorId] || 0) + 1;
             }
 
             // Acumular vistas
@@ -150,18 +152,21 @@ export function usePosts(initialFilters: PostFilters = {}) {
 
         // Encontrar el autor con más posts
         let topAuthor: PostStats["topAuthor"] = undefined;
+        let topAuthorId: string | undefined;
+        let topAuthorCount = 0;
         Object.entries(postsByAuthor).forEach(([authorId, count]) => {
-            if (!topAuthor || count > topAuthor.postCount) {
-                const author = posts.find((p) => p.author?.id === authorId)?.author;
-                if (author) {
-                    topAuthor = {
-                        id: authorId,
-                        name: author.name,
-                        postCount: count,
-                    };
-                }
+            if (count > topAuthorCount) {
+                topAuthorId = authorId;
+                topAuthorCount = count;
             }
         });
+        if (topAuthorId && topAuthorName) {
+            topAuthor = {
+                id: topAuthorId,
+                name: topAuthorName,
+                postCount: topAuthorCount,
+            };
+        }
 
         // Ordenar tags por popularidad
         const topTags = Object.entries(postsByTag)
@@ -215,8 +220,22 @@ export function usePosts(initialFilters: PostFilters = {}) {
             postsByAuthor,
             topAuthor,
         };
-    }, [posts, filteredPosts]);
-    
+    }, [posts, filteredPosts, topAuthorName]);
+
+    // Fetch top author name lazily (1 read instead of N)
+    useEffect(() => {
+        if (!posts.length) return;
+        const authorCounts: Record<string, number> = {};
+        posts.forEach(p => {
+            if (p.authorId) authorCounts[p.authorId] = (authorCounts[p.authorId] || 0) + 1;
+        });
+        const topId = Object.entries(authorCounts).sort((a, b) => b[1] - a[1])[0]?.[0];
+        if (!topId) return;
+        getAuthor(topId).then(author => {
+            if (author) setTopAuthorName(author.name);
+        }).catch(() => {});
+    }, [posts]);
+
     const updateFilters = useCallback((newFilters: Partial<PostFilters>) => {
         setFilters((prev) => ({ ...prev, ...newFilters }));
     }, []);

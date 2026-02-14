@@ -110,35 +110,22 @@ export const getTagById = async (tagId: string): Promise<Tag | null> => {
 export const getAllTags = async (
     searchTerm: string = "",
 ): Promise<Tag[]> => {
-    try {
-        const q = query(tagsCollection, limit(200));
-        const snapshot = await getDocs(q);
-        
-        const tags = snapshot.docs
-            .filter((doc) => {
-                try {
-                    const data = doc.data() as Tag;
-                    if (!data || !data.name) {
-                        console.warn(`Invalid tag data found in document: ${doc.id}`);
-                        return false;
-                    }
-                    return data.name.toLowerCase().includes(searchTerm.toLowerCase());
-                } catch (error) {
-                    console.warn(`Error processing tag document ${doc.id}:`, error);
-                    return false;
-                }
-            })
-            .map((doc) => {
-                const tagData = doc.data();
-                return serializeTag(tagData, doc.id);
-            });
-            
-        return tags;
-    } catch (error) {
-        console.error("Error getting all tags:", error);
-        // Return empty array as fallback to prevent app crashes
-        return [];
-    }
+    const q = query(tagsCollection, limit(200));
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs
+        .filter((doc) => {
+            const data = doc.data() as Tag;
+            if (!data || !data.name) {
+                console.warn(`Invalid tag data found in document: ${doc.id}`);
+                return false;
+            }
+            return data.name.toLowerCase().includes(searchTerm.toLowerCase());
+        })
+        .map((doc) => {
+            const tagData = doc.data();
+            return serializeTag(tagData, doc.id);
+        });
 };
 
 // Actualizar un tag

@@ -106,75 +106,59 @@ export const createComment = async (commentData: CreateCommentData, author: Comm
  * Obtener comentarios de un post
  */
 export const getPostComments = async (postId: string, includeReplies: boolean = true): Promise<Comment[]> => {
-    try {
-        if (!postId) {
-            throw new Error("ID del post requerido");
-        }
-
-        // Simplificar query para evitar problemas de índices
-        const q = query(
-            commentsCollection,
-            where("postId", "==", postId)
-        );
-
-        const snapshot = await getDocs(q);
-        
-        // Filtrar en el cliente para evitar problemas de índices
-        let comments = snapshot.docs
-            .map((doc) => {
-                const commentData = serializeFirestoreData(doc.data());
-                const comment = { id: doc.id, ...commentData } as Comment;
-                return comment;
-            })
-            .filter((comment) => {
-                // Filtrar solo comentarios no aprobados (ya no necesitamos filtrar isDeleted)
-                const isValid = comment.isApproved !== false; // Solo excluir si explícitamente es false
-                if (!includeReplies) {
-                    // Si no incluimos respuestas, solo comentarios principales
-                    return isValid && !comment.parentId;
-                }
-                return isValid;
-            })
-            .sort((a, b) => {
-                // Ordenar por fecha de creación
-                const dateA = new Date(a.createdAt).getTime();
-                const dateB = new Date(b.createdAt).getTime();
-                return dateA - dateB;
-            });
-        
-        if (includeReplies) {
-            // Organizar comentarios en estructura jerárquica
-            comments = organizeComments(comments);
-        }
-
-        return comments;
-    } catch (error) {
-        console.error("Error getting post comments:", error);
-        return [];
+    if (!postId) {
+        throw new Error("ID del post requerido");
     }
+
+    const q = query(
+        commentsCollection,
+        where("postId", "==", postId)
+    );
+
+    const snapshot = await getDocs(q);
+
+    let comments = snapshot.docs
+        .map((doc) => {
+            const commentData = serializeFirestoreData(doc.data());
+            const comment = { id: doc.id, ...commentData } as Comment;
+            return comment;
+        })
+        .filter((comment) => {
+            const isValid = comment.isApproved !== false;
+            if (!includeReplies) {
+                return isValid && !comment.parentId;
+            }
+            return isValid;
+        })
+        .sort((a, b) => {
+            const dateA = new Date(a.createdAt).getTime();
+            const dateB = new Date(b.createdAt).getTime();
+            return dateA - dateB;
+        });
+
+    if (includeReplies) {
+        comments = organizeComments(comments);
+    }
+
+    return comments;
 };
 
 /**
  * Obtener un comentario por ID
  */
 export const getCommentById = async (commentId: string): Promise<Comment | null> => {
-    try {
-        if (!commentId) {
-            throw new Error("ID del comentario requerido");
-        }
+    if (!commentId) {
+        throw new Error("ID del comentario requerido");
+    }
 
-        const commentDoc = await getDoc(doc(commentsCollection, commentId));
-        
-        if (!commentDoc.exists()) {
-            return null;
-        }
+    const commentDoc = await getDoc(doc(commentsCollection, commentId));
 
-        const commentData = serializeFirestoreData(commentDoc.data());
-        return { id: commentDoc.id, ...commentData } as Comment;
-    } catch (error) {
-        console.error("Error getting comment by ID:", error);
+    if (!commentDoc.exists()) {
         return null;
     }
+
+    const commentData = serializeFirestoreData(commentDoc.data());
+    return { id: commentDoc.id, ...commentData } as Comment;
 };
 
 /**
@@ -281,30 +265,23 @@ export const deletePostComments = async (postId: string): Promise<void> => {
  * Obtener comentarios de un usuario
  */
 export const getUserComments = async (userId: string, limit: number = 50): Promise<Comment[]> => {
-    try {
-        if (!userId) {
-            throw new Error("ID del usuario requerido");
-        }
-
-        const q = query(
-            commentsCollection,
-            where("authorId", "==", userId),
-            orderBy("createdAt", "desc"),
-            firestoreLimit(limit)
-        );
-
-        const snapshot = await getDocs(q);
-        
-        const comments = snapshot.docs.map((doc) => {
-            const commentData = serializeFirestoreData(doc.data());
-            return { id: doc.id, ...commentData } as Comment;
-        });
-
-        return comments;
-    } catch (error) {
-        console.error("Error getting user comments:", error);
-        return [];
+    if (!userId) {
+        throw new Error("ID del usuario requerido");
     }
+
+    const q = query(
+        commentsCollection,
+        where("authorId", "==", userId),
+        orderBy("createdAt", "desc"),
+        firestoreLimit(limit)
+    );
+
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.map((doc) => {
+        const commentData = serializeFirestoreData(doc.data());
+        return { id: doc.id, ...commentData } as Comment;
+    });
 };
 
 /**

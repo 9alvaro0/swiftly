@@ -26,10 +26,9 @@ export default function PostFeaturedImage({
                 <Image
                     src={image}
                     alt={title}
-                    width={800}
-                    height={450}
+                    fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-                    className="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                    className="object-contain transition-transform duration-300 group-hover:scale-105"
                     priority
                     onLoad={() => setIsLoading(false)}
                 />

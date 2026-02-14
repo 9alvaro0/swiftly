@@ -271,42 +271,23 @@ export const removeUserStat = async (uid: string, stat: keyof User["stats"], val
 
 // Obtener todos los usuarios
 export const getAllUsers = async (searchTerm: string = "", role: string = "", status: string = ""): Promise<User[]> => {
-    try {
-        const q = query(usersCollection, orderBy("createdAt", "desc"), limit(500));
-        const querySnapshot = await getDocs(q);
+    const q = query(usersCollection, orderBy("createdAt", "desc"), limit(500));
+    const querySnapshot = await getDocs(q);
 
-        const users = querySnapshot.docs
-            .map((doc) => {
-                try {
-                    const userData = serializeFirestoreData(doc.data());
-                    return userData as User;
-                } catch (error) {
-                    console.warn(`Error processing user document ${doc.id}:`, error);
-                    return null;
-                }
-            })
-            .filter((user): user is User => user !== null)
-            .filter((user) => {
-                try {
-                    const isMatchingRole = role ? user.role === role : true;
-                    const isMatchingStatus = status ? user.isActive === (status === "active") : true;
-                    const isMatchingSearchTerm = searchTerm
-                        ? (user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           user.name?.toLowerCase().includes(searchTerm.toLowerCase()))
-                        : true;
+    return querySnapshot.docs
+        .map((doc) => {
+            const userData = serializeFirestoreData(doc.data());
+            return userData as User;
+        })
+        .filter((user) => {
+            const isMatchingRole = role ? user.role === role : true;
+            const isMatchingStatus = status ? user.isActive === (status === "active") : true;
+            const isMatchingSearchTerm = searchTerm
+                ? (user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                   user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                   user.name?.toLowerCase().includes(searchTerm.toLowerCase()))
+                : true;
 
-                    return isMatchingRole && isMatchingStatus && isMatchingSearchTerm;
-                } catch (error) {
-                    console.warn(`Error filtering user ${user.uid}:`, error);
-                    return false;
-                }
-            });
-            
-        return users;
-    } catch (error) {
-        console.error("Error getting all users:", error);
-        // Return empty array as fallback
-        return [];
-    }
+            return isMatchingRole && isMatchingStatus && isMatchingSearchTerm;
+        });
 };

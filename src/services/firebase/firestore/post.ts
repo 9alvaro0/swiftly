@@ -48,79 +48,58 @@ const populatePostAuthor = async (post: Post): Promise<PostWithAuthor | null> =>
 
 // Obtener un post por ID
 export const getPostById = async (id: string): Promise<Post | undefined> => {
-    try {
-        const postRef = doc(postsCollection, id);
-        const postDoc = await getDoc(postRef);
-        if (postDoc.exists()) {
-            return serializePost(postDoc.data() as Post);
-        }
-        return undefined;
-    } catch (error) {
-        console.error("Error getting post by ID:", error);
-        return undefined;
+    const postRef = doc(postsCollection, id);
+    const postDoc = await getDoc(postRef);
+    if (postDoc.exists()) {
+        return serializePost(postDoc.data() as Post);
     }
+    return undefined;
 };
 
 // Obtener un post por slug
 export const getPostBySlug = async (slug: string): Promise<Post | undefined> => {
-    try {
-        const q = query(postsCollection, where("slug", "==", slug), limit(1));
-        const snapshot = await getDocs(q);
-        
-        if (!snapshot.empty) {
-            const postDoc = snapshot.docs[0];
-            return serializePost(postDoc.data() as Post);
-        }
-        return undefined;
-    } catch (error) {
-        console.error("Error getting post by slug:", error);
-        return undefined;
+    const q = query(postsCollection, where("slug", "==", slug), limit(1));
+    const snapshot = await getDocs(q);
+
+    if (!snapshot.empty) {
+        const postDoc = snapshot.docs[0];
+        return serializePost(postDoc.data() as Post);
     }
+    return undefined;
 };
 
 // Obtener posts por tags
 export const getPostsByTag = async (tag: string): Promise<Post[]> => {
-    try {
-        // Use simple query to avoid composite index requirements
-        const q = query(
-            postsCollection, 
-            where("tags", "array-contains", tag)
-        );
-        const snapshot = await getDocs(q);
-        
-        let posts = snapshot.docs.map((doc) => {
-            return serializePost(doc.data() as Post);
-        });
-        
-        // Filter for published posts client-side
-        posts = posts.filter((post) => post.isPublished === true);
-        
-        // Sort by publishedAt descending
-        posts.sort((a, b) => {
-            const dateA = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
-            const dateB = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
-            return dateB - dateA;
-        });
-        
-        return posts;
-    } catch (error) {
-        console.error("Error getting posts by tag:", error);
-        return [];
-    }
+    const q = query(
+        postsCollection,
+        where("tags", "array-contains", tag)
+    );
+    const snapshot = await getDocs(q);
+
+    let posts = snapshot.docs.map((doc) => {
+        return serializePost(doc.data() as Post);
+    });
+
+    // Filter for published posts client-side
+    posts = posts.filter((post) => post.isPublished === true);
+
+    // Sort by publishedAt descending
+    posts.sort((a, b) => {
+        const dateA = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
+        const dateB = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
+        return dateB - dateA;
+    });
+
+    return posts;
 };
 
 // Obtener todos los posts
 export const getAllPosts = async (): Promise<Post[]> => {
-    try {
-        const q = query(postsCollection, orderBy("createdAt", "desc"), limit(200));
-        const snapshot = await getDocs(q);
-        return snapshot.docs.map((doc) => {
-            return serializePost(doc.data() as Post);
-        });
-    } catch (error) {
-        console.error("Error getting all posts:", error);
-        return [];
-    }
+    const q = query(postsCollection, orderBy("createdAt", "desc"), limit(200));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((doc) => {
+        return serializePost(doc.data() as Post);
+    });
 };
 
 // Obtener todos los posts publicados
@@ -133,55 +112,50 @@ interface PostFilters {
 }
 
 export const getAllPublishedPosts = async (filters: PostFilters): Promise<Post[]> => {
-    try {
-        const { searchTerm = "", level = "", tag = "", type = "", limitCount = 200 } = filters;
+    const { searchTerm = "", level = "", tag = "", type = "", limitCount = 200 } = filters;
 
-        // Build query with server-side filters (requires composite indexes)
-        const constraints: QueryConstraint[] = [
-            where("isPublished", "==", true),
-        ];
+    // Build query with server-side filters (requires composite indexes)
+    const constraints: QueryConstraint[] = [
+        where("isPublished", "==", true),
+    ];
 
-        // Use server-side type filter when composite index is available
-        if (type) {
-            constraints.push(where("type", "==", type));
-        }
-
-        // Use server-side level filter when composite index is available
-        if (level) {
-            constraints.push(where("level", "==", level));
-        }
-
-        constraints.push(orderBy("publishedAt", "desc"));
-        constraints.push(limit(limitCount));
-
-        const q = query(postsCollection, ...constraints);
-
-        const snapshot = await getDocs(q);
-        let posts = snapshot.docs.map((doc) => {
-            return serializePost(doc.data() as Post);
-        });
-
-        // Tag and search filters remain client-side (array-contains can't combine with other inequality)
-        if (tag) {
-            posts = posts.filter((post) =>
-                post.tags && post.tags.some(postTag =>
-                    postTag.toLowerCase() === tag.toLowerCase()
-                )
-            );
-        }
-
-        if (searchTerm) {
-            posts = posts.filter((post) =>
-                post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                post.description.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-        }
-
-        return posts;
-    } catch (error) {
-        console.error("Error getting published posts:", error);
-        return [];
+    // Use server-side type filter when composite index is available
+    if (type) {
+        constraints.push(where("type", "==", type));
     }
+
+    // Use server-side level filter when composite index is available
+    if (level) {
+        constraints.push(where("level", "==", level));
+    }
+
+    constraints.push(orderBy("publishedAt", "desc"));
+    constraints.push(limit(limitCount));
+
+    const q = query(postsCollection, ...constraints);
+
+    const snapshot = await getDocs(q);
+    let posts = snapshot.docs.map((doc) => {
+        return serializePost(doc.data() as Post);
+    });
+
+    // Tag and search filters remain client-side (array-contains can't combine with other inequality)
+    if (tag) {
+        posts = posts.filter((post) =>
+            post.tags && post.tags.some(postTag =>
+                postTag.toLowerCase() === tag.toLowerCase()
+            )
+        );
+    }
+
+    if (searchTerm) {
+        posts = posts.filter((post) =>
+            post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            post.description.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }
+
+    return posts;
 };
 
 // Crea o actualiza un post (atomic: uses transaction to avoid TOCTOU race)
@@ -280,99 +254,69 @@ const batchPopulateAuthors = async (posts: Post[]): Promise<PostWithAuthor[]> =>
 
 // Obtener un post por slug con datos del autor
 export const getPostBySlugWithAuthor = async (slug: string): Promise<PostWithAuthor | undefined> => {
-    try {
-        const post = await getPostBySlug(slug);
-        if (!post) return undefined;
-        
-        const postWithAuthor = await populatePostAuthor(post);
-        return postWithAuthor || undefined;
-    } catch (error) {
-        console.error("Error getting post by slug with author:", error);
-        return undefined;
-    }
+    const post = await getPostBySlug(slug);
+    if (!post) return undefined;
+
+    const postWithAuthor = await populatePostAuthor(post);
+    return postWithAuthor || undefined;
 };
 
 
 // Obtener todos los posts con datos del autor
 export const getAllPostsWithAuthor = async (): Promise<PostWithAuthor[]> => {
-    try {
-        const posts = await getAllPosts();
-        return batchPopulateAuthors(posts);
-    } catch (error) {
-        console.error("Error getting all posts with author:", error);
-        return [];
-    }
+    const posts = await getAllPosts();
+    return batchPopulateAuthors(posts);
 };
 
 // Obtener todos los posts publicados con datos del autor
 export const getAllPublishedPostsWithAuthor = async (filters: PostFilters): Promise<PostWithAuthor[]> => {
-    try {
-        const posts = await getAllPublishedPosts(filters);
-        return batchPopulateAuthors(posts);
-    } catch (error) {
-        console.error("Error getting published posts with author:", error);
-        return [];
-    }
+    const posts = await getAllPublishedPosts(filters);
+    return batchPopulateAuthors(posts);
 };
 
 // Obtener posts por IDs con datos del autor (batched queries, max 30 per batch)
 export const getPostsByIds = async (postIds: string[]): Promise<PostWithAuthor[]> => {
-    try {
-        if (!postIds.length) return [];
+    if (!postIds.length) return [];
 
-        // Deduplicate IDs
-        const uniqueIds = [...new Set(postIds)];
+    // Deduplicate IDs
+    const uniqueIds = [...new Set(postIds)];
 
-        // Firestore 'in' operator supports max 30 items per query
-        const BATCH_SIZE = 30;
-        const allPosts: Post[] = [];
+    // Firestore 'in' operator supports max 30 items per query
+    const BATCH_SIZE = 30;
+    const allPosts: Post[] = [];
 
-        for (let i = 0; i < uniqueIds.length; i += BATCH_SIZE) {
-            const batch = uniqueIds.slice(i, i + BATCH_SIZE);
-            const q = query(postsCollection, where(documentId(), "in", batch));
-            const snapshot = await getDocs(q);
-            snapshot.docs.forEach((doc) => {
-                allPosts.push(serializePost(doc.data() as Post));
-            });
-        }
-
-        return batchPopulateAuthors(allPosts);
-    } catch (error) {
-        console.error("Error getting posts by IDs:", error);
-        return [];
+    for (let i = 0; i < uniqueIds.length; i += BATCH_SIZE) {
+        const batch = uniqueIds.slice(i, i + BATCH_SIZE);
+        const q = query(postsCollection, where(documentId(), "in", batch));
+        const snapshot = await getDocs(q);
+        snapshot.docs.forEach((doc) => {
+            allPosts.push(serializePost(doc.data() as Post));
+        });
     }
+
+    return batchPopulateAuthors(allPosts);
 };
 
 // Obtener posts que el usuario ha dado like
 export const getUserLikedPosts = async (userStats: { likes: string[] } | undefined): Promise<PostWithAuthor[]> => {
-    try {
-        if (!userStats?.likes?.length) return [];
-        
-        // Get posts by liked post IDs, most recent first
-        const likedPostIds = [...userStats.likes].reverse(); // Most recent likes first
-        const posts = await getPostsByIds(likedPostIds);
-        
-        // Filter only published posts
-        return posts.filter(post => post.isPublished);
-    } catch (error) {
-        console.error("Error getting user liked posts:", error);
-        return [];
-    }
+    if (!userStats?.likes?.length) return [];
+
+    // Get posts by liked post IDs, most recent first
+    const likedPostIds = [...userStats.likes].reverse();
+    const posts = await getPostsByIds(likedPostIds);
+
+    // Filter only published posts
+    return posts.filter(post => post.isPublished);
 };
 
 // Obtener posts que el usuario ha visto recientemente
 export const getUserViewedPosts = async (userStats: { views: string[] } | undefined): Promise<PostWithAuthor[]> => {
-    try {
-        if (!userStats?.views?.length) return [];
-        
-        // Get posts by viewed post IDs, most recent first (last 20 views)
-        const recentViewedIds = [...userStats.views].reverse().slice(0, 20); // Last 20 views
-        const posts = await getPostsByIds(recentViewedIds);
-        
-        // Filter only published posts
-        return posts.filter(post => post.isPublished);
-    } catch (error) {
-        console.error("Error getting user viewed posts:", error);
-        return [];
-    }
+    if (!userStats?.views?.length) return [];
+
+    // Get posts by viewed post IDs, most recent first (last 20 views)
+    const recentViewedIds = [...userStats.views].reverse().slice(0, 20);
+    const posts = await getPostsByIds(recentViewedIds);
+
+    // Filter only published posts
+    return posts.filter(post => post.isPublished);
 };
