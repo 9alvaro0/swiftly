@@ -362,13 +362,16 @@ const organizeComments = (comments: Comment[]): Comment[] => {
 
     // Organizar jerarquía
     comments.forEach(comment => {
+        const node = commentMap.get(comment.id);
+        if (!node) return;
+
         if (comment.parentId) {
             const parent = commentMap.get(comment.parentId);
             if (parent) {
-                parent.replies!.push(commentMap.get(comment.id)!);
+                (parent.replies ??= []).push(node);
             }
         } else {
-            rootComments.push(commentMap.get(comment.id)!);
+            rootComments.push(node);
         }
     });
 

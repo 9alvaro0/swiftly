@@ -51,6 +51,6 @@ export async function generateMetadata({ params }: GenerateMetadataProps): Promi
             follow: true,
         },
         authors: post.author?.name ? [{ name: post.author.name }] : undefined,
-        publisher: "https://www.linkedin.com/in/alvaro-guerra/",
+        publisher: "aprendeSwift",
     };
 }

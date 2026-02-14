@@ -167,15 +167,16 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                 rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
                 components={{
                     h1: ({ children, ...props }) => {
+                        // Remap markdown h1 to h2 to avoid duplicate H1s (PostHeader already renders the page H1)
                         const id = slugify(children?.toString() || "");
                         return (
-                            <h1
+                            <h2
                                 id={id}
                                 className="text-3xl font-bold mt-12 mb-6 pb-2 border-b border-white/10 scroll-mt-20 text-white"
                                 {...props}
                             >
                                 {children}
-                            </h1>
+                            </h2>
                         );
                     },
                     h2: ({ children, ...props }) => {

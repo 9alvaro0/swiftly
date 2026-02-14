@@ -8,7 +8,7 @@ import { SITE_URL } from '@/lib/constants';
 
 const baseUrl = SITE_URL;
 const siteTitle = 'aprendeSwift Blog';
-const siteDescription = 'Artículos y tutoriales sobre desarrollo web, programación y tecnología moderna';
+const siteDescription = 'Publicaciones, guias y tutoriales para aprender Swift y SwiftUI de manera efectiva';
 const siteLanguage = 'es-ES';
 const authorEmail = '9alvaro0@gmail.com';
 

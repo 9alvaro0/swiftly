@@ -185,30 +185,23 @@ export const deletePost = async (id: string): Promise<void> => {
 export const togglePostLike = async (postId: string, userId: string, likeStatus: boolean): Promise<void> => {
     const postRef = doc(postsCollection, postId);
 
-    try {
-        await runTransaction(db, async (transaction) => {
-            const postDoc = await transaction.get(postRef);
+    await runTransaction(db, async (transaction) => {
+        const postDoc = await transaction.get(postRef);
 
-            if (!postDoc.exists()) {
-                throw new Error("El post no existe");
-            }
+        if (!postDoc.exists()) {
+            throw new Error("El post no existe");
+        }
 
-            // Determinar la operación a realizar según el estado del like
-            if (likeStatus) {
-                // Agregar like
-                transaction.update(postRef, {
-                    likedBy: arrayUnion(userId),
-                });
-            } else {
-                // Quitar like
-                transaction.update(postRef, {
-                    likedBy: arrayRemove(userId),
-                });
-            }
-        });
-    } catch (error) {
-        throw error;
-    }
+        if (likeStatus) {
+            transaction.update(postRef, {
+                likedBy: arrayUnion(userId),
+            });
+        } else {
+            transaction.update(postRef, {
+                likedBy: arrayRemove(userId),
+            });
+        }
+    });
 };
 
 // Incrementa el contador de vistas de un post (single write, no re-read)
