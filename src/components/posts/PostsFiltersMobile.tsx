@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { FaFilter, FaTimes } from "react-icons/fa";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PostLevel } from "@/types/Post";
@@ -30,6 +30,8 @@ export default function PostsFiltersMobile({
     const searchParams = useSearchParams();
     const pathName = usePathname();
     const { replace } = useRouter();
+    const triggerRef = useRef<HTMLButtonElement>(null);
+    const drawerRef = useRef<HTMLDivElement>(null);
 
     const levelFilter = searchParams.get("level") || "";
     const tagFilter = searchParams.get("tag") || "";
@@ -64,23 +66,43 @@ export default function PostsFiltersMobile({
         }, 50);
     };
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         setIsClosing(true);
         setTimeout(() => {
             setIsOpen(false);
             setIsClosing(false);
+            triggerRef.current?.focus();
         }, 300);
-    };
+    }, []);
+
+    // Escape key handler & focus drawer on open
+    useEffect(() => {
+        if (!isOpen || isOpening) return;
+
+        drawerRef.current?.focus();
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                handleClose();
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [isOpen, isOpening, handleClose]);
 
     return (
         <>
             {/* Botón de filtros móvil */}
             <div className="lg:hidden flex items-center gap-1">
                 <Button
+                    ref={triggerRef}
                     variant="outline"
                     size="lg"
                     onClick={handleOpen}
                     className="relative px-3 h-10 shadow-none"
+                    aria-label="Abrir filtros"
+                    aria-expanded={isOpen}
                 >
                     <FaFilter size={16} />
                     {hasActiveFilters && (
@@ -96,6 +118,7 @@ export default function PostsFiltersMobile({
                         size="lg"
                         onClick={handleClearFilters}
                         className="text-red-600 px-3 h-10 shadow-none"
+                        aria-label="Limpiar filtros"
                     >
                         <FaTimes size={14} />
                     </Button>
@@ -106,24 +129,32 @@ export default function PostsFiltersMobile({
             {isOpen && (
                 <div className="fixed inset-0 z-50 lg:hidden">
                     {/* Overlay */}
-                    <div 
+                    <div
                         className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
                             isClosing ? 'opacity-0' : isOpening ? 'opacity-0' : 'opacity-100'
                         }`}
                         onClick={handleClose}
                     />
-                    
+
                     {/* Drawer desde abajo */}
-                    <div className={`mobile-filter-drawer absolute bottom-0 left-0 right-0 rounded-t-2xl p-6 min-h-[60vh] max-h-[90vh] overflow-y-auto transition-transform duration-300 ease-out ${
-                        isClosing ? 'translate-y-full' : isOpening ? 'translate-y-full' : 'translate-y-0'
-                    }`}>
+                    <div
+                        ref={drawerRef}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="filter-title"
+                        tabIndex={-1}
+                        className={`mobile-filter-drawer absolute bottom-0 left-0 right-0 rounded-t-2xl p-6 min-h-[60vh] max-h-[90vh] overflow-y-auto transition-transform duration-300 ease-out ${
+                            isClosing ? 'translate-y-full' : isOpening ? 'translate-y-full' : 'translate-y-0'
+                        }`}
+                    >
                         <div className="flex items-center justify-between mb-6">
-                            <h3 className="text-lg font-semibold">
+                            <h3 id="filter-title" className="text-lg font-semibold">
                                 Filtros
                             </h3>
                             <button
                                 onClick={handleClose}
                                 className="p-2 rounded-full hover:bg-neutral-100 transition-colors"
+                                aria-label="Cerrar filtros"
                             >
                                 <FaTimes size={16} className="text-neutral-500" />
                             </button>
@@ -155,8 +186,8 @@ export default function PostsFiltersMobile({
                                 <label className="block text-sm font-medium mb-3">
                                     Ordenar por
                                 </label>
-                                <SortOptions 
-                                    sortBy={sortBy} 
+                                <SortOptions
+                                    sortBy={sortBy}
                                     onSortChange={onSortChange}
                                 />
                             </div>
@@ -166,8 +197,8 @@ export default function PostsFiltersMobile({
                                 <label className="block text-sm font-medium mb-3">
                                     Vista
                                 </label>
-                                <ViewToggle 
-                                    viewMode={viewMode} 
+                                <ViewToggle
+                                    viewMode={viewMode}
                                     onViewChange={onViewChange}
                                 />
                             </div>

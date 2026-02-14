@@ -110,7 +110,7 @@ export default function PostCard({ post, onPostDeleted }: Props) {
                             <Link
                                 href={`/admin/posts/edit/${post.slug}`}
                                 className="text-gray-300 hover:text-white hover:bg-gray-700 p-2 rounded-lg transition-colors duration-200"
-                                title="Editar"
+                                aria-label={`Editar publicación: ${post.title}`}
                             >
                                 <Edit size={16} />
                             </Link>
@@ -123,7 +123,7 @@ export default function PostCard({ post, onPostDeleted }: Props) {
                                         ? "text-orange-400 hover:bg-orange-900/20"
                                         : "text-green-400 hover:bg-green-900/20"
                                 } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
-                                title={isPublished ? "Despublicar" : "Publicar"}
+                                aria-label={isPublished ? `Despublicar: ${post.title}` : `Publicar: ${post.title}`}
                             >
                                 {isPublished ? <EyeOff size={16} /> : <Globe size={16} />}
                             </button>
@@ -134,7 +134,7 @@ export default function PostCard({ post, onPostDeleted }: Props) {
                                 className={`text-red-400 hover:bg-red-900/20 p-2 rounded-lg transition-colors duration-200 ${
                                     isLoading ? "opacity-50 cursor-not-allowed" : ""
                                 }`}
-                                title="Eliminar"
+                                aria-label={`Eliminar publicación: ${post.title}`}
                             >
                                 <Trash2 size={16} />
                             </button>
