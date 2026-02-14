@@ -23,7 +23,7 @@ export default function PostBreadcrumbs({ branch, postTitle }: PostBreadcrumbsPr
     const { url, label } = getBranchInfo();
 
     return (
-        <nav className="flex items-center text-sm mb-8 text-white/80 font-medium">
+        <nav aria-label="Breadcrumb" className="flex items-center text-sm mb-8 text-white/80 font-medium">
             <div className="flex items-center space-x-2">
                 <Link
                     href="/"

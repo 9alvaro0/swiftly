@@ -55,7 +55,7 @@ export default function Pagination({ totalItems, itemsPerPage }: PaginationProps
     };
 
     return (
-        <nav className="flex justify-center items-center gap-2 mt-6 select-none">
+        <nav aria-label="Paginación" className="flex justify-center items-center gap-2 mt-6 select-none">
             <button
                 onClick={() => goToPage(currentPage - 1)}
                 disabled={currentPage === 1}

@@ -28,8 +28,14 @@ export const useAuthStore = create<AuthState>()(
 
             setUser: (user) => {
                 set((state) => {
-                    // Only update if user data has actually changed
-                    if (JSON.stringify(state.user) === JSON.stringify(user)) {
+                    // Only update if persisted fields have changed (avoids full JSON.stringify)
+                    if (
+                        state.user?.uid === user?.uid &&
+                        state.user?.name === user?.name &&
+                        state.user?.photoURL === user?.photoURL &&
+                        state.user?.role === user?.role &&
+                        state.user?.username === user?.username
+                    ) {
                         return state;
                     }
                     return { user };

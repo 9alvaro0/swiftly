@@ -1,5 +1,7 @@
 // src/app/privacy/page.tsx
 
+export const dynamic = 'force-static';
+
 import { Metadata } from "next";
 import PrivacyHeader from "@/components/privacy/PrivacyHeader";
 import InformationCollectedSection from "@/components/privacy/InformationCollectedSection";

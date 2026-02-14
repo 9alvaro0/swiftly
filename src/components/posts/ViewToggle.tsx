@@ -22,6 +22,7 @@ export default function ViewToggle({ viewMode, onViewChange }: ViewToggleProps) 
                         : "text-white/60 hover:text-white/80 hover:bg-white/10"
                 }`}
                 aria-label="Vista en grid"
+                aria-pressed={viewMode === "grid"}
             >
                 <FaTh size={14} />
             </button>
@@ -33,6 +34,7 @@ export default function ViewToggle({ viewMode, onViewChange }: ViewToggleProps) 
                         : "text-white/60 hover:text-white/80 hover:bg-white/10"
                 }`}
                 aria-label="Vista en lista"
+                aria-pressed={viewMode === "list"}
             >
                 <FaList size={14} />
             </button>

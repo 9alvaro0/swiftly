@@ -281,42 +281,35 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
     
-    // Legacy collection - migrar a newsletter
+    // Active newsletter collection (used by subscribe flow)
     match /newsletterSubscribers/{subscriberId} {
-      function isValidSubscription() {
-        let data = incomingData();
-        return hasFields(['email', 'subscribedAt']) &&
-               isValidEmail(data.email);
-      }
-      
-      function isValidSubscriptionCreate() {
+      function isValidNewsletterCreate() {
         let data = incomingData();
         return hasFields(['email', 'createdAt', 'isActive']) &&
                isValidEmail(data.email) &&
                data.isActive is bool;
       }
-      
+
       // Lectura: admins pueden leer todo, usuarios pueden leer su propia suscripción
       allow read: if isAdmin() ||
-                     (isAuthenticated() && 
+                     (isAuthenticated() &&
                       request.auth.token.email != null &&
                       resource.data.email == request.auth.token.email.lower());
-      
+
       // Lista: solo admins pueden listar suscriptores
       allow list: if isAdmin();
-      
+
       // Creación: público con validación
-      allow create: if isValidSubscriptionCreate();
-      
+      allow create: if isValidNewsletterCreate();
+
       // Actualización: admins o usuarios actualizando su propia suscripción
-      allow update: if isAdmin() || 
-                       (isAuthenticated() && 
+      allow update: if isAdmin() ||
+                       (isAuthenticated() &&
                         request.auth.token.email != null &&
                         resource.data.email == request.auth.token.email.lower() &&
-                        // Solo permitir cambiar isActive
                         request.resource.data.email == resource.data.email &&
                         request.resource.data.keys().hasAll(['isActive']));
-      
+
       // Eliminación: solo admins
       allow delete: if isAdmin();
     }

@@ -65,10 +65,13 @@ export async function POST(request: NextRequest) {
             }
         }
 
+        // Sanitize name: trim and limit to 100 chars
+        const sanitizedName = typeof name === 'string' ? name.trim().slice(0, 100) : undefined;
+
         // Send welcome email
         const result = await emailService.sendNewsletterWelcome({
             email: normalizedEmail,
-            name: name || undefined
+            name: sanitizedName || undefined
         });
 
         if (!result.success) {

@@ -1,5 +1,7 @@
 // src/app/cookies/page.tsx
 
+export const dynamic = 'force-static';
+
 import { Metadata } from "next";
 import CookiesHeader from "@/components/cookies/CookiesHeader";
 import WhatWeStoreSection from "@/components/cookies/WhatWeStoreSection";

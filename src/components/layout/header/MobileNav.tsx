@@ -62,7 +62,7 @@ export default function MobileNav({ isOpen, onToggle, isAuthenticated, user, isL
                 }`}
                 style={{ zIndex: 35 }}
             >
-                <nav className="container mx-auto px-4 py-8">
+                <nav aria-label="Menú principal móvil" className="container mx-auto px-4 py-8">
                     <NavLinks
                         isMobile={true}
                         onItemClick={onToggle}

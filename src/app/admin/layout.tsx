@@ -163,7 +163,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 <div className="flex flex-1">
                     {/* Desktop Sidebar */}
                     <aside className="hidden md:block w-64 bg-gray-900/50 backdrop-blur-sm border-r border-gray-700">
-                        <nav className="p-4">
+                        <nav aria-label="Panel de administración" className="p-4">
                             <DesktopNavContent />
                         </nav>
                     </aside>

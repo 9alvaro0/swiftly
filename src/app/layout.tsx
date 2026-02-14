@@ -7,8 +7,21 @@ import AuthInitializer from "@/components/auth/AuthInitializer";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
-    title: "aprendeSwift - Tutoriales de Swift y SwiftUI",
+    metadataBase: new URL('https://aprendeswift.dev'),
+    title: {
+        default: "aprendeSwift - Tutoriales de Swift y SwiftUI",
+        template: "%s | aprendeSwift",
+    },
     description: "Publicaciones, guías y tutoriales para aprender Swift y SwiftUI de manera efectiva",
+    openGraph: {
+        type: 'website',
+        locale: 'es_ES',
+        siteName: 'aprendeSwift',
+        images: [{ url: '/icons/logo.png', width: 512, height: 512, alt: 'aprendeSwift' }],
+    },
+    twitter: {
+        card: 'summary_large_image',
+    },
     alternates: {
         types: {
             'application/rss+xml': [

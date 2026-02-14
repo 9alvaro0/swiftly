@@ -22,7 +22,7 @@ export default function PostFeaturedImage({
 
     return (
         <figure className="mb-10">
-            <div className="relative w-full rounded-lg overflow-hidden shadow-lg">
+            <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden shadow-lg">
                 <Image
                     src={image}
                     alt={title}

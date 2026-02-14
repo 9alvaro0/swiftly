@@ -274,6 +274,31 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                             </code>
                         );
                     },
+                    iframe: ({ src, title, ...props }: React.IframeHTMLAttributes<HTMLIFrameElement>) => {
+                        if (!src) return null;
+                        const allowedHosts = [
+                            'www.youtube.com', 'youtube.com', 'youtube-nocookie.com', 'www.youtube-nocookie.com',
+                            'player.vimeo.com',
+                            'codepen.io',
+                            'codesandbox.io',
+                            'stackblitz.com',
+                        ];
+                        try {
+                            const url = new URL(src);
+                            if (!allowedHosts.includes(url.hostname)) return null;
+                        } catch {
+                            return null;
+                        }
+                        return (
+                            <iframe
+                                src={src}
+                                title={title || 'Contenido embebido'}
+                                loading="lazy"
+                                className="w-full aspect-video rounded-lg my-6"
+                                {...props}
+                            />
+                        );
+                    },
                     img: ({ src, alt }) => {
                         if (!src) return null;
                         
@@ -288,6 +313,7 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                                     className="w-auto h-auto max-h-[600px] mx-auto rounded-lg object-contain"
                                     width={600}
                                     height={800}
+                                    sizes="(max-width: 768px) 100vw, 600px"
                                     unoptimized={isGif}
                                 />
                                 {alt && <div className="text-center mt-2 text-sm text-gray-400 italic">{alt}</div>}

@@ -1,5 +1,7 @@
 // src/app/terms/page.tsx
 
+export const dynamic = 'force-static';
+
 import { Metadata } from "next";
 import TermsHeader from "@/components/terms/TermsHeader";
 import AcceptanceSection from "@/components/terms/AcceptanceSection";
