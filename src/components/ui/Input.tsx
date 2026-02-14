@@ -44,9 +44,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                         <button
                             type="button"
                             onClick={onIconClick}
+                            aria-label="Icono de entrada"
                             className={`text-white/40 ${
                                 onIconClick ? "hover:text-white" : ""
-                            } transition-colors focus:outline-none`}
+                            } transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         >
                             {icon}
                         </button>

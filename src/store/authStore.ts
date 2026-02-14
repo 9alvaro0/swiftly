@@ -40,8 +40,8 @@ export const useAuthStore = create<AuthState>()(
             setError: (error) => set({ error }),
             logout: async () => {
                 try {
-                    set({ user: null, isAuthenticated: false, error: null });
                     await firebaseLogout();
+                    set({ user: null, isAuthenticated: false, error: null });
                     toast.success("Sesión cerrada");
                 } catch (error) {
                     console.error("Error during logout:", error);

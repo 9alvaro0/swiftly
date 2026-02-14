@@ -22,10 +22,6 @@ export const metadata: Metadata = {
             ],
         },
     },
-    other: {
-        'msvalidate.01': '', // Add Bing verification if needed
-        'google-site-verification': '', // Add Google verification if needed
-    },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

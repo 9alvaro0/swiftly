@@ -35,7 +35,7 @@ export default function PostCard({ post, variant = "default", searchTerm = "" }:
                     <div className={`relative w-full ${isFeatured ? "h-96" : "h-48"}`}>
                         {post.imageUrl || post.coverImage ? (
                             <Image
-                                src={post.imageUrl}
+                                src={post.imageUrl || post.coverImage || ""}
                                 alt={post.title || "Imagen del post"}
                                 fill
                                 className="object-cover transition-transform duration-500 group-hover:scale-105"

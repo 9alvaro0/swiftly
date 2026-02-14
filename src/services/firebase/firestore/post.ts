@@ -10,6 +10,7 @@ import {
     arrayUnion,
     arrayRemove,
     increment,
+    updateDoc,
     runTransaction,
     query,
     where,
@@ -257,31 +258,9 @@ export const hasUserLikedPost = async (postId: string, userId: string): Promise<
 // Incrementa el contador de vistas de un post
 export const incrementPostViews = async (postId: string): Promise<{ views: number }> => {
     const postRef = doc(postsCollection, postId);
-
-    try {
-        let newViewCount = 0;
-
-        await runTransaction(db, async (transaction) => {
-            const postDoc = await transaction.get(postRef);
-
-            if (!postDoc.exists()) {
-                throw new Error("El post no existe");
-            }
-
-            // Obtenemos el número actual de vistas o 0 si no existe
-            const currentViews = postDoc.data().views || 0;
-            newViewCount = currentViews + 1;
-
-            // Incrementamos el contador de vistas
-            transaction.update(postRef, {
-                views: increment(1),
-            });
-        });
-
-        return { views: newViewCount };
-    } catch (error) {
-        throw error;
-    }
+    await updateDoc(postRef, { views: increment(1) });
+    const updated = await getDoc(postRef);
+    return { views: updated.data()?.views || 1 };
 };
 
 // === FUNCTIONS WITH POPULATED AUTHOR DATA ===
