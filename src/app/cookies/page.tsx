@@ -13,10 +13,18 @@ import PolicyChangesSection from "@/components/cookies/PolicyChangesSection";
 import ContactSection from "@/components/cookies/ContactSection";
 import CookiesFooter from "@/components/cookies/CookiesFooter";
 
+import { SITE_URL } from "@/lib/constants";
+
 export const metadata: Metadata = {
     title: "Política de Cookies - aprendeSwift",
     description: "Transparencia sobre nuestro uso de almacenamiento local y tecnologías similares en aprendeSwift.",
+    alternates: { canonical: `${SITE_URL}/cookies` },
     openGraph: {
+        title: "Política de Cookies - aprendeSwift",
+        description: "Transparencia sobre nuestro uso de almacenamiento local y tecnologías similares en aprendeSwift.",
+        url: `${SITE_URL}/cookies`,
+    },
+    twitter: {
         title: "Política de Cookies - aprendeSwift",
         description: "Transparencia sobre nuestro uso de almacenamiento local y tecnologías similares en aprendeSwift.",
     },

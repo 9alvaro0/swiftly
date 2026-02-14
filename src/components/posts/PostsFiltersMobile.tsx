@@ -186,7 +186,7 @@ export default function PostsFiltersMobile({
                         <div className="space-y-6">
                             {/* Filtro de Nivel */}
                             <div>
-                                <label className="block text-sm font-medium mb-3">
+                                <label htmlFor="level-mobile" className="block text-sm font-medium mb-3">
                                     Nivel de dificultad
                                 </label>
                                 <Select
@@ -206,9 +206,9 @@ export default function PostsFiltersMobile({
 
                             {/* Ordenamiento */}
                             <div>
-                                <label className="block text-sm font-medium mb-3">
+                                <span className="block text-sm font-medium mb-3">
                                     Ordenar por
-                                </label>
+                                </span>
                                 <SortOptions
                                     sortBy={sortBy}
                                     onSortChange={onSortChange}
@@ -217,9 +217,9 @@ export default function PostsFiltersMobile({
 
                             {/* Vista */}
                             <div>
-                                <label className="block text-sm font-medium mb-3">
+                                <span className="block text-sm font-medium mb-3">
                                     Vista
-                                </label>
+                                </span>
                                 <ViewToggle
                                     viewMode={viewMode}
                                     onViewChange={onViewChange}

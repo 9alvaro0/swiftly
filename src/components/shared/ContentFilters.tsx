@@ -98,7 +98,7 @@ export default function ContentFilters({
                 <div className="hidden lg:flex items-end gap-4">
                     {/* Filtro de Nivel */}
                     <div className="w-48">
-                        <label className="block text-sm font-medium text-white/80 mb-2">
+                        <label htmlFor="level" className="block text-sm font-medium text-white/80 mb-2">
                             {levelLabel}
                         </label>
                         <Select
@@ -127,9 +127,9 @@ export default function ContentFilters({
                     {/* Toggle de vista */}
                     {showViewToggle && (
                         <div>
-                            <label className="block text-sm font-medium text-white/80 mb-2">
+                            <span className="block text-sm font-medium text-white/80 mb-2" id="view-label">
                                 Vista
-                            </label>
+                            </span>
                             <ViewToggle 
                                 viewMode={viewMode} 
                                 onViewChange={handleViewChange} 

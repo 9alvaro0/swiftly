@@ -70,7 +70,7 @@ export function useSocialShare(options: UseSocialShareOptions = {}) {
         };
     }, []);
 
-    const shareToplatform = useCallback(async (
+    const shareToPlatform = useCallback(async (
         platformKey: string,
         url: string,
         title: string,
@@ -289,7 +289,7 @@ export function useSocialShare(options: UseSocialShareOptions = {}) {
     }, []);
 
     return {
-        shareToplatform,
+        shareToPlatform,
         copyToClipboard,
         nativeShare,
         isSharing,

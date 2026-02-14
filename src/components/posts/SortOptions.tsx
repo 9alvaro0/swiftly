@@ -14,7 +14,7 @@ interface SortOptionsProps {
 export default function SortOptions({ sortBy, onSortChange }: SortOptionsProps) {
     return (
         <div className="w-48">
-            <label className="block text-sm font-medium text-white/80 mb-2">
+            <label htmlFor="sort" className="block text-sm font-medium text-white/80 mb-2">
                 Ordenar por
             </label>
             <Select

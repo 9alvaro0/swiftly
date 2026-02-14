@@ -43,16 +43,20 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
                 {icon && (
                     <div className="absolute inset-y-0 left-3 flex items-center">
-                        <button
-                            type="button"
-                            onClick={onIconClick}
-                            aria-label="Icono de entrada"
-                            className={`text-white/40 ${
-                                onIconClick ? "hover:text-white" : ""
-                            } transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                        >
-                            {icon}
-                        </button>
+                        {onIconClick ? (
+                            <button
+                                type="button"
+                                onClick={onIconClick}
+                                aria-label={props.type === "password" ? "Mostrar contraseña" : props.type === "text" && id?.includes("password") ? "Ocultar contraseña" : "Icono de entrada"}
+                                className="text-white/40 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                {icon}
+                            </button>
+                        ) : (
+                            <span className="text-white/40" aria-hidden="true">
+                                {icon}
+                            </span>
+                        )}
                     </div>
                 )}
             </div>

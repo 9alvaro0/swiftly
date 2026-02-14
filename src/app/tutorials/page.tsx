@@ -20,6 +20,9 @@ export const metadata: Metadata = {
         description: "Tutoriales paso a paso de Swift y SwiftUI para todos los niveles.",
     },
 };
+// ISR: revalidate every 5 minutes
+export const revalidate = 300;
+
 import TutorialsList from "@/components/tutorials/TutorialsList";
 import TutorialListSkeleton from "@/components/tutorials/skeletons/TutorialListSkeleton";
 import ContentPageLayout from "@/components/shared/ContentPageLayout";

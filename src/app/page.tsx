@@ -5,10 +5,13 @@ import HeroSection from "@/components/home/HeroSection";
 import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
-    title: "aprendeSwift - Tutoriales de Swift y SwiftUI",
+    title: "aprendeSwift - Tutoriales de Swift y SwiftUI para desarrollo iOS",
     description: "Publicaciones, guías y tutoriales para aprender Swift y SwiftUI de manera efectiva.",
     alternates: {
         canonical: SITE_URL,
+    },
+    openGraph: {
+        url: SITE_URL,
     },
 };
 import FeaturedTutorials from "@/components/home/FeaturedTutorials";

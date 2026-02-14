@@ -31,30 +31,36 @@ export default function ContactForm({
         <form onSubmit={handleSubmit} className="space-y-2">
             <Input
                 id="name"
+                name="name"
                 label="Nombre"
                 value={formState.name}
                 onChange={handleChange}
                 placeholder="Tu nombre"
+                required
                 error={errors.name}
                 className="bg-gray-800 text-white border-gray-600"
             />
 
             <Input
                 id="email"
+                name="email"
                 label="Correo electrónico"
                 value={formState.email}
                 onChange={handleChange}
                 placeholder="tucorreo@ejemplo.com"
+                required
                 error={errors.email}
                 className="bg-gray-800 text-white border-gray-600"
             />
 
             <Textarea
                 id="message"
+                name="message"
                 label="Mensaje"
                 value={formState.message}
                 onChange={handleChange}
                 placeholder="Escribe tu mensaje aquí..."
+                required
                 error={errors.message}
                 className="bg-gray-800 text-white border-gray-600 resize-none"
             />

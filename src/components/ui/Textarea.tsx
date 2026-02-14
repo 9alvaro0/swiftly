@@ -56,16 +56,20 @@ const Textarea = ({
 
                 {icon && (
                     <div className="absolute top-3 left-3 flex items-start">
-                        <button
-                            type="button"
-                            onClick={onIconClick}
-                            aria-label="Icono de entrada"
-                            className={`text-white/40 ${
-                                onIconClick ? "hover:text-white" : ""
-                            } transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                        >
-                            {icon}
-                        </button>
+                        {onIconClick ? (
+                            <button
+                                type="button"
+                                onClick={onIconClick}
+                                aria-label="Icono de entrada"
+                                className="text-white/40 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                {icon}
+                            </button>
+                        ) : (
+                            <span className="text-white/40" aria-hidden="true">
+                                {icon}
+                            </span>
+                        )}
                     </div>
                 )}
             </div>

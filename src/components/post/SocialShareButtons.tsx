@@ -100,7 +100,7 @@ export default function SocialShareButtons({
     const [showDropdown, setShowDropdown] = useState(false);
     
     const {
-        shareToplatform,
+        shareToPlatform,
         copyToClipboard,
         nativeShare,
         isSharing,
@@ -115,7 +115,7 @@ export default function SocialShareButtons({
     });
 
     const handleShare = async (platform: SharePlatform) => {
-        await shareToplatform(platform.key, url, title, description);
+        await shareToPlatform(platform.key, url, title, description);
         
         if (variant === "dropdown") {
             setShowDropdown(false);

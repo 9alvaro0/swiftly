@@ -76,6 +76,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                                 : "text-white/70 hover:bg-white/10 hover:text-white"
                         }
                     `}
+                        aria-disabled={item.disabled || undefined}
+                        tabIndex={item.disabled ? -1 : undefined}
                         onClick={item.disabled ? (e) => e.preventDefault() : undefined}
                     >
                         <item.icon
@@ -119,6 +121,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                                     ? "border-transparent text-white/40 cursor-default"
                                     : "border-transparent text-white/70 hover:text-white hover:border-white/20"
                             }`}
+                            aria-disabled={item.disabled || undefined}
+                            tabIndex={item.disabled ? -1 : undefined}
                             onClick={item.disabled ? (e) => e.preventDefault() : undefined}
                         >
                             <item.icon
@@ -149,7 +153,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 {/* Header responsive */}
                 <header className="bg-gray-900/90 backdrop-blur-md border-b border-gray-700 shadow-md">
                     <div className="px-4 py-4">
-                        <h1 className="text-xl font-bold text-white">Admin Panel</h1>
+                        <h2 className="text-xl font-bold text-white">Admin Panel</h2>
                     </div>
                 </header>
 

@@ -15,7 +15,7 @@ export default function ProfileBio({ bio, onEditClick }: ProfileBioProps) {
                 <button
                     onClick={onEditClick}
                     className="text-gray-400 hover:text-gray-300 p-2 hover:bg-gray-700/50 rounded-lg transition-colors"
-                    title="Editar biografía"
+                    aria-label="Editar biografía"
                 >
                     <PencilIcon className="h-4 w-4" />
                 </button>

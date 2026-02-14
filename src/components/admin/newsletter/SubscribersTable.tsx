@@ -91,6 +91,7 @@ export default function SubscribersTable({
                                     <button
                                         onClick={() => onToggleStatus(subscriber.id || '', subscriber.isActive)}
                                         disabled={updatingSubscribers.has(subscriber.id || '')}
+                                        aria-label={`${subscriber.isActive ? 'Desactivar' : 'Activar'} suscripción de ${subscriber.email}`}
                                         className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors relative ${
                                             subscriber.isActive
                                                 ? 'bg-red-600/20 text-red-400 hover:bg-red-600/30'

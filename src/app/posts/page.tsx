@@ -20,6 +20,9 @@ export const metadata: Metadata = {
         description: "Artículos sobre Swift, SwiftUI, y desarrollo iOS.",
     },
 };
+// ISR: revalidate every 5 minutes
+export const revalidate = 300;
+
 import PostsList from "@/components/posts/PostsList";
 import PostsListSkeleton from "@/components/posts/skeletons/PostsListSkeleton";
 import ContentPageLayout from "@/components/shared/ContentPageLayout";

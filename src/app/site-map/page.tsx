@@ -4,10 +4,18 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { Map, FileText, Tag, Home, BookOpen } from "lucide-react";
 
+import { SITE_URL } from "@/lib/constants";
+
 export const metadata: Metadata = {
     title: "Mapa del sitio - aprendeSwift",
     description: "Explora todas las páginas y contenido disponible en aprendeSwift. Encuentra artículos, tutoriales y recursos.",
+    alternates: { canonical: `${SITE_URL}/site-map` },
     openGraph: {
+        title: "Mapa del sitio - aprendeSwift",
+        description: "Explora todas las páginas y contenido disponible en aprendeSwift. Encuentra artículos, tutoriales y recursos.",
+        url: `${SITE_URL}/site-map`,
+    },
+    twitter: {
         title: "Mapa del sitio - aprendeSwift",
         description: "Explora todas las páginas y contenido disponible en aprendeSwift. Encuentra artículos, tutoriales y recursos.",
     },

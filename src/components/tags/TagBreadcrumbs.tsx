@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { Home, ChevronRight, ChevronLeft, Tags } from "lucide-react";
+import { SITE_URL } from "@/lib/constants";
 
 export default function TagBreadcrumbs({ tagName }: { tagName: string | undefined }) {
     const jsonLd = {
@@ -13,13 +14,13 @@ export default function TagBreadcrumbs({ tagName }: { tagName: string | undefine
                 "@type": "ListItem",
                 position: 1,
                 name: "Inicio",
-                item: `${typeof window !== "undefined" ? window.location.origin : ""}/`,
+                item: `${SITE_URL}/`,
             },
             {
                 "@type": "ListItem",
                 position: 2,
                 name: "Tags",
-                item: `${typeof window !== "undefined" ? window.location.origin : ""}/tags`,
+                item: `${SITE_URL}/tags`,
             },
             ...(tagName
                 ? [

@@ -38,6 +38,18 @@ export const metadata: Metadata = {
     },
 };
 
+const organizationJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'aprendeSwift',
+    url: SITE_URL,
+    logo: `${SITE_URL}/icons/logo.png`,
+    sameAs: [
+        'https://twitter.com/aprendeswift',
+        'https://github.com/aprendeswift',
+    ],
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="es">
@@ -46,6 +58,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <link rel="preconnect" href="https://firebasestorage.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+                />
             </head>
             <body className={inter.className}>
                 <a

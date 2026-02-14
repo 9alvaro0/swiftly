@@ -20,6 +20,9 @@ export const metadata: Metadata = {
         description: "Explora contenido por etiquetas en aprendeSwift.",
     },
 };
+// ISR: revalidate every 5 minutes
+export const revalidate = 300;
+
 import TagsSkeleton from "@/components/tags/skeletons/TagsSkeleton";
 import TagsHeader from "@/components/tags/TagsHeader";
 import TagsFilters from "@/components/tags/TagsFilters";
