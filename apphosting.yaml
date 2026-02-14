@@ -8,16 +8,110 @@ runConfig:
   # memoryMiB: 512
 
 # Environment variables and secrets.
-# env:
-  # Configure environment variables.
-  # See https://firebase.google.com/docs/app-hosting/configure#user-defined-environment
-  # - variable: MESSAGE
-  #   value: Hello world!
-  #   availability:
-  #     - BUILD
-  #     - RUNTIME
+env:
+  # Firebase Client SDK (public keys — safe at BUILD + RUNTIME)
+  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+    value: ""
+    availability:
+      - BUILD
+      - RUNTIME
 
-  # Grant access to secrets in Cloud Secret Manager.
-  # See https://firebase.google.com/docs/app-hosting/configure#secret-parameters
-  # - variable: MY_SECRET
-  #   secret: mySecretRef
+  - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: ""
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: ""
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+    value: ""
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+    value: ""
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_APP_ID
+    value: ""
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+    value: ""
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_BASE_URL
+    value: https://aprendeswift.dev
+    availability:
+      - BUILD
+      - RUNTIME
+
+  # Non-secret server config
+  - variable: SENDGRID_FROM_EMAIL
+    value: noreply@aprendeswift.dev
+    availability:
+      - RUNTIME
+
+  - variable: SENDGRID_FROM_NAME
+    value: aprendeSwift
+    availability:
+      - RUNTIME
+
+  - variable: CONTACT_EMAIL
+    value: contacto@aprendeswift.dev
+    availability:
+      - RUNTIME
+
+  - variable: OPENAI_MODEL
+    value: gpt-3.5-turbo
+    availability:
+      - RUNTIME
+
+  - variable: OPENAI_TEMPERATURE
+    value: "0.7"
+    availability:
+      - RUNTIME
+
+  - variable: OPENAI_MAX_TOKENS
+    value: "500"
+    availability:
+      - RUNTIME
+
+  # Secrets (stored in Google Cloud Secret Manager)
+  # Create these secrets first: gcloud secrets create <name> --data-file=-
+  - variable: FIREBASE_PROJECT_ID
+    secret: FIREBASE_PROJECT_ID
+    availability:
+      - RUNTIME
+
+  - variable: FIREBASE_CLIENT_EMAIL
+    secret: FIREBASE_CLIENT_EMAIL
+    availability:
+      - RUNTIME
+
+  - variable: FIREBASE_PRIVATE_KEY
+    secret: FIREBASE_PRIVATE_KEY
+    availability:
+      - RUNTIME
+
+  - variable: SENDGRID_API_KEY
+    secret: SENDGRID_API_KEY
+    availability:
+      - RUNTIME
+
+  - variable: OPENAI_API_KEY
+    secret: OPENAI_API_KEY
+    availability:
+      - RUNTIME

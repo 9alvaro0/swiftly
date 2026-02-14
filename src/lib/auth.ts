@@ -1,6 +1,7 @@
 // src/lib/auth.ts
 import { headers } from 'next/headers';
 import { getAdminAuth, getAdminDb } from './firebase-admin';
+import { syncCustomClaims } from './claims';
 
 export class AuthError extends Error {
   statusCode: number;
@@ -64,6 +65,13 @@ export async function verifyAdminToken(): Promise<VerifyResult> {
   const userData = userDoc.data();
   if (userData?.role !== 'admin') {
     throw new AuthError('Insufficient permissions', 403);
+  }
+
+  // Opportunistically sync custom claims if they're out of date
+  if (decodedToken.role !== userData.role) {
+    syncCustomClaims(decodedToken.uid, userData.role).catch(() => {
+      // Non-blocking — claims will be synced on next request
+    });
   }
 
   return {
