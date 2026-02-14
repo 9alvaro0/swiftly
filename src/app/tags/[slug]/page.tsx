@@ -6,6 +6,7 @@ import TagBreadcrumbs from "@/components/tags/TagBreadcrumbs";
 import PostGrid from "@/components/home/latestPosts/PostList";
 import PostGridSkeleton from "@/components/posts/skeletons/PostGridSkeleton";
 import { slugToTag } from "@/utils/tagUtils";
+import { SITE_URL } from "@/lib/constants";
 
 interface TagPageProps {
     params: Promise<{
@@ -21,7 +22,12 @@ export async function generateMetadata({ params }: TagPageProps): Promise<Metada
         title: `${tagName} - aprendeSwift`,
         description: `Artículos y tutoriales sobre ${tagName} en aprendeSwift.`,
         alternates: {
-            canonical: `https://aprendeswift.dev/tags/${slug}`,
+            canonical: `${SITE_URL}/tags/${slug}`,
+        },
+        openGraph: {
+            title: `${tagName} - aprendeSwift`,
+            description: `Artículos y tutoriales sobre ${tagName} en aprendeSwift.`,
+            url: `${SITE_URL}/tags/${slug}`,
         },
         robots: {
             index: true,

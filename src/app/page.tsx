@@ -2,12 +2,13 @@
 
 import type { Metadata } from "next";
 import HeroSection from "@/components/home/HeroSection";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
     title: "aprendeSwift - Tutoriales de Swift y SwiftUI",
     description: "Publicaciones, guías y tutoriales para aprender Swift y SwiftUI de manera efectiva.",
     alternates: {
-        canonical: "https://aprendeswift.dev",
+        canonical: SITE_URL,
     },
 };
 import FeaturedTutorials from "@/components/home/FeaturedTutorials";
@@ -24,23 +25,23 @@ const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'aprendeSwift',
-    url: 'https://aprendeswift.dev',
+    url: SITE_URL,
     description: 'Publicaciones, guías y tutoriales para aprender Swift y SwiftUI de manera efectiva.',
     publisher: {
         '@type': 'Organization',
         name: 'aprendeSwift',
-        logo: { '@type': 'ImageObject', url: 'https://aprendeswift.dev/icons/logo.png' },
+        logo: { '@type': 'ImageObject', url: `${SITE_URL}/icons/logo.png` },
     },
     potentialAction: {
         '@type': 'SearchAction',
-        target: 'https://aprendeswift.dev/posts?query={search_term_string}',
+        target: `${SITE_URL}/posts?query={search_term_string}`,
         'query-input': 'required name=search_term_string',
     },
 };
 
 export default async function Home() {
     return (
-        <main className="mb-16">
+        <div className="mb-16">
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -60,6 +61,6 @@ export default async function Home() {
             </Suspense>
 
             <NewsletterSignup />
-        </main>
+        </div>
     );
 }

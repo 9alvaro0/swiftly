@@ -1,11 +1,6 @@
 import { addDoc, collection, query, where, getDocs, serverTimestamp, updateDoc, doc } from "firebase/firestore";
 import { db } from "@/services/firebase/config";
-
-// Validar formato de email
-function isValidEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-}
+import { isValidEmail } from "@/utils/validation";
 
 export async function subscribe(email: string, metadata = {}): Promise<void> {
     try {

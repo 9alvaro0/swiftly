@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/styles/globals.css";
 import MainLayout from "@/components/layout/MainLayout";
+import { SITE_URL } from "@/lib/constants";
 const inter = Inter({ subsets: ["latin"] });
 import AuthInitializer from "@/components/auth/AuthInitializer";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
-    metadataBase: new URL('https://aprendeswift.dev'),
+    metadataBase: new URL(SITE_URL),
     title: {
         default: "aprendeSwift - Tutoriales de Swift y SwiftUI",
         template: "%s | aprendeSwift",

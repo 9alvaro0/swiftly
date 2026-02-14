@@ -154,6 +154,8 @@ export default function Select({
                     aria-expanded={isOpen}
                     aria-haspopup="listbox"
                     aria-controls={listboxId}
+                    aria-invalid={!!error || undefined}
+                    aria-describedby={error ? `${id}-error` : undefined}
                     aria-activedescendant={
                         isOpen && focusedIndex >= 0
                             ? `${listboxId}-option-${focusedIndex}`
@@ -213,7 +215,7 @@ export default function Select({
                     </div>
                 )}
             </div>
-            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+            {error && <p id={`${id}-error`} role="alert" className="text-red-500 text-sm mt-1">{error}</p>}
 
             {/* Hidden native select for form submission */}
             <select

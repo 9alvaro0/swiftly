@@ -9,6 +9,7 @@ import CommentsSection from "@/components/post/CommentsSection";
 import FloatingSocialShare from "@/components/post/FloatingSocialShare";
 import PostViewTracker from "@/components/post/PostViewTracker";
 import PostContent from "@/components/post/PostContent";
+import { SITE_URL } from "@/lib/constants";
 
 interface PostDetailProps {
     post: PostWithAuthor;
@@ -17,7 +18,7 @@ interface PostDetailProps {
 
 export default function PostDetail({ post, branch }: PostDetailProps) {
     const relatedPosts = post.relatedPosts || [];
-    const postUrl = `https://aprendeswift.dev/${branch === "articles" ? "posts" : "tutorials"}/${post.slug}`;
+    const postUrl = `${SITE_URL}/${branch === "articles" ? "posts" : "tutorials"}/${post.slug}`;
 
     return (
         <>

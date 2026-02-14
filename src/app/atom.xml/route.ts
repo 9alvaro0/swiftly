@@ -4,8 +4,9 @@ import { NextResponse } from 'next/server';
 import { getAllPublishedPostsWithAuthorServer } from '@/services/firebase/firestore/post-server';
 import { PostWithAuthor } from '@/types/Post';
 import { formatAtomDate, createExcerpt, escapeXml } from '@/utils/dateUtils';
+import { SITE_URL } from '@/lib/constants';
 
-const baseUrl = 'https://aprendeswift.dev';
+const baseUrl = SITE_URL;
 const siteTitle = 'aprendeSwift Blog';
 const siteDescription = 'Artículos y tutoriales sobre desarrollo web, programación y tecnología moderna';
 const authorName = 'aprendeSwift Team';

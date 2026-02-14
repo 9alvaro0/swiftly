@@ -6,8 +6,9 @@ import { db } from '@/services/firebase/config';
 import { Post } from '@/types/Post';
 import { Tag } from '@/types/Tag';
 import { getLatestDate } from '@/utils/dateUtils';
+import { SITE_URL } from '@/lib/constants';
 
-const baseUrl = 'https://aprendeswift.dev';
+const baseUrl = SITE_URL;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     try {

@@ -25,17 +25,24 @@ export default function FloatingSocialShare({
     const [isExpanded, setIsExpanded] = useState(false);
 
     useEffect(() => {
+        let ticking = false;
         const toggleVisibility = () => {
-            if (window.pageYOffset > threshold) {
-                setIsVisible(true);
-            } else {
-                setIsVisible(false);
-                setIsExpanded(false);
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    if (window.scrollY > threshold) {
+                        setIsVisible(true);
+                    } else {
+                        setIsVisible(false);
+                        setIsExpanded(false);
+                    }
+                    ticking = false;
+                });
+                ticking = true;
             }
         };
 
-        window.addEventListener('scroll', toggleVisibility);
-        
+        window.addEventListener('scroll', toggleVisibility, { passive: true });
+
         return () => {
             window.removeEventListener('scroll', toggleVisibility);
         };

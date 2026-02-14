@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Comment } from "@/types/Comment";
 import { useAuthStore } from "@/store/authStore";
 import { formatDistanceToNow } from "date-fns";
@@ -39,9 +39,23 @@ export default function CommentItem({
     const [editContent, setEditContent] = useState(comment.content);
     const [submitting, setSubmitting] = useState(false);
 
+    const menuRef = useRef<HTMLDivElement>(null);
+    const menuButtonRef = useRef<HTMLButtonElement>(null);
     const isOwner = user?.uid === comment.author.id;
     const isLiked = user ? comment.likedBy.includes(user.uid) : false;
     const canReply = depth < maxDepth;
+
+    useEffect(() => {
+        if (!showMenu) return;
+        const handleEscape = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setShowMenu(false);
+                menuButtonRef.current?.focus();
+            }
+        };
+        document.addEventListener("keydown", handleEscape);
+        return () => document.removeEventListener("keydown", handleEscape);
+    }, [showMenu]);
 
     const handleReply = async () => {
         if (!replyContent.trim()) return;
@@ -177,17 +191,22 @@ export default function CommentItem({
 
                         {/* Menu */}
                         {isOwner && (
-                            <div className="relative">
+                            <div className="relative" ref={menuRef}>
                                 <button
+                                    ref={menuButtonRef}
                                     onClick={() => setShowMenu(!showMenu)}
-                                    className="p-2 hover:bg-white/10 rounded-xl text-white/30 hover:text-white/70 transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-105"
+                                    aria-expanded={showMenu}
+                                    aria-haspopup="menu"
+                                    aria-label="Opciones del comentario"
+                                    className="p-2 hover:bg-white/10 rounded-xl text-white/30 hover:text-white/70 transition-all duration-200 opacity-0 group-hover:opacity-100 focus:opacity-100 hover:scale-105"
                                 >
                                     <FiMoreHorizontal size={14} />
                                 </button>
-                                
+
                                 {showMenu && (
-                                    <div className="absolute right-0 top-10 bg-gray-900/95 backdrop-blur-md border border-white/20 rounded-xl shadow-2xl py-2 z-20 min-w-[140px] animate-in slide-in-from-top-2 duration-200">
+                                    <div role="menu" className="absolute right-0 top-10 bg-gray-900/95 backdrop-blur-md border border-white/20 rounded-xl shadow-2xl py-2 z-20 min-w-[140px] animate-in slide-in-from-top-2 duration-200">
                                         <button
+                                            role="menuitem"
                                             onClick={() => {
                                                 setShowEditForm(true);
                                                 setShowMenu(false);
@@ -198,6 +217,7 @@ export default function CommentItem({
                                             Editar
                                         </button>
                                         <button
+                                            role="menuitem"
                                             onClick={() => {
                                                 handleDelete();
                                                 setShowMenu(false);

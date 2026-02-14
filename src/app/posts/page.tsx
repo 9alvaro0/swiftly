@@ -2,12 +2,22 @@
 
 import type { Metadata } from "next";
 import PostsHeader from "@/components/posts/PostsHeader";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
     title: "Artículos - aprendeSwift",
     description: "Artículos sobre Swift, SwiftUI, y desarrollo iOS.",
     alternates: {
-        canonical: "https://aprendeswift.dev/posts",
+        canonical: `${SITE_URL}/posts`,
+    },
+    openGraph: {
+        title: "Artículos - aprendeSwift",
+        description: "Artículos sobre Swift, SwiftUI, y desarrollo iOS.",
+        url: `${SITE_URL}/posts`,
+    },
+    twitter: {
+        title: "Artículos - aprendeSwift",
+        description: "Artículos sobre Swift, SwiftUI, y desarrollo iOS.",
     },
 };
 import PostsList from "@/components/posts/PostsList";

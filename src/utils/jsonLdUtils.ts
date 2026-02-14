@@ -1,6 +1,7 @@
 import { PostWithAuthor } from "@/types/Post";
+import { SITE_URL } from "@/lib/constants";
 
-const siteUrl = "https://aprendeswift.dev";
+const siteUrl = SITE_URL;
 
 export function generateArticleJsonLd(
     post: PostWithAuthor,

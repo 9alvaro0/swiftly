@@ -1,7 +1,8 @@
 import { getPostBySlugWithAuthorServer } from "@/services/firebase/firestore/post-server";
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/constants";
 
-const siteUrl = "https://aprendeswift.dev";
+const siteUrl = SITE_URL;
 
 interface GenerateMetadataProps {
     params: Promise<{

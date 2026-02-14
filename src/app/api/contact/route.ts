@@ -1,11 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { emailService } from '@/services/email/emailService';
-
-// Validation functions
-const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailRegex.test(email);
-};
+import { isValidEmail } from '@/utils/validation';
 
 const validateInput = (data: unknown) => {
     // Type guard to ensure data is an object
@@ -22,11 +17,8 @@ const validateInput = (data: unknown) => {
         throw new Error('El nombre debe tener máximo 100 caracteres');
     }
     
-    if (!typedData.email || typeof typedData.email !== 'string' || !validateEmail(typedData.email)) {
+    if (!typedData.email || typeof typedData.email !== 'string' || !isValidEmail(typedData.email)) {
         throw new Error('Email inválido');
-    }
-    if (typedData.email.length > 254) {
-        throw new Error('Email demasiado largo');
     }
     
     if (!typedData.message || typeof typedData.message !== 'string' || typedData.message.trim().length === 0) {

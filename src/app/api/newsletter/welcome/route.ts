@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { emailService } from '@/services/email/emailService';
 import { getAdminDb } from '@/lib/firebase-admin';
+import { isValidEmail } from '@/utils/validation';
 
 export async function POST(request: NextRequest) {
     try {
@@ -16,8 +17,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
+        if (!isValidEmail(email)) {
             return NextResponse.json(
                 { error: 'Email inválido' },
                 { status: 400 }

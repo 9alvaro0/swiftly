@@ -3,12 +3,22 @@
 import type { Metadata } from "next";
 import ContactHeader from "@/components/contact/ContactHeader";
 import ContactPageClient from "@/components/contact/ContactPageClient";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
     title: "Contacto - aprendeSwift",
     description: "Ponte en contacto con el equipo de aprendeSwift.",
     alternates: {
-        canonical: "https://aprendeswift.dev/contact",
+        canonical: `${SITE_URL}/contact`,
+    },
+    openGraph: {
+        title: "Contacto - aprendeSwift",
+        description: "Ponte en contacto con el equipo de aprendeSwift.",
+        url: `${SITE_URL}/contact`,
+    },
+    twitter: {
+        title: "Contacto - aprendeSwift",
+        description: "Ponte en contacto con el equipo de aprendeSwift.",
     },
 };
 

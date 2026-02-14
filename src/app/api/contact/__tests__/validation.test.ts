@@ -1,12 +1,7 @@
 import { describe, it, expect } from 'vitest';
+import { isValidEmail } from '@/utils/validation';
 
-// Extract validation logic inline since it's not exported from route.ts
-// This tests the same patterns used in the contact API route
-const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailRegex.test(email);
-};
-
+// Mirrors the validation logic in contact API route
 const validateInput = (data: unknown) => {
     if (!data || typeof data !== 'object') {
         throw new Error('Datos inválidos');
@@ -21,11 +16,8 @@ const validateInput = (data: unknown) => {
         throw new Error('El nombre debe tener máximo 100 caracteres');
     }
 
-    if (!typedData.email || typeof typedData.email !== 'string' || !validateEmail(typedData.email)) {
+    if (!typedData.email || typeof typedData.email !== 'string' || !isValidEmail(typedData.email)) {
         throw new Error('Email inválido');
-    }
-    if (typedData.email.length > 254) {
-        throw new Error('Email demasiado largo');
     }
 
     if (!typedData.message || typeof typedData.message !== 'string' || typedData.message.trim().length === 0) {
@@ -42,31 +34,36 @@ const validateInput = (data: unknown) => {
     };
 };
 
-describe('validateEmail', () => {
+describe('isValidEmail', () => {
     it('accepts valid emails', () => {
-        expect(validateEmail('test@example.com')).toBe(true);
-        expect(validateEmail('user.name@domain.org')).toBe(true);
-        expect(validateEmail('user+tag@sub.domain.com')).toBe(true);
+        expect(isValidEmail('test@example.com')).toBe(true);
+        expect(isValidEmail('user.name@domain.org')).toBe(true);
+        expect(isValidEmail('user+tag@sub.domain.com')).toBe(true);
     });
 
     it('rejects emails without @', () => {
-        expect(validateEmail('testexample.com')).toBe(false);
+        expect(isValidEmail('testexample.com')).toBe(false);
     });
 
     it('rejects emails without domain', () => {
-        expect(validateEmail('test@')).toBe(false);
+        expect(isValidEmail('test@')).toBe(false);
     });
 
     it('rejects emails without TLD', () => {
-        expect(validateEmail('test@example')).toBe(false);
+        expect(isValidEmail('test@example')).toBe(false);
     });
 
     it('rejects emails with single char TLD', () => {
-        expect(validateEmail('test@example.a')).toBe(false);
+        expect(isValidEmail('test@example.a')).toBe(false);
     });
 
     it('rejects empty string', () => {
-        expect(validateEmail('')).toBe(false);
+        expect(isValidEmail('')).toBe(false);
+    });
+
+    it('rejects emails longer than 254 chars', () => {
+        const longEmail = 'a'.repeat(246) + '@test.com'; // 255 chars
+        expect(isValidEmail(longEmail)).toBe(false);
     });
 });
 
@@ -127,7 +124,7 @@ describe('validateInput', () => {
     it('throws for email > 254 chars', () => {
         const longEmail = 'a'.repeat(246) + '@test.com'; // 255 chars > 254 limit
         expect(() => validateInput({ ...validData, email: longEmail }))
-            .toThrow('Email demasiado largo');
+            .toThrow('Email inválido');
     });
 
     it('throws for missing message', () => {

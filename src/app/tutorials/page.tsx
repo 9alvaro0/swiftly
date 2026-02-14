@@ -2,12 +2,22 @@
 
 import type { Metadata } from "next";
 import TutorialsHeader from "@/components/tutorials/TutorialsHeader";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
     title: "Tutoriales - aprendeSwift",
     description: "Tutoriales paso a paso de Swift y SwiftUI para todos los niveles.",
     alternates: {
-        canonical: "https://aprendeswift.dev/tutorials",
+        canonical: `${SITE_URL}/tutorials`,
+    },
+    openGraph: {
+        title: "Tutoriales - aprendeSwift",
+        description: "Tutoriales paso a paso de Swift y SwiftUI para todos los niveles.",
+        url: `${SITE_URL}/tutorials`,
+    },
+    twitter: {
+        title: "Tutoriales - aprendeSwift",
+        description: "Tutoriales paso a paso de Swift y SwiftUI para todos los niveles.",
     },
 };
 import TutorialsList from "@/components/tutorials/TutorialsList";

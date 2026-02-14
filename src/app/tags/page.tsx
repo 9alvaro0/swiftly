@@ -2,12 +2,22 @@
 
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
     title: "Tags - aprendeSwift",
     description: "Explora contenido por etiquetas en aprendeSwift.",
     alternates: {
-        canonical: "https://aprendeswift.dev/tags",
+        canonical: `${SITE_URL}/tags`,
+    },
+    openGraph: {
+        title: "Tags - aprendeSwift",
+        description: "Explora contenido por etiquetas en aprendeSwift.",
+        url: `${SITE_URL}/tags`,
+    },
+    twitter: {
+        title: "Tags - aprendeSwift",
+        description: "Explora contenido por etiquetas en aprendeSwift.",
     },
 };
 import TagsSkeleton from "@/components/tags/skeletons/TagsSkeleton";
