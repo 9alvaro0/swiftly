@@ -199,8 +199,10 @@ export const createOrUpdatePost = async (id: string, updatedFields: Partial<Post
     });
 };
 
-// Eliminar un post
+// Eliminar un post y sus comentarios asociados
 export const deletePost = async (id: string): Promise<void> => {
+    const { deletePostComments } = await import("./comments");
+    await deletePostComments(id);
     await deleteDoc(doc(postsCollection, id));
 };
 

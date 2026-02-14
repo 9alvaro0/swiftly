@@ -106,11 +106,11 @@ export default function CommentsSection({ postId }: CommentsSectionProps) {
                                 onChange={(e) => setNewComment(e.target.value)}
                                 placeholder="Comparte tu experiencia con este tutorial..."
                                 rows={4}
-                                maxLength={2000}
+                                maxLength={1000}
                                 className="bg-gray-800/50 border-gray-600 text-white placeholder-gray-400 focus:border-blue-400 focus:ring-blue-400/20 rounded-lg"
                             />
                             <div className="absolute bottom-3 right-3 text-xs text-gray-400">
-                                {newComment.length}/2000
+                                {newComment.length}/1000
                             </div>
                         </div>
                         <div className="flex justify-between items-center">

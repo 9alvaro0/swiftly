@@ -35,8 +35,8 @@ export const createComment = async (commentData: CreateCommentData, author: Comm
             throw new Error("Datos del comentario inválidos");
         }
 
-        if (commentData.content.trim().length > 2000) {
-            throw new Error("El comentario debe tener máximo 2000 caracteres");
+        if (commentData.content.trim().length > 1000) {
+            throw new Error("El comentario debe tener máximo 1000 caracteres");
         }
 
         const commentId = doc(commentsCollection).id;
@@ -186,8 +186,8 @@ export const updateComment = async (commentId: string, content: string, userId: 
             throw new Error("Datos para actualización inválidos");
         }
 
-        if (content.trim().length > 2000) {
-            throw new Error("El comentario debe tener máximo 2000 caracteres");
+        if (content.trim().length > 1000) {
+            throw new Error("El comentario debe tener máximo 1000 caracteres");
         }
 
         const comment = await getCommentById(commentId);

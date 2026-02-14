@@ -242,7 +242,7 @@ export default function CommentItem({
                                 onChange={(e) => setEditContent(e.target.value)}
                                 placeholder="Edita tu comentario..."
                                 rows={3}
-                                maxLength={2000}
+                                maxLength={1000}
                                 className="bg-white/10 border-white/20 text-white placeholder-white/50 focus:border-blue-400/50 focus:ring-blue-400/20 rounded-lg backdrop-blur-sm resize-none"
                             />
                             <div className="flex gap-3 justify-end">
@@ -319,7 +319,7 @@ export default function CommentItem({
                                     onChange={(e) => setReplyContent(e.target.value)}
                                     placeholder={`Escribe tu respuesta...`}
                                     rows={3}
-                                    maxLength={2000}
+                                    maxLength={1000}
                                     className="bg-white/10 border-white/20 text-white placeholder-white/50 focus:border-blue-400/50 focus:ring-blue-400/20 rounded-xl backdrop-blur-sm resize-none"
                                 />
                                 <div className="flex gap-3 justify-end pt-2">
