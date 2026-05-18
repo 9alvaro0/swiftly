@@ -313,3 +313,4 @@ export const getUserViewedPosts = async (userStats: { views: string[] } | undefi
     // Filter only published posts
     return posts.filter(post => post.isPublished);
 };
+
