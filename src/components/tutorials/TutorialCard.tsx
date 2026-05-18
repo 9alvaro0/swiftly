@@ -1,8 +1,9 @@
+import { memo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Post } from "@/types/Post";
 import { LEVEL_COLORS } from "@/constants/post";
-import { FiClock } from "react-icons/fi";
+import { Clock } from "lucide-react";
 import HighlightText from "@/components/ui/HighlightText";
 
 type TutorialCardProps = {
@@ -10,7 +11,7 @@ type TutorialCardProps = {
     searchTerm?: string;
 };
 
-export default function TutorialCard({ tutorial, searchTerm = "" }: TutorialCardProps) {
+function TutorialCard({ tutorial, searchTerm = "" }: TutorialCardProps) {
     const levelStyle = tutorial.level ? LEVEL_COLORS[tutorial.level] : null;
 
     return (
@@ -39,7 +40,7 @@ export default function TutorialCard({ tutorial, searchTerm = "" }: TutorialCard
                 </h2>
                 <div className="mt-auto pt-4 flex items-center justify-between text-xs">
                     <span className="flex items-center gap-1 px-2 py-1 bg-blue-400/20 rounded-full text-white/70 capitalize">
-                        <FiClock size={14} className="text-blue-300" />
+                        <Clock size={14} className="text-blue-300" />
                         {tutorial.readTime} min
                     </span>
 
@@ -55,3 +56,5 @@ export default function TutorialCard({ tutorial, searchTerm = "" }: TutorialCard
         </Link>
     );
 }
+
+export default memo(TutorialCard);

@@ -3,8 +3,26 @@
 "use client";
 
 import { useState } from "react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import dynamic from "next/dynamic";
+
+const SyntaxHighlighter = dynamic(
+    () => import("react-syntax-highlighter").then((mod) => mod.Prism),
+    {
+        loading: () => (
+            <div className="bg-[#1e1e1e] p-4 rounded-b-md animate-pulse">
+                <div className="h-4 bg-gray-700 rounded w-3/4 mb-2" />
+                <div className="h-4 bg-gray-700 rounded w-1/2 mb-2" />
+                <div className="h-4 bg-gray-700 rounded w-5/6" />
+            </div>
+        ),
+        ssr: false,
+    }
+);
+
+// Import style lazily too
+const stylePromise = import("react-syntax-highlighter/dist/cjs/styles/prism").then(
+    (mod) => mod.vscDarkPlus
+);
 
 interface CodeBlockProps {
     language: string;
@@ -13,6 +31,12 @@ interface CodeBlockProps {
 
 export function CodeBlock({ language, children }: CodeBlockProps) {
     const [copied, setCopied] = useState(false);
+    const [style, setStyle] = useState<Record<string, React.CSSProperties> | null>(null);
+
+    // Load style on first render
+    if (!style) {
+        stylePromise.then(setStyle);
+    }
 
     const handleCopy = async () => {
         try {
@@ -31,7 +55,7 @@ export function CodeBlock({ language, children }: CodeBlockProps) {
                 <button
                     onClick={handleCopy}
                     className="hover:text-white transition-colors text-gray-400 flex items-center gap-1"
-                    title="Copiar código"
+                    aria-label="Copiar código"
                 >
                     {copied ? (
                         <>
@@ -67,17 +91,23 @@ export function CodeBlock({ language, children }: CodeBlockProps) {
                     )}
                 </button>
             </div>
-            <SyntaxHighlighter
-                language={language}
-                style={vscDarkPlus}
-                PreTag="div"
-                customStyle={{
-                    margin: 0,
-                    borderRadius: "0 0 0.375rem 0.375rem",
-                }}
-            >
-                {children}
-            </SyntaxHighlighter>
+            {style ? (
+                <SyntaxHighlighter
+                    language={language}
+                    style={style}
+                    PreTag="div"
+                    customStyle={{
+                        margin: 0,
+                        borderRadius: "0 0 0.375rem 0.375rem",
+                    }}
+                >
+                    {children}
+                </SyntaxHighlighter>
+            ) : (
+                <pre className="bg-[#1e1e1e] p-4 rounded-b-md overflow-x-auto">
+                    <code className="text-sm text-gray-300">{children}</code>
+                </pre>
+            )}
         </div>
     );
 }

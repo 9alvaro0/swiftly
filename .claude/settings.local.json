@@ -43,7 +43,25 @@
       "WebFetch(domain:medium.com)",
       "Bash(mkdir:*)",
       "Bash(ls:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(npm run typecheck:*)",
+      "Bash(node -e:*)",
+      "WebSearch",
+      "Bash(findstr:*)",
+      "Bash(git rm:*)",
+      "WebFetch(domain:firebase.google.com)",
+      "WebFetch(domain:coffey.codes)",
+      "WebFetch(domain:firebase.blog)",
+      "WebFetch(domain:github.com)",
+      "Bash(firebase use:*)",
+      "Bash(test:*)",
+      "Bash(firebase apphosting:secrets:set:*)",
+      "Bash(gcloud --version:*)",
+      "Bash(firebase apphosting:secrets:access:*)",
+      "Bash(CI=true echo:*)",
+      "Bash(firebase apphosting:secrets:grantaccess:*)",
+      "Bash(npm ls:*)",
+      "Bash(git check-ignore *)"
     ],
     "deny": []
   }

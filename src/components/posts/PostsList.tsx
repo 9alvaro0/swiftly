@@ -1,6 +1,6 @@
 // src/components/posts/PostsList.tsx
 
-import { getAllPublishedPosts } from "@/services/firebase/firestore/post";
+import { getAllPublishedPostsServer } from "@/services/firebase/firestore/post-server";
 import PostsListClient from "./PostsListClient";
 import { ViewMode } from "./ViewToggle";
 import { SortOption } from "./SortOptions";
@@ -21,7 +21,7 @@ export default async function PostsList({
     sortBy?: SortOption;
 }) {
     // Obtener datos en el servidor
-    const posts = await getAllPublishedPosts({ searchTerm, level, tag, type: "article" });
+    const posts = await getAllPublishedPostsServer({ searchTerm, level, tag, type: "article" });
 
     // Pasar datos al componente cliente
     return (

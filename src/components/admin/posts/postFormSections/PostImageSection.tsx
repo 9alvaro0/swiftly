@@ -4,10 +4,9 @@ import React from "react";
 import PostImageHandler from "@/components/admin/posts/PostImageHandler";
 import { Post } from "@/types/Post";
 import PostFeaturedImage from "@/components/post/PostFeaturedImage";
-import { HiOutlinePhotograph } from "react-icons/hi";
+import { Image as ImageIcon, Link } from "lucide-react";
 import TutorialCard from "@/components/tutorials/TutorialCard";
 import { formatDate } from "@/utils/dateUtils";
-import { Link } from "lucide-react";
 import Image from "next/image";
 
 interface PostImageSectionProps {
@@ -108,7 +107,7 @@ const PostImageSection: React.FC<PostImageSectionProps> = ({
                             </div>
                         ) : (
                             <div className="flex flex-col items-center justify-center h-64 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700 p-6">
-                                <HiOutlinePhotograph className="w-12 h-12 text-gray-400 dark:text-gray-600 mb-2" />
+                                <ImageIcon className="w-12 h-12 text-gray-400 dark:text-gray-600 mb-2" />
                                 <span className="text-gray-500 dark:text-gray-400 text-center">
                                     No hay imagen principal seleccionada
                                 </span>
@@ -137,7 +136,7 @@ const PostImageSection: React.FC<PostImageSectionProps> = ({
                             </div>
                         ) : (
                             <div className="flex flex-col items-center justify-center h-64 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700 p-6">
-                                <HiOutlinePhotograph className="w-12 h-12 text-gray-400 dark:text-gray-600 mb-2" />
+                                <ImageIcon className="w-12 h-12 text-gray-400 dark:text-gray-600 mb-2" />
                                 <span className="text-gray-500 dark:text-gray-400 text-center">
                                     No hay imagen seleccionada
                                 </span>

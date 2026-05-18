@@ -1,4 +1,5 @@
 import { Post } from "@/types/Post";
+import { auth } from "@/services/firebase/config";
 
 /**
  * Respuesta de la API de generación de SEO
@@ -86,10 +87,16 @@ export async function generateSEO(post: Post): Promise<Post> {
         const requestData = prepareSEORequestData(post);
         const baseUrl = getBaseUrl();
 
+        const token = await auth.currentUser?.getIdToken();
+        if (!token) {
+            throw new Error("User not authenticated");
+        }
+
         const response = await fetch(`${baseUrl}/api/generate-seo`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
             },
             body: JSON.stringify(requestData),
             signal: AbortSignal.timeout(10000),

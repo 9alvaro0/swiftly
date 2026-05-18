@@ -21,10 +21,10 @@ service cloud.firestore {
              request.auth.token.firebase.sign_in_provider == 'anonymous';
     }
     
-    // Role-based access control (RBAC)
+    // Role-based access control (RBAC) — uses custom claims (no Firestore reads)
     function getUserRole() {
-      return isAuthenticated() ? 
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role : null;
+      return isAuthenticated() && request.auth.token.role != null ?
+        request.auth.token.role : null;
     }
     
     function hasRole(role) {
@@ -36,8 +36,7 @@ service cloud.firestore {
     }
     
     function isAdmin() {
-      return hasRole('admin') || 
-             (isAuthenticated() && request.auth.token.email == '9alvaro0@gmail.com');
+      return hasRole('admin');
     }
     
     function isEditor() {
@@ -159,24 +158,40 @@ service cloud.firestore {
       // Lista: acceso público para queries y listas
       allow list: if true;
       
-      // Creación: usuarios autenticados pueden crear con validación básica
-      allow create: if isAuthenticated() &&
+      // Creación: solo autores, editores y admins pueden crear posts
+      allow create: if isAuthor() &&
                        request.auth.uid == incomingData().authorId &&
                        incomingData().authorId is string &&
                        incomingData().title is string &&
                        incomingData().content is string &&
                        incomingData().isPublished is bool;
       
-      // Actualización: autor del post o admin
-      allow update: if isAuthenticated() &&
-                       (request.auth.uid == resource.data.authorId || 
-                        request.auth.token.email == '9alvaro0@gmail.com') &&
-                       incomingData().authorId == resource.data.authorId; // No cambiar autor
+      // Actualización: autor del post, admin, o actualizaciones de like/views
+      allow update: if (
+                         // Autor del post o admin pueden actualizar todo (requiere autenticación)
+                         isAuthenticated() &&
+                         (request.auth.uid == resource.data.authorId || isAdmin()) &&
+                         incomingData().authorId == resource.data.authorId
+                       ) ||
+                       (
+                         // Usuarios autenticados pueden actualizar likes y views
+                         isAuthenticated() &&
+                         request.resource.data.diff(resource.data).affectedKeys()
+                          .hasOnly(['likedBy', 'views']) &&
+                         incomingData().authorId == resource.data.authorId
+                       ) ||
+                       (
+                         // Usuarios NO autenticados solo pueden incrementar views
+                         !isAuthenticated() &&
+                         request.resource.data.diff(resource.data).affectedKeys()
+                          .hasOnly(['views']) &&
+                         incomingData().authorId == resource.data.authorId &&
+                         incomingData().views == resource.data.views + 1 // Solo incremento de 1
+                       );
       
       // Eliminación: admin o autor del post
       allow delete: if isAuthenticated() &&
-                       (request.auth.uid == resource.data.authorId || 
-                        request.auth.token.email == '9alvaro0@gmail.com');
+                       (request.auth.uid == resource.data.authorId || isAdmin());
     }
     
     // ========================================
@@ -245,64 +260,36 @@ service cloud.firestore {
     }
     
     // ========================================
-    // NEWSLETTER COLLECTION - Suscripciones
+    // NEWSLETTER SUBSCRIBERS COLLECTION
     // ========================================
-    match /newsletter/{subscriberId} {
-      function isValidSubscription() {
-        let data = incomingData();
-        return hasFields(['email', 'createdAt']) &&
-               isValidEmail(data.email) &&
-               data.createdAt == request.time;
-      }
-      
-      // Lectura: solo admins
-      allow read, list: if isAdmin();
-      
-      // Creación: público con validación (una por email)
-      allow create: if isValidSubscription() &&
-                       !exists(/databases/$(database)/documents/newsletter/$(incomingData().email.lower()));
-      
-      // Actualización/Eliminación: solo admins
-      allow update, delete: if isAdmin();
-    }
-    
-    // Legacy collection - migrar a newsletter
     match /newsletterSubscribers/{subscriberId} {
-      function isValidSubscription() {
-        let data = incomingData();
-        return hasFields(['email', 'subscribedAt']) &&
-               isValidEmail(data.email);
-      }
-      
-      function isValidSubscriptionCreate() {
+      function isValidNewsletterCreate() {
         let data = incomingData();
         return hasFields(['email', 'createdAt', 'isActive']) &&
                isValidEmail(data.email) &&
                data.isActive is bool;
       }
-      
+
       // Lectura: admins pueden leer todo, usuarios pueden leer su propia suscripción
       allow read: if isAdmin() ||
-                     (isAuthenticated() && 
+                     (isAuthenticated() &&
                       request.auth.token.email != null &&
                       resource.data.email == request.auth.token.email.lower());
-      
-      // Lista: admins pueden listar todos, usuarios autenticados pueden hacer queries
-      // Nota: Firebase requiere allow list para que funcionen las queries
-      allow list: if isAdmin() || isAuthenticated();
-      
+
+      // Lista: solo admins pueden listar suscriptores
+      allow list: if isAdmin();
+
       // Creación: público con validación
-      allow create: if isValidSubscriptionCreate();
-      
+      allow create: if isValidNewsletterCreate();
+
       // Actualización: admins o usuarios actualizando su propia suscripción
-      allow update: if isAdmin() || 
-                       (isAuthenticated() && 
+      allow update: if isAdmin() ||
+                       (isAuthenticated() &&
                         request.auth.token.email != null &&
                         resource.data.email == request.auth.token.email.lower() &&
-                        // Solo permitir cambiar isActive
                         request.resource.data.email == resource.data.email &&
                         request.resource.data.keys().hasAll(['isActive']));
-      
+
       // Eliminación: solo admins
       allow delete: if isAdmin();
     }
@@ -320,9 +307,10 @@ service cloud.firestore {
                data.createdAt == request.time;
       }
       
-      // Rate limiting: 1 mensaje cada 5 minutos por IP/email
+      // Rate limiting: server-side API route enforces Firestore-backed rate limiting.
+      // Client-side direct writes are blocked (contacts should go through /api/contact).
       function notSpamming() {
-        return true; // Implementar rate limiting por IP si es necesario
+        return false; // Block direct client writes — all contacts must go through API route
       }
       
       // Lectura: solo admins

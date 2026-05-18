@@ -7,7 +7,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useUserNewsletter } from "@/hooks/useUserNewsletter";
 import { ErrorMessage } from "@/components/ui/ErrorMessage";
 import Input from "../ui/Input";
-import { FiMail, FiCheck } from "react-icons/fi";
+import { Mail, Check } from "lucide-react";
 import Button from "../ui/Button";
 import Spinner from "../ui/Spinner";
 import Link from "next/link";
@@ -40,7 +40,7 @@ export default function NewsletterSignup() {
                         // User is subscribed - no question header needed
                         <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-xl">
                             <div className="flex items-center justify-center gap-2 mb-2">
-                                <FiCheck className="h-5 w-5 text-emerald-400" />
+                                <Check className="h-5 w-5 text-emerald-400" />
                                 <h3 className="text-xl font-semibold text-white">¡Ya estás suscrito al newsletter!</h3>
                             </div>
                             <p className="text-white/70 mb-4">
@@ -50,7 +50,7 @@ export default function NewsletterSignup() {
                                 href="/profile"
                                 className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all shadow-md shadow-blue-500/20 hover:shadow-blue-500/40"
                             >
-                                <FiMail className="h-4 w-4" />
+                                <Mail className="h-4 w-4" />
                                 Gestionar suscripción
                             </Link>
                         </div>
@@ -70,7 +70,7 @@ export default function NewsletterSignup() {
                                     href="/profile"
                                     className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all shadow-md shadow-blue-500/20 hover:shadow-blue-500/40"
                                 >
-                                    <FiMail className="h-4 w-4" />
+                                    <Mail className="h-4 w-4" />
                                     Ir a mi perfil
                                 </Link>
                             </div>
@@ -86,7 +86,7 @@ export default function NewsletterSignup() {
                         {isSuccess ? (
                             <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-xl">
                                 <div className="flex items-center justify-center gap-2 mb-2">
-                                    <FiCheck className="h-5 w-5 text-emerald-400" />
+                                    <Check className="h-5 w-5 text-emerald-400" />
                                     <h3 className="text-xl font-semibold text-white">¡Te has suscrito con éxito!</h3>
                                 </div>
                                 <p className="text-white/70">Gracias por unirte a nuestro boletín. Recibirás novedades pronto.</p>
@@ -101,7 +101,7 @@ export default function NewsletterSignup() {
                                         <Input
                                             id="email"
                                             placeholder="Tu correo electrónico"
-                                            icon={<FiMail />}
+                                            icon={<Mail />}
                                             value={email}
                                             onChange={handleEmailChange}
                                             disabled={isLoading}

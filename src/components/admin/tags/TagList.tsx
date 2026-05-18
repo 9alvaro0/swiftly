@@ -9,7 +9,7 @@ interface TagListProps {
     currentPage: number;
 }
 
-export default async function TagListProps({ searchTerm, currentPage }: TagListProps) {
+export default async function TagList({ searchTerm, currentPage }: TagListProps) {
     const TAGS_PER_PAGE = 5;
 
     const tags = await getAllTags(searchTerm);
@@ -29,10 +29,16 @@ export default async function TagListProps({ searchTerm, currentPage }: TagListP
     return (
         <>
             <div className="mb-4 text-text-secondary">
-                Mostrando {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, tags.length)} de {tags.length} tutoriales
+                Mostrando {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, tags.length)} de {tags.length} etiquetas
             </div>
             <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead className="sr-only">
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                         {currentTags.map((tag) => (
                             <TagItem

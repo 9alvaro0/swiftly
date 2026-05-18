@@ -43,7 +43,6 @@ export const uploadImage = async (file: File, path: string): Promise<string> => 
         const snapshot = await uploadBytes(storageRef, file, metadata);
         const downloadURL = await getDownloadURL(snapshot.ref);
 
-        console.log(`Image uploaded successfully: ${path}`);
         return downloadURL;
     } catch (error) {
         console.error(`Error uploading image (${path}):`, error);
@@ -74,7 +73,6 @@ export const deleteImage = async (path: string): Promise<void> => {
         
         const storageRef = ref(storage, path);
         await deleteObject(storageRef);
-        console.log(`Image deleted successfully: ${path}`);
     } catch (error) {
         console.error(`Error deleting image (${path}):`, error);
         
@@ -108,12 +106,9 @@ export const updateImage = async (file: File, path: string): Promise<string> => 
         const imageExists = await checkImageExists(path);
         if (imageExists) {
             await deleteImage(path);
-        } else {
-            console.log(`No existing image to replace at: ${path}`);
         }
         
         const downloadURL = await uploadImage(file, path);
-        console.log(`Image updated successfully: ${path}`);
         return downloadURL;
     } catch (error) {
         console.error(`Error updating image (${path}):`, error);
@@ -149,7 +144,6 @@ export const listImages = async (folderPath: string): Promise<string[]> => {
 
         // Filter out null values from failed downloads
         const validURLs = downloadURLs.filter((url): url is string => url !== null);
-        console.log(`Listed ${validURLs.length} images from folder: ${folderPath}`);
         return validURLs;
     } catch (error) {
         console.error(`Error listing images (${folderPath}):`, error);

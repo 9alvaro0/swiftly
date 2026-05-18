@@ -91,7 +91,6 @@ export const incrementPostShareStat = async (
             });
         });
 
-        console.log(`Share stat incremented for post ${postId} on platform ${platform}`);
     } catch (error) {
         console.error("Error incrementing share stat:", error);
         throw new Error(`Failed to increment share stat: ${error instanceof Error ? error.message : String(error)}`);

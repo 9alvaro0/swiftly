@@ -17,7 +17,8 @@ export default function HighlightText({ text, searchTerm, className = "" }: High
     return (
         <span className={className}>
             {parts.map((part, index) => {
-                if (regex.test(part)) {
+                const escaped = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                if (part.toLowerCase() === escaped.toLowerCase()) {
                     return (
                         <mark
                             key={index}
