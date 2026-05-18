@@ -61,7 +61,21 @@
       "Bash(CI=true echo:*)",
       "Bash(firebase apphosting:secrets:grantaccess:*)",
       "Bash(npm ls:*)",
-      "Bash(git check-ignore *)"
+      "Bash(git check-ignore *)",
+      "mcp__plugin_firebase_firebase__firebase_get_project",
+      "mcp__plugin_firebase_firebase__firebase_get_sdk_config",
+      "PowerShell(& \"C:\\\\Program Files\\\\GitHub CLI\\\\gh.exe\" pr checks 77 2>&1 | Select-Object -First 10)",
+      "PowerShell(& \"C:\\\\Program Files\\\\GitHub CLI\\\\gh.exe\" run rerun 26051667657 2>&1)",
+      "PowerShell(& \"C:\\\\Program Files\\\\GitHub CLI\\\\gh.exe\" run list --branch release --limit 5 --json status,conclusion,databaseId,headSha,event,createdAt 2>&1)",
+      "PowerShell(& \"C:\\\\Program Files\\\\GitHub CLI\\\\gh.exe\" api repos/9alvaro0/swiftly/branches/master/protection 2>&1 | Select-Object -First 50)",
+      "PowerShell(& \"C:\\\\Program Files\\\\GitHub CLI\\\\gh.exe\" api -X DELETE repos/9alvaro0/swiftly/branches/master/protection/enforce_admins 2>&1)",
+      "PowerShell(& \"C:\\\\Program Files\\\\GitHub CLI\\\\gh.exe\" pr merge 77 --merge --admin 2>&1)",
+      "PowerShell(& \"C:\\\\Program Files\\\\GitHub CLI\\\\gh.exe\" api -X POST repos/9alvaro0/swiftly/branches/master/protection/enforce_admins 2>&1)",
+      "PowerShell(& \"C:\\\\Program Files\\\\GitHub CLI\\\\gh.exe\" api repos/9alvaro0/swiftly/branches/master/protection/enforce_admins 2>&1)",
+      "PowerShell(& \"C:\\\\Program Files\\\\GitHub CLI\\\\gh.exe\" pr view 77 --json state,mergedAt,mergeCommit 2>&1)",
+      "Bash(git restore *)",
+      "Bash('/c/Program Files/GitHub CLI/gh.exe' secret set FIREBASE_PROJECT_ID --body swiftly-by-warwere)",
+      "Bash('/c/Program Files/GitHub CLI/gh.exe' secret set FIREBASE_CLIENT_EMAIL --body firebase-adminsdk-fbsvc@swiftly-by-warwere.iam.gserviceaccount.com)"
     ],
     "deny": []
   }
