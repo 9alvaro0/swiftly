@@ -2,6 +2,7 @@
 
 "use client";
 
+import { useMemo } from "react";
 import PostCard from "@/components/posts/PostCard";
 import PostCardList from "@/components/posts/PostCardList";
 import Pagination from "@/components/ui/Pagination";
@@ -27,19 +28,18 @@ export default function PostsListClient({
     const POSTS_PER_PAGE = 9;
 
     // Aplicar ordenamiento en el cliente
-    let sortedPosts = [...posts];
-    switch (sortBy) {
-        case "popular":
-            sortedPosts = sortedPosts.sort((a, b) => (b.views || 0) - (a.views || 0));
-            break;
-        case "alphabetical":
-            sortedPosts = sortedPosts.sort((a, b) => a.title.localeCompare(b.title));
-            break;
-        case "recent":
-        default:
-            // Ya viene ordenado por fecha desde el servicio
-            break;
-    }
+    const sortedPosts = useMemo(() => {
+        const sorted = [...posts];
+        switch (sortBy) {
+            case "popular":
+                return sorted.sort((a, b) => (b.views || 0) - (a.views || 0));
+            case "alphabetical":
+                return sorted.sort((a, b) => a.title.localeCompare(b.title));
+            case "recent":
+            default:
+                return sorted;
+        }
+    }, [posts, sortBy]);
 
     const indexOfLastItem = currentPage * POSTS_PER_PAGE;
     const indexOfFirstItem = indexOfLastItem - POSTS_PER_PAGE;
@@ -48,7 +48,7 @@ export default function PostsListClient({
 
     if (currentPosts.length === 0) {
         return (
-            <div className="text-center py-16">
+            <div className="text-center py-16" aria-live="polite">
                 <p className="text-text-secondary text-lg mb-4">No se encontraron artículos</p>
             </div>
         );
@@ -56,7 +56,7 @@ export default function PostsListClient({
 
     return (
         <>
-            <div className="mb-4 text-text-secondary">
+            <div className="mb-4 text-text-secondary" aria-live="polite">
                 Mostrando {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, sortedPosts.length)} de {sortedPosts.length} artículos
             </div>
             

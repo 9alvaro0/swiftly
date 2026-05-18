@@ -1,5 +1,3 @@
-"use client";
-
 import { PostWithAuthor } from "@/types/Post";
 import RelatedPosts from "@/components/post/RelatedPosts";
 import PostAuthorBio from "@/components/post/PostAuthorBio";
@@ -9,8 +7,13 @@ import PostHeader from "@/components/post/PostHeader";
 import PostTags from "@/components/post/PostTags";
 import CommentsSection from "@/components/post/CommentsSection";
 import FloatingSocialShare from "@/components/post/FloatingSocialShare";
-import { usePostViews } from "@/hooks/usePostViews";
-import PostContent from "@/components/post/PostContent";
+import PostViewTracker from "@/components/post/PostViewTracker";
+import dynamic from "next/dynamic";
+import { SITE_URL } from "@/lib/constants";
+
+const PostContent = dynamic(() => import("@/components/post/PostContent"), {
+    loading: () => <div className="animate-pulse bg-white/5 rounded-lg h-96 w-full" />,
+});
 
 interface PostDetailProps {
     post: PostWithAuthor;
@@ -19,22 +22,16 @@ interface PostDetailProps {
 
 export default function PostDetail({ post, branch }: PostDetailProps) {
     const relatedPosts = post.relatedPosts || [];
-    const { views } = usePostViews(post.id, post.views || 0);
-    const postWithUpdatedViews: PostWithAuthor = {
-        ...post,
-        views: views,
-    };
-
-    // Generate full URL for sharing
-    const currentUrl = typeof window !== 'undefined' 
-        ? window.location.href 
-        : `https://aprendeswift.dev/${branch}/${post.slug}`;
+    const postUrl = `${SITE_URL}/${branch === "articles" ? "posts" : "tutorials"}/${post.slug}`;
 
     return (
         <>
+            {/* Client-side view tracking (renders nothing) */}
+            <PostViewTracker postId={post.id} initialViews={post.views || 0} />
+
             <div className="py-2 md:py-12 px-4 md:px-6 max-w-4xl mx-auto">
                 <PostBreadcrumbs branch={branch} />
-                <PostHeader post={postWithUpdatedViews} />
+                <PostHeader post={post} />
                 <PostFeaturedImage
                     image={post.coverImage || post.imageUrl}
                     title={post.title}
@@ -42,12 +39,12 @@ export default function PostDetail({ post, branch }: PostDetailProps) {
                 <PostContent content={post.content} />
                 <PostTags tags={post.tags || []} />
                 <PostAuthorBio author={post.author} />
-                
+
                 {/* Sección de comentarios */}
                 <div className="mt-12">
                     <CommentsSection postId={post.id} />
                 </div>
-                
+
                 {relatedPosts.length > 0 && (
                     <div className="mt-12">
                         <RelatedPosts posts={relatedPosts} />
@@ -57,7 +54,7 @@ export default function PostDetail({ post, branch }: PostDetailProps) {
 
             {/* Floating social share button */}
             <FloatingSocialShare
-                url={currentUrl}
+                url={postUrl}
                 title={post.title}
                 description={post.description}
                 threshold={400}

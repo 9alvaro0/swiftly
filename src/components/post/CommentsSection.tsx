@@ -9,7 +9,7 @@ import CommentItem from "./CommentItem";
 import Button from "@/components/ui/Button";
 import Textarea from "@/components/ui/Textarea";
 import Spinner from "@/components/ui/Spinner";
-import { FiMessageCircle, FiLock } from "react-icons/fi";
+import { MessageCircle, Lock } from "lucide-react";
 
 interface CommentsSectionProps {
     postId: string;
@@ -67,7 +67,7 @@ export default function CommentsSection({ postId }: CommentsSectionProps) {
             {/* Header */}
             <div className="mb-8">
                 <div className="flex items-center gap-3">
-                    <FiMessageCircle className="text-blue-400" size={24} />
+                    <MessageCircle className="text-blue-400" size={24} />
                     <h3 className="text-2xl font-bold text-white">
                         Comentarios
                     </h3>
@@ -83,7 +83,7 @@ export default function CommentsSection({ postId }: CommentsSectionProps) {
             {comments.length === 0 && isAuthenticated && (
                 <div className="text-center py-12 mb-8">
                     <div className="inline-flex p-6 bg-blue-500/10 rounded-full mb-6">
-                        <FiMessageCircle className="text-blue-400" size={32} />
+                        <MessageCircle className="text-blue-400" size={32} />
                     </div>
                     <h4 className="text-xl font-semibold text-white mb-3">
                         Sé el primero en comentar
@@ -106,11 +106,11 @@ export default function CommentsSection({ postId }: CommentsSectionProps) {
                                 onChange={(e) => setNewComment(e.target.value)}
                                 placeholder="Comparte tu experiencia con este tutorial..."
                                 rows={4}
-                                maxLength={2000}
+                                maxLength={1000}
                                 className="bg-gray-800/50 border-gray-600 text-white placeholder-gray-400 focus:border-blue-400 focus:ring-blue-400/20 rounded-lg"
                             />
                             <div className="absolute bottom-3 right-3 text-xs text-gray-400">
-                                {newComment.length}/2000
+                                {newComment.length}/1000
                             </div>
                         </div>
                         <div className="flex justify-between items-center">
@@ -136,7 +136,7 @@ export default function CommentsSection({ postId }: CommentsSectionProps) {
                 ) : (
                     <div className="text-center py-12">
                         <div className="inline-flex p-4 bg-blue-500/20 rounded-full mb-4">
-                            <FiLock className="text-blue-400" size={24} />
+                            <Lock className="text-blue-400" size={24} />
                         </div>
                         <h4 className="text-lg font-semibold text-white mb-2">
                             Únete a la conversación

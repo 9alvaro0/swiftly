@@ -4,45 +4,53 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { Map, FileText, Tag, Home, BookOpen } from "lucide-react";
 
+import { SITE_URL } from "@/lib/constants";
+
 export const metadata: Metadata = {
-    title: "Sitemap - aprendeSwift",
-    description: "Explore all pages and content available on aprendeSwift. Find articles, tutorials, and resources.",
+    title: "Mapa del sitio - aprendeSwift",
+    description: "Explora todas las páginas y contenido disponible en aprendeSwift. Encuentra artículos, tutoriales y recursos.",
+    alternates: { canonical: `${SITE_URL}/site-map` },
     openGraph: {
-        title: "Sitemap - aprendeSwift",
-        description: "Explore all pages and content available on aprendeSwift. Find articles, tutorials, and resources.",
+        title: "Mapa del sitio - aprendeSwift",
+        description: "Explora todas las páginas y contenido disponible en aprendeSwift. Encuentra artículos, tutoriales y recursos.",
+        url: `${SITE_URL}/site-map`,
+    },
+    twitter: {
+        title: "Mapa del sitio - aprendeSwift",
+        description: "Explora todas las páginas y contenido disponible en aprendeSwift. Encuentra artículos, tutoriales y recursos.",
     },
 };
 
 export default function SitemapPage() {
     const siteStructure = [
         {
-            title: "Main Pages",
+            title: "Páginas principales",
             icon: Home,
             links: [
-                { name: "Home", href: "/", description: "Welcome to aprendeSwift" },
-                { name: "Posts", href: "/posts", description: "All articles and posts" },
-                { name: "Tutorials", href: "/tutorials", description: "Step-by-step learning guides" },
-                { name: "Tags", href: "/tags", description: "Browse content by topics" },
-                { name: "Contact", href: "/contact", description: "Get in touch with us" },
+                { name: "Inicio", href: "/", description: "Bienvenido a aprendeSwift" },
+                { name: "Artículos", href: "/posts", description: "Todos los artículos y publicaciones" },
+                { name: "Tutoriales", href: "/tutorials", description: "Guías de aprendizaje paso a paso" },
+                { name: "Etiquetas", href: "/tags", description: "Explora contenido por temas" },
+                { name: "Contacto", href: "/contact", description: "Ponte en contacto con nosotros" },
             ],
         },
         {
-            title: "Resources",
+            title: "Recursos",
             icon: BookOpen,
             links: [
-                { name: "Newsletter", href: "/newsletter", description: "Subscribe to our newsletter" },
-                { name: "RSS Feed", href: "/feed.xml", description: "RSS feed for content updates", external: true },
-                { name: "Atom Feed", href: "/atom.xml", description: "Atom feed format", external: true },
-                { name: "JSON Feed", href: "/feed.json", description: "JSON feed format", external: true },
+                { name: "Newsletter", href: "/newsletter", description: "Suscríbete a nuestra newsletter" },
+                { name: "RSS Feed", href: "/feed.xml", description: "Feed RSS para actualizaciones", external: true },
+                { name: "Atom Feed", href: "/atom.xml", description: "Feed en formato Atom", external: true },
+                { name: "JSON Feed", href: "/feed.json", description: "Feed en formato JSON", external: true },
             ],
         },
         {
             title: "Legal",
             icon: FileText,
             links: [
-                { name: "Privacy Policy", href: "/privacy", description: "How we handle your data" },
-                { name: "Terms of Service", href: "/terms", description: "Terms and conditions" },
-                { name: "Cookie Policy", href: "/cookies", description: "Information about cookies" },
+                { name: "Política de privacidad", href: "/privacy", description: "Cómo gestionamos tus datos" },
+                { name: "Términos y condiciones", href: "/terms", description: "Términos de uso del servicio" },
+                { name: "Política de cookies", href: "/cookies", description: "Información sobre cookies" },
             ],
         },
     ];
@@ -58,11 +66,11 @@ export default function SitemapPage() {
                         </div>
                     </div>
                     <h1 className="text-4xl font-bold text-white mb-4">
-                        Sitemap
+                        Mapa del sitio
                     </h1>
                     <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                        Explore all the pages and content available on aprendeSwift. 
-                        Find articles, tutorials, and resources to accelerate your learning.
+                        Explora todas las páginas y contenido disponible en aprendeSwift.
+                        Encuentra artículos, tutoriales y recursos para acelerar tu aprendizaje.
                     </p>
                 </div>
 
@@ -129,29 +137,29 @@ export default function SitemapPage() {
                             <Tag className="w-6 h-6 text-blue-400" />
                         </div>
                         <h2 className="text-2xl font-semibold text-white">
-                            Dynamic Content
+                            Contenido dinámico
                         </h2>
                     </div>
                     <div className="text-gray-300 space-y-4">
                         <p>
-                            In addition to the pages listed above, aprendeSwift includes dynamic content that 
-                            grows over time:
+                            Además de las páginas listadas arriba, aprendeSwift incluye contenido dinámico
+                            que crece con el tiempo:
                         </p>
                         <ul className="list-disc list-inside space-y-2 ml-4">
-                            <li>Individual blog posts accessible via <code className="bg-gray-800 px-2 py-1 rounded text-blue-400">/posts/[slug]</code></li>
-                            <li>Tutorial pages accessible via <code className="bg-gray-800 px-2 py-1 rounded text-blue-400">/tutorials/[slug]</code></li>
-                            <li>Tag pages accessible via <code className="bg-gray-800 px-2 py-1 rounded text-blue-400">/tags/[slug]</code></li>
+                            <li>Artículos individuales accesibles en <code className="bg-gray-800 px-2 py-1 rounded text-blue-400">/posts/[slug]</code></li>
+                            <li>Páginas de tutoriales accesibles en <code className="bg-gray-800 px-2 py-1 rounded text-blue-400">/tutorials/[slug]</code></li>
+                            <li>Páginas de etiquetas accesibles en <code className="bg-gray-800 px-2 py-1 rounded text-blue-400">/tags/[slug]</code></li>
                         </ul>
                         <p className="text-sm text-gray-400 mt-6">
-                            This sitemap is automatically updated as new content is published. 
-                            For a machine-readable version, visit our{" "}
-                            <a 
-                                href="/sitemap.xml" 
+                            Este mapa del sitio se actualiza automáticamente cuando se publica nuevo contenido.
+                            Para una versión legible por máquinas, visita nuestro{" "}
+                            <a
+                                href="/sitemap.xml"
                                 className="text-blue-400 hover:text-blue-300 transition-colors"
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                XML sitemap
+                                sitemap XML
                             </a>.
                         </p>
                     </div>

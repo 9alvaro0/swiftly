@@ -23,7 +23,10 @@ export async function getSecret(secretName: string): Promise<string> {
       }
     }
 
-    const projectId = process.env.FIREBASE_PROJECT_ID || 'swiftly-by-warwere';
+    const projectId = process.env.FIREBASE_PROJECT_ID;
+    if (!projectId) {
+      throw new Error('FIREBASE_PROJECT_ID environment variable is required');
+    }
     const name = `projects/${projectId}/secrets/${secretName}/versions/latest`;
     
     const [version] = await getClient().accessSecretVersion({ name });

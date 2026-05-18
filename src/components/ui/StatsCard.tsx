@@ -1,7 +1,9 @@
+"use client";
 // src/components/ui/StatsCard.tsx
 
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { AdminCard, AdminCardBody } from './AdminCard';
 import { ArrowRight } from 'lucide-react';
 
@@ -26,6 +28,8 @@ export default function StatsCard({
   linkText,
   className
 }: StatsCardProps) {
+  const router = useRouter();
+
   const variantColors = {
     default: 'text-blue-400',
     accent: 'text-blue-400',
@@ -47,7 +51,7 @@ export default function StatsCard({
       hover={!!link} 
       variant={variant} 
       className={className}
-      onClick={link ? () => window.location.href = link : undefined}
+      onClick={link ? () => router.push(link) : undefined}
     >
       <AdminCardBody className="flex items-start gap-4">
         {icon && (

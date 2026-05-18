@@ -1,5 +1,7 @@
 // src/components/post/PostFeaturedImage.tsx
 
+"use client";
+
 import Image from "next/image";
 import { useState } from "react";
 
@@ -20,14 +22,13 @@ export default function PostFeaturedImage({
 
     return (
         <figure className="mb-10">
-            <div className="relative w-full rounded-lg overflow-hidden shadow-lg">
+            <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden shadow-lg">
                 <Image
                     src={image}
                     alt={title}
-                    width={800}
-                    height={450}
+                    fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-                    className="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                    className="object-contain transition-transform duration-300 group-hover:scale-105"
                     priority
                     onLoad={() => setIsLoading(false)}
                 />

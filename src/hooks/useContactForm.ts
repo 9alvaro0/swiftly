@@ -1,6 +1,6 @@
 // src/hooks/useContactForm.ts
 
-import { validateEmail, validateEmailFormat } from "@/utils/formUtils";
+import { isValidEmail } from "@/utils/validation";
 import { useState } from "react";
 
 export default function useContactForm() {
@@ -42,12 +42,10 @@ export default function useContactForm() {
             isValid = false;
         }
 
-        if (!validateEmail(formState.email)) {
+        if (!formState.email.trim()) {
             newErrors.email = "El correo electrónico es obligatorio";
             isValid = false;
-        }
-
-        if (!validateEmailFormat(formState.email)) {
+        } else if (!isValidEmail(formState.email)) {
             newErrors.email = "El correo electrónico no es válido";
             isValid = false;
         }

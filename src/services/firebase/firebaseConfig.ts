@@ -1,11 +1,13 @@
 // firebase/firebaseConfig.ts
+// Note: NEXT_PUBLIC_* vars must be accessed as static literals for Next.js
+// to inline them at compile time. Dynamic access (process.env[name]) does NOT work.
 
 export const firebaseConfig = {
-    apiKey: "AIzaSyBn_Qd5WIT7MLsnMpIpiapC0hLwAgfGbZM",
-    authDomain: "swiftly-by-warwere.firebaseapp.com",
-    projectId: "swiftly-by-warwere",
-    storageBucket: "swiftly-by-warwere.firebasestorage.app",
-    messagingSenderId: "98348062711",
-    appId: "1:98348062711:web:1beb2066b19655d2d2c0f2",
-    measurementId: "G-F5ED31GB3H",
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN!,
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID!,
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET!,
+    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID!,
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID!,
+    measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || '',
 };

@@ -2,7 +2,7 @@
 
 "use client";
 
-import { FaTh, FaList } from "react-icons/fa";
+import { LayoutGrid, List } from "lucide-react";
 
 export type ViewMode = "grid" | "list";
 
@@ -22,8 +22,9 @@ export default function ViewToggle({ viewMode, onViewChange }: ViewToggleProps) 
                         : "text-white/60 hover:text-white/80 hover:bg-white/10"
                 }`}
                 aria-label="Vista en grid"
+                aria-pressed={viewMode === "grid"}
             >
-                <FaTh size={14} />
+                <LayoutGrid size={14} />
             </button>
             <button
                 onClick={() => onViewChange("list")}
@@ -33,8 +34,9 @@ export default function ViewToggle({ viewMode, onViewChange }: ViewToggleProps) 
                         : "text-white/60 hover:text-white/80 hover:bg-white/10"
                 }`}
                 aria-label="Vista en lista"
+                aria-pressed={viewMode === "list"}
             >
-                <FaList size={14} />
+                <List size={14} />
             </button>
         </div>
     );

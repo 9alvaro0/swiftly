@@ -1,7 +1,14 @@
 // src/components/auth/layout.tsx
 
+import type { Metadata } from "next";
 import { FaSwift } from "react-icons/fa";
 import { ReactNode } from "react";
+
+export const metadata: Metadata = {
+    title: "Iniciar sesión - aprendeSwift",
+    description: "Accede a tu cuenta de aprendeSwift.",
+    robots: { index: false, follow: false },
+};
 
 interface AuthLayoutProps {
     children: ReactNode;
