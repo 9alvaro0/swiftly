@@ -15,18 +15,11 @@ export default function Header() {
     const { isAuthenticated, user, isLoading } = useAuthStore();
 
     useEffect(() => {
-        let ticking = false;
         const handleScroll = () => {
-            if (!ticking) {
-                requestAnimationFrame(() => {
-                    setScrolled(window.scrollY > 10);
-                    ticking = false;
-                });
-                ticking = true;
-            }
+            setScrolled(window.scrollY > 10);
         };
 
-        window.addEventListener("scroll", handleScroll, { passive: true });
+        window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 

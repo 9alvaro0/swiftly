@@ -10,7 +10,7 @@ import PostPublishOptions from "@/components/admin/posts/postFormSections/PostPu
 import Button from "@/components/ui/Button";
 import usePostForm from "@/hooks/usePostForm";
 import Spinner from "@/components/ui/Spinner";
-import { ArrowRight } from "lucide-react";
+import { FiArrowRight } from "react-icons/fi";
 
 interface PostFormProps {
     selectedPost?: Post | PostWithAuthor;
@@ -107,7 +107,7 @@ export default function PostForm({ selectedPost }: PostFormProps) {
                     ) : (
                         <span className="flex items-center justify-center">
                             {selectedPost ? "Actualizar Post" : "Guardar Post"}
-                            <ArrowRight className="ml-2 h-4 w-4" />
+                            <FiArrowRight className="ml-2 h-4 w-4" />
                         </span>
                     )}
                 </Button>

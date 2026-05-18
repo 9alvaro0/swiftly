@@ -143,7 +143,6 @@ export default function EditProfileImage({
                         ref={fileInputRef}
                         onChange={handleFileChange}
                         accept="image/jpeg,image/png,image/gif,image/webp"
-                        aria-label="Seleccionar imagen de perfil"
                         className="hidden"
                     />
 

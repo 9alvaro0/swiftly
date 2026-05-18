@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useMemo } from "react";
 
@@ -55,14 +55,14 @@ export default function Pagination({ totalItems, itemsPerPage }: PaginationProps
     };
 
     return (
-        <nav aria-label="Paginación" className="flex justify-center items-center gap-2 mt-6 select-none">
+        <nav className="flex justify-center items-center gap-2 mt-6 select-none">
             <button
                 onClick={() => goToPage(currentPage - 1)}
                 disabled={currentPage === 1}
                 className="p-2 rounded-lg text-white/70 hover:bg-white/10 transition-all disabled:opacity-40"
                 aria-label="Página anterior"
             >
-                <ChevronLeft size={18} />
+                <FiChevronLeft size={18} />
             </button>
 
             <div className="flex gap-1">
@@ -98,7 +98,7 @@ export default function Pagination({ totalItems, itemsPerPage }: PaginationProps
                 className="p-2 rounded-lg text-white/70 hover:bg-white/10 transition-all disabled:opacity-40"
                 aria-label="Página siguiente"
             >
-                <ChevronRight size={18} />
+                <FiChevronRight size={18} />
             </button>
         </nav>
     );

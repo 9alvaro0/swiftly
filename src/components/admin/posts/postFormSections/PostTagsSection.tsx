@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
-import { Plus, X } from "lucide-react";
+import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 import { useTags } from "@/hooks/useTags";
 import { Tag } from "@/types/Tag";
 import { v4 as uuidv4 } from "uuid";
@@ -86,7 +86,7 @@ const PostTagsSection: React.FC<PostTagsSectionProps> = ({ tags, onAddTag, onRem
                             onClick={() => onRemoveTag(tag)}
                             className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
                         >
-                            <X size={16} />
+                            <AiOutlineClose size={16} />
                         </button>
                     </div>
                 ))}
@@ -120,7 +120,7 @@ const PostTagsSection: React.FC<PostTagsSectionProps> = ({ tags, onAddTag, onRem
                             onClick={() => setIsAddingNewTag(true)}
                         >
                             <div className="flex items-center">
-                                <Plus className="mr-1" /> Añadir nueva etiqueta
+                                <AiOutlinePlus className="mr-1" /> Añadir nueva etiqueta
                             </div>
                         </Button>
                     </div>

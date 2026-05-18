@@ -1,9 +1,9 @@
 // src/hooks/useLikes.ts
-import { useState, useEffect, useCallback } from "react";
-import { togglePostLike } from "@/services/firebase/firestore/post";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { hasUserLikedPost, togglePostLike } from "@/services/firebase/firestore/post";
 import { PostWithAuthor } from "@/types/Post";
 import { User } from "@/types/User";
-import { incrementUserStat, removeUserStat } from "@/services/firebase/firestore/user";
+import { saveUser } from "@/services/firebase/firestore/user";
 
 interface UseLikesResult {
     isLiked: boolean;
@@ -21,12 +21,45 @@ export function useLikes(post: PostWithAuthor, currentUser: User | null): UseLik
     const [likesCount, setLikesCount] = useState(Array.isArray(post.likedBy) ? post.likedBy.length : 0);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    // Verificar estado de like desde los datos del post (sin read adicional)
-    useEffect(() => {
+    const previousPostId = useRef(post.id);
+
+    // Verificar si el usuario ha dado like al post
+    const checkLikeStatus = useCallback(async () => {
         if (!currentUser) return;
-        const liked = Array.isArray(post.likedBy) && post.likedBy.includes(currentUser.uid);
-        setIsLiked(liked);
-    }, [currentUser?.uid, post.id, post.likedBy]);
+
+        try {
+            setIsLoading(true);
+            setError(null);
+
+            // Verificar directamente desde el post si está entre los likedBy
+            if (post.likedBy && Array.isArray(post.likedBy)) {
+                setIsLiked(post.likedBy.includes(currentUser.uid));
+            } else {
+                // Si no está en el post, consultamos a Firestore
+                const liked = await hasUserLikedPost(post.id, currentUser.uid);
+                setIsLiked(liked);
+            }
+        } catch (err) {
+            console.error("Error al verificar estado de like:", err);
+            setError("No se pudo verificar si te gusta este post");
+        } finally {
+            setIsLoading(false);
+        }
+    }, [currentUser, post]);
+
+    // Comprobar estado inicial de like
+    useEffect(() => {
+        if (currentUser && post) {
+            checkLikeStatus();
+        }
+    }, [checkLikeStatus, currentUser, post]);
+
+    useEffect(() => {
+        if (currentUser && post.id !== previousPostId.current) {
+            previousPostId.current = post.id;
+            checkLikeStatus();
+        }
+    }, [checkLikeStatus, currentUser, post]);
 
     // Función para dar/quitar like
     const toggleLike = async () => {
@@ -49,12 +82,19 @@ export function useLikes(post: PostWithAuthor, currentUser: User | null): UseLik
             // Actualizar en Firestore el estado del post
             await togglePostLike(post.id, currentUser.uid, newLikedState);
 
-            // Actualizar atomicamente la estadística de likes del usuario
-            if (newLikedState) {
-                await incrementUserStat(currentUser.uid, 'likes', post.id);
-            } else {
-                await removeUserStat(currentUser.uid, 'likes', post.id);
-            }
+            // Actualizar en Firestore el usuario con la referencia del post
+            const updatedLikedPosts = newLikedState
+                ? [...(currentUser.stats?.likes || []), post.id]
+                : (currentUser.stats?.likes || []).filter((likedPostId) => likedPostId !== post.id);
+
+            await saveUser({
+                ...currentUser,
+                stats: {
+                    ...currentUser.stats,
+                    likes: updatedLikedPosts,
+                    views: currentUser.stats?.views ?? 0,
+                },
+            });
         } catch {
             setIsLiked(previousLikedState);
             setLikesCount(previousLikesCount);

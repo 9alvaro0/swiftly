@@ -10,15 +10,8 @@ import SocialAuth from "@/components/auth/SocialAuth";
 export default function AuthPage() {
     const [activePage, setActivePage] = useState<"login" | "register" | "recover">("login");
 
-    const headings: Record<string, string> = {
-        login: "Iniciar sesión",
-        register: "Crear cuenta",
-        recover: "Recuperar contraseña",
-    };
-
     return (
         <div className="p-6 rounded-xl">
-            <h1 className="text-2xl font-bold text-white mb-6 text-center">{headings[activePage]}</h1>
             <SocialAuth />
             <AuthForm
                 activePage={activePage}

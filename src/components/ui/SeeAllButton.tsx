@@ -1,7 +1,7 @@
 // src/components/ui/SeeAllButton.tsx
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { FiArrowRight } from "react-icons/fi";
 
 interface SeeAllButtonProps {
     link: string;
@@ -15,7 +15,7 @@ export default function SeeAllButton({ link, selectedAccent }: SeeAllButtonProps
             className={`group flex items-center px-4 py-2 rounded-lg bg-gradient-to-r ${selectedAccent} border-[1px] font-medium transition-all`}
         >
             <span className="mr-1">Ver todos</span>
-            <ArrowRight
+            <FiArrowRight
                 size={16}
                 className="transform group-hover:translate-x-1 transition-transform duration-200"
             />

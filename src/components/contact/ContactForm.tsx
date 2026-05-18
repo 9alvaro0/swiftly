@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { FiArrowRight } from "react-icons/fi";
 import Input from "@/components/ui/Input";
 import Spinner from "@/components/ui/Spinner";
 import Button from "@/components/ui/Button";
@@ -31,36 +31,30 @@ export default function ContactForm({
         <form onSubmit={handleSubmit} className="space-y-2">
             <Input
                 id="name"
-                name="name"
                 label="Nombre"
                 value={formState.name}
                 onChange={handleChange}
                 placeholder="Tu nombre"
-                required
                 error={errors.name}
                 className="bg-gray-800 text-white border-gray-600"
             />
 
             <Input
                 id="email"
-                name="email"
                 label="Correo electrónico"
                 value={formState.email}
                 onChange={handleChange}
                 placeholder="tucorreo@ejemplo.com"
-                required
                 error={errors.email}
                 className="bg-gray-800 text-white border-gray-600"
             />
 
             <Textarea
                 id="message"
-                name="message"
                 label="Mensaje"
                 value={formState.message}
                 onChange={handleChange}
                 placeholder="Escribe tu mensaje aquí..."
-                required
                 error={errors.message}
                 className="bg-gray-800 text-white border-gray-600 resize-none"
             />
@@ -80,7 +74,7 @@ export default function ContactForm({
                         </span>
                     ) : (
                         <span className="flex items-center justify-center">
-                            Enviar mensaje <ArrowRight className="ml-2 h-4 w-4" />
+                            Enviar mensaje <FiArrowRight className="ml-2 h-4 w-4" />
                         </span>
                     )}
                 </Button>

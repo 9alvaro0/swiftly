@@ -1,23 +1,22 @@
 // src/app/feed.xml/route.ts
 
 import { NextResponse } from 'next/server';
-import { getAllPublishedPostsWithAuthorServer } from '@/services/firebase/firestore/post-server';
+import { getAllPublishedPostsWithAuthor } from '@/services/firebase/firestore/post';
 import { PostWithAuthor } from '@/types/Post';
 import { formatRssDate, createExcerpt, escapeXml } from '@/utils/dateUtils';
-import { SITE_URL } from '@/lib/constants';
 
-const baseUrl = SITE_URL;
+const baseUrl = 'https://aprendeswift.dev';
 const siteTitle = 'aprendeSwift Blog';
-const siteDescription = 'Publicaciones, guias y tutoriales para aprender Swift y SwiftUI de manera efectiva';
+const siteDescription = 'Artículos y tutoriales sobre desarrollo web, programación y tecnología moderna';
 const siteLanguage = 'es-ES';
 const authorEmail = '9alvaro0@gmail.com';
 
-export const revalidate = 3600;
+export const dynamic = 'force-static';
 
 export async function GET(): Promise<NextResponse> {
     try {
         // Get latest published posts with author data
-        const allPosts = await getAllPublishedPostsWithAuthorServer({});
+        const allPosts = await getAllPublishedPostsWithAuthor({});
         const posts = allPosts.slice(0, 20); // Limit to 20 posts
 
         // Generate RSS XML
@@ -70,6 +69,8 @@ ${categories}
 ${rssItems}
     </channel>
 </rss>`;
+
+        console.log(`Generated RSS feed with ${posts.length} posts`);
 
         // Return RSS XML with proper headers
         return new NextResponse(rssXml, {

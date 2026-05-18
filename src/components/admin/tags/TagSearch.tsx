@@ -2,7 +2,7 @@
 
 'use client';
 
-import { Search } from "lucide-react";
+import { FaSearch } from "react-icons/fa";
 import Input from "@/components/ui/Input";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
@@ -32,7 +32,7 @@ export default function TagSearch() {
                 label="Buscar tags..."
                 placeholder="Escribe el nombre del tag"
                 defaultValue={query}
-                icon={<Search size={16} />}
+                icon={<FaSearch size={16} />}
                 onChange={(e) => handleSearch(e.target.value)}
             />
         </div>

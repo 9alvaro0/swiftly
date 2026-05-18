@@ -45,8 +45,6 @@ export default function NavItem({
             <Link
                 href={disabled ? "#" : path}
                 className={baseStyles}
-                aria-disabled={disabled || undefined}
-                tabIndex={disabled ? -1 : undefined}
                 onClick={(e) => {
                     if (disabled) {
                         e.preventDefault();

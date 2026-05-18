@@ -2,12 +2,14 @@
 
 import PostList from "@/components/home/latestPosts/PostList";
 import SectionHeader from "../../ui/SectionHeader";
-import { getAllPublishedPostsServer } from "@/services/firebase/firestore/post-server";
-import { BookOpen, FileText } from "lucide-react";
+import { getAllPublishedPosts } from "@/services/firebase/firestore/post";
+import { FiBookOpen, FiFileText } from "react-icons/fi";
 
 export default async function LatestPosts() {
     // Cambiar tutorial por post cuando hayan posts y limitar a 4
-    const publishedPosts = await getAllPublishedPostsServer({ type: "article", limitCount: 8 });
+    const posts = await getAllPublishedPosts({ type: "article" });
+    // Additional filter to ensure only published articles are shown
+    const publishedPosts = posts.filter(post => post.isPublished === true);
     const hasPosts = publishedPosts && publishedPosts.length > 0;
 
     return (
@@ -26,7 +28,7 @@ export default async function LatestPosts() {
                 <div className="bg-white/5 p-8 rounded-lg border border-white/10 mx-auto">
                     <div className="flex items-center gap-6 mb-8">
                         <div className="p-4 bg-purple-500/20 rounded-lg">
-                            <FileText
+                            <FiFileText
                                 size={28}
                                 className="text-purple-400"
                             />
@@ -42,7 +44,7 @@ export default async function LatestPosts() {
                     <div className="bg-white/5 p-6 rounded-lg border border-white/10 mb-6">
                         <div className="flex items-start gap-3">
                             <div className="p-2 bg-emerald-500/20 rounded-lg">
-                                <BookOpen
+                                <FiBookOpen
                                     size={22}
                                     className="text-emerald-400"
                                 />

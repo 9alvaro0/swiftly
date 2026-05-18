@@ -9,10 +9,8 @@ import {
     updateDoc,
     query,
     orderBy,
-    limit,
     Timestamp,
     arrayUnion,
-    arrayRemove,
     FieldValue,
 } from "firebase/firestore";
 import { db } from "../config";
@@ -82,6 +80,9 @@ export const createUserProfile = async (
         // Crear el perfil de usuario en Firestore
         await setDoc(doc(usersCollection, uid), userWithTimestamps);
         
+        // Esperar un poco para asegurar que el documento se haya creado
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
         // También crear el perfil de autor público
         try {
             await createOrUpdateAuthorProfile(newUser);
@@ -90,6 +91,7 @@ export const createUserProfile = async (
             // No fallar la creación del usuario si falla la creación del autor
         }
         
+        console.log(`User profile created successfully: ${uid}`);
     } catch (error) {
         console.error(`Error creating user profile (${uid}):`, error);
         throw new Error(`Failed to create user profile: ${error instanceof Error ? error.message : String(error)}`);
@@ -108,7 +110,7 @@ export const saveUser = async (user: User): Promise<void> => {
             updatedAt: new Date(),
         });
 
-        await setDoc(doc(usersCollection, user.uid), userWithTimestamps, { merge: true });
+        await setDoc(doc(usersCollection, user.uid), userWithTimestamps);
         
         // También actualizar el perfil de autor público
         try {
@@ -121,6 +123,7 @@ export const saveUser = async (user: User): Promise<void> => {
             // No fallar la actualización del usuario si falla la actualización del autor
         }
         
+        console.log(`User saved successfully: ${user.uid}`);
     } catch (error) {
         console.error(`Error saving user (${user?.uid || 'unknown'}):`, error);
         throw new Error(`Failed to save user: ${error instanceof Error ? error.message : String(error)}`);
@@ -138,9 +141,11 @@ export const getUser = async (uid: string): Promise<User | null> => {
 
         if (userDoc.exists()) {
             const userData = serializeFirestoreData(userDoc.data());
+            console.log(`User retrieved successfully: ${uid}`);
             return userData as User;
         }
 
+        console.log(`User not found: ${uid}`);
         return null;
     } catch (error) {
         console.error(`Error getting user (${uid}):`, error);
@@ -163,6 +168,7 @@ export const updateLastLogin = async (uid: string): Promise<void> => {
             lastLogin: Timestamp.fromDate(now),
             updatedAt: Timestamp.fromDate(now),
         });
+        console.log(`Last login updated for user: ${uid}`);
     } catch (error) {
         console.error(`Error updating last login (${uid}):`, error);
         throw new Error(`Failed to update last login: ${error instanceof Error ? error.message : String(error)}`);
@@ -209,6 +215,7 @@ export const updateUser = async (uid: string, updatedFields: Partial<User>): Pro
             }
         }
         
+        console.log(`User updated successfully: ${uid}`);
     } catch (error) {
         console.error(`Error updating user (${uid}):`, error);
         throw new Error(`Failed to update user: ${error instanceof Error ? error.message : String(error)}`);
@@ -236,58 +243,55 @@ export const incrementUserStat = async (uid: string, stat: keyof User["stats"], 
             [`stats.${stat}`]: arrayUnion(value),
             updatedAt: Timestamp.fromDate(new Date()),
         });
+        console.log(`User stat incremented: ${uid} - ${stat}`);
     } catch (error) {
         console.error(`Error incrementing user stat (${uid}, ${stat}):`, error);
         throw new Error(`Failed to increment user stat: ${error instanceof Error ? error.message : String(error)}`);
     }
 };
 
-// Eliminar un valor de una estadística del usuario (arrayRemove atómico)
-export const removeUserStat = async (uid: string, stat: keyof User["stats"], value: string): Promise<void> => {
-    try {
-        if (!uid || typeof uid !== 'string') {
-            throw new Error("Valid user UID is required");
-        }
 
-        if (!stat || !value) {
-            throw new Error("Stat type and value are required");
-        }
-
-        const validStats = ['views', 'likes'];
-        if (!validStats.includes(stat)) {
-            throw new Error(`Invalid stat type: ${stat}. Must be one of: ${validStats.join(', ')}`);
-        }
-
-        await updateDoc(doc(usersCollection, uid), {
-            [`stats.${stat}`]: arrayRemove(value),
-            updatedAt: Timestamp.fromDate(new Date()),
-        });
-    } catch (error) {
-        console.error(`Error removing user stat (${uid}, ${stat}):`, error);
-        throw new Error(`Failed to remove user stat: ${error instanceof Error ? error.message : String(error)}`);
-    }
-};
 
 
 // Obtener todos los usuarios
 export const getAllUsers = async (searchTerm: string = "", role: string = "", status: string = ""): Promise<User[]> => {
-    const q = query(usersCollection, orderBy("createdAt", "desc"), limit(500));
-    const querySnapshot = await getDocs(q);
+    try {
+        const q = query(usersCollection, orderBy("createdAt", "desc"));
+        const querySnapshot = await getDocs(q);
 
-    return querySnapshot.docs
-        .map((doc) => {
-            const userData = serializeFirestoreData(doc.data());
-            return userData as User;
-        })
-        .filter((user) => {
-            const isMatchingRole = role ? user.role === role : true;
-            const isMatchingStatus = status ? user.isActive === (status === "active") : true;
-            const isMatchingSearchTerm = searchTerm
-                ? (user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                   user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                   user.name?.toLowerCase().includes(searchTerm.toLowerCase()))
-                : true;
+        const users = querySnapshot.docs
+            .map((doc) => {
+                try {
+                    const userData = serializeFirestoreData(doc.data());
+                    return userData as User;
+                } catch (error) {
+                    console.warn(`Error processing user document ${doc.id}:`, error);
+                    return null;
+                }
+            })
+            .filter((user): user is User => user !== null)
+            .filter((user) => {
+                try {
+                    const isMatchingRole = role ? user.role === role : true;
+                    const isMatchingStatus = status ? user.isActive === (status === "active") : true;
+                    const isMatchingSearchTerm = searchTerm
+                        ? (user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           user.name?.toLowerCase().includes(searchTerm.toLowerCase()))
+                        : true;
 
-            return isMatchingRole && isMatchingStatus && isMatchingSearchTerm;
-        });
+                    return isMatchingRole && isMatchingStatus && isMatchingSearchTerm;
+                } catch (error) {
+                    console.warn(`Error filtering user ${user.uid}:`, error);
+                    return false;
+                }
+            });
+            
+        console.log(`Retrieved ${users.length} users with filters - search: "${searchTerm}", role: "${role}", status: "${status}"`);
+        return users;
+    } catch (error) {
+        console.error("Error getting all users:", error);
+        // Return empty array as fallback
+        return [];
+    }
 };

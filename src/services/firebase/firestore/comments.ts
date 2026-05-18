@@ -35,8 +35,8 @@ export const createComment = async (commentData: CreateCommentData, author: Comm
             throw new Error("Datos del comentario inválidos");
         }
 
-        if (commentData.content.trim().length > 1000) {
-            throw new Error("El comentario debe tener máximo 1000 caracteres");
+        if (commentData.content.trim().length > 2000) {
+            throw new Error("El comentario debe tener máximo 2000 caracteres");
         }
 
         const commentId = doc(commentsCollection).id;
@@ -106,59 +106,75 @@ export const createComment = async (commentData: CreateCommentData, author: Comm
  * Obtener comentarios de un post
  */
 export const getPostComments = async (postId: string, includeReplies: boolean = true): Promise<Comment[]> => {
-    if (!postId) {
-        throw new Error("ID del post requerido");
+    try {
+        if (!postId) {
+            throw new Error("ID del post requerido");
+        }
+
+        // Simplificar query para evitar problemas de índices
+        const q = query(
+            commentsCollection,
+            where("postId", "==", postId)
+        );
+
+        const snapshot = await getDocs(q);
+        
+        // Filtrar en el cliente para evitar problemas de índices
+        let comments = snapshot.docs
+            .map((doc) => {
+                const commentData = serializeFirestoreData(doc.data());
+                const comment = { id: doc.id, ...commentData } as Comment;
+                return comment;
+            })
+            .filter((comment) => {
+                // Filtrar solo comentarios no aprobados (ya no necesitamos filtrar isDeleted)
+                const isValid = comment.isApproved !== false; // Solo excluir si explícitamente es false
+                if (!includeReplies) {
+                    // Si no incluimos respuestas, solo comentarios principales
+                    return isValid && !comment.parentId;
+                }
+                return isValid;
+            })
+            .sort((a, b) => {
+                // Ordenar por fecha de creación
+                const dateA = new Date(a.createdAt).getTime();
+                const dateB = new Date(b.createdAt).getTime();
+                return dateA - dateB;
+            });
+        
+        if (includeReplies) {
+            // Organizar comentarios en estructura jerárquica
+            comments = organizeComments(comments);
+        }
+
+        return comments;
+    } catch (error) {
+        console.error("Error getting post comments:", error);
+        return [];
     }
-
-    const q = query(
-        commentsCollection,
-        where("postId", "==", postId)
-    );
-
-    const snapshot = await getDocs(q);
-
-    let comments = snapshot.docs
-        .map((doc) => {
-            const commentData = serializeFirestoreData(doc.data());
-            const comment = { id: doc.id, ...commentData } as Comment;
-            return comment;
-        })
-        .filter((comment) => {
-            const isValid = comment.isApproved !== false;
-            if (!includeReplies) {
-                return isValid && !comment.parentId;
-            }
-            return isValid;
-        })
-        .sort((a, b) => {
-            const dateA = new Date(a.createdAt).getTime();
-            const dateB = new Date(b.createdAt).getTime();
-            return dateA - dateB;
-        });
-
-    if (includeReplies) {
-        comments = organizeComments(comments);
-    }
-
-    return comments;
 };
 
 /**
  * Obtener un comentario por ID
  */
 export const getCommentById = async (commentId: string): Promise<Comment | null> => {
-    if (!commentId) {
-        throw new Error("ID del comentario requerido");
-    }
+    try {
+        if (!commentId) {
+            throw new Error("ID del comentario requerido");
+        }
 
-    const commentDoc = await getDoc(doc(commentsCollection, commentId));
+        const commentDoc = await getDoc(doc(commentsCollection, commentId));
+        
+        if (!commentDoc.exists()) {
+            return null;
+        }
 
-    if (!commentDoc.exists()) {
+        const commentData = serializeFirestoreData(commentDoc.data());
+        return { id: commentDoc.id, ...commentData } as Comment;
+    } catch (error) {
+        console.error("Error getting comment by ID:", error);
         return null;
     }
-
-    const commentData = serializeFirestoreData(commentDoc.data());
-    return { id: commentDoc.id, ...commentData } as Comment;
 };
 
 /**
@@ -170,8 +186,8 @@ export const updateComment = async (commentId: string, content: string, userId: 
             throw new Error("Datos para actualización inválidos");
         }
 
-        if (content.trim().length > 1000) {
-            throw new Error("El comentario debe tener máximo 1000 caracteres");
+        if (content.trim().length > 2000) {
+            throw new Error("El comentario debe tener máximo 2000 caracteres");
         }
 
         const comment = await getCommentById(commentId);
@@ -255,6 +271,7 @@ export const deletePostComments = async (postId: string): Promise<void> => {
 
         await batch.commit();
         
+        console.log(`Eliminados ${snapshot.size} comentarios del post ${postId}`);
     } catch (error) {
         console.error("Error deleting post comments:", error);
         throw error;
@@ -265,23 +282,30 @@ export const deletePostComments = async (postId: string): Promise<void> => {
  * Obtener comentarios de un usuario
  */
 export const getUserComments = async (userId: string, limit: number = 50): Promise<Comment[]> => {
-    if (!userId) {
-        throw new Error("ID del usuario requerido");
+    try {
+        if (!userId) {
+            throw new Error("ID del usuario requerido");
+        }
+
+        const q = query(
+            commentsCollection,
+            where("authorId", "==", userId),
+            orderBy("createdAt", "desc"),
+            firestoreLimit(limit)
+        );
+
+        const snapshot = await getDocs(q);
+        
+        const comments = snapshot.docs.map((doc) => {
+            const commentData = serializeFirestoreData(doc.data());
+            return { id: doc.id, ...commentData } as Comment;
+        });
+
+        return comments;
+    } catch (error) {
+        console.error("Error getting user comments:", error);
+        return [];
     }
-
-    const q = query(
-        commentsCollection,
-        where("authorId", "==", userId),
-        orderBy("createdAt", "desc"),
-        firestoreLimit(limit)
-    );
-
-    const snapshot = await getDocs(q);
-
-    return snapshot.docs.map((doc) => {
-        const commentData = serializeFirestoreData(doc.data());
-        return { id: doc.id, ...commentData } as Comment;
-    });
 };
 
 /**
@@ -362,16 +386,13 @@ const organizeComments = (comments: Comment[]): Comment[] => {
 
     // Organizar jerarquía
     comments.forEach(comment => {
-        const node = commentMap.get(comment.id);
-        if (!node) return;
-
         if (comment.parentId) {
             const parent = commentMap.get(comment.parentId);
             if (parent) {
-                (parent.replies ??= []).push(node);
+                parent.replies!.push(commentMap.get(comment.id)!);
             }
         } else {
-            rootComments.push(node);
+            rootComments.push(commentMap.get(comment.id)!);
         }
     });
 

@@ -2,7 +2,7 @@
 
 "use client";
 
-import { Search } from "lucide-react";
+import { FiSearch } from "react-icons/fi";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 import Input from "@/components/ui/Input";
@@ -95,7 +95,7 @@ export default function UserFilters() {
                     label="Buscar usuarios"
                     placeholder="Buscar por nombre, email o username"
                     defaultValue={query}
-                    icon={<Search />}
+                    icon={<FiSearch />}
                     onChange={(e) => handleSearch(e.target.value)}
                 />
             </div>

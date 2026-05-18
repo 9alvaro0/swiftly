@@ -19,7 +19,7 @@ export default function ProfileInfo({ user, onEdit }: ProfileInfoProps) {
                     <button
                         onClick={() => onEdit("name")}
                         className="text-gray-400 hover:text-gray-300"
-                        aria-label="Editar nombre"
+                        title="Editar nombre"
                     >
                         <PencilIcon className="h-4 w-4" />
                     </button>
@@ -29,7 +29,7 @@ export default function ProfileInfo({ user, onEdit }: ProfileInfoProps) {
                     <button
                         onClick={() => onEdit("username")}
                         className="text-gray-400 hover:text-gray-300"
-                        aria-label="Editar nombre de usuario"
+                        title="Editar nombre de usuario"
                     >
                         <PencilIcon className="h-4 w-4" />
                     </button>
@@ -43,7 +43,7 @@ export default function ProfileInfo({ user, onEdit }: ProfileInfoProps) {
                             <button
                                 onClick={() => onEdit("location")}
                                 className="text-gray-400 hover:text-gray-300"
-                                aria-label="Editar ubicación"
+                                title="Editar ubicación"
                             >
                                 <PencilIcon className="h-3 w-3" />
                             </button>

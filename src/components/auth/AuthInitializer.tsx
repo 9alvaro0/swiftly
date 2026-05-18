@@ -29,19 +29,6 @@ export default function AuthInitializer({ children }: { children: React.ReactNod
                     if (userProfile) {
                         setUser(userProfile);
                         setAuthenticated(true);
-
-                        // Sync custom claims (non-blocking) so Firestore/Storage rules work
-                        firebaseUser.getIdToken().then(token =>
-                            fetch('/api/auth/sync-claims', {
-                                method: 'POST',
-                                headers: { Authorization: `Bearer ${token}` },
-                            }).then(res => res.json()).then(data => {
-                                if (data.synced) {
-                                    // Claims were updated — force token refresh so client picks them up
-                                    firebaseUser.getIdToken(true);
-                                }
-                            }).catch(() => {})
-                        ).catch(() => {});
                     } else {
                         // Si no hay perfil después de reintentos, cerrar sesión
                         setUser(null);

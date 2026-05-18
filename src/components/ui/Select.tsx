@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useId } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 
 interface SelectOption {
@@ -35,9 +35,7 @@ export default function Select({
     const [selectedOption, setSelectedOption] = useState<SelectOption | null>(
         value ? options.find((option) => option.value === value) || null : null
     );
-    const [focusedIndex, setFocusedIndex] = useState(-1);
     const selectRef = useRef<HTMLDivElement>(null);
-    const listboxId = useId();
 
     useEffect(() => {
         // Update selected option when value prop changes
@@ -52,7 +50,6 @@ export default function Select({
         const handleClickOutside = (event: MouseEvent) => {
             if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
                 setIsOpen(false);
-                setFocusedIndex(-1);
             }
         };
 
@@ -62,22 +59,9 @@ export default function Select({
         };
     }, []);
 
-    // Reset focused index when opening dropdown
-    useEffect(() => {
-        if (isOpen) {
-            const currentIndex = selectedOption
-                ? options.findIndex((o) => o.value === selectedOption.value)
-                : -1;
-            setFocusedIndex(currentIndex >= 0 ? currentIndex : 0);
-        } else {
-            setFocusedIndex(-1);
-        }
-    }, [isOpen, options, selectedOption]);
-
     const handleSelect = (option: SelectOption) => {
         setSelectedOption(option);
         setIsOpen(false);
-        setFocusedIndex(-1);
         onChange({
             target: { name: id, value: option.value },
         } as React.ChangeEvent<HTMLSelectElement>);
@@ -86,51 +70,6 @@ export default function Select({
     const toggleDropdown = () => {
         if (!disabled) {
             setIsOpen(!isOpen);
-        }
-    };
-
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (disabled) return;
-
-        switch (e.key) {
-            case "Enter":
-            case " ":
-                e.preventDefault();
-                if (isOpen && focusedIndex >= 0) {
-                    handleSelect(options[focusedIndex]);
-                } else {
-                    toggleDropdown();
-                }
-                break;
-            case "ArrowDown":
-                e.preventDefault();
-                if (!isOpen) {
-                    setIsOpen(true);
-                } else {
-                    setFocusedIndex((prev) =>
-                        prev < options.length - 1 ? prev + 1 : 0
-                    );
-                }
-                break;
-            case "ArrowUp":
-                e.preventDefault();
-                if (!isOpen) {
-                    setIsOpen(true);
-                } else {
-                    setFocusedIndex((prev) =>
-                        prev > 0 ? prev - 1 : options.length - 1
-                    );
-                }
-                break;
-            case "Escape":
-                e.preventDefault();
-                setIsOpen(false);
-                setFocusedIndex(-1);
-                break;
-            case "Tab":
-                setIsOpen(false);
-                setFocusedIndex(-1);
-                break;
         }
     };
 
@@ -150,21 +89,9 @@ export default function Select({
             >
                 <div
                     id={id}
-                    role="combobox"
-                    aria-expanded={isOpen}
-                    aria-haspopup="listbox"
-                    aria-controls={listboxId}
-                    aria-invalid={!!error || undefined}
-                    aria-describedby={error ? `${id}-error` : undefined}
-                    aria-activedescendant={
-                        isOpen && focusedIndex >= 0
-                            ? `${listboxId}-option-${focusedIndex}`
-                            : undefined
-                    }
                     onClick={toggleDropdown}
-                    onKeyDown={handleKeyDown}
-                    className={`w-full px-4 py-2 rounded-lg bg-white/5
-                        border ${error ? "border-red-500" : "border-white/10"}
+                    className={`w-full px-4 py-2 rounded-lg bg-white/5 
+                        border ${error ? "border-red-500" : "border-white/10"} 
                         text-white placeholder-white/40
                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400
                         transition-all duration-300 ease-in-out
@@ -173,6 +100,11 @@ export default function Select({
                         ${disabled ? "opacity-50 cursor-not-allowed" : ""}
                         ${className}`}
                     tabIndex={disabled ? -1 : 0}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                            toggleDropdown();
+                        }
+                    }}
                 >
                     <span className={`${!selectedOption ? "text-white/40" : ""}`}>
                         {selectedOption ? selectedOption.label : "Seleccionar..."}
@@ -183,31 +115,18 @@ export default function Select({
                 </div>
 
                 {isOpen && (
-                    <div
-                        id={listboxId}
-                        role="listbox"
-                        className="absolute z-10 w-full mt-1 bg-neutral-800/90 backdrop-blur-md border border-white/10 rounded-lg max-h-60 overflow-auto"
-                    >
-                        {options.map((option, index) => (
+                    <div className="absolute z-10 w-full mt-1 bg-neutral-800/90 backdrop-blur-md border border-white/10 rounded-lg max-h-60 overflow-auto">
+                        {options.map((option) => (
                             <div
                                 key={option.value}
-                                id={`${listboxId}-option-${index}`}
-                                role="option"
-                                aria-selected={selectedOption?.value === option.value}
-                                className={`px-4 py-2 cursor-pointer transition-colors
+                                className={`px-4 py-2 cursor-pointer hover:bg-white/10 transition-colors
                                     ${
                                         selectedOption?.value === option.value
                                             ? "bg-blue-500/20 text-blue-300"
                                             : "text-white"
                                     }
-                                    ${
-                                        focusedIndex === index
-                                            ? "bg-white/10"
-                                            : "hover:bg-white/10"
-                                    }
                                 `}
                                 onClick={() => handleSelect(option)}
-                                onMouseEnter={() => setFocusedIndex(index)}
                             >
                                 {option.label}
                             </div>
@@ -215,7 +134,7 @@ export default function Select({
                     </div>
                 )}
             </div>
-            {error && <p id={`${id}-error`} role="alert" className="text-red-500 text-sm mt-1">{error}</p>}
+            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
 
             {/* Hidden native select for form submission */}
             <select
@@ -226,7 +145,6 @@ export default function Select({
                 required={required}
                 disabled={disabled}
                 aria-hidden="true"
-                tabIndex={-1}
             >
                 <option
                     value=""

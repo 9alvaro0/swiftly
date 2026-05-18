@@ -1,10 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAdminDb } from '@/lib/firebase-admin';
-import { verifyAdminToken, AuthError } from '@/lib/auth';
+import { headers } from 'next/headers';
 
 export async function POST(request: NextRequest) {
   try {
-    await verifyAdminToken();
+    // Get auth header
+    const headersList = await headers();
+    const authHeader = headersList.get('authorization');
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.log('Missing or invalid authorization header');
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Basic token validation
+    const token = authHeader.substring(7);
+    if (!token || token.length < 100) {
+      console.log('Invalid token format');
+      return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+    }
 
     const { name, slug, description } = await request.json();
 
@@ -43,26 +57,21 @@ export async function POST(request: NextRequest) {
 
     await adminDb.collection('tags').doc(slug).set(tagData);
 
-    return NextResponse.json({
-      success: true,
-      tag: { ...tagData, id: slug }
+    return NextResponse.json({ 
+      success: true, 
+      tag: { ...tagData, id: slug } 
     });
 
   } catch (error) {
-    if (error instanceof AuthError) {
-      return NextResponse.json({ error: error.message }, { status: error.statusCode });
-    }
     console.error('Error creating tag:', error);
-    return NextResponse.json({
-      error: 'Failed to create tag'
+    return NextResponse.json({ 
+      error: 'Failed to create tag' 
     }, { status: 500 });
   }
 }
 
 export async function GET() {
   try {
-    await verifyAdminToken();
-
     // Get admin database
     const adminDb = await getAdminDb();
     if (!adminDb) {
@@ -79,12 +88,9 @@ export async function GET() {
     return NextResponse.json({ tags });
 
   } catch (error) {
-    if (error instanceof AuthError) {
-      return NextResponse.json({ error: error.message }, { status: error.statusCode });
-    }
     console.error('Error fetching tags:', error);
-    return NextResponse.json({
-      error: 'Failed to fetch tags'
+    return NextResponse.json({ 
+      error: 'Failed to fetch tags' 
     }, { status: 500 });
   }
 }

@@ -79,7 +79,7 @@ const Footer = () => {
 
                     {/* Navegación rápida */}
                     <div>
-                        <h2 className="text-white font-semibold mb-6 text-lg">Navegación</h2>
+                        <h3 className="text-white font-semibold mb-6 text-lg">Navegación</h3>
                         <ul className="space-y-3">
                             {navigationLinks.map((link) => (
                                 <li key={link.href}>
@@ -96,7 +96,7 @@ const Footer = () => {
 
                     {/* Recursos adicionales */}
                     <div>
-                        <h2 className="text-white font-semibold mb-6 text-lg">Recursos</h2>
+                        <h3 className="text-white font-semibold mb-6 text-lg">Recursos</h3>
                         <ul className="space-y-3">
                             <li>
                                 <Link

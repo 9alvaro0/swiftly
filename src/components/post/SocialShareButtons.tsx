@@ -3,16 +3,17 @@
 "use client";
 
 import { useState } from "react";
-import {
-    FaTwitter,
-    FaFacebook,
-    FaLinkedin,
-    FaWhatsapp,
+import { 
+    FaTwitter, 
+    FaFacebook, 
+    FaLinkedin, 
+    FaWhatsapp, 
     FaTelegram,
     FaReddit,
-    FaCopy
+    FaCopy,
+    FaShare
 } from "react-icons/fa";
-import { Check, Share2, Share } from "lucide-react";
+import { FiCheck, FiShare2 } from "react-icons/fi";
 import { useSocialShare } from "@/hooks/useSocialShare";
 
 interface SocialShareButtonsProps {
@@ -100,7 +101,7 @@ export default function SocialShareButtons({
     const [showDropdown, setShowDropdown] = useState(false);
     
     const {
-        shareToPlatform,
+        shareToplatform,
         copyToClipboard,
         nativeShare,
         isSharing,
@@ -109,13 +110,14 @@ export default function SocialShareButtons({
         trackAnalytics: true,
         trackInFirebase,
         postId,
-        onShare: () => {
+        onShare: (analytics) => {
             // Custom analytics handling can be added here
+            console.log('Share analytics:', analytics);
         }
     });
 
     const handleShare = async (platform: SharePlatform) => {
-        await shareToPlatform(platform.key, url, title, description);
+        await shareToplatform(platform.key, url, title, description);
         
         if (variant === "dropdown") {
             setShowDropdown(false);
@@ -175,7 +177,7 @@ export default function SocialShareButtons({
             title="Copiar enlace"
             aria-label="Copiar enlace"
         >
-            {copied ? <Check size={18} /> : <FaCopy size={18} />}
+            {copied ? <FiCheck size={18} /> : <FaCopy size={18} />}
             {(showLabels || variant === "vertical") && (
                 <span className="text-sm font-medium">
                     {copied ? "Copiado" : "Copiar enlace"}
@@ -202,7 +204,7 @@ export default function SocialShareButtons({
                 title="Compartir"
                 aria-label="Compartir"
             >
-                <Share2 size={18} />
+                <FiShare2 size={18} />
                 {(showLabels || variant === "vertical") && (
                     <span className="text-sm font-medium">Compartir</span>
                 )}
@@ -223,7 +225,7 @@ export default function SocialShareButtons({
                         ${isSharing ? "opacity-50 cursor-not-allowed" : ""}
                     `}
                 >
-                    <Share size={16} />
+                    <FaShare size={16} />
                     <span className="text-sm font-medium">Compartir</span>
                 </button>
 
@@ -247,7 +249,7 @@ export default function SocialShareButtons({
                                         onClick={handleNativeShare}
                                         className="flex items-center gap-3 px-3 py-2.5 text-sm text-white hover:bg-white/10 w-full text-left transition-colors rounded-lg"
                                     >
-                                        <Share2 size={16} className="text-indigo-400" />
+                                        <FiShare2 size={16} className="text-indigo-400" />
                                         Compartir
                                     </button>
                                 )}
@@ -280,7 +282,7 @@ export default function SocialShareButtons({
                                     `}
                                 >
                                     {copied ? (
-                                        <Check size={16} className="text-green-400" />
+                                        <FiCheck size={16} className="text-green-400" />
                                     ) : (
                                         <FaCopy size={16} className="text-gray-400" />
                                     )}
@@ -304,7 +306,7 @@ export default function SocialShareButtons({
         return (
             <div className={`space-y-2 ${className}`}>
                 <div className="flex items-center gap-2 mb-4">
-                    <Share className="text-blue-400" size={16} />
+                    <FaShare className="text-blue-400" size={16} />
                     <h3 className="text-sm font-semibold text-white">Compartir artículo</h3>
                 </div>
                 {buttonElements}
@@ -317,7 +319,7 @@ export default function SocialShareButtons({
         <div className={`flex items-center gap-2 ${className}`}>
             {showLabels && (
                 <div className="flex items-center gap-2 mr-3">
-                    <Share className="text-blue-400" size={16} />
+                    <FaShare className="text-blue-400" size={16} />
                     <span className="text-sm font-semibold text-white">Compartir:</span>
                 </div>
             )}

@@ -4,7 +4,7 @@
 
 import { useAuthStore } from "@/store/authStore";
 import { useState } from "react";
-import { LogOut } from "lucide-react";
+import { FaSignOutAlt } from "react-icons/fa";
 
 import ProfileHeader from "@/components/profile/header/ProfileHeader";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
@@ -34,7 +34,7 @@ export default function ProfilePage() {
                             onClick={() => setShowLogoutModal(true)}
                             className="w-full flex items-center justify-center gap-3 p-4 rounded-xl bg-gray-800 hover:bg-red-900/20 transition-all border border-gray-700 text-red-400 hover:text-red-300"
                         >
-                            <LogOut size={18} />
+                            <FaSignOutAlt size={18} />
                             <span className="font-medium">Cerrar sesión</span>
                         </button>
                     </div>

@@ -1,10 +1,12 @@
 import SectionHeader from "../ui/SectionHeader";
-import { getAllPublishedPostsServer } from "@/services/firebase/firestore/post-server";
-import { BookOpen } from "lucide-react";
+import { getAllPublishedPosts } from "@/services/firebase/firestore/post";
+import { FiBookOpen } from "react-icons/fi";
 import TutorialCard from "../tutorials/TutorialCard";
 
 export default async function FeaturedTutorials() {
-    const publishedTutorials = await getAllPublishedPostsServer({ type: "tutorial", limitCount: 8 });
+    const tutorials = await getAllPublishedPosts({ type: "tutorial" });
+    // Additional filter to ensure only published tutorials are shown
+    const publishedTutorials = tutorials.filter(tutorial => tutorial.isPublished === true);
     const hasTutorials = publishedTutorials && publishedTutorials.length > 0;
 
     return (
@@ -31,7 +33,7 @@ export default async function FeaturedTutorials() {
                     </div>
                 ) : (
                     <div className="relative bg-white/5 border border-white/10 p-12 rounded-2xl shadow-lg text-center mt-10">
-                        <BookOpen
+                        <FiBookOpen
                             size={48}
                             className="text-blue-400 mx-auto mb-6"
                         />

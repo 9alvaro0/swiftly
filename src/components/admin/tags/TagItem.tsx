@@ -4,7 +4,7 @@
 
 import { Tag } from "@/types/Tag";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { Pencil, Trash2 } from "lucide-react";
+import { BiEditAlt, BiTrash } from "react-icons/bi";
 import DeleteTagDialog from "./DeleteTagDialog";
 import { useState } from "react";
 import { deleteTag } from "@/services/firebase/firestore/tags";
@@ -52,17 +52,15 @@ export default function TagItem({ tag }: TagItemProps) {
                     <div className="flex justify-end space-x-2">
                         <button
                             onClick={handleEdit}
-                            aria-label={`Editar etiqueta: ${tag.name}`}
                             className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 flex items-center"
                         >
-                            <Pencil className="mr-1" /> Editar
+                            <BiEditAlt className="mr-1" /> Editar
                         </button>
                         <button
                             onClick={handleDelete}
-                            aria-label={`Eliminar etiqueta: ${tag.name}`}
                             className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 flex items-center"
                         >
-                            <Trash2 className="mr-1" /> Eliminar
+                            <BiTrash className="mr-1" /> Eliminar
                         </button>
                     </div>
                 </td>

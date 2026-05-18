@@ -1,6 +1,6 @@
 // src/hooks/useSocialShare.ts
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback } from "react";
 import { toast } from "sonner";
 import { incrementPostShareStat } from "@/services/firebase/firestore/shareStats";
 import { ShareStats } from "@/types/Post";
@@ -61,16 +61,8 @@ export function useSocialShare(options: UseSocialShareOptions = {}) {
     const { trackAnalytics = true, trackInFirebase = false, postId, onShare } = options;
     const [isSharing, setIsSharing] = useState(false);
     const [shareCount, setShareCount] = useState(0);
-    const timersRef = useRef<number[]>([]);
 
-    // Cleanup all pending timers on unmount
-    useEffect(() => {
-        return () => {
-            timersRef.current.forEach(id => clearInterval(id));
-        };
-    }, []);
-
-    const shareToPlatform = useCallback(async (
+    const shareToplatform = useCallback(async (
         platformKey: string,
         url: string,
         title: string,
@@ -136,25 +128,22 @@ export function useSocialShare(options: UseSocialShareOptions = {}) {
                     onShare(analytics);
                 }
                 
+                console.log(`Shared to ${platform.name}:`, analytics);
             }
 
-            // Check if window was closed (user completed share)
+            // Optional: Check if window was closed (user completed share)
             if (shareWindow) {
-                const checkClosed = window.setInterval(() => {
+                const checkClosed = setInterval(() => {
                     if (shareWindow.closed) {
-                        window.clearInterval(checkClosed);
-                        timersRef.current = timersRef.current.filter(id => id !== checkClosed && id !== timeout);
+                        clearInterval(checkClosed);
                         toast.success(`Compartido en ${platform.name}`);
                     }
                 }, 1000);
 
-                // Clear interval after 30 seconds
-                const timeout = window.setTimeout(() => {
-                    window.clearInterval(checkClosed);
-                    timersRef.current = timersRef.current.filter(id => id !== checkClosed && id !== timeout);
+                // Clear interval after 30 seconds to prevent memory leaks
+                setTimeout(() => {
+                    clearInterval(checkClosed);
                 }, 30000);
-
-                timersRef.current.push(checkClosed, timeout);
             }
 
             return true;
@@ -289,7 +278,7 @@ export function useSocialShare(options: UseSocialShareOptions = {}) {
     }, []);
 
     return {
-        shareToPlatform,
+        shareToplatform,
         copyToClipboard,
         nativeShare,
         isSharing,

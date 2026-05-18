@@ -1,6 +1,6 @@
 // src/components/tutorials/TutorialsList.tsx
 
-import { getAllPublishedPostsServer } from "@/services/firebase/firestore/post-server";
+import { getAllPublishedPosts } from "@/services/firebase/firestore/post";
 import TutorialsListClient from "./TutorialsListClient";
 import { ViewMode } from "@/components/posts/ViewToggle";
 import { SortOption } from "@/components/posts/SortOptions";
@@ -21,7 +21,7 @@ export default async function TutorialsList({
     sortBy?: SortOption;
 }) {
     // Obtener datos en el servidor
-    const tutorials = await getAllPublishedPostsServer({ searchTerm, level, tag, type: "tutorial" });
+    const tutorials = await getAllPublishedPosts({ searchTerm, level, tag, type: "tutorial" });
     
     // Additional filter to ensure only published tutorials are shown
     const publishedTutorials = tutorials.filter(tutorial => tutorial.isPublished === true);

@@ -2,12 +2,12 @@
 
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Comment } from "@/types/Comment";
 import { useAuthStore } from "@/store/authStore";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
-import { Heart, MessageCircle, Pencil, Trash2, MoreHorizontal } from "lucide-react";
+import { FiHeart, FiMessageCircle, FiEdit2, FiTrash2, FiMoreHorizontal } from "react-icons/fi";
 import Button from "@/components/ui/Button";
 import Textarea from "@/components/ui/Textarea";
 import Image from "next/image";
@@ -39,23 +39,9 @@ export default function CommentItem({
     const [editContent, setEditContent] = useState(comment.content);
     const [submitting, setSubmitting] = useState(false);
 
-    const menuRef = useRef<HTMLDivElement>(null);
-    const menuButtonRef = useRef<HTMLButtonElement>(null);
     const isOwner = user?.uid === comment.author.id;
     const isLiked = user ? comment.likedBy.includes(user.uid) : false;
     const canReply = depth < maxDepth;
-
-    useEffect(() => {
-        if (!showMenu) return;
-        const handleEscape = (e: KeyboardEvent) => {
-            if (e.key === "Escape") {
-                setShowMenu(false);
-                menuButtonRef.current?.focus();
-            }
-        };
-        document.addEventListener("keydown", handleEscape);
-        return () => document.removeEventListener("keydown", handleEscape);
-    }, [showMenu]);
 
     const handleReply = async () => {
         if (!replyContent.trim()) return;
@@ -191,40 +177,34 @@ export default function CommentItem({
 
                         {/* Menu */}
                         {isOwner && (
-                            <div className="relative" ref={menuRef}>
+                            <div className="relative">
                                 <button
-                                    ref={menuButtonRef}
                                     onClick={() => setShowMenu(!showMenu)}
-                                    aria-expanded={showMenu}
-                                    aria-haspopup="menu"
-                                    aria-label="Opciones del comentario"
-                                    className="p-2 hover:bg-white/10 rounded-xl text-white/30 hover:text-white/70 transition-all duration-200 opacity-0 group-hover:opacity-100 focus:opacity-100 hover:scale-105"
+                                    className="p-2 hover:bg-white/10 rounded-xl text-white/30 hover:text-white/70 transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-105"
                                 >
-                                    <MoreHorizontal size={14} />
+                                    <FiMoreHorizontal size={14} />
                                 </button>
-
+                                
                                 {showMenu && (
-                                    <div role="menu" className="absolute right-0 top-10 bg-gray-900/95 backdrop-blur-md border border-white/20 rounded-xl shadow-2xl py-2 z-20 min-w-[140px] animate-in slide-in-from-top-2 duration-200">
+                                    <div className="absolute right-0 top-10 bg-gray-900/95 backdrop-blur-md border border-white/20 rounded-xl shadow-2xl py-2 z-20 min-w-[140px] animate-in slide-in-from-top-2 duration-200">
                                         <button
-                                            role="menuitem"
                                             onClick={() => {
                                                 setShowEditForm(true);
                                                 setShowMenu(false);
                                             }}
                                             className="flex items-center gap-3 px-4 py-2.5 text-sm text-white hover:bg-white/10 w-full text-left transition-colors rounded-lg mx-1"
                                         >
-                                            <Pencil size={14} className="text-blue-400" />
+                                            <FiEdit2 size={14} className="text-blue-400" />
                                             Editar
                                         </button>
                                         <button
-                                            role="menuitem"
                                             onClick={() => {
                                                 handleDelete();
                                                 setShowMenu(false);
                                             }}
                                             className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 w-full text-left transition-colors rounded-lg mx-1"
                                         >
-                                            <Trash2 size={14} />
+                                            <FiTrash2 size={14} />
                                             Eliminar
                                         </button>
                                     </div>
@@ -242,7 +222,7 @@ export default function CommentItem({
                                 onChange={(e) => setEditContent(e.target.value)}
                                 placeholder="Edita tu comentario..."
                                 rows={3}
-                                maxLength={1000}
+                                maxLength={2000}
                                 className="bg-white/10 border-white/20 text-white placeholder-white/50 focus:border-blue-400/50 focus:ring-blue-400/20 rounded-lg backdrop-blur-sm resize-none"
                             />
                             <div className="flex gap-3 justify-end">
@@ -285,7 +265,7 @@ export default function CommentItem({
                                         : "text-white/60 hover:text-red-400 hover:bg-red-500/10 border border-white/10 hover:border-red-500/30"
                                 } ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
-                                <Heart size={16} className={isLiked ? "fill-current" : ""} />
+                                <FiHeart size={16} className={isLiked ? "fill-current" : ""} />
                                 <span>{comment.likes || 0}</span>
                             </button>
 
@@ -296,7 +276,7 @@ export default function CommentItem({
                                     disabled={!isAuthenticated}
                                     className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 text-white/60 hover:text-blue-400 hover:bg-blue-500/10 border border-white/10 hover:border-blue-500/30 ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 >
-                                    <MessageCircle size={16} />
+                                    <FiMessageCircle size={16} />
                                     <span>Responder</span>
                                 </button>
                             )}
@@ -308,7 +288,7 @@ export default function CommentItem({
                         <div className={`mt-4 p-4 bg-gradient-to-br from-white/5 to-white/10 rounded-xl backdrop-blur-sm border border-white/20 shadow-xl`}>
                             <div className="space-y-4">
                                 <div className="flex items-center gap-2 mb-3">
-                                    <MessageCircle size={16} className="text-blue-400" />
+                                    <FiMessageCircle size={16} className="text-blue-400" />
                                     <span className="text-sm text-white/70">
                                         Respondiendo a <span className="text-blue-400 font-medium">{comment.author.name}</span>
                                     </span>
@@ -319,7 +299,7 @@ export default function CommentItem({
                                     onChange={(e) => setReplyContent(e.target.value)}
                                     placeholder={`Escribe tu respuesta...`}
                                     rows={3}
-                                    maxLength={1000}
+                                    maxLength={2000}
                                     className="bg-white/10 border-white/20 text-white placeholder-white/50 focus:border-blue-400/50 focus:ring-blue-400/20 rounded-xl backdrop-blur-sm resize-none"
                                 />
                                 <div className="flex gap-3 justify-end pt-2">

@@ -2,8 +2,8 @@
 
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import { Filter, X } from "lucide-react";
+import { useState } from "react";
+import { FaFilter, FaTimes } from "react-icons/fa";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PostLevel } from "@/types/Post";
 import Button from "@/components/ui/Button";
@@ -30,8 +30,6 @@ export default function PostsFiltersMobile({
     const searchParams = useSearchParams();
     const pathName = usePathname();
     const { replace } = useRouter();
-    const triggerRef = useRef<HTMLButtonElement>(null);
-    const drawerRef = useRef<HTMLDivElement>(null);
 
     const levelFilter = searchParams.get("level") || "";
     const tagFilter = searchParams.get("tag") || "";
@@ -66,67 +64,25 @@ export default function PostsFiltersMobile({
         }, 50);
     };
 
-    const handleClose = useCallback(() => {
+    const handleClose = () => {
         setIsClosing(true);
         setTimeout(() => {
             setIsOpen(false);
             setIsClosing(false);
-            triggerRef.current?.focus();
         }, 300);
-    }, []);
-
-    // Escape key handler & focus drawer on open
-    useEffect(() => {
-        if (!isOpen || isOpening) return;
-
-        drawerRef.current?.focus();
-
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === "Escape") {
-                handleClose();
-                return;
-            }
-
-            // Focus trap
-            if (e.key === "Tab" && drawerRef.current) {
-                const focusable = drawerRef.current.querySelectorAll<HTMLElement>(
-                    'a[href], button:not([disabled]), select:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
-                );
-                if (focusable.length === 0) return;
-                const first = focusable[0];
-                const last = focusable[focusable.length - 1];
-                if (e.shiftKey) {
-                    if (document.activeElement === first) {
-                        e.preventDefault();
-                        last.focus();
-                    }
-                } else {
-                    if (document.activeElement === last) {
-                        e.preventDefault();
-                        first.focus();
-                    }
-                }
-            }
-        };
-
-        document.addEventListener("keydown", handleKeyDown);
-        return () => document.removeEventListener("keydown", handleKeyDown);
-    }, [isOpen, isOpening, handleClose]);
+    };
 
     return (
         <>
             {/* Botón de filtros móvil */}
             <div className="lg:hidden flex items-center gap-1">
                 <Button
-                    ref={triggerRef}
                     variant="outline"
                     size="lg"
                     onClick={handleOpen}
                     className="relative px-3 h-10 shadow-none"
-                    aria-label="Abrir filtros"
-                    aria-expanded={isOpen}
                 >
-                    <Filter size={16} />
+                    <FaFilter size={16} />
                     {hasActiveFilters && (
                         <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                             {activeFiltersCount}
@@ -140,9 +96,8 @@ export default function PostsFiltersMobile({
                         size="lg"
                         onClick={handleClearFilters}
                         className="text-red-600 px-3 h-10 shadow-none"
-                        aria-label="Limpiar filtros"
                     >
-                        <X size={14} />
+                        <FaTimes size={14} />
                     </Button>
                 )}
             </div>
@@ -151,42 +106,33 @@ export default function PostsFiltersMobile({
             {isOpen && (
                 <div className="fixed inset-0 z-50 lg:hidden">
                     {/* Overlay */}
-                    <div
+                    <div 
                         className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
                             isClosing ? 'opacity-0' : isOpening ? 'opacity-0' : 'opacity-100'
                         }`}
                         onClick={handleClose}
-                        aria-hidden="true"
                     />
-
+                    
                     {/* Drawer desde abajo */}
-                    <div
-                        ref={drawerRef}
-                        role="dialog"
-                        aria-modal="true"
-                        aria-labelledby="filter-title"
-                        tabIndex={-1}
-                        className={`mobile-filter-drawer absolute bottom-0 left-0 right-0 rounded-t-2xl p-6 min-h-[60vh] max-h-[90vh] overflow-y-auto transition-transform duration-300 ease-out ${
-                            isClosing ? 'translate-y-full' : isOpening ? 'translate-y-full' : 'translate-y-0'
-                        }`}
-                    >
+                    <div className={`mobile-filter-drawer absolute bottom-0 left-0 right-0 rounded-t-2xl p-6 min-h-[60vh] max-h-[90vh] overflow-y-auto transition-transform duration-300 ease-out ${
+                        isClosing ? 'translate-y-full' : isOpening ? 'translate-y-full' : 'translate-y-0'
+                    }`}>
                         <div className="flex items-center justify-between mb-6">
-                            <h3 id="filter-title" className="text-lg font-semibold">
+                            <h3 className="text-lg font-semibold">
                                 Filtros
                             </h3>
                             <button
                                 onClick={handleClose}
                                 className="p-2 rounded-full hover:bg-neutral-100 transition-colors"
-                                aria-label="Cerrar filtros"
                             >
-                                <X size={16} className="text-neutral-500" />
+                                <FaTimes size={16} className="text-neutral-500" />
                             </button>
                         </div>
 
                         <div className="space-y-6">
                             {/* Filtro de Nivel */}
                             <div>
-                                <label htmlFor="level-mobile" className="block text-sm font-medium mb-3">
+                                <label className="block text-sm font-medium mb-3">
                                     Nivel de dificultad
                                 </label>
                                 <Select
@@ -206,22 +152,22 @@ export default function PostsFiltersMobile({
 
                             {/* Ordenamiento */}
                             <div>
-                                <span className="block text-sm font-medium mb-3">
+                                <label className="block text-sm font-medium mb-3">
                                     Ordenar por
-                                </span>
-                                <SortOptions
-                                    sortBy={sortBy}
+                                </label>
+                                <SortOptions 
+                                    sortBy={sortBy} 
                                     onSortChange={onSortChange}
                                 />
                             </div>
 
                             {/* Vista */}
                             <div>
-                                <span className="block text-sm font-medium mb-3">
+                                <label className="block text-sm font-medium mb-3">
                                     Vista
-                                </span>
-                                <ViewToggle
-                                    viewMode={viewMode}
+                                </label>
+                                <ViewToggle 
+                                    viewMode={viewMode} 
                                     onViewChange={onViewChange}
                                 />
                             </div>

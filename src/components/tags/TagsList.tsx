@@ -1,17 +1,17 @@
 // src/components/tags/TagsList.tsx
 
-import { getAllTagsServer } from "@/services/firebase/firestore/post-server";
-import { Frown } from "lucide-react";
+import { getAllTags } from "@/services/firebase/firestore/tags";
+import { BsEmojiFrown } from "react-icons/bs";
 import Link from "next/link";
 import { tagToSlug } from "@/utils/tagUtils";
 
 export default async function TagsList({ searchTerm }: { searchTerm: string }) {
-    const tags = await getAllTagsServer(searchTerm);
+    const tags = await getAllTags(searchTerm);
 
     const filteredTags = tags.filter((tag) => tag.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
     return (
-        <div className="rounded-2xl shadow-lg transition-all" aria-live="polite">
+        <div className="rounded-2xl shadow-lg transition-all">
             {filteredTags.length > 0 ? (
                 <>
                     <div className="flex justify-between items-center mb-6">
@@ -38,7 +38,7 @@ export default async function TagsList({ searchTerm }: { searchTerm: string }) {
                 </>
             ) : (
                 <div className="text-center py-16 flex flex-col items-center space-y-4">
-                    <Frown className="w-14 h-14 text-gray-600" />
+                    <BsEmojiFrown className="w-14 h-14 text-gray-600" />
                     <h3 className="text-xl font-semibold text-gray-300">No se encontraron tags</h3>
                     <p className="text-gray-400 max-w-sm">
                         No hay tags que coincidan con tu búsqueda.

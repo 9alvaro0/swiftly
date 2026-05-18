@@ -1,7 +1,5 @@
 // src/app/terms/page.tsx
 
-export const dynamic = 'force-static';
-
 import { Metadata } from "next";
 import TermsHeader from "@/components/terms/TermsHeader";
 import AcceptanceSection from "@/components/terms/AcceptanceSection";
@@ -15,18 +13,10 @@ import ModificationsSection from "@/components/terms/ModificationsSection";
 import TermsContactSection from "@/components/terms/TermsContactSection";
 import TermsFooter from "@/components/terms/TermsFooter";
 
-import { SITE_URL } from "@/lib/constants";
-
 export const metadata: Metadata = {
     title: "Términos y Condiciones - aprendeSwift",
     description: "Conoce los términos y condiciones de uso de aprendeSwift y nuestras políticas de contenido.",
-    alternates: { canonical: `${SITE_URL}/terms` },
     openGraph: {
-        title: "Términos y Condiciones - aprendeSwift",
-        description: "Conoce los términos y condiciones de uso de aprendeSwift y nuestras políticas de contenido.",
-        url: `${SITE_URL}/terms`,
-    },
-    twitter: {
         title: "Términos y Condiciones - aprendeSwift",
         description: "Conoce los términos y condiciones de uso de aprendeSwift y nuestras políticas de contenido.",
     },

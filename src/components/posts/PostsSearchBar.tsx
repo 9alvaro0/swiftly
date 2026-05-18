@@ -5,7 +5,7 @@
 import { useState, useEffect } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Search } from "lucide-react";
+import { FaSearch } from "react-icons/fa";
 import Input from "@/components/ui/Input";
 
 export default function PostsSearchBar() {
@@ -44,7 +44,7 @@ export default function PostsSearchBar() {
                 label="Buscar publicaciones"
                 placeholder="Buscar..."
                 value={currentQuery}
-                icon={<Search size={16} />}
+                icon={<FaSearch size={16} />}
                 onChange={handleInputChange}
                 className="w-full"
             />

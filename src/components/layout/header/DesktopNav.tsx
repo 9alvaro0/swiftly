@@ -11,12 +11,12 @@ interface DesktopNavProps {
 
 export default function DesktopNav({ isAuthenticated, user, isLoading }: DesktopNavProps) {
     return (
-        <nav aria-label="Navegación principal" className="hidden md:block">
+        <div className="hidden md:block">
             <NavLinks
                 isAuthenticated={isAuthenticated}
                 user={user}
                 isLoading={isLoading}
             />
-        </nav>
+        </div>
     );
 }

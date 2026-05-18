@@ -4,7 +4,7 @@
 
 import { useState, useEffect } from "react";
 import SocialShareButtons from "./SocialShareButtons";
-import { Share2, X } from "lucide-react";
+import { FiShare2, FiX } from "react-icons/fi";
 
 interface FloatingSocialShareProps {
     url: string;
@@ -25,24 +25,17 @@ export default function FloatingSocialShare({
     const [isExpanded, setIsExpanded] = useState(false);
 
     useEffect(() => {
-        let ticking = false;
         const toggleVisibility = () => {
-            if (!ticking) {
-                requestAnimationFrame(() => {
-                    if (window.scrollY > threshold) {
-                        setIsVisible(true);
-                    } else {
-                        setIsVisible(false);
-                        setIsExpanded(false);
-                    }
-                    ticking = false;
-                });
-                ticking = true;
+            if (window.pageYOffset > threshold) {
+                setIsVisible(true);
+            } else {
+                setIsVisible(false);
+                setIsExpanded(false);
             }
         };
 
-        window.addEventListener('scroll', toggleVisibility, { passive: true });
-
+        window.addEventListener('scroll', toggleVisibility);
+        
         return () => {
             window.removeEventListener('scroll', toggleVisibility);
         };
@@ -70,7 +63,7 @@ export default function FloatingSocialShare({
                     "
                     aria-label="Compartir artículo"
                 >
-                    <Share2 size={20} />
+                    <FiShare2 size={20} />
                     <span className="hidden sm:inline font-medium">Compartir</span>
                 </button>
             ) : (
@@ -83,7 +76,7 @@ export default function FloatingSocialShare({
                     {/* Header */}
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
-                            <Share2 className="text-blue-400" size={18} />
+                            <FiShare2 className="text-blue-400" size={18} />
                             <h3 className="text-white font-semibold text-sm">
                                 Compartir artículo
                             </h3>
@@ -96,7 +89,7 @@ export default function FloatingSocialShare({
                             "
                             aria-label="Cerrar panel de compartir"
                         >
-                            <X size={16} />
+                            <FiX size={16} />
                         </button>
                     </div>
 

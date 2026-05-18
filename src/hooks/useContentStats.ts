@@ -14,7 +14,6 @@ interface ContentStats {
     postsReadingHours: number;
     tutorialsReadingHours: number;
     loading: boolean;
-    error: string | null;
 }
 
 export function useContentStats(): ContentStats {
@@ -25,8 +24,7 @@ export function useContentStats(): ContentStats {
         totalReadingHours: 0,
         postsReadingHours: 0,
         tutorialsReadingHours: 0,
-        loading: true,
-        error: null,
+        loading: true
     });
 
     const { tags } = useTags();
@@ -34,16 +32,21 @@ export function useContentStats(): ContentStats {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                // Single query for all published content, split client-side
-                const allContent = await getAllPublishedPosts({});
-                const publishedPosts = allContent.filter(item => item.type === "article");
-                const publishedTutorials = allContent.filter(item => item.type === "tutorial");
+                // Obtener todos los posts y tutoriales
+                const [posts, tutorials] = await Promise.all([
+                    getAllPublishedPosts({ type: "article" }),
+                    getAllPublishedPosts({ type: "tutorial" })
+                ]);
+                
+                // Additional filter to ensure only published content is counted
+                const publishedPosts = posts.filter(post => post.isPublished === true);
+                const publishedTutorials = tutorials.filter(tutorial => tutorial.isPublished === true);
 
                 // Calcular tiempo total de lectura en horas
                 const postsMinutes = publishedPosts.reduce((total, item) => total + (item.readTime || 0), 0);
                 const tutorialsMinutes = publishedTutorials.reduce((total, item) => total + (item.readTime || 0), 0);
                 const totalMinutes = postsMinutes + tutorialsMinutes;
-
+                
                 const totalHours = Math.round(totalMinutes / 60);
                 const postsHours = Math.round(postsMinutes / 60);
                 const tutorialsHours = Math.round(tutorialsMinutes / 60);
@@ -55,16 +58,11 @@ export function useContentStats(): ContentStats {
                     totalReadingHours: totalHours,
                     postsReadingHours: postsHours,
                     tutorialsReadingHours: tutorialsHours,
-                    loading: false,
-                    error: null,
+                    loading: false
                 });
             } catch (error) {
                 console.error("Error fetching content stats:", error);
-                setStats(prev => ({
-                    ...prev,
-                    loading: false,
-                    error: error instanceof Error ? error.message : "Error al cargar estadísticas",
-                }));
+                setStats(prev => ({ ...prev, loading: false }));
             }
         };
 

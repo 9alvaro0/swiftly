@@ -2,7 +2,7 @@
 "use client";
 
 import { useUserNewsletter } from '@/hooks/useUserNewsletter';
-import { Mail, CheckCircle, XCircle } from 'lucide-react';
+import { MdEmail, MdCheckCircle, MdCancel } from 'react-icons/md';
 import Spinner from '@/components/ui/Spinner';
 
 export default function NewsletterSubscription() {
@@ -18,7 +18,7 @@ export default function NewsletterSubscription() {
       <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
         <div className="flex items-center gap-4">
           <div className="bg-blue-600/20 p-3 rounded-xl">
-            <Mail className="h-6 w-6 text-blue-400" />
+            <MdEmail className="h-6 w-6 text-blue-400" />
           </div>
           <div className="flex-1">
             <h3 className="font-semibold text-white mb-2">Newsletter</h3>
@@ -38,16 +38,16 @@ export default function NewsletterSubscription() {
     <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
       <div className="flex items-center gap-4">
         <div className="bg-blue-600/20 p-3 rounded-xl">
-          <Mail className="h-6 w-6 text-blue-400" />
+          <MdEmail className="h-6 w-6 text-blue-400" />
         </div>
         <div className="flex-1">
           <h3 className="font-semibold text-white mb-2">Newsletter</h3>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               {isSubscribed ? (
-                <CheckCircle className="h-4 w-4 text-green-400" />
+                <MdCheckCircle className="h-4 w-4 text-green-400" />
               ) : (
-                <XCircle className="h-4 w-4 text-red-400" />
+                <MdCancel className="h-4 w-4 text-red-400" />
               )}
               <span className={`text-sm ${isSubscribed ? 'text-green-400' : 'text-red-400'}`}>
                 {isSubscribed ? 'Suscrito' : 'No suscrito'}

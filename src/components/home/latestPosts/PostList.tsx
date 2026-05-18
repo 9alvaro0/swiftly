@@ -1,6 +1,6 @@
 import { getPostsByTag } from "@/services/firebase/firestore/post";
 import Link from "next/link";
-import { Tags } from "lucide-react";
+import { AiFillTags } from "react-icons/ai";
 import { Post } from "@/types/Post";
 import Image from "next/image";
 import { formatDate } from "@/utils/dateUtils";
@@ -23,7 +23,7 @@ export default async function PostList({ tag, posts: initialPosts }: PostListPro
     if (displayPosts.length === 0) {
         return (
             <div className="text-center bg-white/5 rounded-lg border border-white/10 p-8">
-                <Tags className="mx-auto text-gray-500 text-5xl mb-4" />
+                <AiFillTags className="mx-auto text-gray-500 text-5xl mb-4" />
                 <p className="text-gray-400 mb-2">No hay posts asociados a esta etiqueta.</p>
                 <Link
                     href="/tags"

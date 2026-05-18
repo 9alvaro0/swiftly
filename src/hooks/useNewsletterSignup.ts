@@ -1,7 +1,7 @@
 // src/hooks/useNewsletterSignup.ts
 
 import { subscribe } from "@/services/firebase/firestore/newsletter";
-import { isValidEmail } from "@/utils/validation";
+import { validateEmail, validateEmailFormat } from "@/utils/formUtils";
 import { useState } from "react";
 
 interface UseNewsletterSignupReturn {
@@ -27,12 +27,12 @@ export function useNewsletterSignup(): UseNewsletterSignupReturn {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!email.trim()) {
+        if (!validateEmail(email)) {
             setError("Por favor, ingresa un correo electrónico");
             return;
         }
 
-        if (!isValidEmail(email)) {
+        if (!validateEmailFormat(email)) {
             setError("Por favor, ingresa un correo electrónico válido");
             return;
         }

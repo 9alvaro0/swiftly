@@ -7,7 +7,6 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkUnwrapImages from "remark-unwrap-images";
 import rehypeRaw from "rehype-raw";
-import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import Image from "next/image";
 import { CodeBlock } from "@/components/ui/CodeBlock";
 
@@ -27,30 +26,6 @@ const slugify = (text: string): string => {
         .replace(/[^\w\s-]/g, "") // Eliminar caracteres especiales
         .replace(/[\s_-]+/g, "-") // Reemplazar espacios con guiones
         .replace(/^-+|-+$/g, ""); // Eliminar guiones iniciales y finales
-};
-
-// Custom sanitization schema: allow iframes (YouTube/Vimeo), images, CSS classes; block scripts/event handlers
-const sanitizeSchema: typeof defaultSchema = {
-    ...defaultSchema,
-    tagNames: [
-        ...(defaultSchema.tagNames || []),
-        'iframe', 'div', 'span',
-    ],
-    attributes: {
-        ...defaultSchema.attributes,
-        iframe: ['src', 'width', 'height', 'frameBorder', 'allow', 'allowFullScreen', 'title', 'loading'],
-        div: [...(defaultSchema.attributes?.div || []), 'className', 'class'],
-        span: [...(defaultSchema.attributes?.span || []), 'className', 'class'],
-        code: [...(defaultSchema.attributes?.code || []), 'className', 'class'],
-        pre: [...(defaultSchema.attributes?.pre || []), 'className', 'class'],
-        img: ['src', 'alt', 'width', 'height', 'loading', 'className', 'class'],
-        a: ['href', 'title', 'target', 'rel', 'className', 'class'],
-    },
-    protocols: {
-        ...defaultSchema.protocols,
-        src: ['https'],
-    },
-    strip: ['script'],
 };
 
 // Componente principal
@@ -164,19 +139,18 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
         >
             <ReactMarkdown
                 remarkPlugins={[remarkGfm, remarkUnwrapImages]}
-                rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
+                rehypePlugins={[rehypeRaw]}
                 components={{
                     h1: ({ children, ...props }) => {
-                        // Remap markdown h1 to h2 to avoid duplicate H1s (PostHeader already renders the page H1)
                         const id = slugify(children?.toString() || "");
                         return (
-                            <h2
+                            <h1
                                 id={id}
                                 className="text-3xl font-bold mt-12 mb-6 pb-2 border-b border-white/10 scroll-mt-20 text-white"
                                 {...props}
                             >
                                 {children}
-                            </h2>
+                            </h1>
                         );
                     },
                     h2: ({ children, ...props }) => {
@@ -275,31 +249,6 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                             </code>
                         );
                     },
-                    iframe: ({ src, title, ...props }: React.IframeHTMLAttributes<HTMLIFrameElement>) => {
-                        if (!src) return null;
-                        const allowedHosts = [
-                            'www.youtube.com', 'youtube.com', 'youtube-nocookie.com', 'www.youtube-nocookie.com',
-                            'player.vimeo.com',
-                            'codepen.io',
-                            'codesandbox.io',
-                            'stackblitz.com',
-                        ];
-                        try {
-                            const url = new URL(src);
-                            if (!allowedHosts.includes(url.hostname)) return null;
-                        } catch {
-                            return null;
-                        }
-                        return (
-                            <iframe
-                                src={src}
-                                title={title || 'Contenido embebido'}
-                                loading="lazy"
-                                className="w-full aspect-video rounded-lg my-6"
-                                {...props}
-                            />
-                        );
-                    },
                     img: ({ src, alt }) => {
                         if (!src) return null;
                         
@@ -314,7 +263,6 @@ const PostContent = memo(function PostContent({ content }: PostContentProps) {
                                     className="w-auto h-auto max-h-[600px] mx-auto rounded-lg object-contain"
                                     width={600}
                                     height={800}
-                                    sizes="(max-width: 768px) 100vw, 600px"
                                     unoptimized={isGif}
                                 />
                                 {alt && <div className="text-center mt-2 text-sm text-gray-400 italic">{alt}</div>}

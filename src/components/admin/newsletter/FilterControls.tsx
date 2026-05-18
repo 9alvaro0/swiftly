@@ -23,7 +23,6 @@ export default function FilterControls({
                 <div className="flex gap-2">
                     <button
                         onClick={() => setFilter('all')}
-                        aria-pressed={filter === 'all'}
                         className={`px-4 py-2 rounded-lg text-sm transition-colors ${
                             filter === 'all'
                                 ? 'bg-blue-600 text-white'
@@ -34,7 +33,6 @@ export default function FilterControls({
                     </button>
                     <button
                         onClick={() => setFilter('active')}
-                        aria-pressed={filter === 'active'}
                         className={`px-4 py-2 rounded-lg text-sm transition-colors ${
                             filter === 'active'
                                 ? 'bg-green-600 text-white'
@@ -45,7 +43,6 @@ export default function FilterControls({
                     </button>
                     <button
                         onClick={() => setFilter('inactive')}
-                        aria-pressed={filter === 'inactive'}
                         className={`px-4 py-2 rounded-lg text-sm transition-colors ${
                             filter === 'inactive'
                                 ? 'bg-red-600 text-white'
@@ -60,11 +57,10 @@ export default function FilterControls({
                     <input
                         type="text"
                         placeholder="Buscar por email..."
-                        aria-label="Buscar suscriptores por email"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full sm:w-64 px-4 py-2 bg-white/10 border border-white/20 rounded-lg
-                                 text-white placeholder-white/50 focus:outline-none focus:ring-2
+                        className="w-full sm:w-64 px-4 py-2 bg-white/10 border border-white/20 rounded-lg 
+                                 text-white placeholder-white/50 focus:outline-none focus:ring-2 
                                  focus:ring-blue-500 focus:border-transparent"
                     />
                 </div>

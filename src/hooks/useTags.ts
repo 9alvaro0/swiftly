@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getAllTags, getTagById, createTagViaAPI, updateTag, deleteTag } from "@/services/firebase/firestore/tags";
 import { Tag } from "@/types/Tag";
 
@@ -32,7 +32,7 @@ interface UseTagsReturn {
 
 export function useTags(options: UseTagsOptions = {}): UseTagsReturn {
     const [tags, setTags] = useState<Tag[]>([]);
-    // filteredTags computed from tags + filters (no state needed)
+    const [filteredTags, setFilteredTags] = useState<Tag[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
     const [stats, setStats] = useState<TagsStats>({ total: 0 });
@@ -68,12 +68,19 @@ export function useTags(options: UseTagsOptions = {}): UseTagsReturn {
         setFilters({ searchTerm: "" });
     }, []);
 
-    // Derive filtered tags from tags + filters
-    const filteredTags = useMemo(() => {
-        if (!tags.length) return [];
-        if (!filters.searchTerm) return tags;
-        const term = filters.searchTerm.toLowerCase();
-        return tags.filter((tag) => tag.name.toLowerCase().includes(term));
+    // Aplicar filtros a los tags
+    useEffect(() => {
+        if (!tags.length) return;
+
+        let result = [...tags];
+
+        // Aplicar filtro de búsqueda
+        if (filters.searchTerm) {
+            const searchTermLower = filters.searchTerm.toLowerCase();
+            result = result.filter((tag) => tag.name.toLowerCase().includes(searchTermLower));
+        }
+
+        setFilteredTags(result);
     }, [tags, filters]);
 
     // Cargar tags iniciales

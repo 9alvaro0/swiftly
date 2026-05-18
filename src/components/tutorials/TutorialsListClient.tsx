@@ -2,7 +2,6 @@
 
 "use client";
 
-import { useMemo } from "react";
 import TutorialCard from "@/components/tutorials/TutorialCard";
 import TutorialCardList from "@/components/tutorials/TutorialCardList";
 import Pagination from "@/components/ui/Pagination";
@@ -28,18 +27,19 @@ export default function TutorialsListClient({
     const TUTORIALS_PER_PAGE = 9;
 
     // Aplicar ordenamiento en el cliente
-    const sortedTutorials = useMemo(() => {
-        const sorted = [...tutorials];
-        switch (sortBy) {
-            case "popular":
-                return sorted.sort((a, b) => (b.views || 0) - (a.views || 0));
-            case "alphabetical":
-                return sorted.sort((a, b) => a.title.localeCompare(b.title));
-            case "recent":
-            default:
-                return sorted;
-        }
-    }, [tutorials, sortBy]);
+    let sortedTutorials = [...tutorials];
+    switch (sortBy) {
+        case "popular":
+            sortedTutorials = sortedTutorials.sort((a, b) => (b.views || 0) - (a.views || 0));
+            break;
+        case "alphabetical":
+            sortedTutorials = sortedTutorials.sort((a, b) => a.title.localeCompare(b.title));
+            break;
+        case "recent":
+        default:
+            // Ya viene ordenado por fecha desde el servicio
+            break;
+    }
 
     const indexOfLastItem = currentPage * TUTORIALS_PER_PAGE;
     const indexOfFirstItem = indexOfLastItem - TUTORIALS_PER_PAGE;
@@ -48,7 +48,7 @@ export default function TutorialsListClient({
 
     if (currentTutorials.length === 0) {
         return (
-            <div className="text-center py-16" aria-live="polite">
+            <div className="text-center py-16">
                 <p className="text-text-secondary text-lg mb-4">No se encontraron tutoriales</p>
             </div>
         );
@@ -56,7 +56,7 @@ export default function TutorialsListClient({
 
     return (
         <>
-            <div className="mb-4 text-text-secondary" aria-live="polite">
+            <div className="mb-4 text-text-secondary">
                 Mostrando {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, sortedTutorials.length)} de {sortedTutorials.length} tutoriales
             </div>
             

@@ -1,28 +1,6 @@
 // src/app/tutorials/page.tsx
 
-import type { Metadata } from "next";
 import TutorialsHeader from "@/components/tutorials/TutorialsHeader";
-import { SITE_URL } from "@/lib/constants";
-
-export const metadata: Metadata = {
-    title: "Tutoriales - aprendeSwift",
-    description: "Tutoriales paso a paso de Swift y SwiftUI para todos los niveles.",
-    alternates: {
-        canonical: `${SITE_URL}/tutorials`,
-    },
-    openGraph: {
-        title: "Tutoriales - aprendeSwift",
-        description: "Tutoriales paso a paso de Swift y SwiftUI para todos los niveles.",
-        url: `${SITE_URL}/tutorials`,
-    },
-    twitter: {
-        title: "Tutoriales - aprendeSwift",
-        description: "Tutoriales paso a paso de Swift y SwiftUI para todos los niveles.",
-    },
-};
-// ISR: revalidate every 5 minutes
-export const revalidate = 300;
-
 import TutorialsList from "@/components/tutorials/TutorialsList";
 import TutorialListSkeleton from "@/components/tutorials/skeletons/TutorialListSkeleton";
 import ContentPageLayout from "@/components/shared/ContentPageLayout";

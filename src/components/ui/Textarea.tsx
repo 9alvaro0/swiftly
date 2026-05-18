@@ -38,11 +38,9 @@ const Textarea = ({
                 <textarea
                     ref={ref}
                     id={id}
-                    aria-invalid={!!error || undefined}
-                    aria-describedby={error ? `${id}-error` : undefined}
-                    style={{ height }}
-                    className={`w-full px-4 py-2 rounded-lg bg-white/5
-                        border ${error ? "border-red-500" : "border-white/10"}
+                    style={{ height }} // Usamos height dinámico
+                    className={`w-full px-4 py-2 rounded-lg bg-white/5 
+                        border ${error ? "border-red-500" : "border-white/10"} 
                         text-white placeholder-white/40
                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400
                         transition-all duration-300 ease-in-out
@@ -56,25 +54,20 @@ const Textarea = ({
 
                 {icon && (
                     <div className="absolute top-3 left-3 flex items-start">
-                        {onIconClick ? (
-                            <button
-                                type="button"
-                                onClick={onIconClick}
-                                aria-label="Icono de entrada"
-                                className="text-white/40 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                                {icon}
-                            </button>
-                        ) : (
-                            <span className="text-white/40" aria-hidden="true">
-                                {icon}
-                            </span>
-                        )}
+                        <button
+                            type="button"
+                            onClick={onIconClick}
+                            className={`text-white/40 ${
+                                onIconClick ? "hover:text-white" : ""
+                            } transition-colors focus:outline-none`}
+                        >
+                            {icon}
+                        </button>
                     </div>
                 )}
             </div>
 
-            {error && <p id={`${id}-error`} role="alert" className="text-red-500 text-sm mt-1">{error}</p>}
+            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
     );
 };

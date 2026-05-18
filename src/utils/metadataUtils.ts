@@ -1,8 +1,7 @@
-import { getPostBySlugWithAuthorServer } from "@/services/firebase/firestore/post-server";
+import { getPostBySlugWithAuthor } from "@/services/firebase/firestore/post";
 import type { Metadata } from "next";
-import { SITE_URL } from "@/lib/constants";
 
-const siteUrl = SITE_URL;
+const siteUrl = "https://aprendeswift.dev";
 
 interface GenerateMetadataProps {
     params: Promise<{
@@ -13,7 +12,7 @@ interface GenerateMetadataProps {
 export async function generateMetadata({ params }: GenerateMetadataProps): Promise<Metadata> {
     const resolvedParams = await params;
     const { slug } = resolvedParams;
-    const post = await getPostBySlugWithAuthorServer(slug);
+    const post = await getPostBySlugWithAuthor(slug);
 
     if (!post) {
         return {
@@ -23,7 +22,7 @@ export async function generateMetadata({ params }: GenerateMetadataProps): Promi
         };
     }
 
-    const url = `${siteUrl}/${post.type === "article" ? "posts" : "tutorials"}/${slug}`;
+    const url = `${siteUrl}/${post.type === "article" ? "posts" : "tutorial"}/${slug}`;
 
     return {
         title: post.title,
@@ -51,6 +50,6 @@ export async function generateMetadata({ params }: GenerateMetadataProps): Promi
             follow: true,
         },
         authors: post.author?.name ? [{ name: post.author.name }] : undefined,
-        publisher: "aprendeSwift",
+        publisher: "https://www.linkedin.com/in/alvaro-guerra/",
     };
 }

@@ -2,7 +2,8 @@
 
 import { Tag } from "@/types/Tag";
 import Modal from "@/components/ui/Modal";
-import { AlertTriangle, Loader2 } from "lucide-react";
+import { FaExclamationTriangle } from "react-icons/fa";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useState } from "react";
 
 interface DeleteTagDialogProps {
@@ -54,7 +55,7 @@ export default function DeleteTagDialog({
                     >
                         {isDeleting ? (
                             <span className="flex items-center">
-                                <Loader2 className="animate-spin mr-2" />
+                                <AiOutlineLoading3Quarters className="animate-spin mr-2" />
                                 Eliminando...
                             </span>
                         ) : (
@@ -67,7 +68,7 @@ export default function DeleteTagDialog({
             {tagToDelete && (
                 <div className="flex items-start space-x-4">
                     <div className="flex-shrink-0 bg-red-100 dark:bg-red-900 p-2 rounded-full">
-                        <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-300" />
+                        <FaExclamationTriangle className="h-6 w-6 text-red-600 dark:text-red-300" />
                     </div>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
                         ¿Estás seguro de que deseas eliminar el tag{" "}

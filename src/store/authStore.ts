@@ -28,14 +28,8 @@ export const useAuthStore = create<AuthState>()(
 
             setUser: (user) => {
                 set((state) => {
-                    // Only update if persisted fields have changed (avoids full JSON.stringify)
-                    if (
-                        state.user?.uid === user?.uid &&
-                        state.user?.name === user?.name &&
-                        state.user?.photoURL === user?.photoURL &&
-                        state.user?.role === user?.role &&
-                        state.user?.username === user?.username
-                    ) {
+                    // Only update if user data has actually changed
+                    if (JSON.stringify(state.user) === JSON.stringify(user)) {
                         return state;
                     }
                     return { user };
@@ -46,8 +40,8 @@ export const useAuthStore = create<AuthState>()(
             setError: (error) => set({ error }),
             logout: async () => {
                 try {
-                    await firebaseLogout();
                     set({ user: null, isAuthenticated: false, error: null });
+                    await firebaseLogout();
                     toast.success("Sesión cerrada");
                 } catch (error) {
                     console.error("Error during logout:", error);
@@ -59,15 +53,7 @@ export const useAuthStore = create<AuthState>()(
             name: "auth-storage",
             partialize: (state) => ({
                 isAuthenticated: state.isAuthenticated,
-                user: state.user
-                    ? {
-                          uid: state.user.uid,
-                          name: state.user.name,
-                          photoURL: state.user.photoURL,
-                          role: state.user.role,
-                          username: state.user.username,
-                      }
-                    : null,
+                user: state.user,
             }),
         }
     )

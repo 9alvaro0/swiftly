@@ -3,7 +3,7 @@
 "use client";
 
 import { User } from "@/types/User";
-import { CheckCircle, XCircle } from "lucide-react";
+import { FiCheckCircle, FiXCircle } from "react-icons/fi";
 import Image from "next/image";
 import { formatDate } from "@/utils/dateUtils";
 
@@ -40,9 +40,9 @@ export default function UserItem({ user }: UserItemProps) {
     };
 
     const getStatusIcon = (user: User) => {
-        if (user.isBanned) return <XCircle className="mr-1" />;
-        if (!user.isActive) return <XCircle className="mr-1" />;
-        return <CheckCircle className="mr-1" />;
+        if (user.isBanned) return <FiXCircle className="mr-1" />;
+        if (!user.isActive) return <FiXCircle className="mr-1" />;
+        return <FiCheckCircle className="mr-1" />;
     };
 
     return (
@@ -67,7 +67,7 @@ export default function UserItem({ user }: UserItemProps) {
                         )}
                         {user.emailVerified && (
                             <div className="absolute -right-1 -bottom-1 bg-green-500 rounded-full p-0.5">
-                                <CheckCircle className="text-white w-4 h-4" />
+                                <FiCheckCircle className="text-white w-4 h-4" />
                             </div>
                         )}
                     </div>
