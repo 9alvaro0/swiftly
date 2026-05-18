@@ -32,23 +32,18 @@ export default function Select({
     required = false,
 }: CustomSelectProps) {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState<SelectOption | null>(
+    const [internalSelected, setInternalSelected] = useState<SelectOption | null>(
         value ? options.find((option) => option.value === value) || null : null
     );
     const [focusedIndex, setFocusedIndex] = useState(-1);
     const selectRef = useRef<HTMLDivElement>(null);
     const listboxId = useId();
 
-    useEffect(() => {
-        // Update selected option when value prop changes
-        if (value) {
-            const option = options.find((opt) => opt.value === value);
-            if (option) setSelectedOption(option);
-        }
-    }, [value, options]);
+    const selectedOption = value !== undefined
+        ? options.find((o) => o.value === value) ?? null
+        : internalSelected;
 
     useEffect(() => {
-        // Close dropdown when clicking outside
         const handleClickOutside = (event: MouseEvent) => {
             if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
                 setIsOpen(false);
@@ -62,31 +57,31 @@ export default function Select({
         };
     }, []);
 
-    // Reset focused index when opening dropdown
-    useEffect(() => {
-        if (isOpen) {
-            const currentIndex = selectedOption
-                ? options.findIndex((o) => o.value === selectedOption.value)
-                : -1;
-            setFocusedIndex(currentIndex >= 0 ? currentIndex : 0);
-        } else {
-            setFocusedIndex(-1);
-        }
-    }, [isOpen, options, selectedOption]);
+    const openDropdown = () => {
+        const currentIndex = selectedOption
+            ? options.findIndex((o) => o.value === selectedOption.value)
+            : -1;
+        setFocusedIndex(currentIndex >= 0 ? currentIndex : 0);
+        setIsOpen(true);
+    };
 
-    const handleSelect = (option: SelectOption) => {
-        setSelectedOption(option);
+    const closeDropdown = () => {
         setIsOpen(false);
         setFocusedIndex(-1);
+    };
+
+    const handleSelect = (option: SelectOption) => {
+        if (value === undefined) setInternalSelected(option);
+        closeDropdown();
         onChange({
             target: { name: id, value: option.value },
         } as React.ChangeEvent<HTMLSelectElement>);
     };
 
     const toggleDropdown = () => {
-        if (!disabled) {
-            setIsOpen(!isOpen);
-        }
+        if (disabled) return;
+        if (isOpen) closeDropdown();
+        else openDropdown();
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -105,7 +100,7 @@ export default function Select({
             case "ArrowDown":
                 e.preventDefault();
                 if (!isOpen) {
-                    setIsOpen(true);
+                    openDropdown();
                 } else {
                     setFocusedIndex((prev) =>
                         prev < options.length - 1 ? prev + 1 : 0
@@ -115,7 +110,7 @@ export default function Select({
             case "ArrowUp":
                 e.preventDefault();
                 if (!isOpen) {
-                    setIsOpen(true);
+                    openDropdown();
                 } else {
                     setFocusedIndex((prev) =>
                         prev > 0 ? prev - 1 : options.length - 1
@@ -124,12 +119,10 @@ export default function Select({
                 break;
             case "Escape":
                 e.preventDefault();
-                setIsOpen(false);
-                setFocusedIndex(-1);
+                closeDropdown();
                 break;
             case "Tab":
-                setIsOpen(false);
-                setFocusedIndex(-1);
+                closeDropdown();
                 break;
         }
     };
