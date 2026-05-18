@@ -1,21 +1,22 @@
 // src/app/feed.json/route.ts
 
 import { NextResponse } from 'next/server';
-import { getAllPublishedPostsWithAuthor } from '@/services/firebase/firestore/post';
+import { getAllPublishedPostsWithAuthorServer } from '@/services/firebase/firestore/post-server';
 import { PostWithAuthor } from '@/types/Post';
 import { createExcerpt } from '@/utils/dateUtils';
+import { SITE_URL } from '@/lib/constants';
 
-const baseUrl = 'https://aprendeswift.dev';
+const baseUrl = SITE_URL;
 const siteTitle = 'aprendeSwift Blog';
-const siteDescription = 'Artículos y tutoriales sobre desarrollo web, programación y tecnología moderna';
+const siteDescription = 'Publicaciones, guias y tutoriales para aprender Swift y SwiftUI de manera efectiva';
 const authorName = 'aprendeSwift Team';
 
-export const dynamic = 'force-static';
+export const revalidate = 3600;
 
 export async function GET(): Promise<NextResponse> {
     try {
         // Get latest published posts with author data
-        const allPosts = await getAllPublishedPostsWithAuthor({});
+        const allPosts = await getAllPublishedPostsWithAuthorServer({});
         const posts = allPosts.slice(0, 20); // Limit to 20 posts
 
         // Generate JSON Feed items
@@ -64,8 +65,6 @@ export async function GET(): Promise<NextResponse> {
             ],
             items: jsonItems,
         };
-
-        console.log(`Generated JSON feed with ${posts.length} posts`);
 
         // Return JSON Feed with proper headers
         return new NextResponse(JSON.stringify(jsonFeed, null, 2), {

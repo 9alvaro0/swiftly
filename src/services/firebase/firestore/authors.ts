@@ -40,8 +40,7 @@ export const createOrUpdateAuthorProfile = async (user: User): Promise<void> => 
             authorData.socialLinks = socialLinks;
         }
 
-        await setDoc(doc(authorsCollection, user.uid), authorData);
-        console.log(`Author profile created/updated successfully: ${user.uid}`);
+        await setDoc(doc(authorsCollection, user.uid), authorData, { merge: true });
     } catch (error) {
         console.error(`Error creating/updating author profile (${user?.uid || 'unknown'}):`, error);
         throw new Error(`Failed to create/update author profile: ${error instanceof Error ? error.message : String(error)}`);
@@ -59,11 +58,9 @@ export const getAuthor = async (authorId: string): Promise<Author | null> => {
 
         if (authorDoc.exists()) {
             const authorData = authorDoc.data() as Author;
-            console.log(`Author retrieved successfully: ${authorId}`);
             return authorData;
         }
 
-        console.log(`Author not found: ${authorId}`);
         return null;
     } catch (error) {
         console.error(`Error getting author (${authorId}):`, error);

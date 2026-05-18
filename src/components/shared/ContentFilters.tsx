@@ -3,7 +3,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { FaTimes } from "react-icons/fa";
+import { X } from "lucide-react";
 import { PostLevel } from "@/types/Post";
 import Select from "@/components/ui/Select";
 import Button from "@/components/ui/Button";
@@ -98,7 +98,7 @@ export default function ContentFilters({
                 <div className="hidden lg:flex items-end gap-4">
                     {/* Filtro de Nivel */}
                     <div className="w-48">
-                        <label className="block text-sm font-medium text-white/80 mb-2">
+                        <label htmlFor="level" className="block text-sm font-medium text-white/80 mb-2">
                             {levelLabel}
                         </label>
                         <Select
@@ -127,9 +127,9 @@ export default function ContentFilters({
                     {/* Toggle de vista */}
                     {showViewToggle && (
                         <div>
-                            <label className="block text-sm font-medium text-white/80 mb-2">
+                            <span className="block text-sm font-medium text-white/80 mb-2" id="view-label">
                                 Vista
-                            </label>
+                            </span>
                             <ViewToggle 
                                 viewMode={viewMode} 
                                 onViewChange={handleViewChange} 
@@ -145,7 +145,7 @@ export default function ContentFilters({
                             onClick={handleClearFilters}
                             className="text-red-400 border-red-400 hover:bg-red-400/10"
                         >
-                            <FaTimes size={14} className="mr-2" />
+                            <X size={14} className="mr-2" />
                             Limpiar
                         </Button>
                     )}

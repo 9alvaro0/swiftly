@@ -3,8 +3,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { FaShare, FaTwitter, FaFacebook, FaLinkedin, FaWhatsapp } from "react-icons/fa";
-import { FiTrendingUp, FiCalendar, FiLink } from "react-icons/fi";
+import { FaTwitter, FaFacebook, FaLinkedin, FaWhatsapp } from "react-icons/fa";
+import { Share, TrendingUp, Calendar, Link } from "lucide-react";
 import { AdminCard, AdminCardBody } from "@/components/ui/AdminCard";
 
 interface ShareAnalytics {
@@ -32,10 +32,10 @@ const platformIcons: Record<string, React.ComponentType<PlatformIconProps>> = {
     "Facebook": FaFacebook,
     "LinkedIn": FaLinkedin,
     "WhatsApp": FaWhatsapp,
-    "Clipboard": FiLink,
-    "Native Share": FaShare,
-    "Telegram": FaShare,
-    "Reddit": FaShare
+    "Clipboard": Link,
+    "Native Share": Share,
+    "Telegram": Share,
+    "Reddit": Share
 };
 
 export default function StatsShareSection() {
@@ -95,7 +95,7 @@ export default function StatsShareSection() {
                     .map(([platform, count]) => ({
                         platform,
                         count,
-                        icon: platformIcons[platform] || FaShare
+                        icon: platformIcons[platform] || Share
                     }))
                     .sort((a, b) => b.count - a.count)
                     .slice(0, 5);
@@ -153,7 +153,7 @@ export default function StatsShareSection() {
             
             {shareStats.totalShares === 0 ? (
                 <div className="text-center py-8">
-                    <FaShare className="mx-auto text-gray-500 mb-3" size={32} />
+                    <Share className="mx-auto text-gray-500 mb-3" size={32} />
                     <p className="text-gray-400">No hay datos de compartir aún</p>
                     <p className="text-gray-500 text-sm mt-1">
                         Las estadísticas aparecerán cuando los usuarios compartan contenido
@@ -166,7 +166,7 @@ export default function StatsShareSection() {
                         <AdminCard>
                             <AdminCardBody className="text-center">
                                 <div className="flex items-center justify-center gap-2 mb-2">
-                                    <FaShare className="text-blue-400" size={16} />
+                                    <Share className="text-blue-400" size={16} />
                                     <span className="text-gray-300 text-sm font-medium">Total</span>
                                 </div>
                                 <p className="text-2xl font-bold text-white">{shareStats.totalShares}</p>
@@ -176,7 +176,7 @@ export default function StatsShareSection() {
                         <AdminCard>
                             <AdminCardBody className="text-center">
                                 <div className="flex items-center justify-center gap-2 mb-2">
-                                    <FiCalendar className="text-green-400" size={16} />
+                                    <Calendar className="text-green-400" size={16} />
                                     <span className="text-gray-300 text-sm font-medium">Esta semana</span>
                                 </div>
                                 <p className="text-2xl font-bold text-white">{shareStats.sharesThisWeek}</p>
@@ -186,7 +186,7 @@ export default function StatsShareSection() {
                         <AdminCard>
                             <AdminCardBody className="text-center">
                                 <div className="flex items-center justify-center gap-2 mb-2">
-                                    <FiTrendingUp className={`${shareStats.shareGrowth >= 0 ? 'text-green-400' : 'text-red-400'}`} size={16} />
+                                    <TrendingUp className={`${shareStats.shareGrowth >= 0 ? 'text-green-400' : 'text-red-400'}`} size={16} />
                                     <span className="text-gray-300 text-sm font-medium">Crecimiento</span>
                                 </div>
                                 <p className={`text-2xl font-bold ${shareStats.shareGrowth >= 0 ? 'text-green-400' : 'text-red-400'}`}>
@@ -199,7 +199,7 @@ export default function StatsShareSection() {
                     {/* Top platforms */}
                     <div>
                         <h4 className="text-white font-medium mb-3 flex items-center gap-2">
-                            <FiTrendingUp className="text-blue-400" size={16} />
+                            <TrendingUp className="text-blue-400" size={16} />
                             Plataformas más populares
                         </h4>
                         <div className="space-y-2">
@@ -228,7 +228,7 @@ export default function StatsShareSection() {
                     {/* Recent shares */}
                     <div>
                         <h4 className="text-white font-medium mb-3 flex items-center gap-2">
-                            <FiCalendar className="text-blue-400" size={16} />
+                            <Calendar className="text-blue-400" size={16} />
                             Actividad reciente
                         </h4>
                         <div className="space-y-2">
@@ -236,7 +236,7 @@ export default function StatsShareSection() {
                                 <div key={index} className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg border border-gray-700">
                                     <div className="flex items-center gap-3 flex-1 min-w-0">
                                         <div className="p-1.5 bg-gray-700 rounded">
-                                            {React.createElement(platformIcons[share.platform] || FaShare, {
+                                            {React.createElement(platformIcons[share.platform] || Share, {
                                                 size: 12,
                                                 className: "text-blue-400"
                                             })}

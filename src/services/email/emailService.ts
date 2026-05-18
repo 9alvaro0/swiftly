@@ -28,6 +28,10 @@ export interface NewsletterData {
   name?: string;
 }
 
+const escapeHtml = (text: string): string =>
+    text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+
 class EmailService {
   private fromEmail = process.env.SENDGRID_FROM_EMAIL || 'noreply@aprendeswift.dev';
   private fromName = process.env.SENDGRID_FROM_NAME || 'aprendeSwift';
@@ -72,12 +76,12 @@ class EmailService {
       subject: `Nuevo mensaje de contacto: ${data.subject}`,
       html: `
         <h2>Nuevo mensaje de contacto desde aprendeSwift</h2>
-        <p><strong>Nombre:</strong> ${data.name}</p>
-        <p><strong>Email:</strong> ${data.email}</p>
-        <p><strong>Asunto:</strong> ${data.subject}</p>
+        <p><strong>Nombre:</strong> ${escapeHtml(data.name)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(data.email)}</p>
+        <p><strong>Asunto:</strong> ${escapeHtml(data.subject)}</p>
         <p><strong>Mensaje:</strong></p>
         <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0;">
-          ${data.message.replace(/\n/g, '<br>')}
+          ${escapeHtml(data.message).replace(/\n/g, '<br>')}
         </div>
         <hr>
         <p style="color: #666; font-size: 12px;">
@@ -113,14 +117,14 @@ class EmailService {
         <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
           <h2 style="color: #007AFF;">¡Gracias por contactarnos!</h2>
           
-          <p>Hola ${data.name},</p>
-          
+          <p>Hola ${escapeHtml(data.name)},</p>
+
           <p>Hemos recibido tu mensaje y te responderemos lo antes posible, normalmente en menos de 24 horas.</p>
-          
+
           <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <h3 style="margin-top: 0; color: #333;">Resumen de tu mensaje:</h3>
-            <p><strong>Asunto:</strong> ${data.subject}</p>
-            <p><strong>Mensaje:</strong> ${data.message}</p>
+            <p><strong>Asunto:</strong> ${escapeHtml(data.subject)}</p>
+            <p><strong>Mensaje:</strong> ${escapeHtml(data.message)}</p>
           </div>
           
           <p>Mientras tanto, puedes:</p>
@@ -178,7 +182,7 @@ class EmailService {
           </div>
           
           <div style="padding: 40px 20px;">
-            <p style="font-size: 18px;">¡Hola ${name}!</p>
+            <p style="font-size: 18px;">¡Hola ${escapeHtml(name)}!</p>
             
             <p>Te damos la bienvenida a la newsletter de <strong>aprendeSwift</strong>, donde cada semana compartimos:</p>
             
@@ -242,52 +246,6 @@ class EmailService {
     return this.sendEmail(emailData);
   }
 
-  /**
-   * Send notification about new post to subscribers (for future use)
-   */
-  async sendNewPostNotification(
-    subscribers: string[], 
-    postTitle: string, 
-    postUrl: string, 
-    postExcerpt: string
-  ): Promise<{ success: boolean; error?: string }> {
-    try {
-      const emails = subscribers.map(email => ({
-        to: email,
-        from: {
-          email: this.fromEmail,
-          name: this.fromName
-        },
-        subject: `Nuevo artículo: ${postTitle}`,
-        html: `
-          <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
-            <h2 style="color: #007AFF;">Nuevo artículo en aprendeSwift</h2>
-            <h3>${postTitle}</h3>
-            <p>${postExcerpt}</p>
-            <div style="text-align: center; margin: 30px 0;">
-              <a href="${postUrl}" 
-                 style="display: inline-block; background: #007AFF; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px;">
-                Leer Artículo
-              </a>
-            </div>
-            <p style="color: #666; font-size: 12px;">
-              Has recibido este email porque estás suscrito a la newsletter de aprendeSwift.
-            </p>
-          </div>
-        `
-      }));
-
-      await sgMail.send(emails);
-      return { success: true };
-      
-    } catch (error) {
-      console.error('Error sending newsletter:', error);
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Unknown error' 
-      };
-    }
-  }
 }
 
 export const emailService = new EmailService();

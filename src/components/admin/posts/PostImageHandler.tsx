@@ -163,7 +163,7 @@ export default function PostImageHandler({
 
                                     {/* Overlay con acciones */}
                                     <div
-                                        className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 
+                                        className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100
                                         flex flex-col items-center justify-center gap-2 transition-opacity"
                                     >
                                         <div className="flex gap-2 mb-2">
@@ -171,6 +171,7 @@ export default function PostImageHandler({
                                                 type="button"
                                                 onClick={() => handleUseAsMainImage(imageUrl)}
                                                 className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded"
+                                                aria-label={`Usar imagen ${index + 1} como principal`}
                                             >
                                                 Imagen Principal
                                             </button>
@@ -179,6 +180,7 @@ export default function PostImageHandler({
                                                 type="button"
                                                 onClick={() => handleUseAsCoverImage(imageUrl)}
                                                 className="bg-purple-500 hover:bg-purple-600 text-white px-2 py-1 text-xs rounded"
+                                                aria-label={`Usar imagen ${index + 1} como portada`}
                                             >
                                                 Portada
                                             </button>
@@ -189,6 +191,7 @@ export default function PostImageHandler({
                                                 type="button"
                                                 onClick={() => onInsertInContent(imageUrl)}
                                                 className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 text-xs rounded"
+                                                aria-label={`Insertar imagen ${index + 1} en contenido`}
                                             >
                                                 Insertar
                                             </button>
@@ -198,6 +201,7 @@ export default function PostImageHandler({
                                                 onClick={() => handleDeleteImage(imageUrl)}
                                                 disabled={isDeleting}
                                                 className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 text-xs rounded"
+                                                aria-label={`Eliminar imagen ${index + 1}`}
                                             >
                                                 Eliminar
                                             </button>

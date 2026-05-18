@@ -41,7 +41,7 @@ export default function LikeButton({ post, currentUser, className = "" }: LikeBu
             <button
                 onClick={handleLikeClick}
                 disabled={isLoading}
-                className={`flex items-center gap-1 focus:outline-none transition-colors ${
+                className={`flex items-center gap-1 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-gray-900 rounded transition-colors ${
                     isLiked ? "text-red-500" : "text-gray-400 hover:text-red-400"
                 } ${className}`}
                 aria-label={isLiked ? "Quitar like" : "Dar like"}

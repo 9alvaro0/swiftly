@@ -1,22 +1,23 @@
 // src/app/atom.xml/route.ts
 
 import { NextResponse } from 'next/server';
-import { getAllPublishedPostsWithAuthor } from '@/services/firebase/firestore/post';
+import { getAllPublishedPostsWithAuthorServer } from '@/services/firebase/firestore/post-server';
 import { PostWithAuthor } from '@/types/Post';
 import { formatAtomDate, createExcerpt, escapeXml } from '@/utils/dateUtils';
+import { SITE_URL } from '@/lib/constants';
 
-const baseUrl = 'https://aprendeswift.dev';
+const baseUrl = SITE_URL;
 const siteTitle = 'aprendeSwift Blog';
-const siteDescription = 'Artículos y tutoriales sobre desarrollo web, programación y tecnología moderna';
+const siteDescription = 'Publicaciones, guias y tutoriales para aprender Swift y SwiftUI de manera efectiva';
 const authorName = 'aprendeSwift Team';
 const authorEmail = '9alvaro0@gmail.com';
 
-export const dynamic = 'force-static';
+export const revalidate = 3600;
 
 export async function GET(): Promise<NextResponse> {
     try {
         // Get latest published posts with author data
-        const allPosts = await getAllPublishedPostsWithAuthor({});
+        const allPosts = await getAllPublishedPostsWithAuthorServer({});
         const posts = allPosts.slice(0, 20); // Limit to 20 posts
 
         const lastUpdated = posts.length > 0 ? new Date(posts[0].publishedAt || posts[0].createdAt) : new Date();
@@ -70,8 +71,6 @@ ${categories}
 
 ${atomEntries}
 </feed>`;
-
-        console.log(`Generated Atom feed with ${posts.length} posts`);
 
         // Return Atom XML with proper headers
         return new NextResponse(atomXml, {

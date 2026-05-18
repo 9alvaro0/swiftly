@@ -52,7 +52,7 @@ export default function HeroSection() {
                                 />
                             </div>
                             <div>
-                                <h3 className="font-semibold text-white text-lg mb-2">Código práctico</h3>
+                                <h2 className="font-semibold text-white text-lg mb-2">Código práctico</h2>
                                 <p className="text-white/70">
                                     Ejemplos de código que puedes aplicar directamente a tus proyectos.
                                 </p>
@@ -68,7 +68,7 @@ export default function HeroSection() {
                                 />
                             </div>
                             <div>
-                                <h3 className="font-semibold text-white text-lg mb-2">Tutoriales paso a paso</h3>
+                                <h2 className="font-semibold text-white text-lg mb-2">Tutoriales paso a paso</h2>
                                 <p className="text-white/70">
                                     Guías detalladas desde conceptos básicos hasta avanzados.
                                 </p>
@@ -84,7 +84,7 @@ export default function HeroSection() {
                                 />
                             </div>
                             <div>
-                                <h3 className="font-semibold text-white text-lg mb-2">Actualizado constantemente</h3>
+                                <h2 className="font-semibold text-white text-lg mb-2">Actualizado constantemente</h2>
                                 <p className="text-white/70">
                                     Contenido actualizado con las últimas versiones de Swift y SwiftUI.
                                 </p>

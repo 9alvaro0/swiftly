@@ -15,29 +15,40 @@ interface AdminAPIResponse<T> {
   refetch: () => Promise<void>;
 }
 
-export function useAdminUsers(
-  searchTerm: string = '',
-  role: string = '',
-  status: string = ''
-): AdminAPIResponse<User[]> {
-  const [data, setData] = useState<User[] | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+// Shared hook for auth state — avoids 3 duplicate onAuthStateChanged listeners
+function useAdminAuth() {
   const [authReady, setAuthReady] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
 
-  // Wait for auth to be ready
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setAuthReady(true);
       if (!user) {
-        setError('Authentication required');
-        setIsLoading(false);
+        setAuthError('Authentication required');
+      } else {
+        setAuthError(null);
       }
     });
     return () => unsubscribe();
   }, []);
 
-  const fetchUsers = useCallback(async () => {
+  return { authReady, authError };
+}
+
+// Generic admin API fetcher
+function useAdminFetch<T>(
+  endpoint: string,
+  params: Record<string, string>,
+  resultKey: string
+): AdminAPIResponse<T> {
+  const { authReady, authError } = useAdminAuth();
+  const [data, setData] = useState<T | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const paramsString = JSON.stringify(params);
+
+  const fetchData = useCallback(async () => {
     if (!auth.currentUser) {
       setError('Authentication required');
       setIsLoading(false);
@@ -49,12 +60,13 @@ export function useAdminUsers(
       setError(null);
 
       const token = await auth.currentUser.getIdToken();
-      const params = new URLSearchParams();
-      if (searchTerm) params.append('search', searchTerm);
-      if (role) params.append('role', role);
-      if (status) params.append('status', status);
+      const searchParams = new URLSearchParams();
+      const parsedParams = JSON.parse(paramsString) as Record<string, string>;
+      for (const [key, value] of Object.entries(parsedParams)) {
+        if (value) searchParams.append(key, value);
+      }
 
-      const response = await fetch(`/api/admin/users?${params}`, {
+      const response = await fetch(`${endpoint}?${searchParams}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -66,22 +78,37 @@ export function useAdminUsers(
       }
 
       const result = await response.json();
-      setData(result.users);
+      setData(result[resultKey]);
     } catch (err) {
-      console.error('Error fetching users:', err);
-      setError(err instanceof Error ? err.message : 'Failed to fetch users');
+      console.error(`Error fetching ${endpoint}:`, err);
+      setError(err instanceof Error ? err.message : `Failed to fetch ${endpoint}`);
     } finally {
       setIsLoading(false);
     }
-  }, [searchTerm, role, status]);
+  }, [endpoint, paramsString, resultKey]);
 
   useEffect(() => {
     if (authReady && auth.currentUser) {
-      fetchUsers();
+      fetchData();
+    } else if (authReady && authError) {
+      setError(authError);
+      setIsLoading(false);
     }
-  }, [authReady, fetchUsers]);
+  }, [authReady, authError, fetchData]);
 
-  return { data, isLoading, error, refetch: fetchUsers };
+  return { data, isLoading, error, refetch: fetchData };
+}
+
+export function useAdminUsers(
+  searchTerm: string = '',
+  role: string = '',
+  status: string = ''
+): AdminAPIResponse<User[]> {
+  return useAdminFetch<User[]>(
+    '/api/admin/users',
+    { search: searchTerm, role, status },
+    'users'
+  );
 }
 
 export function useAdminPosts(
@@ -89,133 +116,20 @@ export function useAdminPosts(
   status: string = '',
   type: string = ''
 ): AdminAPIResponse<Post[]> {
-  const [data, setData] = useState<Post[] | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [authReady, setAuthReady] = useState(false);
-
-  // Wait for auth to be ready
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setAuthReady(true);
-      if (!user) {
-        setError('Authentication required');
-        setIsLoading(false);
-      }
-    });
-    return () => unsubscribe();
-  }, []);
-
-  const fetchPosts = useCallback(async () => {
-    if (!auth.currentUser) {
-      setError('Authentication required');
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-      setError(null);
-
-      const token = await auth.currentUser.getIdToken();
-      const params = new URLSearchParams();
-      if (searchTerm) params.append('search', searchTerm);
-      if (status) params.append('status', status);
-      if (type) params.append('type', type);
-
-      const response = await fetch(`/api/admin/posts?${params}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      setData(result.posts);
-    } catch (err) {
-      console.error('Error fetching posts:', err);
-      setError(err instanceof Error ? err.message : 'Failed to fetch posts');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [searchTerm, status, type]);
-
-  useEffect(() => {
-    if (authReady && auth.currentUser) {
-      fetchPosts();
-    }
-  }, [authReady, fetchPosts]);
-
-  return { data, isLoading, error, refetch: fetchPosts };
+  return useAdminFetch<Post[]>(
+    '/api/admin/posts',
+    { search: searchTerm, status, type },
+    'posts'
+  );
 }
 
 export function useAdminNewsletter(
   searchTerm: string = '',
   status: string = ''
 ): AdminAPIResponse<NewsletterSubscriber[]> {
-  const [data, setData] = useState<NewsletterSubscriber[] | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [authReady, setAuthReady] = useState(false);
-
-  // Wait for auth to be ready
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setAuthReady(true);
-      if (!user) {
-        setError('Authentication required');
-        setIsLoading(false);
-      }
-    });
-    return () => unsubscribe();
-  }, []);
-
-  const fetchSubscribers = useCallback(async () => {
-    if (!auth.currentUser) {
-      setError('Authentication required');
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-      setError(null);
-
-      const token = await auth.currentUser.getIdToken();
-      const params = new URLSearchParams();
-      if (searchTerm) params.append('search', searchTerm);
-      if (status) params.append('status', status);
-
-      const response = await fetch(`/api/admin/newsletter?${params}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      setData(result.subscribers);
-    } catch (err) {
-      console.error('Error fetching newsletter subscribers:', err);
-      setError(err instanceof Error ? err.message : 'Failed to fetch subscribers');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [searchTerm, status]);
-
-  useEffect(() => {
-    if (authReady && auth.currentUser) {
-      fetchSubscribers();
-    }
-  }, [authReady, fetchSubscribers]);
-
-  return { data, isLoading, error, refetch: fetchSubscribers };
+  return useAdminFetch<NewsletterSubscriber[]>(
+    '/api/admin/newsletter',
+    { search: searchTerm, status },
+    'subscribers'
+  );
 }

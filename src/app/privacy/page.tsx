@@ -1,5 +1,7 @@
 // src/app/privacy/page.tsx
 
+export const dynamic = 'force-static';
+
 import { Metadata } from "next";
 import PrivacyHeader from "@/components/privacy/PrivacyHeader";
 import InformationCollectedSection from "@/components/privacy/InformationCollectedSection";
@@ -9,10 +11,18 @@ import UserRightsSection from "@/components/privacy/UserRightsSection";
 import PrivacyContactSection from "@/components/privacy/PrivacyContactSection";
 import PrivacyFooter from "@/components/privacy/PrivacyFooter";
 
+import { SITE_URL } from "@/lib/constants";
+
 export const metadata: Metadata = {
     title: "Política de Privacidad - aprendeSwift",
     description: "Conoce cómo protegemos tu información personal y qué datos recopilamos en aprendeSwift.",
+    alternates: { canonical: `${SITE_URL}/privacy` },
     openGraph: {
+        title: "Política de Privacidad - aprendeSwift",
+        description: "Conoce cómo protegemos tu información personal y qué datos recopilamos en aprendeSwift.",
+        url: `${SITE_URL}/privacy`,
+    },
+    twitter: {
         title: "Política de Privacidad - aprendeSwift",
         description: "Conoce cómo protegemos tu información personal y qué datos recopilamos en aprendeSwift.",
     },

@@ -12,7 +12,7 @@ export default function Logo() {
             <Image
                 src="/icons/logo.png"
                 className="rounded-full"
-                alt="Logo"
+                alt="aprendeSwift"
                 width={40}
                 height={40}
             />
