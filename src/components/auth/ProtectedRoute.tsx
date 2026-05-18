@@ -1,10 +1,9 @@
 // src/components/auth/ProtectedRoute.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
-// Removed unused imports
 
 interface ProtectedRouteProps {
     children: React.ReactNode;
@@ -14,8 +13,8 @@ interface ProtectedRouteProps {
     fallbackPath?: string;
 }
 
-export default function ProtectedRoute({ 
-    children, 
+export default function ProtectedRoute({
+    children,
     adminOnly = false,
     editorOnly = false,
     requiresContentRole = false,
@@ -23,39 +22,32 @@ export default function ProtectedRoute({
 }: ProtectedRouteProps) {
     const router = useRouter();
     const { isAuthenticated, user, isLoading } = useAuthStore();
-    const [authChecked, setAuthChecked] = useState(false);
 
     useEffect(() => {
-        if (!isLoading) {
-            setAuthChecked(true);
-            
-            if (!isAuthenticated) {
-                router.push("/auth");
-                return;
-            }
+        if (isLoading) return;
 
-            // Check admin permissions
-            if (adminOnly && user?.role !== "admin") {
-                router.push(fallbackPath);
-                return;
-            }
+        if (!isAuthenticated) {
+            router.push("/auth");
+            return;
+        }
 
-            // Check editor permissions
-            if (editorOnly && user?.role !== "admin" && user?.role !== "editor") {
-                router.push(fallbackPath);
-                return;
-            }
+        if (adminOnly && user?.role !== "admin") {
+            router.push(fallbackPath);
+            return;
+        }
 
-            // Check content creation permissions
-            if (requiresContentRole && !['admin', 'editor', 'author'].includes(user?.role || '')) {
-                router.push(fallbackPath);
-                return;
-            }
+        if (editorOnly && user?.role !== "admin" && user?.role !== "editor") {
+            router.push(fallbackPath);
+            return;
+        }
+
+        if (requiresContentRole && !['admin', 'editor', 'author'].includes(user?.role || '')) {
+            router.push(fallbackPath);
+            return;
         }
     }, [isAuthenticated, isLoading, router, user, adminOnly, editorOnly, requiresContentRole, fallbackPath]);
 
-    // Show minimal loading while checking authentication
-    if (isLoading || !authChecked) {
+    if (isLoading) {
         return null;
     }
 

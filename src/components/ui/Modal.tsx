@@ -20,25 +20,23 @@ export default function Modal({ isOpen, onClose, title, children, footer }: Moda
     // Este estado controla las clases de animación
     const [isAnimating, setIsAnimating] = useState(false);
 
+    // Coordinated mount/animation/unmount lifecycle driven by isOpen prop.
+    // The setState calls here are necessary to sequence the 300ms closing animation
+    // before unmounting; using derived state would require the parent to handle timing.
     useEffect(() => {
         if (isOpen && !isMounted) {
-            // Save the element that had focus before the modal opened
             previousFocusRef.current = document.activeElement;
-            // Primero montamos el componente
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setIsMounted(true);
-            // Programamos la animación para el siguiente ciclo de renderizado
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
                     setIsAnimating(true);
                 });
             });
         } else if (!isOpen && isMounted) {
-            // Primero quitamos las clases de animación
             setIsAnimating(false);
-            // Después de la transición, desmontamos el componente
             const timer = setTimeout(() => {
                 setIsMounted(false);
-                // Restore focus to previously focused element
                 if (previousFocusRef.current instanceof HTMLElement) {
                     previousFocusRef.current.focus();
                 }
