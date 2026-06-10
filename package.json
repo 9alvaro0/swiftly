@@ -50,6 +50,6 @@
     "knip": "^5.61.3",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^4.0.18"
+    "vitest": "^4.1.0"
   }
 }
