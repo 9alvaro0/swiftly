@@ -1,7 +1,6 @@
 import { collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../config";
 import { Tag } from "@/types/Tag"; // Importar el objeto Tag
-import { auth } from "../config";
 
 // Helper function to serialize Firestore data for client components
 function serializeTag(data: Record<string, unknown>, docId: string): Tag {
@@ -36,38 +35,6 @@ function serializeTag(data: Record<string, unknown>, docId: string): Tag {
 // Colección de Firestore
 const tagsCollection = collection(db, "tags");
 
-// Crear un tag usando la API admin (evita problemas de permisos)
-export const createTagViaAPI = async (tagData: { name: string; slug: string; description?: string }): Promise<Tag> => {
-    try {
-        const user = auth.currentUser;
-        if (!user) {
-            throw new Error("User not authenticated");
-        }
-
-        const token = await user.getIdToken();
-        
-        const response = await fetch('/api/admin/tags', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(tagData)
-        });
-
-        const result = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(result.error || 'Failed to create tag');
-        }
-
-        console.log(`Tag created successfully via API: ${result.tag.id}`);
-        return result.tag;
-    } catch (error) {
-        console.error("Error creating tag via API:", error);
-        throw new Error(`Failed to create tag: ${error instanceof Error ? error.message : String(error)}`);
-    }
-};
 
 // Crear un tag
 export const createTag = async (tag: Tag): Promise<void> => {

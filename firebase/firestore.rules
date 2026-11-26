@@ -242,24 +242,16 @@ service cloud.firestore {
     }
     
     // ========================================
-    // TAGS COLLECTION - Taxonomía
+    // TAGS COLLECTION - Taxonomía (TEMPORAL - PERMISIVO)
     // ========================================
     match /tags/{tagId} {
-      function isValidTag() {
-        let data = incomingData();
-        return hasFields(['name', 'slug']) &&
-               isValidString(data.name, 2, 50) &&
-               isValidString(data.slug, 2, 50) &&
-               data.slug.matches('^[a-z0-9-]+$');
-      }
-      
       // Lectura: público
       allow read: if true;
       allow list: if true;
       
-      // Escritura: solo editores y admins con validación
-      allow create, update: if isEditor() && isValidTag();
-      allow delete: if isAdmin(); // Solo admin puede eliminar
+      // Escritura: usuario autenticado con email específico (SIN VALIDACIÓN COMPLEJA)
+      allow create, update, delete: if isAuthenticated() && 
+                                       request.auth.token.email == '9alvaro0@gmail.com';
     }
     
     // ========================================

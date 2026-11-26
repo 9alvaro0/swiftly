@@ -3,7 +3,7 @@
 import { useState, useEffect, FormEvent } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Tag } from "@/types/Tag";
-import { createTagViaAPI, updateTag, getTagById } from "@/services/firebase/firestore/tags";
+import { createTag, updateTag, getTagById } from "@/services/firebase/firestore/tags";
 import Input from "@/components/ui/Input";
 import { revalidateTagsPath } from "@/actions/revalidateTagsPath";
 
@@ -48,18 +48,24 @@ export default function TagForm() {
         e.preventDefault();
         try {
             if (!tagId) {
-                // Crear nuevo tag usando la API
+                // Crear nuevo tag directamente con Firestore
                 const slug = formData.name.trim().toLowerCase()
                     .replace(/[^a-z0-9\s-]/g, '') // Remover caracteres especiales
                     .replace(/\s+/g, '-') // Reemplazar espacios con guiones
                     .replace(/-+/g, '-') // Remover guiones duplicados
                     .replace(/^-|-$/g, ''); // Remover guiones al inicio/final
 
-                await createTagViaAPI({
+                const newTag: Tag = {
+                    id: slug,
                     name: formData.name.trim(),
                     slug: slug,
-                    description: ''
-                });
+                    description: '',
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                    postCount: 0
+                };
+
+                await createTag(newTag);
 
                 // Limpiar formulario después de crear
                 setFormData({ id: "", name: "" });

@@ -7,7 +7,7 @@ import Select from "@/components/ui/Select";
 import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 import { useTags } from "@/hooks/useTags";
 import { Tag } from "@/types/Tag";
-import { v4 as uuidv4 } from "uuid";
+import { createTag } from "@/services/firebase/firestore/tags";
 
 interface PostTagsSectionProps {
     tags: string[];
@@ -16,7 +16,7 @@ interface PostTagsSectionProps {
 }
 
 const PostTagsSection: React.FC<PostTagsSectionProps> = ({ tags, onAddTag, onRemoveTag }) => {
-    const { tags: availableTags, createNewTag, isLoading: loadingTags } = useTags();
+    const { tags: availableTags, isLoading: loadingTags } = useTags();
     const [isAddingNewTag, setIsAddingNewTag] = useState(false);
     const [newTagName, setNewTagName] = useState("");
     const [tagError, setTagError] = useState("");
@@ -31,7 +31,12 @@ const PostTagsSection: React.FC<PostTagsSectionProps> = ({ tags, onAddTag, onRem
     };
 
     // Función para crear y añadir una nueva etiqueta
-    const handleCreateNewTag = async () => {
+    const handleCreateNewTag = async (e?: React.MouseEvent) => {
+        // Prevenir propagación del evento
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
         if (!newTagName.trim()) {
             setTagError("El nombre de la etiqueta no puede estar vacío");
             return;
@@ -48,24 +53,47 @@ const PostTagsSection: React.FC<PostTagsSectionProps> = ({ tags, onAddTag, onRem
         }
 
         try {
-            // Crear nueva etiqueta en el sistema
+            console.log("🏷️ Iniciando creación de tag:", newTagName.trim());
+            
+            // Generar slug desde el nombre
+            const slug = newTagName.trim().toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '') // Remover caracteres especiales
+                .replace(/\s+/g, '-') // Reemplazar espacios con guiones
+                .replace(/-+/g, '-') // Remover guiones duplicados
+                .replace(/^-|-$/g, ''); // Remover guiones al inicio/final
+
+            console.log("🏷️ Slug generado:", slug);
+
+            // Crear nueva etiqueta en el sistema (sin refrescar la lista completa)
             const newTag: Tag = {
-                id: uuidv4(),
+                id: slug,
                 name: newTagName.trim(),
+                slug: slug,
+                description: '',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                postCount: 0
             };
 
-            await createNewTag(newTag);
+            console.log("🏷️ Creando tag con Firebase...");
+            // Usar createTag directamente sin el hook que refresca todo
+            await createTag(newTag);
+            console.log("✅ Tag creado exitosamente en Firebase");
 
+            console.log("🏷️ Añadiendo tag al post local...");
             // Añadir la etiqueta al post actual
             onAddTag(newTagName.trim());
+            console.log("✅ Tag añadido al post local");
 
             // Limpiar el estado
             setNewTagName("");
             setIsAddingNewTag(false);
             setTagError("");
+            
+            console.log("✅ Proceso de creación de tag completado sin navegación");
         } catch (error) {
-            setTagError("Error al crear la etiqueta");
-            console.error(error);
+            console.error("❌ Error al crear la etiqueta:", error);
+            setTagError("Error al crear la etiqueta: " + (error instanceof Error ? error.message : String(error)));
         }
     };
 
@@ -115,6 +143,7 @@ const PostTagsSection: React.FC<PostTagsSectionProps> = ({ tags, onAddTag, onRem
                             disabled={loadingTags}
                         />
                         <Button
+                            type="button"
                             variant="primary"
                             size="md"
                             onClick={() => setIsAddingNewTag(true)}
@@ -140,6 +169,7 @@ const PostTagsSection: React.FC<PostTagsSectionProps> = ({ tags, onAddTag, onRem
                         </div>
                         <div className="space-x-2">
                             <Button
+                                type="button"
                                 variant="primary"
                                 size="md"
                                 onClick={handleCreateNewTag}
@@ -147,6 +177,7 @@ const PostTagsSection: React.FC<PostTagsSectionProps> = ({ tags, onAddTag, onRem
                                 Crear y añadir
                             </Button>
                             <Button
+                                type="button"
                                 variant="outline"
                                 size="md"
                                 onClick={() => {

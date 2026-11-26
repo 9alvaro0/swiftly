@@ -92,10 +92,24 @@ export const getPostsByTag = async (tag: string): Promise<Post[]> => {
         // Filter for published posts client-side
         posts = posts.filter((post) => post.isPublished === true);
         
-        // Sort by publishedAt descending
+        // Sort by publishedAt descending, fallback to createdAt, then updatedAt
         posts.sort((a, b) => {
-            const dateA = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
-            const dateB = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
+            const dateA = a.publishedAt 
+                ? new Date(a.publishedAt).getTime() 
+                : a.createdAt 
+                    ? new Date(a.createdAt).getTime() 
+                    : a.updatedAt 
+                        ? new Date(a.updatedAt).getTime() 
+                        : 0;
+            
+            const dateB = b.publishedAt 
+                ? new Date(b.publishedAt).getTime() 
+                : b.createdAt 
+                    ? new Date(b.createdAt).getTime() 
+                    : b.updatedAt 
+                        ? new Date(b.updatedAt).getTime() 
+                        : 0;
+            
             return dateB - dateA;
         });
         
@@ -167,10 +181,24 @@ export const getAllPublishedPosts = async (filters: PostFilters): Promise<Post[]
             );
         }
         
-        // Sort by publishedAt descending
+        // Sort by publishedAt descending, fallback to createdAt, then updatedAt
         posts.sort((a, b) => {
-            const dateA = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
-            const dateB = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
+            const dateA = a.publishedAt 
+                ? new Date(a.publishedAt).getTime() 
+                : a.createdAt 
+                    ? new Date(a.createdAt).getTime() 
+                    : a.updatedAt 
+                        ? new Date(a.updatedAt).getTime() 
+                        : 0;
+            
+            const dateB = b.publishedAt 
+                ? new Date(b.publishedAt).getTime() 
+                : b.createdAt 
+                    ? new Date(b.createdAt).getTime() 
+                    : b.updatedAt 
+                        ? new Date(b.updatedAt).getTime() 
+                        : 0;
+            
             return dateB - dateA;
         });
         
@@ -187,18 +215,33 @@ export const createOrUpdatePost = async (id: string, updatedFields: Partial<Post
 
     let post;
     if (existingPost) {
+        const wasUnpublished = !existingPost.isPublished;
+        const isNowPublished = updatedFields.isPublished === true;
+        
         post = {
             ...existingPost,
             ...updatedFields,
             updatedAt: new Date(),
         };
+        
+        // Si el post se está publicando por primera vez, establecer publishedAt
+        if (wasUnpublished && isNowPublished && !existingPost.publishedAt) {
+            post.publishedAt = new Date();
+        }
     } else {
+        const isPublished = updatedFields.isPublished === true;
+        
         post = {
             id,
             createdAt: new Date(),
             ...updatedFields,
             updatedAt: new Date(),
         };
+        
+        // Si se crea directamente como publicado, establecer publishedAt
+        if (isPublished) {
+            post.publishedAt = new Date();
+        }
     }
 
     const processedData = convertDatesToTimestamps(post);

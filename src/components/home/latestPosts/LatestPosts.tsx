@@ -6,8 +6,9 @@ import { getAllPublishedPosts } from "@/services/firebase/firestore/post";
 import { FiBookOpen, FiFileText } from "react-icons/fi";
 
 export default async function LatestPosts() {
-    // Cambiar tutorial por post cuando hayan posts y limitar a 4
-    const posts = await getAllPublishedPosts({ type: "article" });
+    // Cambiar tutorial por post cuando hayan posts y limitar a 6
+    const allPosts = await getAllPublishedPosts({ type: "article" });
+    const posts = allPosts.slice(0, 6); // Limitar a 6 posts más recientes
     // Additional filter to ensure only published articles are shown
     const publishedPosts = posts.filter(post => post.isPublished === true);
     const hasPosts = publishedPosts && publishedPosts.length > 0;
